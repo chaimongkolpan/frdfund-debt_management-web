@@ -338,4 +338,69 @@ export const getDebtManagementDetailClassify = async (idcard, province, creditor
     return defaultErrorResponse;
   }
 };
+export const updateDebtManagementDetailClassify = async (param) => {
+  const path = '/classify/debt-management-contract';
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getBorrowerClassify = async (idcard, province, creditor_type) => {
+  const path = '/classify/borrower';
+  try {
+    const result = await axios.get(path, { params: { idcard, province, creditor_type }});
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateBorrowerClassify = async (data) => {
+  const path = '/classify/borrower';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const upsertGuarantorClassify = async (data) => {
+  const path = '/classify/guarantor';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeGuarantorClassify = async (data) => {
+  const path = '/classify/guarantor/remove';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion

@@ -21,7 +21,7 @@ const ClassifyDebtManageTable = (props) => {
         <td>{item.hasNPA && (<i className="fas fa-check"></i>)}</td>
         <td>
           <div className="d-flex justify-content-center"> 
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleShowDetail()}><i className="far fa-list-alt "></i></button>
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleShowDetail(item)}><i className="far fa-list-alt "></i></button>
           </div>
         </td>
         <td className="align-middle white-space-nowrap text-center pe-0">
@@ -70,7 +70,7 @@ const ClassifyDebtManageTable = (props) => {
                 <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน </th>
                 <th>สถานะผู้กู้</th>
-                <th>อัปโหลดเอกสารประกอบ</th>
+                <th>เอกสารประกอบ</th>
                 <th>สัญญา NPA </th>
                 <th>จำแนกมูลหนี้ </th>
                 <th>ดำเนินการ </th>

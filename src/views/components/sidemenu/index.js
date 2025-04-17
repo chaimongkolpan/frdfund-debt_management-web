@@ -41,7 +41,7 @@ const Sidebar = props => {
                 <p className="navbar-vertical-label">การจัดการหนี้</p>
                 {/* parent pages จัดทำรายชื่อเกษตรกร*/}
                 <div className="nav-item-wrapper">
-                  <a className={`nav-link dropdown-indicator label-1 ${path == '/debt' ? 'active' : ''}`}  href="#nv-MakeList" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-MakeList">
+                  <a className={`nav-link dropdown-indicator label-1 ${path.includes('/debt') ? 'active' : ''}`}  href="#nv-MakeList" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-MakeList">
                     <div className="d-flex align-items-center">
                       <div className="dropdown-indicator-icon-wrapper"><span className="fas fa-caret-right dropdown-indicator-icon"></span></div><span className="nav-link-icon"><span className="far fa-address-book"></span></span><span className="nav-link-text">จัดทำรายชื่อเกษตรกร</span>
                     </div>
@@ -55,7 +55,7 @@ const Sidebar = props => {
                         </a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="../MakeList/MakeListNPA.html">
+                        <a className={`nav-link ${path == '/debt/npa' ? 'active' : ''}`} href="/debt/npa">
                           <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
                         </a>
                       </li>

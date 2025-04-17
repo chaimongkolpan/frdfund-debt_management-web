@@ -2,9 +2,30 @@ import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const FullModal = (props) => {
-  const {isOpen, setModal, onOk, onClose} = props;
+  const {isOpen, setModal, onOk, onClose, data} = props;
   const [selected, setSelected] = useState([]);
   const toggle = () => setModal(!isOpen);
+  const RenderData = (item, index) => {
+    return (item && (
+      <tr key={index}>
+        <td className="fs-9">
+          <div className="form-check ms-2 mb-0 fs-8">
+            <input className="form-check-input" type="checkbox" />
+          </div>
+        </td>
+        <td>{index + 1}</td>
+        <td>{item.checking_management_status}</td>
+        <td>{item.debt_manage_contract_no}</td>
+        <td>{item.creditor_type}</td>
+        <td>{item.creditor_name}</td>
+        <td>{item.debt_manage_outstanding_principal}</td>
+        <td>{item.frD_paymen_amount}</td>
+        <td>{item.purpose_loan_contract}</td>
+        <td>{item.dept_status}</td>
+        <td>{item.collateral_type}</td>
+      </tr>
+    ))
+  }
   return (
       <Modal isOpen={isOpen} toggle={toggle} scrollable fullscreen>
         <ModalHeader toggle={toggle}>รวมสัญญา</ModalHeader>
@@ -19,7 +40,7 @@ const FullModal = (props) => {
                         <tr>
                           <th className="white-space-nowrap fs-9 ps-0" rowSpan="2" style={{ minWidth: 30 }}>
                             <div className="form-check ms-2 mb-0 fs-8">
-                              <input className="form-check-input" id="bulk-select-example2" type="checkbox" data-bulk-select='{"body":"bulk-select-body2","actions":"bulk-select-actions2","replacedElement":"bulk-select-replace-element"}' />
+                              <input className="form-check-input" type="checkbox" data-bulk-select='{"body":"bulk-select-body2","actions":"bulk-select-actions2","replacedElement":"bulk-select-replace-element"}' />
                             </div>
                           </th>
                           <th style={{ minWidth: 30 }}>#</th>
@@ -34,58 +55,14 @@ const FullModal = (props) => {
                           <th>ประเภทหลักประกัน </th>
                         </tr>
                       </thead>
-                      <tbody className="list text-center align-middle" id="bulk-select-body2">
-                        <tr>
-                          <td className="fs-9">
-                            <div className="form-check ms-2 mb-0 fs-8">
-                              <input className="form-check-input" type="checkbox" data-bulk-select-row="{&quot;name&quot;:&quot;Anna&quot;,&quot;email&quot;:&quot;anna@example.com&quot;,&quot;age&quot;:18}" />
-                            </div>
-                          </td>
-                          <td>1</td>
-                          <td>กำลังดำเนินการ</td>
-                          <td>1958</td>
-                          <td>สหกรณ์</td>
-                          <td>สหกรณ์การเกษตรเมืองมีนบุรี จำกัด</td>
-                          <td>30,000.00</td>
-                          <td>30,000.00</td>
-                          <td>เพื่อการเกษตร</td>
-                          <td>ผิดนัดชำระ</td>
-                          <td>หลักทรัพย์ค้ำประกัน</td>
-                        </tr>
-                        <tr>
-                          <td className="fs-9">
-                            <div className="form-check ms-2 mb-0 fs-8">
-                              <input className="form-check-input" type="checkbox" data-bulk-select-row="{&quot;name&quot;:&quot;Anna&quot;,&quot;email&quot;:&quot;anna@example.com&quot;,&quot;age&quot;:18}" />
-                            </div>
-                          </td>
-                          <td>2</td>
-                          <td>กำลังดำเนินการ</td>
-                          <td>2525</td>
-                          <td>สหกรณ์</td>
-                          <td>สหกรณ์การเกษตรเมืองมีนบุรี จำกัด</td>
-                          <td>10,000.00</td>
-                          <td>10,000.00</td>
-                          <td>เพื่อการเกษตร</td>
-                          <td>ผิดนัดชำระ</td>
-                          <td>หลักทรัพย์ค้ำประกัน</td>
-                        </tr>
-                        <tr>
-                          <td className="fs-9">
-                            <div className="form-check ms-2 mb-0 fs-8">
-                              <input className="form-check-input" type="checkbox" data-bulk-select-row="{&quot;name&quot;:&quot;Anna&quot;,&quot;email&quot;:&quot;anna@example.com&quot;,&quot;age&quot;:18}" />
-                            </div>
-                          </td>
-                          <td>3</td>
-                          <td>กำลังดำเนินการ</td>
-                          <td>2005</td>
-                          <td>สหกรณ์</td>
-                          <td>สหกรณ์การเกษตรเมืองมีนบุรี จำกัด</td>
-                          <td>70,000.00</td>
-                          <td>70,000.00</td>
-                          <td>เพื่อการเกษตร</td>
-                          <td>ผิดนัดชำระ</td>
-                          <td>หลักทรัพย์ค้ำประกัน</td>
-                        </tr>
+                      <tbody className="list text-center align-middle">
+                        {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+                          <tr>
+                            <td className="fs-9 text-center align-middle" colSpan={11}>
+                              <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>

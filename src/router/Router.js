@@ -10,6 +10,7 @@ const Error = lazy(() => import('../views/pages/Error'))
 const Version = lazy(() => import('../views/pages/Version'))
 const Login = lazy(() => import('../views/pages/authentication/Login'))
 const DebtRegister = lazy(() => import('../views/pages/debt-register'))
+const DebtRegisterNpa = lazy(() => import('../views/pages/debt-register/npa'))
 const ClassifyImport = lazy(() => import('../views/pages/classify/import'))
 const ClassifySearch = lazy(() => import('../views/pages/classify/search'))
 const ClassifySearchDetail = lazy(() => import('../views/pages/classify/searchDetail'))
@@ -37,6 +38,11 @@ const Router = () => {
             path: '/debt',
             element: <VerticalLayout />,
             children: [{ path: '/debt', element: <DebtRegister /> }]
+        },
+        {
+            path: '/debt/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/debt/npa', element: <DebtRegisterNpa /> }]
         },
         {
             path: '/classify/import',

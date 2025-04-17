@@ -5,8 +5,8 @@ const ClassifyGuarantorTable = (props) => {
       <tr key={index}>
         <td className="align-middle">{index + 1}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{item.id_card}</td>
-        <td>{item.name_prefix}</td>
+        <td>{item.guarantor_idcard}</td>
+        <td>{item.guarantor_name_prefix}</td>
         <td>{item.fullname}</td>
       </tr>
     ))
