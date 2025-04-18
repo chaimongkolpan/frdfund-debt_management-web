@@ -403,4 +403,30 @@ export const removeGuarantorClassify = async (data) => {
     return defaultErrorResponse;
   }
 };
+export const upsertCollateralClassify = async (data) => {
+  const path = '/classify/collateral';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeCollateralClassify = async (data) => {
+  const path = '/classify/collateral/remove';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion

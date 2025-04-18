@@ -110,7 +110,7 @@ const DebtRegister = () => {
                       <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                       <br />
                       {data && (
-                        <BigDataTable result={data} handleSubmit={onAddBigData} />
+                        <BigDataTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} />
                       )}
                     </>
                   )}

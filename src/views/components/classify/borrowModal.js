@@ -347,13 +347,10 @@ const FullModal = (props) => {
                           />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <div className="flatpickr-input-container">
-                            <div className="form-floating">
-                              <input className="form-control datetimepicker" type="text" placeholder="end date" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' onChange={(e) => handleChange('borrower_birthday', e.target?.value)} />
-                              <label className="ps-6">วันเดือนปีเกิด</label>
-                              <span className="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-                            </div>
-                          </div>
+                          <DatePicker title={'วันเดือนปีเกิด'}
+                            value={editDetail.borrower_birthday} 
+                            handleChange={(val) => handleChange('borrower_birthday', val)} 
+                          />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <Textbox title={'บ้านเลขที่'} 
