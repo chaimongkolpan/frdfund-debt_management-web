@@ -245,9 +245,9 @@ export const submitListNPL = async (params) => {
   }
 };
 export const submitListNPLExport = async (params) => {
-  const path = '/test';
+  const path = '/bigdata/export';
   try {
-    const result = await axios.post(exporturl + path, {});
+    const result = await axios.post(path, { data: params.data }, { responseType: "blob" });
     if (result.status == 200) {
       const blob = new Blob([result.data], { type: params.type });
       SaveAs(blob, params.filename);
