@@ -1,3 +1,4 @@
+import { stringToDateTh } from "@utils";
 const DebtRegisterConfirmTable = (props) => {
   const { data } = props;
   const RenderData = (item, index) => {
@@ -8,15 +9,16 @@ const DebtRegisterConfirmTable = (props) => {
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.date_member_first_time}</td>
-        <td>{item.date_member_current}</td>
+        <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false) : '-'}</td>
+        <td>{item.date_member_current ? stringToDateTh(item.date_member_current, false) : '-'}</td>
+        <td>{item.status}</td>
         <td>{item.organization_register_round}</td>
         <td>{item.organization_name}</td>
         <td>{item.organization_no}</td>
         <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register}</td>
+        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false) : '-'}</td>
         <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date}</td>
+        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false) : '-'}</td>
         <td>{item.creditor_type}</td>
         <td>{item.creditor_name}</td>
         <td>{item.creditor_province}</td>
@@ -50,20 +52,24 @@ const DebtRegisterConfirmTable = (props) => {
                 <th>คำนำหน้า</th>
                 <th>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
+
                 <th>ชื่อองค์กรการเกษตร</th>
                 <th>หมายเลของค์กร</th>
                 <th>รอบองค์กร</th>
                 <th>สถานะองค์กร</th>
                 <th>วันที่เป็นสมาชิก (ครั้งแรก)</th>
+
                 <th>สถานะการตรวจสอบทะเบียนหนี้</th>
                 <th>รอบหนี้</th>
                 <th>วันที่ยื่นขึ้นทะเบียนหนี้</th>
                 <th>ผ่านความเห็นชอบครั้งที่</th>
                 <th>ผ่านความเห็นชอบวันที่</th>
+
                 <th>ประเภทเจ้าหนี้</th>
                 <th>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
                 <th>สาขาเจ้าหนี้</th>
+
                 <th>เลขที่สัญญา</th>
                 <th>เงินต้นตามสัญญา</th>
                 <th>สถานะหนี้</th>

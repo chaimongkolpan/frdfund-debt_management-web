@@ -243,6 +243,7 @@ export const submitListNPL = async (params) => {
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
   }
+  return;
 };
 export const submitListNPLExport = async (params) => {
   const path = '/bigdata/export';
@@ -255,6 +256,7 @@ export const submitListNPLExport = async (params) => {
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
   }
+  return;
 };
 //#endregion
 //#region Classify

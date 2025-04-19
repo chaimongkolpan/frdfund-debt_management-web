@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
+import { stringToDateTh } from "@utils";
 const DebtRegisterBigDataTable = (props) => {
   const { result, handleSubmit, filter, getData } = props;
   const [data, setData] = useState([]);
@@ -35,15 +36,15 @@ const DebtRegisterBigDataTable = (props) => {
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.date_member_first_time}</td>
-        <td>{item.organization_register_date}</td>
+        <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.organization_register_date ? stringToDateTh(item.organization_register_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.organization_register_round}</td>
         <td>{item.organization_name}</td>
         <td>{item.organization_no}</td>
         <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register}</td>
+        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date}</td>
+        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.creditor_type}</td>
         <td>{item.creditor_name}</td>
         <td>{item.creditor_province}</td>
