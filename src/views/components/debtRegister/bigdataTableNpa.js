@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-const DebtRegisterBigDataTable = (props) => {
+const DebtNPABigDataTable = (props) => {
   const { result, handleSubmit } = props;
   const [data, setData] = useState([]);
   const [isSome, setIsSome] = useState(false);
@@ -33,12 +33,11 @@ const DebtRegisterBigDataTable = (props) => {
         <td className="align-middle">{item.name_prefix}</td>
         <td className="align-middle">{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td className="align-middle">{item.province}</td>
+        <td className="align-middle">{item.date_member_first_time}</td>
+        <td className="align-middle">{item.date_member_current}</td>
+        <td className="align-middle">{item.organization_register_round}</td>
         <td className="align-middle">{item.organization_name}</td>
         <td className="align-middle">{item.organization_no}</td>
-        <td className="align-middle">{item.organization_register_round}</td>
-        <td className="align-middle">{item.organization_status}</td>
-        <td className="align-middle">{item.date_member_first_time}</td>
-        <td className="align-middle">{item.debt_register_status}</td>
         <td className="align-middle">{item.debt_register_round}</td>
         <td className="align-middle">{item.date_submit_debt_register}</td>
         <td className="align-middle">{item.passed_approval_no}</td>
@@ -53,7 +52,17 @@ const DebtRegisterBigDataTable = (props) => {
         <td className="align-middle">{item.collateral_type}</td>
         <td className="align-middle">{item.purpose_loan_contract}</td>
         <td className="align-middle">{item.purpose_type_loan_contract}</td>
-        <td className="align-middle">{item.status}</td>
+        <td className="align-middle">{item.debt_management_audit_status}</td>
+        <td className="align-middle">{item.NPA_round}</td>
+        <td className="align-middle">{item.title_document_type}</td>
+        <td className="align-middle">{item.title_document_no}</td>
+        <td className="align-middle">{item.sub_district}</td>
+        <td className="align-middle">{item.district}</td>
+        <td className="align-middle">{item.province}</td>
+        <td className="align-middle">{item.rai}</td>
+        <td className="align-middle">{item.ngan}</td>
+        <td className="align-middle">{item.sqaure_wa}</td>
+        <td className="align-middle"><i class='fas fa-pen-square'/></td>
       </tr>
     ))
   }
@@ -92,23 +101,23 @@ const DebtRegisterBigDataTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th className="text-center" colSpan="4">เกษตรกร</th>
-                <th className="text-center" colSpan="5">องค์กร</th>
-                <th className="text-center" colSpan="5">ทะเบียนหนี้</th>
+                <th className="text-center" colSpan="7">เกษตรกร</th>
+                <th className="text-center" colSpan="2">องค์กร</th>
+                <th className="text-center" colSpan="4">ทะเบียนหนี้</th>
                 <th className="text-center" colSpan="4">เจ้าหนี้</th>
-                <th className="text-center" colSpan="7">สัญญา</th>
+                <th className="text-center" colSpan="8">สัญญา</th>
+                <th className="text-center" colSpan="9">ข้อมูลทรัพย์ NPA</th>
               </tr>
               <tr>
                 <th className="align-middle text-center" data-sort="name">เลขบัตรประชาชน</th>
                 <th className="align-middle text-center" data-sort="email">คำนำหน้า</th>
                 <th className="align-middle text-center" data-sort="age">ชื่อ-นามสกุล</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัด</th>
+                <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิกองค์กร (ครั้งแรก)</th>
+                <th className="align-middle text-center" data-sort="email">วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
+                <th className="align-middle text-center" data-sort="age">รอบองค์กร</th>
                 <th className="align-middle text-center" data-sort="age">ชื่อองค์กรการเกษตร</th>
                 <th className="align-middle text-center" data-sort="age">หมายเลของค์กร</th>
-                <th className="align-middle text-center" data-sort="age">รอบองค์กร</th>
-                <th className="align-middle text-center" data-sort="age">สถานะองค์กร</th>
-                <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิก (ครั้งแรก)</th>
-                <th className="align-middle text-center" data-sort="age">สถานะการตรวจสอบทะเบียนหนี้</th>
                 <th className="align-middle text-center" data-sort="age">รอบหนี้</th>
                 <th className="align-middle text-center" data-sort="age">วันที่ยื่นขึ้นทะเบียนหนี้</th>
                 <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบครั้งที่</th>
@@ -118,12 +127,22 @@ const DebtRegisterBigDataTable = (props) => {
                 <th className="align-middle text-center" data-sort="age">จังหวัดเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">สาขาเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">เลขที่สัญญา</th>
-                <th className="align-middle text-center" data-sort="age">เงินต้นตามสัญญา</th>
+                <th className="align-middle text-center" data-sort="age">เงินต้นคงเหลือตามสัญญา</th>
                 <th className="align-middle text-center" data-sort="age">สถานะหนี้</th>
                 <th className="align-middle text-center" data-sort="age">ประเภทหลักประกัน</th>
                 <th className="align-middle text-center" data-sort="age">วัตถุประสงค์การกู้ตามสัญญา</th>
                 <th className="align-middle text-center" data-sort="age">ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
-                <th className="align-middle text-center" data-sort="age">สถานะการตรวจสอบจัดการหนี้</th>
+                <th className="align-middle text-center" data-sort="age">สถานะสัญญาจำแนกมูลหนี้</th>
+                <th className="align-middle text-center" data-sort="age">รอบ NPA</th>
+                <th className="align-middle text-center" data-sort="age">หลังประกัน NPA</th>
+                <th className="align-middle text-center" data-sort="age">เลขที่หลักประกัน</th>
+                <th className="align-middle text-center" data-sort="age">ตำบล</th>
+                <th className="align-middle text-center" data-sort="age">อำเภอ</th>
+                <th className="align-middle text-center" data-sort="age">จังหวัด</th>
+                <th className="align-middle text-center" data-sort="age">เนื้อที่(ไร่)</th>
+                <th className="align-middle text-center" data-sort="age">เนื้อที่(งาน)</th>
+                <th className="align-middle text-center" data-sort="age">เนื้อที่(ตร.ว)</th>
+                <th className="align-middle text-center" data-sort="age">แก้ไขทะเบียนหนี้</th>
               </tr>
             </thead>
             <tbody className="list text-center" id="bulk-select-body">
@@ -157,4 +176,4 @@ const DebtRegisterBigDataTable = (props) => {
     </>
   );
 };
-export default DebtRegisterBigDataTable;
+export default DebtNPABigDataTable;
