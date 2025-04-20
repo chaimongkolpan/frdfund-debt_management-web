@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import Paging from "@views/components/Paging";
+import { stringToDateTh } from "@utils";
 const DebtRegisterSelectedTable = (props) => {
   const { result, handleSubmit, handleRemove, filter, getData } = props;
   const [data, setData] = useState([]);
+  const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -35,31 +38,30 @@ const DebtRegisterSelectedTable = (props) => {
             <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td className="align-middle">{item.id_card}</td>
-        <td className="align-middle">{item.name_prefix}</td>
-        <td className="align-middle">{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
-        <td className="align-middle">{item.province}</td>
-        <td className="align-middle">{item.organization_name}</td>
-        <td className="align-middle">{item.organization_no}</td>
-        <td className="align-middle">{item.organization_register_round}</td>
-        <td className="align-middle">{item.organization_status}</td>
-        <td className="align-middle">{item.date_member_first_time}</td>
-        <td className="align-middle">{item.debt_register_status}</td>
-        <td className="align-middle">{item.debt_register_round}</td>
-        <td className="align-middle">{item.date_submit_debt_register}</td>
-        <td className="align-middle">{item.passed_approval_no}</td>
-        <td className="align-middle">{item.passed_approval_date}</td>
-        <td className="align-middle">{item.creditor_type}</td>
-        <td className="align-middle">{item.creditor_name}</td>
-        <td className="align-middle">{item.creditor_province}</td>
-        <td className="align-middle">{item.creditor_branch}</td>
-        <td className="align-middle">{item.contract_no}</td>
-        <td className="align-middle">{item.remaining_principal_contract}</td>
-        <td className="align-middle">{item.dept_status}</td>
-        <td className="align-middle">{item.collateral_type}</td>
-        <td className="align-middle">{item.purpose_loan_contract}</td>
-        <td className="align-middle">{item.purpose_type_loan_contract}</td>
-        <td className="align-middle">{item.status}</td>
+        <td>{item.id_card}</td>
+        <td>{item.name_prefix}</td>
+        <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
+        <td>{item.province}</td>
+        <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false) : '-'}</td>
+        <td>{item.date_member_current ? stringToDateTh(item.date_member_current, false) : '-'}</td>
+        <td>{item.organization_register_round}</td>
+        <td>{item.organization_name}</td>
+        <td>{item.organization_no}</td>
+        <td>{item.debt_register_round}</td>
+        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false) : '-'}</td>
+        <td>{item.passed_approval_no}</td>
+        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false) : '-'}</td>
+        <td>{item.creditor_type}</td>
+        <td>{item.creditor_name}</td>
+        <td>{item.creditor_province}</td>
+        <td>{item.creditor_branch}</td>
+        <td>{item.contract_no}</td>
+        <td>{item.remaining_principal_contract}</td>
+        <td>{item.dept_status}</td>
+        <td>{item.collateral_type}</td>
+        <td>{item.purpose_loan_contract}</td>
+        <td>{item.purpose_type_loan_contract}</td>
+        <td>{item.status}</td>
       </tr>
     ))
   }
@@ -82,6 +84,7 @@ const DebtRegisterSelectedTable = (props) => {
     if(result) {
       setData(result.data);
       setSelected(result.data.map(() => false));
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
     return () => { setData([]) }
   },[result])
@@ -97,38 +100,37 @@ const DebtRegisterSelectedTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th className="text-center" colSpan="4">เกษตรกร</th>
-                <th className="text-center" colSpan="5">องค์กร</th>
-                <th className="text-center" colSpan="5">ทะเบียนหนี้</th>
-                <th className="text-center" colSpan="4">เจ้าหนี้</th>
-                <th className="text-center" colSpan="7">สัญญา</th>
+                <th colspan="7">เกษตรกร</th>
+                <th colspan="2">องค์กร</th>
+                <th colspan="4">ทะเบียนหนี้</th>
+                <th colspan="4">เจ้าหนี้</th>
+                <th colspan="7">สัญญา</th>
               </tr>
               <tr>
-                <th className="align-middle text-center" data-sort="name">เลขบัตรประชาชน</th>
-                <th className="align-middle text-center" data-sort="email">คำนำหน้า</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อ-นามสกุล</th>
-                <th className="align-middle text-center" data-sort="age">จังหวัด</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อองค์กรการเกษตร</th>
-                <th className="align-middle text-center" data-sort="age">หมายเลของค์กร</th>
-                <th className="align-middle text-center" data-sort="age">รอบองค์กร</th>
-                <th className="align-middle text-center" data-sort="age">สถานะองค์กร</th>
-                <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิก (ครั้งแรก)</th>
-                <th className="align-middle text-center" data-sort="age">สถานะการตรวจสอบทะเบียนหนี้</th>
-                <th className="align-middle text-center" data-sort="age">รอบหนี้</th>
-                <th className="align-middle text-center" data-sort="age">วันที่ยื่นขึ้นทะเบียนหนี้</th>
-                <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบครั้งที่</th>
-                <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบวันที่</th>
-                <th className="align-middle text-center" data-sort="age">ประเภทเจ้าหนี้</th>
-                <th className="align-middle text-center" data-sort="age">สถาบันเจ้าหนี้</th>
-                <th className="align-middle text-center" data-sort="age">จังหวัดเจ้าหนี้</th>
-                <th className="align-middle text-center" data-sort="age">สาขาเจ้าหนี้</th>
-                <th className="align-middle text-center" data-sort="age">เลขที่สัญญา</th>
-                <th className="align-middle text-center" data-sort="age">เงินต้นตามสัญญา</th>
-                <th className="align-middle text-center" data-sort="age">สถานะหนี้</th>
-                <th className="align-middle text-center" data-sort="age">ประเภทหลักประกัน</th>
-                <th className="align-middle text-center" data-sort="age">วัตถุประสงค์การกู้ตามสัญญา</th>
-                <th className="align-middle text-center" data-sort="age">ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
-                <th className="align-middle text-center" data-sort="age">สถานะการตรวจสอบจัดการหนี้</th>
+                <th >เลขบัตรประชาชน</th>
+                <th>คำนำหน้า</th>
+                <th >ชื่อ-นามสกุล</th>
+                <th >จังหวัด</th>
+                <th>วันที่เป็นสมาชิก (ครั้งแรก)</th>
+                <th>วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
+                <th>รอบองค์กร</th>
+                <th>ชื่อองค์กรการเกษตร</th>
+                <th>หมายเลของค์กร</th>
+                <th>รอบหนี้</th>
+                <th>วันที่ยื่นขึ้นทะเบียนหนี้</th>
+                <th>ผ่านความเห็นชอบครั้งที่</th>
+                <th>ผ่านความเห็นชอบวันที่</th>
+                <th>ประเภทเจ้าหนี้</th>
+                <th>สถาบันเจ้าหนี้</th>
+                <th>จังหวัดเจ้าหนี้</th>
+                <th>สาขาเจ้าหนี้</th>
+                <th>เลขที่สัญญา</th>
+                <th>เงินต้นคงเหลือตามสัญญา</th>
+                <th>สถานะหนี้</th>
+                <th>ประเภทหลักประกัน</th>
+                <th>วัตถุประสงค์การกู้ตามสัญญา</th>
+                <th>ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
+                <th>สถานะการตรวจสอบจำแนกมูลหนี้</th>
               </tr>
             </thead>
             <tbody className="list text-center" id="bulk-select-body2">
@@ -142,13 +144,11 @@ const DebtRegisterSelectedTable = (props) => {
             </tbody>
           </table>
         </div>
-        {/* <div className="d-flex justify-content-between mt-3"><span className="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
-          <div className="d-flex">
-            <button className="page-link" data-list-pagination="prev"><span className="fas fa-chevron-left"></span></button>
-            <ul className="mb-0 pagination"></ul>
-            <button className="page-link pe-0" data-list-pagination="next"><span className="fas fa-chevron-right"></span></button>
-          </div>
-        </div> */}
+        {paging?.total > 0 && (
+          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
+            setPage={(page) => getData({ ...filter, currentPage: page })} 
+          />
+        )}
       </div>
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>

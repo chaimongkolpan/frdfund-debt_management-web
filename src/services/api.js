@@ -243,11 +243,12 @@ export const submitListNPL = async (params) => {
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
   }
+  return;
 };
 export const submitListNPLExport = async (params) => {
-  const path = '/test';
+  const path = '/bigdata/export';
   try {
-    const result = await axios.post(exporturl + path, {});
+    const result = await axios.post(path, { data: params.data }, { responseType: "blob" });
     if (result.status == 200) {
       const blob = new Blob([result.data], { type: params.type });
       SaveAs(blob, params.filename);
@@ -255,6 +256,7 @@ export const submitListNPLExport = async (params) => {
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
   }
+  return;
 };
 //#endregion
 //#region Classify
@@ -398,6 +400,102 @@ export const removeGuarantorClassify = async (data) => {
       return result.data;
     else
       return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const upsertCollateralClassify = async (data) => {
+  const path = '/classify/collateral';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeCollateralClassify = async (data) => {
+  const path = '/classify/collateral/remove';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const uploadDocumentClassify = async (data) => {
+  const path = '/classify/upload-document';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const combineClassify = async (data) => {
+  const path = '/classify/combine';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const cancelCombineClassify = async (data) => {
+  const path = '/classify/cancel-combine';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const splitClassify = async (data) => {
+  const path = '/classify/split';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const cancelSplitClassify = async (data) => {
+  const path = '/classify/cancel-split';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
     return defaultErrorResponse;

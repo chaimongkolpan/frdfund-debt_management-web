@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input, Label }  from "reactstrap";
 const Textbox = (props) => {
-  const { title, placeholder, handleChange, containerClassname, classname, value, disabled, isNumber } = props;
+  const { title, placeholder, handleChange, containerClassname, classname, value, disabled, isNumber, footer } = props;
   const [val, setValue] = useState(value ?? '');
   const onBlur = () => {
     if (isNumber) {
@@ -31,6 +31,9 @@ const Textbox = (props) => {
     <div className={`input-group ${containerClassname ?? ''}`}>
       <Label className={`input-group-text`}>{title}</Label>
       <Input className={`${classname ?? ''}`} placeholder={placeholder} onChange={(newval) => onChange(newval)} value={val} disabled={disabled} onBlur={() => onBlur()}/>
+      {footer && (
+        <Label className={`input-group-text`}>{footer}</Label>
+      )}
     </div>
   )
 };

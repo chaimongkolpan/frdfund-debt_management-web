@@ -1,16 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const FullModal = (props) => {
-  const {isOpen, setModal, onOk, onClose, data} = props;
+  const {isOpen, setModal, onOk, onClose, data, id_debt_register} = props;
   const [selected, setSelected] = useState([]);
+  const [isSome, setIsSome] = useState(false);
+  const [isAll, setIsAll] = useState(false);
   const toggle = () => setModal(!isOpen);
-  const RenderData = (item, index) => {
+  const onSubmit = async () => {
+    const selectedData = data.filter((i, index) => selected[index] || i.id_debt_register == id_debt_register);
+    const param = {
+      master_id: id_debt_register,
+      ids_debt_management: selectedData.map(item => item.id_debt_management)
+    };
+    await onOk(param);
+  }
+  const onChange = async (id) => {
+    await setSelected((prev) => {
+      prev[id] = !prev[id];
+      return [...prev]
+    })
+  }
+  const onHeaderChange = async (checked) => {
+    await setSelected(data.map(() => checked));
+    await setIsAll(checked)
+  }
+  const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9">
           <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" />
+            {item.id_debt_register == id_debt_register ? (
+              <input className="form-check-input" type="checkbox" checked={true} disabled />
+            ) : (
+              
+              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            )}
           </div>
         </td>
         <td>{index + 1}</td>
@@ -26,6 +51,16 @@ const FullModal = (props) => {
       </tr>
     ))
   }
+  useEffect(() => {
+    setIsSome(selected.some(i => i))
+    setIsAll(selected.every(i => i) && selected.length > 0)
+    return () => { console.log('Clear data.') }
+  },[selected])
+  useEffect(() => {
+    if(data) {
+      setSelected(data.map(() => false));
+    }
+  },[data])
   return (
       <Modal isOpen={isOpen} toggle={toggle} scrollable fullscreen>
         <ModalHeader toggle={toggle}>รวมสัญญา</ModalHeader>
@@ -40,7 +75,7 @@ const FullModal = (props) => {
                         <tr>
                           <th className="white-space-nowrap fs-9 ps-0" rowSpan="2" style={{ minWidth: 30 }}>
                             <div className="form-check ms-2 mb-0 fs-8">
-                              <input className="form-check-input" type="checkbox" data-bulk-select='{"body":"bulk-select-body2","actions":"bulk-select-actions2","replacedElement":"bulk-select-replace-element"}' />
+                              <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                             </div>
                           </th>
                           <th style={{ minWidth: 30 }}>#</th>
@@ -56,7 +91,7 @@ const FullModal = (props) => {
                         </tr>
                       </thead>
                       <tbody className="list text-center align-middle">
-                        {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+                        {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                           <tr>
                             <td className="fs-9 text-center align-middle" colSpan={11}>
                               <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
@@ -74,7 +109,7 @@ const FullModal = (props) => {
         </ModalBody>
         <ModalFooter>
           {(selected && selected.length > 0) && (
-            <Button color="primary" onClick={onOk}>รวมสัญญา</Button>
+            <Button color="primary" onClick={onSubmit}>รวมสัญญา</Button>
           )}{' '}
           <Button color="secondary" onClick={onClose}>ยกเลิก</Button>
         </ModalFooter>

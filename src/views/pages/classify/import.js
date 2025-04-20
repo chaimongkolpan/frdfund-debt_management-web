@@ -16,24 +16,28 @@ const ImportClassify = () => {
   const [fail_list, setFailList] = useState([]);
   const [succeed, setSuceed] = useState(0);
   const onSubmit = async (filter) => {
-    const form = new FormData();
-    form.append('debtType', filter.debtType);
-    form.append('creditorType', filter.creditorType);
-    form.append('file', filter.file);
-    const result = await importClassify(form);
-    if (result.isSuccess) {
-      setFailed(result.failed);
-      setFailList(result.fail_list);
-      setSuceed(result.succeed);
-      if (!result.hasFail) {
-        setData(result.contracts);
-        return true
+    if (filter.file) {
+      const form = new FormData();
+      form.append('debtType', filter.debtType);
+      form.append('creditorType', filter.creditorType);
+      form.append('file', filter.file);
+      const result = await importClassify(form);
+      if (result.isSuccess) {
+        setFailed(result.failed);
+        setFailList(result.fail_list);
+        setSuceed(result.succeed);
+        if (!result.hasFail) {
+          setData(result.contracts);
+          return true
+        } else {
+          return false
+        }
       } else {
+        setData(null)
         return false
       }
     } else {
-      setData(null)
-      return false
+      console.error('file not upload.')
     }
   }
   return (
