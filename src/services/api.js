@@ -431,4 +431,74 @@ export const removeCollateralClassify = async (data) => {
     return defaultErrorResponse;
   }
 };
+export const uploadDocumentClassify = async (data) => {
+  const path = '/classify/upload-document';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const combineClassify = async (data) => {
+  const path = '/classify/combine';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const cancelCombineClassify = async (data) => {
+  const path = '/classify/cancel-combine';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const splitClassify = async (data) => {
+  const path = '/classify/split';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const cancelSplitClassify = async (data) => {
+  const path = '/classify/cancel-split';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion

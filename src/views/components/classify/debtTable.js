@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { 
   getDebtRegisterDetailClassify,
 } from "@services/api";
+import { stringToDateTh } from "@utils";
 const ClassifyDebtTable = (props) => {
   const { idcard, province, creditorType } = props;
   const [data, setData] = useState(null);
@@ -10,9 +11,9 @@ const ClassifyDebtTable = (props) => {
       <tr key={index}>
         <td className="align-middle">{index + 1}</td>
         <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register}</td>
+        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date}</td>
+        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.creditor_type}</td>
         <td>{item.creditor_name}</td>
         <td>{item.creditor_province}</td>

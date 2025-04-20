@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useDropzone } from 'react-dropzone';
 const DropZone = (props) => {
-  const { onChange, clearFile } = props;
+  const { onChange, clearFile, maxFiles, accept } = props;
   const [acceptedFiles, setFiles] = useState([]);
   const {getRootProps, getInputProps} = useDropzone({
-    accept: {'Custom Files': ['.csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']},
+    accept: accept,
     onDrop: files => {
       setFiles(files);
       onChange(files);
     },
-    maxFiles: 1,
+    maxFiles: maxFiles,
   });
   const RemoveFile = (index) => {
     acceptedFiles.splice(index, 1);
