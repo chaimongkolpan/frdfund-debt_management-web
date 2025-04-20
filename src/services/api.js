@@ -498,7 +498,132 @@ export const cancelSplitClassify = async (data) => {
 
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
-    return defaultErrorResponse;
   }
 };
 //#endregion
+
+// #region NPA
+export const searchBigDataNPA = async (filter) => {
+  const path = '/npa/searchBigData';
+  try {
+    const result = await axios.post(path,filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const addRegistrationNPA = async (selected) => {
+  const path = '/npa/registrationNPA';
+  try {
+    const result = await axios.post(path,{ data: selected });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchRegisteredNPA = async (filter) => {
+  const path = '/NAP/searchNPA';
+  try {
+    const result = await axios.post(path,filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getdetailNPA = async (id) => {
+  const path = '/NAP/getdetailNPA';
+  try {
+    const result = await axios.get(path, { params: { id } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const submitEditRegisteredNPA = async (params) => {
+  const path = '/npa/submit-edit-registered-NPA';
+  try {
+    const result = await axios.post(path, { data: params.data });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+  }
+};
+export const addContractNPAToList = async (selected) => {
+  const path = '/NAP/addContractNPAToList';
+  try {
+    const result = await axios.post(path,{ data: selected });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeContractNPAToList = async (selected) => {
+  const path = '/NAP/removeContractNPAToList';
+  try {
+    const result = await axios.post(path,{ data: selected });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getContractNPAToList = async (params) => {
+  const path = '/NAP/getContractNPAToList';
+  try {
+    const result = await axios.get(path, {params});
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const submitListNPA = async (params) => {
+  const path = '/NAP/submitNPA';
+  try {
+    const result = await axios.post(path, { data: params.data }, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+  }
+};
+// #endregion

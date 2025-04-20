@@ -9,7 +9,7 @@ import {
   getCheckingStatuses,
 } from "@services/api";
 
-const DebtFilterNpa = (props) => {
+const DebtRegisterFilterNpa = (props) => {
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
@@ -152,7 +152,7 @@ const DebtFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
-            <Dropdown 
+            <Dropdown
               title={'จังหวัด'} 
               containerClassname={'mb-3'} 
               defaultValue={'all'} 
@@ -194,7 +194,7 @@ const DebtFilterNpa = (props) => {
               hasAll />
           )}
         </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
+        {/* <div className="col-sm-12 col-md-6 col-lg-6">
           {statusDebtOp && (
             <Dropdown 
               title={'รอบ NPA'} 
@@ -204,8 +204,8 @@ const DebtFilterNpa = (props) => {
               handleChange={(val) => onChange('npaRound', val)}
               hasAll />
           )}
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
+        </div> */}
+        {/* <div className="col-sm-12 col-md-6 col-lg-6">
           {statusDebtOp && (
             <Dropdown 
               title={'เลขที่หลักประกัน'} 
@@ -215,7 +215,7 @@ const DebtFilterNpa = (props) => {
               handleChange={(val) => onChange('collateralNo', val)}
               hasAll />
           )}
-        </div>
+        </div> */}
         <div className="col-sm-12 col-md-6 col-lg-6">
           {checkingStatusOp && (
             <Dropdown 
@@ -238,4 +238,4 @@ const DebtFilterNpa = (props) => {
     </>
   );
 };
-export default DebtFilterNpa;
+export default DebtRegisterFilterNpa;

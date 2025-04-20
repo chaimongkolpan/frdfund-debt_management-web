@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-const DebtRegisterSelectedTableNpa = (props) => {
-  const { result, handleSubmit, handleRemove, filter, getData } = props;
+const DebtRegisterBigDataTable = (props) => {
+  const { result, handleSubmit } = props;
   const [data, setData] = useState([]);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
@@ -9,12 +9,6 @@ const DebtRegisterSelectedTableNpa = (props) => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleSubmit(selectedData)
-    }
-  }
-  const onRemove = () => {
-    if (handleSubmit) {
-      const selectedData = data.filter((i, index) => selected[index]);
-      handleRemove(selectedData)
     }
   }
   const onChange = async (id) => {
@@ -59,15 +53,7 @@ const DebtRegisterSelectedTableNpa = (props) => {
         <td className="align-middle">{item.purpose_loan_contract}</td>
         <td className="align-middle">{item.purpose_type_loan_contract}</td>
         <td className="align-middle">{item.debt_management_audit_status}</td>
-        <td className="align-middle">{item.NPA_round}</td>
-        <td className="align-middle">{item.title_document_type}</td>
-        <td className="align-middle">{item.title_document_no}</td>
-        <td className="align-middle">{item.sub_district}</td>
-        <td className="align-middle">{item.district}</td>
-        <td className="align-middle">{item.province}</td>
-        <td className="align-middle">{item.rai}</td>
-        <td className="align-middle">{item.ngan}</td>
-        <td className="align-middle">{item.sqaure_wa}</td>
+        <td className="svg-inline--fa fa-plus"></td>
       </tr>
     ))
   }
@@ -93,31 +79,31 @@ const DebtRegisterSelectedTableNpa = (props) => {
     }
     return () => { setData([]) }
   },[result])
+
   return (
     <>
-      <div id="tableExample1" data-list='{"valueNames":["name","email","age"]'>
+      <div id="tableExample" data-list='{"valueNames":["name","email","age"]}'>
         <div className="table-responsive mx-n1 px-1">
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
-                  <div className="form-check ms-2 mb-0 fs-8">
+                  <div className="form-check ms-2 me-0 mb-0 fs-8">
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th className="text-center" colSpan="7">เกษตรกร</th>
-                <th className="text-center" colSpan="2">องค์กร</th>
-                <th className="text-center" colSpan="4">ทะเบียนหนี้</th>
+                <th className="text-center" colSpan="4">เกษตรกร</th>
+                <th className="text-center" colSpan="5">องค์กร</th>
+                <th className="text-center" colSpan="5">ทะเบียนหนี้</th>
                 <th className="text-center" colSpan="4">เจ้าหนี้</th>
-                <th className="text-center" colSpan="8">สัญญา</th>
-                <th className="text-center" colSpan="9">ข้อมูลทรัพย์ NPA</th>
+                <th className="text-center" colSpan="7">สัญญา</th>
               </tr>
               <tr>
-              <th className="align-middle text-center" data-sort="name">เลขบัตรประชาชน</th>
+                <th className="align-middle text-center" data-sort="name">เลขบัตรประชาชน</th>
                 <th className="align-middle text-center" data-sort="email">คำนำหน้า</th>
                 <th className="align-middle text-center" data-sort="age">ชื่อ-นามสกุล</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัด</th>
-                <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิกองค์กร (ครั้งแรก)</th>
+                <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิก (ครั้งแรก)</th>
                 <th className="align-middle text-center" data-sort="email">วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
                 <th className="align-middle text-center" data-sort="age">รอบองค์กร</th>
                 <th className="align-middle text-center" data-sort="age">ชื่อองค์กรการเกษตร</th>
@@ -137,18 +123,10 @@ const DebtRegisterSelectedTableNpa = (props) => {
                 <th className="align-middle text-center" data-sort="age">วัตถุประสงค์การกู้ตามสัญญา</th>
                 <th className="align-middle text-center" data-sort="age">ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
                 <th className="align-middle text-center" data-sort="age">สถานะสัญญาจำแนกมูลหนี้</th>
-                <th className="align-middle text-center" data-sort="age">รอบ NPA</th>
-                <th className="align-middle text-center" data-sort="age">หลังประกัน NPA</th>
-                <th className="align-middle text-center" data-sort="age">เลขที่หลักประกัน</th>
-                <th className="align-middle text-center" data-sort="age">ตำบล</th>
-                <th className="align-middle text-center" data-sort="age">อำเภอ</th>
-                <th className="align-middle text-center" data-sort="age">จังหวัด</th>
-                <th className="align-middle text-center" data-sort="age">เนื้อที่(ไร่)</th>
-                <th className="align-middle text-center" data-sort="age">เนื้อที่(งาน)</th>
-                <th className="align-middle text-center" data-sort="age">เนื้อที่(ตร.ว)</th>
+                <th className="align-middle text-center" data-sort="age">สร้างทะเบียนหนี้ NPA</th>
               </tr>
             </thead>
-            <tbody className="list text-center" id="bulk-select-body2">
+            <tbody className="list text-center" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={26}>
@@ -162,7 +140,9 @@ const DebtRegisterSelectedTableNpa = (props) => {
         {/* <div className="d-flex justify-content-between mt-3"><span className="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
           <div className="d-flex">
             <button className="page-link" data-list-pagination="prev"><span className="fas fa-chevron-left"></span></button>
-            <ul className="mb-0 pagination"></ul>
+            <ul className="mb-0 pagination">
+
+            </ul>
             <button className="page-link pe-0" data-list-pagination="next"><span className="fas fa-chevron-right"></span></button>
           </div>
         </div> */}
@@ -170,13 +150,11 @@ const DebtRegisterSelectedTableNpa = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button type="button" className="btn btn-success btn-sm ms-2" onClick={() => onSubmit()}>จัดทำรายชื่อเกษตรกร</button>
-            {' '}
-            <button type="button" className="btn btn-danger btn-sm ms-2" onClick={() => onRemove()}>ไม่จัดทำรายชื่อ</button>
+            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาจัดทำรายชื่อเกษตรกร</button>
           </div>
         </div>
       </div>
     </>
   );
 };
-export default DebtRegisterSelectedTableNpa;
+export default DebtRegisterBigDataTable;
