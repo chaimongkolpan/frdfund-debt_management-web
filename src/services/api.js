@@ -520,7 +520,7 @@ export const searchBigDataNPA = async (filter) => {
 export const addRegistrationNPA = async (selected) => {
   const path = '/npa/registrationNPA';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,{ ...selected });
     if (result.status == 200)
       return result.data;
     else
@@ -532,7 +532,7 @@ export const addRegistrationNPA = async (selected) => {
   }
 };
 export const searchRegisteredNPA = async (filter) => {
-  const path = '/NAP/searchNPA';
+  const path = '/npa/searchNPA';
   try {
     const result = await axios.post(path,filter);
     if (result.status == 200)
@@ -546,7 +546,7 @@ export const searchRegisteredNPA = async (filter) => {
   }
 };
 export const getdetailNPA = async (id) => {
-  const path = '/NAP/getdetailNPA';
+  const path = '/npa/getdetailNPA';
   try {
     const result = await axios.get(path, { params: { id } });
     if (result.status == 200)
@@ -562,7 +562,7 @@ export const getdetailNPA = async (id) => {
 export const submitEditRegisteredNPA = async (params) => {
   const path = '/npa/submit-edit-registered-NPA';
   try {
-    const result = await axios.post(path, { data: params.data });
+    const result = await axios.post(path, { ...params });
     if (result.status == 200)
       return result.data;
     else
@@ -573,9 +573,9 @@ export const submitEditRegisteredNPA = async (params) => {
   }
 };
 export const addContractNPAToList = async (selected) => {
-  const path = '/NAP/addContractNPAToList';
+  const path = '/npa/addContractNPAToList';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,[...selected ]);
     if (result.status == 200)
       return result.data;
     else
@@ -587,9 +587,9 @@ export const addContractNPAToList = async (selected) => {
   }
 };
 export const removeContractNPAToList = async (selected) => {
-  const path = '/NAP/removeContractNPAToList';
+  const path = '/npa/removeContractNPAToList';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,[...selected ]);
     if (result.status == 200)
       return result.data;
     else
@@ -601,7 +601,7 @@ export const removeContractNPAToList = async (selected) => {
   }
 };
 export const getContractNPAToList = async (params) => {
-  const path = '/NAP/getContractNPAToList';
+  const path = '/npa/getContractNPAToList';
   try {
     const result = await axios.get(path, {params});
     if (result.status == 200)
@@ -615,7 +615,7 @@ export const getContractNPAToList = async (params) => {
   }
 };
 export const submitListNPA = async (params) => {
-  const path = '/NAP/submitNPA';
+  const path = '/npa/submitNPA';
   try {
     const result = await axios.post(path, { data: params.data }, { responseType: "blob" });
     if (result.status == 200) {
@@ -625,5 +625,6 @@ export const submitListNPA = async (params) => {
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
   }
+  return;
 };
 // #endregion

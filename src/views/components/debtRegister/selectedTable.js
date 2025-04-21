@@ -15,7 +15,7 @@ const DebtRegisterSelectedTable = (props) => {
     }
   }
   const onRemove = () => {
-    if (handleSubmit) {
+    if (handleRemove) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleRemove(selectedData)
     }

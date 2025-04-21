@@ -37,7 +37,7 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder }, ref) 
   </div>
 ));
 const DatePickerComponent = (props) => {
-  const { title, handleChange, containerClassname, value } = props;
+  const { title, handleChange, containerClassname, value, onBlur } = props;
   const [val, setValue] = useState(value ?? '');
   const [showM, setShowM] = useState(true);
   const [showY, setShowY] = useState(true);
@@ -51,7 +51,7 @@ const DatePickerComponent = (props) => {
     if (handleChange) {
       if (newval) {
         // handleChange(new Date(date).toLocaleString("th-TH", { day: "numeric", month: "numeric", year: "numeric" }));
-        handleChange(new Date(date));
+        handleChange(new Date(newval));
       } else handleChange(null);
     }
   }
@@ -95,6 +95,7 @@ const DatePickerComponent = (props) => {
         locale={th}
         selected={ToDate(val)}
         onChange={(date) => onChange(date)}
+        onBlur={() => onBlur ? onBlur() : null}
         dateFormat="dd/MM/yyyy"
         placeholderText={title}
         popperClassName="custom-datepicker-popper"

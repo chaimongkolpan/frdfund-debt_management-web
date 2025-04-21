@@ -101,6 +101,20 @@ export const stringToDateTh = (value, showTime = true, format) => {
     ? `${day}/${month}/${year} ${time}`
     : `${day}/${month}/${year}`;
 };
+export const stringToDateThShort = (value, showTime = true, format) => {
+  const date = moment(value, format).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear() + 543).slice(-2); // แปลงเป็นปี พ.ศ.
+  const time = date.toLocaleTimeString("th-TH", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return showTime
+    ? `${day}/${month}/${year} ${time}`
+    : `${day}/${month}/${year}`;
+};
 
 export const formatDateDatatable = (value, showTime = true) => {
   const date = new Date(value);
