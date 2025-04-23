@@ -37,7 +37,7 @@ const FullModal = (props) => {
   const [repayment, setRepaymentCon] = useState('');
   const [contract, setContractCon] = useState('');
   const [expense, setExpense] = useState(0);
-  const [not_correct_list, setNotCorrectList] = useState(null);
+    const [not_correct_list, setNotCorrectList] = useState(null);
   const toggle = () => setModal(!isOpen);
 
   const submitDebt = async () => {
@@ -350,10 +350,9 @@ const FullModal = (props) => {
         compensation_conditions: (debt.compensation_conditions ?? 'ไม่มีการชดเชย'),
         debt_manage_objective: (debt.debt_manage_objective ?? 'เพื่อการเกษตร'),
         debt_manage_legal_action: (debt.debt_manage_legal_action ?? 'ไม่มี'),
-        debt_agreement: (debts?.debt_agreement ?? 'ตามข้อตกลง'),
-        debt_repayment_type: (debts?.debt_repayment_type ?? 'ชำระหนี้แทน')
+        debt_agreement: (debts?.debt_agreement ?? 'ตามข้อตกลง')
       });
-      await setNotCorrectList((debts?.not_correct_list ? debts?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0','0']))
+      await setNotCorrectList((debts?.not_correct_list ? debts?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0']))
       await setCreditorType(debt.debt_manage_creditor_type);
       if (debt.debt_manage_creditor_type == "สหกรณ์") await setExpense(debt.debt_manage_total_expenses);
       else await setExpense(0);
@@ -379,7 +378,7 @@ const FullModal = (props) => {
   },[])
   return (
       <Modal isOpen={isOpen} toggle={toggle} scrollable fullscreen>
-        <ModalHeader toggle={toggle}>รายละเอียดจำแนกมูลหนี้ NPL ตามสัญญา</ModalHeader>
+        <ModalHeader toggle={toggle}>รายละเอียดจำแนกมูลหนี้ NPA ตามสัญญา</ModalHeader>
         <ModalBody>
           <form>
           {/* ///start รายละเอียดจัดการหนี้/// */}
@@ -417,7 +416,7 @@ const FullModal = (props) => {
                           </div>
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <Textbox title={'เลขที่สัญญา'} classname={`${(not_correct_list && not_correct_list[0] == '1') ? 'border-danger' : ''}`}
+                          <Textbox title={'เลขที่สัญญา'} 
                             handleChange={(val) => handleChangeDebt('debt_manage_contract_no', val)} 
                             containerClassname={'mb-3'} value={debts?.debt_manage_contract_no}
                           />
@@ -464,18 +463,120 @@ const FullModal = (props) => {
                             containerClassname={'mb-3'} value={debts?.debt_manage_creditor_branch}
                           />
                         </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <div className="form-floating form-floating-advance-select mb-3">
+                            <label htmlFor="floaTingLabelSingleSelect">สถานะหนี้</label>
+                            <select className={`form-select ${(not_correct_list && not_correct_list[8] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
+                              <option value="ปกติ">ปกติ</option>
+                              <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <div className="form-floating">
+                            <select className={`form-select ${(not_correct_list && not_correct_list[9] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
+                              <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
+                              <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
+                              <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
+                            </select>
+                            <label htmlFor="floatingSelectPrivacy">วัตถุประสงค์</label>
+                          </div>
+                        </div>
+                        <div className="col-sm-12 col-md-12 col-lg-12">
+                          <Textarea title={'รายละเอียดวัตถุประสงค์'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_objective_details', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_objective_details}
+                          />
+                        </div>
+
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'จำนวนเงินที่ชดเชย'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'รอบ NPA'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses}
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ราคาขายทรัพย์ NPA'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ต้นเงินคงค้าง (NPL)'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ต้นเงินที่เจ้าหนี้รับชำระ (NPL)'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ดอกเบี้ยคงค้าง'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ค่าเบี้ยประกัน'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ค่าธรรมเนียมการโอน'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ค่าถอนการยึดทรัพย์'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ค่าใช้จ่ายระหว่างถือครองทรัพย์'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'ค่าใช้จ่ายอื่นๆ'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'รวมค่าใช้จ่าย'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} disabled isNumber
+                          />
+                        </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          <Textbox title={'รวมทั้งสิ้น'} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_total_expenses', val)} 
+                            containerClassname={'mb-3'} value={debts?.debt_manage_total_expenses} disabled isNumber
+                          />
+                        </div>
+
+
                         {(creditor_type == 'สหกรณ์') ? (
                           <>
-                            <div className="col-sm-12 col-md-6 col-lg-6">
-                              <div className="form-floating">
-                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_agreement', e.target?.value)}>
-                                  <option value="ชำระหนี้แทน">ชำระหนี้แทน</option>
-                                  <option value="วางเงินชำระหนี้แทน-บังคับคดี">วางเงินชำระหนี้แทน-บังคับคดี</option>
-                                </select>
-                                <label htmlFor="floatingSelectPrivacy">ประเภทการชำระหนี้</label>
-                              </div>
-                            </div>
-                            <div className="col-sm-12 col-md-6 col-lg-6"></div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
                                 <select className="form-select" value={debts?.debt_repayment_conditions ?? ''} onChange={(e) => handleChangeDebt('debt_repayment_conditions', e.target?.value)}>
@@ -537,7 +638,7 @@ const FullModal = (props) => {
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating form-floating-advance-select mb-3">
                                 <label htmlFor="floaTingLabelSingleSelect">สถานะหนี้</label>
-                                <select className={`form-select ${(not_correct_list && not_correct_list[8] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
                                   <option value="ปกติ">ปกติ</option>
                                   <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
                                 </select>
@@ -545,7 +646,7 @@ const FullModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className={`form-select ${(not_correct_list && not_correct_list[9] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
                                   <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
                                   <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
                                   <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
@@ -554,37 +655,37 @@ const FullModal = (props) => {
                               </div>
                             </div>
                             <div className="col-sm-12 col-md-12 col-lg-12">
-                              <Textarea title={'รายละเอียดวัตถุประสงค์'} 
+                              <Textbox title={'รายละเอียดวัตถุประสงค์'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_objective_details', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_objective_details}
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ต้นเงินคงค้าง'} classname={`${(not_correct_list && not_correct_list[1] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ต้นเงินคงค้าง'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_outstanding_principal', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_outstanding_principal} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ดอกเบี้ยคงค้าง'} classname={`${(not_correct_list && not_correct_list[2] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ดอกเบี้ยคงค้าง'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_accrued_interest', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_accrued_interest} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าปรับ'} classname={`${(not_correct_list && not_correct_list[3] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าปรับ'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_fine', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_fine} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} classname={`${(not_correct_list && not_correct_list[4] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_litigation_expenses', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_litigation_expenses} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าถอนการยึดทรัพย์'} classname={`${(not_correct_list && not_correct_list[5] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าถอนการยึดทรัพย์'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_forfeiture_withdrawal_fee', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_forfeiture_withdrawal_fee} isNumber
                               />
@@ -670,7 +771,7 @@ const FullModal = (props) => {
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating form-floating-advance-select mb-3">
                                 <label htmlFor="floaTingLabelSingleSelect">สถานะหนี้</label>
-                                <select className={`form-select ${(not_correct_list && not_correct_list[8] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
                                   <option value="ปกติ">ปกติ</option>
                                   <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
                                 </select>
@@ -678,7 +779,7 @@ const FullModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className={`form-select ${(not_correct_list && not_correct_list[9] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
                                   <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
                                   <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
                                   <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
@@ -687,13 +788,13 @@ const FullModal = (props) => {
                               </div>
                             </div>
                             <div className="col-sm-12 col-md-12 col-lg-12">
-                              <Textarea title={'รายละเอียดวัตถุประสงค์'} 
+                              <Textbox title={'รายละเอียดวัตถุประสงค์'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_objective_details', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_objective_details}
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ต้นเงินคงค้าง'} classname={`${(not_correct_list && not_correct_list[1] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ต้นเงินคงค้าง'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_outstanding_principal', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_outstanding_principal} isNumber
                               />
@@ -706,37 +807,37 @@ const FullModal = (props) => {
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ดอกเบี้ยคงค้าง'} classname={`${(not_correct_list && not_correct_list[2] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ดอกเบี้ยคงค้าง'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_accrued_interest', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_accrued_interest} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าปรับ'} classname={`${(not_correct_list && not_correct_list[3] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าปรับ'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_fine', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_fine} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} classname={`${(not_correct_list && not_correct_list[4] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_litigation_expenses', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_litigation_expenses} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าถอนการยึดทรัพย์'} classname={`${(not_correct_list && not_correct_list[5] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าถอนการยึดทรัพย์'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_forfeiture_withdrawal_fee', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_forfeiture_withdrawal_fee} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าเบี้ยประกัน'} classname={`${(not_correct_list && not_correct_list[6] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าเบี้ยประกัน'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_insurance_premium', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_insurance_premium} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าใช้จ่ายอื่นๆ'} classname={`${(not_correct_list && not_correct_list[7] == '1') ? 'border-danger' : ''}`}
+                              <Textbox title={'ค่าใช้จ่ายอื่นๆ'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_other_expenses', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_other_expenses} isNumber
                               />
@@ -2566,189 +2667,6 @@ const FullModal = (props) => {
               />
             </div>
           {/* ///end รายละเอียดหลักทรัพย์ค้ำประกัน/// */}   
-
-          {/* ///start รายละเอียดบุคคลค้ำประกัน/// */}
-            <div className="mb-1">
-              <According 
-                title={'บุคคลค้ำประกัน'}
-                children={(
-                  <>
-                    <div className="d-flex mb-3 flex-row-reverse">
-                      <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addGuarantor()}><span className="fas fa-plus fs-8"></span> เพิ่มบุคคลค้ำประกัน</button>
-                    </div>
-                    <div id="tableExample" data-list='{"valueNames":["id","name","province"],"page":10,"pagination":true}'>
-                      <div className="table-responsive mx-n1 px-1">
-                        <table className="table table-sm table-bordered fs-9 mb-0">
-                          <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}>
-                            <tr>
-                            <th>#</th>
-                            <th>เลขที่สัญญา</th>
-                            <th>เลขบัตรประชาชน</th>
-                            <th>คำนำหน้า</th>
-                            <th>ชื่อ-นามสกุล</th>
-                            <th>แก้ไขข้อมูล</th>
-                            <th>ลบข้อมูล</th>
-                            </tr>
-                          </thead>
-                          <tbody className="list text-center align-middle">
-                            {(guarantors && guarantors.length > 0) ? (guarantors.map((item,index) => (
-                              <tr key={index}>
-                                <td className="align-middle">{index + 1}</td>
-                                <td>{item.debt_manage_contract_no}</td>
-                                <td>{item.guarantor_idcard}</td>
-                                <td>{item.guarantor_name_prefix}</td>
-                                <td>{item.fullname}</td>
-                                <td>
-                                  <div className='d-flex justify-content-center'>
-                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => editGuarantor(item)}>
-                                      <i className="far fa-edit"></i>
-                                    </button>
-                                  </div>
-                                </td>
-                                <td>
-                                  <div className='d-flex justify-content-center'>
-                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger px-0" type='button' onClick={() => editGuarantor(item)}>
-                                      <i className="fas fa-trash-alt"></i>
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))) : (
-                              <tr>
-                                <td className="fs-9 text-center align-middle" colSpan={7}>
-                                  <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
-                                </td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <br />
-                    {isOpenGuarantorEdit && (
-                      <div className="mb-1">
-                        <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                          <div className="card-body p-0">
-                            <div className="p-4 code-to-copy">
-                              <h3 className="text-center">รายละเอียดบุคคลค้ำประกัน</h3>
-                              <br />
-                              <div className="row g-3">
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'เลขบัตรประชาชน'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_idcard', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_idcard}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'คำนำหน้า'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_name_prefix', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_name_prefix}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'ชื่อ'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_firstname', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_firstname}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'นามสกุล'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_lastname', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_lastname}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <DatePicker title={'วันเดือนปีเกิด'}
-                                    value={guarantorDetail.guarantor_birthday} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_birthday', val)} 
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'บ้านเลขที่'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_house_no', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_house_no}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'บ้าน/ชุมชน'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_village_name', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_village_name}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'ซอย'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_soi', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_soi}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'ถนน'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_road', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_road}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'ตำบล/แขวง'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_sub_district', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_sub_district}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'อำเภอ/กิ่งอำเภอ/เขต'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_district', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_district}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <div className="form-floating form-floating-advance-select mb-3">
-                                    <label>จังหวัด</label>
-                                    <select className="form-select" value={guarantorDetail.guarantor_province ?? provinces[0]} onChange={(e) => handleChangeGuarantor('guarantor_province', e.target?.value)}>
-                                      {provinces && (
-                                        provinces.map((option, index) => (
-                                          <option key={index} value={option}>{option}</option>
-                                        ))
-                                      )}
-                                    </select>
-                                  </div>
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'รหัสไปรษณีย์'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_zipcode', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_zipcode}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'เบอร์โทรศัพท์'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_mobile', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_mobile}
-                                  />
-                                </div>
-                                <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'อีเมล'} 
-                                    handleChange={(val) => handleChangeGuarantor('guarantor_email', val)} 
-                                    containerClassname={'mb-3'} value={guarantorDetail.guarantor_email}
-                                  />
-                                </div>
-                              </div>  
-                              </div>
-                              <div className="d-flex justify-content-center ">
-                                <button className="btn btn-success me-2" type="button" onClick={() => saveGuarantor()}>บันทึก</button>
-                                {isOpenGuarantorAdd ? (
-                                  <button className="btn btn-secondary" type="button" onClick={() => setOpenGuarantorEdit(false)}>ยกเลิก</button>
-                                ) : (
-                                  <button className="btn btn-danger" type="button" onClick={() => removeGuarantor(guarantorDetail)}>ลบบุคคลค้ำประกัน</button>
-                                )}
-                              </div>
-                              <br />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              />
-            </div> 
-          {/* ///end รายละเอียดบุคคลค้ำประกัน/// */} 
           </form>
         </ModalBody>
         <ModalFooter>

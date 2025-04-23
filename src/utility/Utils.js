@@ -86,7 +86,15 @@ export const selectThemeColors = (theme) => ({
 export const validateEmail = (email) => {
   return false;
 };
-
+export const ToDateEn = (value) => {
+  if (typeof value == 'string'){
+    if (value.substring(6,8) == '25') {
+      return value.substring(0,6) + (parseInt(value.substring(6)) - 543).toString();
+    } else {
+      return value;
+    }
+  } else return value;
+};
 export const stringToDateTh = (value, showTime = true, format) => {
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");

@@ -2,16 +2,15 @@ import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
 import { 
-  getBigDataProvinces,
-  getBigDataCreditors,
-  getBigDataCreditorTypes,
+  getProvinces,
+  getCreditors,
+  getCreditorTypes,
   getDebtStatuses,
   getCheckingStatuses,
 } from "@services/api";
-
-const DebtFilterNpa = (props) => {
-  const { handleSubmit, setLoading } = props;
-  const [isMounted, setIsMounted] = useState(false);
+const ClassifySearchFilter = (props) => {
+  const { handleSubmit } = props;
+  const [isMounted, setIsMounted] = useState(false)
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
@@ -23,24 +22,21 @@ const DebtFilterNpa = (props) => {
       handleSubmit({
         idCard: "",
         name: "",
-        province: "",
-        creditorType: "",
-        creditor: "",
-        debtStatus: "",
-        checkingStatus: "",
-        min: 0,
-        max: 0,
+        province: "all",
+        creditorType: "all",
+        creditor: "all",
+        debtStatus: "all",
+        checkingStatus: "all",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
       });
     }
   }
-  const onChange = async (key, val) => {
+  const onChange = async(key, val) => {
     if (key == 'province') {
-      setLoading(true);
       await setCreditorTypeOp(null);
-      const resultCreditorType = await getBigDataCreditorTypes(val);
+      const resultCreditorType = await getCreditorTypes(val);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
@@ -49,34 +45,31 @@ const DebtFilterNpa = (props) => {
           ...({creditorType: temp1[0]})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, temp1[0]);
+        const resultCreditor = await getCreditors(val, temp1[0]);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
         await setCreditorTypeOp(null);
         await setCreditorOp(null);
       } 
-      setLoading(false);
     }
     if (key == 'creditorType') {
-      setLoading(true);
       await setCreditorOp(null);
-      const resultCreditor = await getBigDataCreditors(filter.province, val);
+      const resultCreditor = await getCreditors(filter.province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
-      setLoading(false);
     }
     setFilter((prevState) => ({
       ...prevState,
@@ -84,13 +77,14 @@ const DebtFilterNpa = (props) => {
     }))
   }
   async function fetchData() {
-    const resultProv = await getBigDataProvinces();
+    const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
     const resultChecking = await getCheckingStatuses();
+
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-      const resultCreditorType = await getBigDataCreditorTypes(null);
+      const resultCreditorType = await getCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
@@ -98,13 +92,13 @@ const DebtFilterNpa = (props) => {
           ...prevState,
           ...({creditorType: temp1[0]})
         }))
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getCreditors(null, temp1[0]);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -116,6 +110,7 @@ const DebtFilterNpa = (props) => {
        await setCreditorTypeOp(null);
        await setCreditorOp(null);
     }
+
     if (resultDebtSt.isSuccess) {
       const temp = resultDebtSt.data.map(item => item.name);
       await setStatusDebtOp(temp);
@@ -125,7 +120,6 @@ const DebtFilterNpa = (props) => {
       await setCheckingStatusOp(temp);
     } else await setCheckingStatusOp(null);
     setIsMounted(true);
-    setLoading(false);
   }
 
   //** ComponentDidMount
@@ -166,10 +160,10 @@ const DebtFilterNpa = (props) => {
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
               containerClassname={'mb-3'} 
-              defaultValue={creditorTypeOp[0]} 
+              defaultValue={'all'} 
               options={creditorTypeOp}
               handleChange={(val) => onChange('creditorType', val)}
-            />
+               />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
@@ -195,24 +189,24 @@ const DebtFilterNpa = (props) => {
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
+          {checkingStatusOp && (
             <Dropdown 
               title={'รอบ NPA'} 
               containerClassname={'mb-3'} 
               defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('npaRound', val)}
+              options={checkingStatusOp}
+              handleChange={(val) => onChange('checkingStatus', val)}
               hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
+          {checkingStatusOp && (
             <Dropdown 
               title={'เอกสารสิทธิ์'} 
               containerClassname={'mb-3'} 
               defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('collateralNo', val)}
+              options={checkingStatusOp}
+              handleChange={(val) => onChange('checkingStatus', val)}
               hasAll />
           )}
         </div>
@@ -227,10 +221,10 @@ const DebtFilterNpa = (props) => {
               hasAll />
           )}
         </div>
-        <div className="col-12 gy-6">
+        <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
-              <button className="btn btn-subtle-success me-1 mb-1" type="button" onClick={() => onSubmit()}>ค้นหา</button>
+              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span className="fas fa-search"></span> ค้นหา</button>
             </div>
           </div>
         </div>
@@ -238,4 +232,4 @@ const DebtFilterNpa = (props) => {
     </>
   );
 };
-export default DebtFilterNpa;
+export default ClassifySearchFilter;

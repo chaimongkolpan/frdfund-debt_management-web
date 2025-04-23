@@ -132,8 +132,8 @@ export const getCheckingStatuses = async () => {
 //#endregion
 //#region MakeListNPL
 export const getBigDataProvinces = async () => {
-  // const path = '/bigdata/provinces';
-  const path = '/common/provinces';
+  const path = '/bigdata/provinces';
+  //const path = '/common/provinces';
   try {
     const result = await axios.get(path);
     if (result.status == 200)
@@ -147,8 +147,8 @@ export const getBigDataProvinces = async () => {
   }
 };
 export const getBigDataCreditors = async (province, type) => {
-  // const path = '/bigdata/creditors';
-  const path = '/common/creditors';
+  const path = '/bigdata/creditors';
+  // const path = '/common/creditors';
   try {
     const result = await axios.get(path, { params: { province, type }});
     if (result.status == 200)
@@ -162,8 +162,8 @@ export const getBigDataCreditors = async (province, type) => {
   }
 };
 export const getBigDataCreditorTypes = async (province) => {
-  // const path = '/bigdata/creditor-types';
-  const path = '/common/creditor-types';
+  const path = '/bigdata/creditor-types';
+  // const path = '/common/creditor-types';
   try {
     const result = await axios.get(path, { params: { province } });
     if (result.status == 200)
@@ -498,6 +498,20 @@ export const cancelSplitClassify = async (data) => {
 
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
+  }
+};
+export const searchNpaClassify = async (filter) => {
+  const path = '/classify/search-npa';
+  try {
+    const result = await axios.post(path,filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
   }
 };
 //#endregion

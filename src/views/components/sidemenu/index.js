@@ -73,6 +73,9 @@ const Sidebar = props => {
                         <i className="fas fa-file-signature"></i>
                       </span>
                       <span className="nav-link-text">จำแนกมูลหนี้</span>
+                      {(alert && alert?.classify && alert.classify.total > 0) && (
+                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.classify.total)}</span>
+                      )}
                     </div>
                   </a>
                   <div className="parent-wrapper label-1">
@@ -89,7 +92,13 @@ const Sidebar = props => {
                       <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/classify/search') ? 'active' : ''}`} href="#nv-Search" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Search">
                           <div className="d-flex align-items-center">
-                            <div className="dropdown-indicator-icon-wrapper"><span className="fas fa-caret-right dropdown-indicator-icon"></span></div><span className="nav-link-text">ค้นหา</span>
+                            <div className="dropdown-indicator-icon-wrapper">
+                              <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                            </div>
+                            <span className="nav-link-text">ค้นหา</span>
+                            {(alert && alert?.classify && alert.classify.search?.total > 0) && (
+                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.classify.search?.total)}</span>
+                            )}
                           </div>
                         </a>
                         {/* more inner pages*/}
@@ -97,13 +106,21 @@ const Sidebar = props => {
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-Search">
                             <li className="nav-item">
                               <a className={`nav-link ${path.includes('/classify/searchNPL') ? 'active' : ''}`} href="/classify/searchNPL">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPL</span>
+                                  {(alert && alert?.classify && alert.classify.search?.npl > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.classify.search?.npl)}</span>
+                                  )}
                                 </div>
                               </a>
                             </li>
                             <li className="nav-item">
                               <a className={`nav-link ${path.includes('/classify/searchNPA') ? 'active' : ''}`} href="/classify/searchNPA">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPA</span>
+                                  {(alert && alert?.classify && alert.classify.search?.npa > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.classify.search?.npa)}</span>
+                                  )}
                                 </div>
                               </a>
                             </li>

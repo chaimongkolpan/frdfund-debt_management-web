@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Textbox from "@views/components/input/Textbox";
 import Dropdown from "@views/components/input/DropdownSearch";
+import DatePicker from "@views/components/input/DatePicker";
 import { 
   getProvinces,
   getBorrowerClassify,

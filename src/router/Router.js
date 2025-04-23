@@ -14,6 +14,8 @@ const DebtRegisterNpa = lazy(() => import('../views/pages/debt-register/npa'))
 const ClassifyImport = lazy(() => import('../views/pages/classify/import'))
 const ClassifySearch = lazy(() => import('../views/pages/classify/search'))
 const ClassifySearchDetail = lazy(() => import('../views/pages/classify/searchDetail'))
+const ClassifySearchNpa = lazy(() => import('../views/pages/classify/searchNpa'))
+const ClassifySearchNpaDetail = lazy(() => import('../views/pages/classify/searchNpaDetail'))
 const BranchOfferNpl = lazy(() => import('../views/pages/branch/offer/npl'))
 const BranchOfferNpa = lazy(() => import('../views/pages/branch/offer/npa'))
 const BranchPrepareNpl = lazy(() => import('../views/pages/branch/prepare/npl'))
@@ -74,6 +76,16 @@ const Router = () => {
             path: '/classify/searchNPL/detail/:idcard',
             element: <VerticalLayout />,
             children: [{ path: '/classify/searchNPL/detail/:idcard', element: <ClassifySearchDetail /> }]
+        },
+        {
+            path: '/classify/searchNPA',
+            element: <VerticalLayout />,
+            children: [{ path: '/classify/searchNPA', element: <ClassifySearchNpa /> }]
+        },
+        {
+            path: '/classify/searchNPA/detail/:idcard',
+            element: <VerticalLayout />,
+            children: [{ path: '/classify/searchNPA/detail/:idcard', element: <ClassifySearchNpaDetail /> }]
         },
         {
             path: '/branch/offer/npl',
