@@ -14,6 +14,9 @@ const DebtRegisterNpa = lazy(() => import('../views/pages/debt-register/npa'))
 const ClassifyImport = lazy(() => import('../views/pages/classify/import'))
 const ClassifySearch = lazy(() => import('../views/pages/classify/search'))
 const ClassifySearchDetail = lazy(() => import('../views/pages/classify/searchDetail'))
+const ProposeForApprovalBranchOfferNPA = lazy(() => import('../views/pages/proposeForApproval/branchOfferNPA'))
+const ProposeForApprovalBranchOfferNPL = lazy(() => import('../views/pages/proposeForApproval/branchOfferNPL'))
+
 const Router = () => {
     const getHomeRoute = () => {
         const user = getUserData()
@@ -58,6 +61,16 @@ const Router = () => {
             path: '/classify/searchNPL/detail/:idcard',
             element: <VerticalLayout />,
             children: [{ path: '/classify/searchNPL/detail/:idcard', element: <ClassifySearchDetail /> }]
+        },
+        {
+            path: '/proposeForApproval/branchOfferNPA',
+            element: <VerticalLayout />,
+            children: [{ path: '/proposeForApproval/branchOfferNPA', element: <ProposeForApprovalBranchOfferNPA /> }]
+        },
+        {
+            path: '/proposeForApproval/branchOfferNPL',
+            element: <VerticalLayout />,
+            children: [{ path: '/proposeForApproval/branchOfferNPL', element: <ProposeForApprovalBranchOfferNPL /> }]
         },
         {
             path: '/version',
