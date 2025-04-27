@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { stringToDateTh } from "@utils";
 const DebtRegisterSelectedTableNpa = (props) => {
   const { result, handleSubmit, handleRemove, filter, getData } = props;
   const [data, setData] = useState([]);
@@ -12,7 +13,7 @@ const DebtRegisterSelectedTableNpa = (props) => {
     }
   }
   const onRemove = () => {
-    if (handleSubmit) {
+    if (handleRemove) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleRemove(selectedData)
     }
@@ -39,15 +40,15 @@ const DebtRegisterSelectedTableNpa = (props) => {
         <td className="align-middle">{item.name_prefix}</td>
         <td className="align-middle">{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td className="align-middle">{item.province}</td>
-        <td className="align-middle">{item.date_member_first_time}</td>
-        <td className="align-middle">{item.date_member_current}</td>
+        <td className="align-middle">{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
+        <td className="align-middle">{item.date_member_current ? stringToDateTh(item.date_membedate_member_currentr_first_time, false, 'DD/MM/YYYY') : '-'}</td>
         <td className="align-middle">{item.organization_register_round}</td>
         <td className="align-middle">{item.organization_name}</td>
         <td className="align-middle">{item.organization_no}</td>
         <td className="align-middle">{item.debt_register_round}</td>
-        <td className="align-middle">{item.date_submit_debt_register}</td>
+        <td className="align-middle">{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
         <td className="align-middle">{item.passed_approval_no}</td>
-        <td className="align-middle">{item.passed_approval_date}</td>
+        <td className="align-middle">{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td className="align-middle">{item.creditor_type}</td>
         <td className="align-middle">{item.creditor_name}</td>
         <td className="align-middle">{item.creditor_province}</td>
@@ -59,7 +60,7 @@ const DebtRegisterSelectedTableNpa = (props) => {
         <td className="align-middle">{item.purpose_loan_contract}</td>
         <td className="align-middle">{item.purpose_type_loan_contract}</td>
         <td className="align-middle">{item.debt_management_audit_status}</td>
-        <td className="align-middle">{item.NPA_round}</td>
+        <td className="align-middle">{item.npA_round}</td>
         <td className="align-middle">{item.title_document_type}</td>
         <td className="align-middle">{item.title_document_no}</td>
         <td className="align-middle">{item.sub_district}</td>
@@ -138,7 +139,7 @@ const DebtRegisterSelectedTableNpa = (props) => {
                 <th className="align-middle text-center" data-sort="age">ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
                 <th className="align-middle text-center" data-sort="age">สถานะสัญญาจำแนกมูลหนี้</th>
                 <th className="align-middle text-center" data-sort="age">รอบ NPA</th>
-                <th className="align-middle text-center" data-sort="age">หลังประกัน NPA</th>
+                <th className="align-middle text-center" data-sort="age">หลักประกัน NPA</th>
                 <th className="align-middle text-center" data-sort="age">เลขที่หลักประกัน</th>
                 <th className="align-middle text-center" data-sort="age">ตำบล</th>
                 <th className="align-middle text-center" data-sort="age">อำเภอ</th>

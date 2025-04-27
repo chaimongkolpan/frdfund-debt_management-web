@@ -47,7 +47,7 @@ const DebtRegister = () => {
     const result = await addBigData(selected);
     if (result.isSuccess) {
       await onSearch(filter);
-      await fetchData(filterAdded);
+      await fetchData({ ...filterAdded, currentPage: 1 });
     }
   }
   const fetchData = async (query) => {
@@ -66,28 +66,19 @@ const DebtRegister = () => {
     }
   }
   const onSubmitMakelist = async () => {
-    setSubmit(false);
-    setLoadBigData(true);
-    const clearTimer = setTimeout(() => {
-      setLoadBigData(false);
-      // show timeout
-    }, 10000);
     const result = await submitListNPL({ type: 'application/octet-stream', filename: 'จัดทำรายชื่อเกษตรกร_' + (new Date().getTime()) + '.zip', data: makelistSelected });
     if (result.isSuccess) {
-      await fetchData(filterAdded)
     }
-    clearTimeout(clearTimer);
-    setLoadBigData(false);
   }
   const onCloseMakelist = async () => {
-    setSubmit(false);
+    await setSubmit(false);
+    await fetchData({ ...filterAdded, currentPage: 1 });
   }
   const handleSubmit = async(selected) => {
     await setMakeList(selected);
     await setSubmit(true);
   }
   useEffect(() => {
-
   },[data])
   useEffect(() => {
     setLoadBigData(true);
@@ -110,7 +101,7 @@ const DebtRegister = () => {
                       <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                       <br />
                       {data && (
-                        <BigDataTable result={data} handleSubmit={onAddBigData} />
+                        <BigDataTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} />
                       )}
                     </>
                   )}
@@ -127,7 +118,7 @@ const DebtRegister = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={isSubmit} setModal={setSubmit} onOk={onSubmitMakelist} onClose={onCloseMakelist}  title={'จัดทำรายชื่อเกษตรกร'} okText={'ดาวน์โหลดเอกสารจัดทำรายชื่อเกษตรกร'} closeText={'ปิด'} scrollable>
+      <Modal isOpen={isSubmit} setModal={setSubmit} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำรายชื่อเกษตรกร'} okText={'ดาวน์โหลดเอกสารจัดทำรายชื่อเกษตรกร'} closeText={'ปิด'} scrollable>
         <ConfirmTable data={makelistSelected} />
       </Modal>
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

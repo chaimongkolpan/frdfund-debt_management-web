@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { stringToDateTh } from "@utils";
 const DebtNPABigDataTable = (props) => {
-  const { result, handleSubmit } = props;
+  const { result, handleSubmit, onEditNpaRegister } = props;
   const [data, setData] = useState([]);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
@@ -33,15 +34,15 @@ const DebtNPABigDataTable = (props) => {
         <td className="align-middle">{item.name_prefix}</td>
         <td className="align-middle">{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td className="align-middle">{item.province}</td>
-        <td className="align-middle">{item.date_member_first_time}</td>
-        <td className="align-middle">{item.date_member_current}</td>
+        <td className="align-middle">{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
+        <td className="align-middle">{item.date_member_current ? stringToDateTh(item.date_member_current, false, 'DD/MM/YYYY') : '-'}</td>
         <td className="align-middle">{item.organization_register_round}</td>
         <td className="align-middle">{item.organization_name}</td>
         <td className="align-middle">{item.organization_no}</td>
         <td className="align-middle">{item.debt_register_round}</td>
-        <td className="align-middle">{item.date_submit_debt_register}</td>
+        <td className="align-middle">{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
         <td className="align-middle">{item.passed_approval_no}</td>
-        <td className="align-middle">{item.passed_approval_date}</td>
+        <td className="align-middle">{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td className="align-middle">{item.creditor_type}</td>
         <td className="align-middle">{item.creditor_name}</td>
         <td className="align-middle">{item.creditor_province}</td>
@@ -53,7 +54,7 @@ const DebtNPABigDataTable = (props) => {
         <td className="align-middle">{item.purpose_loan_contract}</td>
         <td className="align-middle">{item.purpose_type_loan_contract}</td>
         <td className="align-middle">{item.debt_management_audit_status}</td>
-        <td className="align-middle">{item.NPA_round}</td>
+        <td className="align-middle">{item.npA_round}</td>
         <td className="align-middle">{item.title_document_type}</td>
         <td className="align-middle">{item.title_document_no}</td>
         <td className="align-middle">{item.sub_district}</td>
@@ -62,7 +63,13 @@ const DebtNPABigDataTable = (props) => {
         <td className="align-middle">{item.rai}</td>
         <td className="align-middle">{item.ngan}</td>
         <td className="align-middle">{item.sqaure_wa}</td>
-        <td className="align-middle"><i class='fas fa-pen-square'/></td>
+        <td classname="align-middle">
+          <div class="d-flex justify-content-center"> 
+            <button class="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => onEditNpaRegister(item)}>
+              <i class="far fa-edit"></i>
+            </button>
+          </div>
+        </td>
       </tr>
     ))
   }

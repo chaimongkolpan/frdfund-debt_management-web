@@ -132,8 +132,8 @@ export const getCheckingStatuses = async () => {
 //#endregion
 //#region MakeListNPL
 export const getBigDataProvinces = async () => {
-  // const path = '/bigdata/provinces';
-  const path = '/common/provinces';
+  const path = '/bigdata/provinces';
+  //const path = '/common/provinces';
   try {
     const result = await axios.get(path);
     if (result.status == 200)
@@ -147,8 +147,8 @@ export const getBigDataProvinces = async () => {
   }
 };
 export const getBigDataCreditors = async (province, type) => {
-  // const path = '/bigdata/creditors';
-  const path = '/common/creditors';
+  const path = '/bigdata/creditors';
+  // const path = '/common/creditors';
   try {
     const result = await axios.get(path, { params: { province, type }});
     if (result.status == 200)
@@ -162,8 +162,8 @@ export const getBigDataCreditors = async (province, type) => {
   }
 };
 export const getBigDataCreditorTypes = async (province) => {
-  // const path = '/bigdata/creditor-types';
-  const path = '/common/creditor-types';
+  const path = '/bigdata/creditor-types';
+  // const path = '/common/creditor-types';
   try {
     const result = await axios.get(path, { params: { province } });
     if (result.status == 200)
@@ -243,18 +243,7 @@ export const submitListNPL = async (params) => {
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
   }
-};
-export const submitListNPLExport = async (params) => {
-  const path = '/test';
-  try {
-    const result = await axios.post(exporturl + path, {});
-    if (result.status == 200) {
-      const blob = new Blob([result.data], { type: params.type });
-      SaveAs(blob, params.filename);
-    }
-  } catch (e) {
-    console.error('error: ' + path + ' =>', e);
-  }
+  return;
 };
 //#endregion
 //#region Classify
@@ -403,9 +392,146 @@ export const removeGuarantorClassify = async (data) => {
     return defaultErrorResponse;
   }
 };
+export const upsertCollateralClassify = async (data) => {
+  const path = '/classify/collateral';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeCollateralClassify = async (data) => {
+  const path = '/classify/collateral/remove';
+  try {
+    const result = await axios.post(path, data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const uploadDocumentClassify = async (data) => {
+  const path = '/classify/upload-document';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const combineClassify = async (data) => {
+  const path = '/classify/combine';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const cancelCombineClassify = async (data) => {
+  const path = '/classify/cancel-combine';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const splitClassify = async (data) => {
+  const path = '/classify/split';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const cancelSplitClassify = async (data) => {
+  const path = '/classify/cancel-split';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+  }
+};
+export const searchNpaClassify = async (filter) => {
+  const path = '/classify/search-npa';
+  try {
+    const result = await axios.post(path,filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
 
 // #region NPA
+export const getNpaRoundFilter = async () => {
+  const path = '/npa/npa-round-filter';
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getNpaCollateralFilter = async (round) => {
+  const path = '/npa/npa-collateral-filter';
+  try {
+    const result = await axios.get(path, { params: { npaRound: round }});
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchBigDataNPA = async (filter) => {
   const path = '/npa/searchBigData';
   try {
@@ -423,7 +549,7 @@ export const searchBigDataNPA = async (filter) => {
 export const addRegistrationNPA = async (selected) => {
   const path = '/npa/registrationNPA';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,{ ...selected });
     if (result.status == 200)
       return result.data;
     else
@@ -435,7 +561,7 @@ export const addRegistrationNPA = async (selected) => {
   }
 };
 export const searchRegisteredNPA = async (filter) => {
-  const path = '/NAP/searchNPA';
+  const path = '/npa/searchNPA';
   try {
     const result = await axios.post(path,filter);
     if (result.status == 200)
@@ -449,7 +575,7 @@ export const searchRegisteredNPA = async (filter) => {
   }
 };
 export const getdetailNPA = async (id) => {
-  const path = '/NAP/getdetailNPA';
+  const path = '/npa/getdetailNPA';
   try {
     const result = await axios.get(path, { params: { id } });
     if (result.status == 200)
@@ -465,7 +591,7 @@ export const getdetailNPA = async (id) => {
 export const submitEditRegisteredNPA = async (params) => {
   const path = '/npa/submit-edit-registered-NPA';
   try {
-    const result = await axios.post(path, { data: params.data });
+    const result = await axios.post(path, { ...params });
     if (result.status == 200)
       return result.data;
     else
@@ -476,9 +602,9 @@ export const submitEditRegisteredNPA = async (params) => {
   }
 };
 export const addContractNPAToList = async (selected) => {
-  const path = '/NAP/addContractNPAToList';
+  const path = '/npa/addContractNPAToList';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,[...selected ]);
     if (result.status == 200)
       return result.data;
     else
@@ -490,9 +616,9 @@ export const addContractNPAToList = async (selected) => {
   }
 };
 export const removeContractNPAToList = async (selected) => {
-  const path = '/NAP/removeContractNPAToList';
+  const path = '/npa/removeContractNPAToList';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,[...selected ]);
     if (result.status == 200)
       return result.data;
     else
@@ -504,7 +630,7 @@ export const removeContractNPAToList = async (selected) => {
   }
 };
 export const getContractNPAToList = async (params) => {
-  const path = '/NAP/getContractNPAToList';
+  const path = '/npa/getContractNPAToList';
   try {
     const result = await axios.get(path, {params});
     if (result.status == 200)
@@ -518,7 +644,7 @@ export const getContractNPAToList = async (params) => {
   }
 };
 export const submitListNPA = async (params) => {
-  const path = '/NAP/submitNPA';
+  const path = '/npa/submitNPA';
   try {
     const result = await axios.post(path, { data: params.data }, { responseType: "blob" });
     if (result.status == 200) {
@@ -528,5 +654,6 @@ export const submitListNPA = async (params) => {
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
   }
+  return;
 };
 // #endregion

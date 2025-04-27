@@ -14,6 +14,24 @@ const DebtRegisterNpa = lazy(() => import('../views/pages/debt-register/npa'))
 const ClassifyImport = lazy(() => import('../views/pages/classify/import'))
 const ClassifySearch = lazy(() => import('../views/pages/classify/search'))
 const ClassifySearchDetail = lazy(() => import('../views/pages/classify/searchDetail'))
+const ClassifySearchNpa = lazy(() => import('../views/pages/classify/searchNpa'))
+const ClassifySearchNpaDetail = lazy(() => import('../views/pages/classify/searchNpaDetail'))
+const BranchOfferNpl = lazy(() => import('../views/pages/branch/offer/npl'))
+const BranchOfferNpa = lazy(() => import('../views/pages/branch/offer/npa'))
+const BranchPrepareNpl = lazy(() => import('../views/pages/branch/prepare/npl'))
+const BranchPrepareNpa = lazy(() => import('../views/pages/branch/prepare/npa'))
+const CommitteePrepareNpl = lazy(() => import('../views/pages/committee/prepare/npl'))
+const CommitteePrepareNpa = lazy(() => import('../views/pages/committee/prepare/npa'))
+const CommitteeWaitingNpl = lazy(() => import('../views/pages/committee/waiting/npl'))
+const CommitteeWaitingNpa = lazy(() => import('../views/pages/committee/waiting/npa'))
+const CommitteeUpdateNpl = lazy(() => import('../views/pages/committee/update/npl'))
+const CommitteeUpdateNpa = lazy(() => import('../views/pages/committee/update/npa'))
+const ApprovalMakePetitionNpl = lazy(() => import('../views/pages/approval/make-petition/npl'))
+const ApprovalMakePetitionNpa = lazy(() => import('../views/pages/approval/make-petition/npa'))
+const ApprovalDisbursementStatusNpl = lazy(() => import('../views/pages/approval/disbursement-status/npl'))
+const ApprovalDisbursementStatusNpa = lazy(() => import('../views/pages/approval/disbursement-status/npa'))
+const ApprovalAdditionalActionNpl = lazy(() => import('../views/pages/approval/additional-action/npl'))
+const ApprovalAdditionalActionNpa = lazy(() => import('../views/pages/approval/additional-action/npa'))
 const Router = () => {
     const getHomeRoute = () => {
         const user = getUserData()
@@ -58,6 +76,96 @@ const Router = () => {
             path: '/classify/searchNPL/detail/:idcard',
             element: <VerticalLayout />,
             children: [{ path: '/classify/searchNPL/detail/:idcard', element: <ClassifySearchDetail /> }]
+        },
+        {
+            path: '/classify/searchNPA',
+            element: <VerticalLayout />,
+            children: [{ path: '/classify/searchNPA', element: <ClassifySearchNpa /> }]
+        },
+        {
+            path: '/classify/searchNPA/detail/:idcard',
+            element: <VerticalLayout />,
+            children: [{ path: '/classify/searchNPA/detail/:idcard', element: <ClassifySearchNpaDetail /> }]
+        },
+        {
+            path: '/branch/offer/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/branch/offer/npl', element: <BranchOfferNpl /> }]
+        },
+        {
+            path: '/branch/offer/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/branch/offer/npa', element: <BranchOfferNpa /> }]
+        },
+        {
+            path: '/branch/prepare/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/branch/prepare/npl', element: <BranchPrepareNpl /> }]
+        },
+        {
+            path: '/branch/prepare/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/branch/prepare/npa', element: <BranchPrepareNpa /> }]
+        },
+        {
+            path: '/committee/prepare-list/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/committee/prepare-list/npl', element: <CommitteePrepareNpl /> }]
+        },
+        {
+            path: '/committee/prepare-list/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/committee/prepare-list/npa', element: <CommitteePrepareNpa /> }]
+        },
+        {
+            path: '/committee/waiting-list/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/committee/waiting-list/npl', element: <CommitteeWaitingNpl /> }]
+        },
+        {
+            path: '/committee/waiting-list/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/committee/waiting-list/npa', element: <CommitteeWaitingNpa /> }]
+        },
+        {
+            path: '/committee/update-list/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/committee/update-list/npl', element: <CommitteeUpdateNpl /> }]
+        },
+        {
+            path: '/committee/update-list/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/committee/update-list/npa', element: <CommitteeUpdateNpa /> }]
+        },
+        {
+            path: '/approval/make-petition/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/make-petition/npl', element: <ApprovalMakePetitionNpl /> }]
+        },
+        {
+            path: '/approval/make-petition/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/make-petition/npa', element: <ApprovalMakePetitionNpa /> }]
+        },
+        {
+            path: '/approval/disbursement-status/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/disbursement-status/npl', element: <ApprovalDisbursementStatusNpl /> }]
+        },
+        {
+            path: '/approval/disbursement-status/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/disbursement-status/npa', element: <ApprovalDisbursementStatusNpa /> }]
+        },
+        {
+            path: '/approval/additional-action/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/additional-action/npl', element: <ApprovalAdditionalActionNpl /> }]
+        },
+        {
+            path: '/approval/additional-action/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/additional-action/npa', element: <ApprovalAdditionalActionNpa /> }]
         },
         {
             path: '/version',

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { stringToDateTh } from "@utils";
 const ClassifyImportTable = (props) => {
   const { data } = props;
   const [isMounted, setIsMounted] = useState(false);
@@ -34,22 +35,22 @@ const ClassifyImportTable = (props) => {
         <td className="align-middle">{item.organization_no}</td>
         <td className="align-middle">{item.organization_register_round}</td>
         <td className="align-middle">{item.organization_status}</td>
-        <td className="align-middle">{item.date_member_first_time}</td>
+        <td className="align-middle">{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false) : '-'}</td>
         <td className="align-middle">{item.debt_register_status}</td>
         <td className="align-middle">{item.debt_register_round}</td>
-        <td className="align-middle">{item.date_member_current}</td>
+        <td className="align-middle">{item.date_member_current ? stringToDateTh(item.date_member_current, false) : '-'}</td>
         <td className="align-middle">{item.passed_approval_no}</td>
-        <td className="align-middle">{item.passed_approval_date}</td>
+        <td className="align-middle">{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false) : '-'}</td>
         <td className="align-middle">{item.creditor_type}</td>
         <td className="align-middle">{item.creditor_name}</td>
         <td className="align-middle">{item.creditor_province}</td>
         <td className="align-middle">{item.creditor_branch}</td>
-        <td className="align-middle">{item.contract_no_new}</td>
-        <td className="align-middle">{item.principal}</td>
-        <td className="align-middle">{item.debt_status_new}</td>
+        <td className="align-middle">{item.debt_manage_contract_no}</td>
+        <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
+        <td className="align-middle">{item.dept_status}</td>
         <td className="align-middle">{item.collateral_type}</td>
         <td className="align-middle">{item.purpose_loan_contract}</td>
-        <td className="align-middle">{item.perpose_detail}</td>
+        <td className="align-middle">{item.purpose_type_loan_contract}</td>
         <td className="align-middle">{item.checking_management_status}</td>
       </tr>
     ))

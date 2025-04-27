@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { Button } from "reactstrap";
+import Paging from "@views/components/Paging";
 const ClassifyDataTable = (props) => {
-  const { data, view } = props;
+  const { result, view, filter, getData } = props;
+  const [data, setData] = useState([]);
+  const [paging, setPaging] = useState(null);
   const OnView = (item) => {
     view(item)
   }
@@ -25,6 +29,13 @@ const ClassifyDataTable = (props) => {
       </tr>
     ))
   }
+  useEffect(() => {
+    if(result) {
+      setData(result.data);
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
+    }
+    return () => { setData([]) }
+  },[result])
   return (
     <>
       <div id="tableExample" data-list='{"valueNames":["id","name","province"]}'>
@@ -61,13 +72,11 @@ const ClassifyDataTable = (props) => {
             </tbody>
           </table>
         </div>
-        {/* <div className="d-flex justify-content-between mt-3"><span className="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
-          <div className="d-flex">
-            <button className="page-link" data-list-pagination="prev"><span className="fas fa-chevron-left"></span></button>
-            <ul className="mb-0 pagination"></ul>
-            <button className="page-link pe-0" data-list-pagination="next"><span className="fas fa-chevron-right"></span></button>
-          </div>
-        </div> */}
+        {paging?.total > 0 && (
+          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
+            setPage={(page) => getData({ ...filter, currentPage: page })} 
+          />
+        )}
       </div>
     </>
   );

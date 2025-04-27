@@ -1,3 +1,4 @@
+import moment from 'moment';
 // ** Checks if an object is empty (returns boolean)
 export const isObjEmpty = (obj) => Object.keys(obj).length === 0;
 
@@ -84,6 +85,43 @@ export const selectThemeColors = (theme) => ({
 
 export const validateEmail = (email) => {
   return false;
+};
+export const ToDateEn = (value) => {
+  if (typeof value == 'string'){
+    if (value.substring(6,8) == '25') {
+      return value.substring(0,6) + (parseInt(value.substring(6)) - 543).toString();
+    } else {
+      return value;
+    }
+  } else return value;
+};
+export const stringToDateTh = (value, showTime = true, format) => {
+  const date = moment(value, format).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear() + 543; // แปลงเป็นปี พ.ศ.
+  const time = date.toLocaleTimeString("th-TH", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return showTime
+    ? `${day}/${month}/${year} ${time}`
+    : `${day}/${month}/${year}`;
+};
+export const stringToDateThShort = (value, showTime = true, format) => {
+  const date = moment(value, format).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear() + 543).slice(-2); // แปลงเป็นปี พ.ศ.
+  const time = date.toLocaleTimeString("th-TH", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return showTime
+    ? `${day}/${month}/${year} ${time}`
+    : `${day}/${month}/${year}`;
 };
 
 export const formatDateDatatable = (value, showTime = true) => {
