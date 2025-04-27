@@ -30,6 +30,7 @@ import {
 const user = getUserData();
 const DebtRegisterNpa = () => {
   const navigate = useNavigate();
+  const [refreshFilter, setRefreshFilter] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [editDebt, setEditDebt] = useState(null)
@@ -47,15 +48,15 @@ const DebtRegisterNpa = () => {
   });
   const handleAddRegister = async (debt) => {
     const result = await addRegistrationNPA(debt);
-    if (result.isSuccess) {
-      await setEditDebt(null)
-      const result1 = await searchRegisteredNPA(filter);
-      if (result1.isSuccess) {
-        await setDataRegister(result1)
-      } else {
-        await setDataRegister(null)
-      }
-    }
+    // if (result.isSuccess) {
+    //   await setEditDebt(null)
+    //   const result1 = await searchRegisteredNPA(filter);
+    //   if (result1.isSuccess) {
+    //     await setDataRegister(result1)
+    //   } else {
+    //     await setDataRegister(null)
+    //   }
+    // }
   }
   const handleEditRegister = async (debt) => {
     const result = await submitEditRegisteredNPA(debt);
@@ -141,7 +142,11 @@ const DebtRegisterNpa = () => {
     await setSubmit(false);
     await fetchData({ ...filterAdded, currentPage: 1 });
   }
-  const onCloseRegisterNPAModel = () => {setShowModal(false)}
+  const onCloseRegisterNPAModel = async() => {
+    await setRefreshFilter(false)
+    await setShowModal(false)
+    await setRefreshFilter(true)
+  }
   const handleSubmit = async(selected) => {
     await setMakeList(selected);
     await setSubmit(true);
@@ -184,7 +189,9 @@ const DebtRegisterNpa = () => {
                 className={"my-4"}
                 children={(
                   <>
-                    <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
+                    {refreshFilter && (
+                      <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
+                    )}
                     <br />
                     {data && (
                       <BigDataTable result={data} handleSubmit={onAddBigData} onEditNpaRegister={(debt) => onEditNpaRegister(debt)}/>

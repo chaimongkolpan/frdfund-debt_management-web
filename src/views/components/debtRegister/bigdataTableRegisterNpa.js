@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Paging from "@views/components/Paging";
 import Textbox from "@views/components/input/Textbox";
 import AreaTextbox from "@views/components/input/AreaTextbox";
@@ -8,13 +8,15 @@ import {
   getProvinces,
 } from "@services/api";
 const DebtRegisterBigDataTable = (props) => {
+  const ref = useRef(null);
   const { result, filter, fetchData, handleSubmit } = props;
   const [provOp, setProvOp] = useState(null);
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [debt, setDebt] = useState(null);
   const onSubmit = async() => {
-    if (handleSubmit) handleSubmit(debt)
+    if (handleSubmit) await handleSubmit(debt);
+    await setDebt(null)
   }
   const handleChangeDebt = async (key, val) => {
     await setDebt((prevState) => ({
@@ -22,11 +24,12 @@ const DebtRegisterBigDataTable = (props) => {
       ...({[key]: val})
     }))
   }
-  const selectDebt = (item) => {
-    setDebt({ 
+  const selectDebt = async(item) => {
+    await setDebt({ 
       ...item, 
       title_document_type: 'โฉนด',
     })
+    ref.current.scrollIntoView() 
   }
   const RenderData = (item, index) => {
     return (item && (
@@ -125,7 +128,7 @@ const DebtRegisterBigDataTable = (props) => {
                 <th className="align-middle text-center" data-sort="age">สร้างทะเบียนหนี้ NPA</th>
               </tr>
             </thead>
-            <tbody className="list text-center" id="bulk-select-body">
+            <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={26}>
@@ -144,7 +147,7 @@ const DebtRegisterBigDataTable = (props) => {
       </div>
       <br />
       {debt && (
-        <div className="card-body p-0">
+        <div ref={ref} className="card-body p-0">
           <div className="p-4 code-to-copy">
             <div className="row">
               <h3 className="text-center mb-4">รายละเอียดทะเบียนหนี้ NPA</h3>

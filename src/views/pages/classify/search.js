@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "@utils";
 
@@ -22,7 +22,7 @@ const SearchClassifyNPL = () => {
     setFilter(filter)
     const result = await searchClassify(filter);
     if (result.isSuccess) {
-      setData(result.data)
+      setData(result)
     } else {
       setData(null)
     }
@@ -42,7 +42,7 @@ const SearchClassifyNPL = () => {
                     <>
                       <Filter handleSubmit={onSearch} />
                       <br />
-                      <DataTable data={data} view={viewDetail}/>
+                      <DataTable result={data} filter={filter} view={viewDetail} getData={onSearch}/>
                     </>
                   )}
                 />

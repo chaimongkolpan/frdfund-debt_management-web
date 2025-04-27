@@ -17,7 +17,6 @@ import {
   removeBigData,
   getAddedList,
   submitListNPL,
-  submitListNPLExport,
 } from "@services/api";
 
 const user = getUserData();

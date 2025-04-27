@@ -9,7 +9,9 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "react-fe
 const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder }, ref) => {
   const [val, setValue] = useState(value ?? '');
   useEffect(() => {
-    setValue(stringToDateTh(value,false,'DD/MM/YYYY'))
+    if (value)
+      setValue(stringToDateTh(value,false,'DD/MM/YYYY'))
+    else setValue("")
   },[value])
   return (
   <div className="custom-datepicker-input-container" style={{ position: 'relative', width: '100%' }}>

@@ -42,15 +42,15 @@ const DebtRegisterSelectedTable = (props) => {
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false) : '-'}</td>
-        <td>{item.date_member_current ? stringToDateTh(item.date_member_current, false) : '-'}</td>
+        <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.date_member_current ? stringToDateTh(item.date_member_current, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.organization_register_round}</td>
         <td>{item.organization_name}</td>
         <td>{item.organization_no}</td>
         <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false) : '-'}</td>
+        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false) : '-'}</td>
+        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.creditor_type}</td>
         <td>{item.creditor_name}</td>
         <td>{item.creditor_province}</td>
@@ -133,7 +133,7 @@ const DebtRegisterSelectedTable = (props) => {
                 <th>สถานะการตรวจสอบจำแนกมูลหนี้</th>
               </tr>
             </thead>
-            <tbody className="list text-center" id="bulk-select-body2">
+            <tbody className="list text-center align-middle">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={26}>

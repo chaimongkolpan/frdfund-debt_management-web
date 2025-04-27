@@ -7,6 +7,8 @@ import {
   getBigDataCreditorTypes,
   getDebtStatuses,
   getCheckingStatuses,
+  getNpaRoundFilter,
+  getNpaCollateralFilter,
 } from "@services/api";
 
 const DebtFilterNpa = (props) => {
@@ -18,6 +20,9 @@ const DebtFilterNpa = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [statusDebtOp, setStatusDebtOp] = useState(null);
   const [checkingStatusOp, setCheckingStatusOp] = useState(null);
+  const [npaRound, setRound] = useState(null);
+  const [npaRoundOp, setRoundOp] = useState(null);
+  const [collateralOp, setCollateralOp] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -78,6 +83,21 @@ const DebtFilterNpa = (props) => {
       } else await setCreditorOp(null);
       setLoading(false);
     }
+    if (key == 'npaRound') {
+      setLoading(true);
+      setRound(val)
+      await setCollateralOp(null);
+      const resultCollateral = await getNpaCollateralFilter(val);
+      if (resultCollateral.isSuccess) {
+        const temp = resultCollateral.data.map(item => item.name);
+        await setCollateralOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({collateralNo: 'all'})
+        }))
+      } else await setCollateralOp(null);
+      setLoading(false);
+    }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -87,6 +107,8 @@ const DebtFilterNpa = (props) => {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
     const resultChecking = await getCheckingStatuses();
+    const resultRound = await getNpaRoundFilter();
+    const resultCollateral = await getNpaCollateralFilter(npaRound);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -124,6 +146,14 @@ const DebtFilterNpa = (props) => {
       const temp = resultChecking.data.map(item => item.name);
       await setCheckingStatusOp(temp);
     } else await setCheckingStatusOp(null);
+    if (resultRound.isSuccess) {
+      const temp = resultRound.data.map(item => item.name);
+      await setRoundOp(temp);
+    } else await setRoundOp(null);
+    if (resultCollateral.isSuccess) {
+      const temp = resultCollateral.data.map(item => item.name);
+      await setCollateralOp(temp);
+    } else await setCollateralOp(null);
     setIsMounted(true);
     setLoading(false);
   }
@@ -195,23 +225,23 @@ const DebtFilterNpa = (props) => {
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
+          {npaRoundOp && (
             <Dropdown 
               title={'รอบ NPA'} 
               containerClassname={'mb-3'} 
               defaultValue={'all'} 
-              options={statusDebtOp}
+              options={npaRoundOp}
               handleChange={(val) => onChange('npaRound', val)}
               hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
+          {collateralOp && (
             <Dropdown 
               title={'เอกสารสิทธิ์'} 
               containerClassname={'mb-3'} 
               defaultValue={'all'} 
-              options={statusDebtOp}
+              options={collateralOp}
               handleChange={(val) => onChange('collateralNo', val)}
               hasAll />
           )}

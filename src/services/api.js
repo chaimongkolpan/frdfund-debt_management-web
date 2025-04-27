@@ -245,19 +245,6 @@ export const submitListNPL = async (params) => {
   }
   return;
 };
-export const submitListNPLExport = async (params) => {
-  const path = '/bigdata/export';
-  try {
-    const result = await axios.post(path, { data: params.data }, { responseType: "blob" });
-    if (result.status == 200) {
-      const blob = new Blob([result.data], { type: params.type });
-      SaveAs(blob, params.filename);
-    }
-  } catch (e) {
-    console.error('error: ' + path + ' =>', e);
-  }
-  return;
-};
 //#endregion
 //#region Classify
 export const importClassify = async (filter) => {
@@ -517,6 +504,34 @@ export const searchNpaClassify = async (filter) => {
 //#endregion
 
 // #region NPA
+export const getNpaRoundFilter = async () => {
+  const path = '/npa/npa-round-filter';
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getNpaCollateralFilter = async (round) => {
+  const path = '/npa/npa-collateral-filter';
+  try {
+    const result = await axios.get(path, { params: { npaRound: round }});
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchBigDataNPA = async (filter) => {
   const path = '/npa/searchBigData';
   try {
