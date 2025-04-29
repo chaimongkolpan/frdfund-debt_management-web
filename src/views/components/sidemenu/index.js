@@ -130,17 +130,50 @@ const Sidebar = props => {
                 <div className="parent-wrapper label-1">
                   <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-ProposeForApproval">
                     <li className="collapsed-nav-item-title d-none">เสนอขออนุมัติรายชื่อ</li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="apps/ProposeForApproval/BranchOffer.html">
-                        <div className="d-flex align-items-center">
-                          <span className="nav-link-text">สาขาเสนอ</span>
-                        {(alert && alert?.branch && alert.branch.request > 0) && (
-                          <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.request)}</span>
-                        )}
+                      <li class="nav-item">
+                        <a
+                          class="nav-link active dropdown-indicator"
+                          href="#nv-BranchOffer"
+                          data-bs-toggle="collapse"
+                          aria-expanded="false"
+                          aria-controls="nv-Search"
+                        >
+                          <div class="d-flex align-items-center">
+                            <div class="dropdown-indicator-icon-wrapper">
+                              <span class="fas fa-caret-right dropdown-indicator-icon"></span>
+                            </div>
+                            <span class="nav-link-text">สาขาเสนอ</span>
+                          </div>
+                        </a>
+                        <div class="parent-wrapper">
+                          <ul
+                            class="nav collapse parent"
+                            data-bs-parent="#e-commerce"
+                            id="nv-BranchOffer"
+                          >
+                            <li class="nav-item">
+                              <a
+                                class="nav-link "
+                                href="/proposeForApproval/branchOfferNPL"
+                              >
+                                <div class="d-flex align-items-center">
+                                  <span class="nav-link-text">NPL</span>
+                                </div>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a
+                                class="nav-link active"
+                                href="/proposeForApproval/branchOfferNPA"
+                              >
+                                <div class="d-flex align-items-center">
+                                  <span class="nav-link-text">NPA</span>
+                                </div>
+                              </a>
+                            </li>
+                          </ul>
                         </div>
-                      </a>
-                      {/* more inner pages*/}
-                    </li>
+                      </li>
                     <li className="nav-item"><a className="nav-link" href="apps/ProposeForApproval/PrepareForPresent.html">
                         <div className="d-flex align-items-center">
                           <span className="nav-link-text">รวบรวมเตรียมนำเสนอ</span>

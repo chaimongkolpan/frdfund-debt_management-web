@@ -1,32 +1,26 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "reactstrap";
-import { getUserData } from "@utils";
 import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/FullModal";
 import Loading from "@views/components/modal/loading";
-import Filter from "@views/components/proposeForApproval/filterNpa";
-import BigDataTable from "@views/components/proposeForApproval/bigdataTableNpa";
-import SelectedTable from "@views/components/proposeForApproval/selectedTableNpa";
-import ConfirmTable from "@views/components/proposeForApproval/confirmTableNpa";
+import Filter from "@views/components/proposeForApproval/NPA/filter";
+import PrepareRequestApproveTable from "@views/components/proposeForApproval/NPA/prepareRequestApproveTable";
+import RequestApproveTable from "@views/components/proposeForApproval/NPA/requestApproveTable";
+import ConfirmTable from "@views/components/proposeForApproval/NPA/confirmTable";
+import RegisterModal from "@views/components/proposeForApproval/NPA/registrationModal";
+import FilterRegis from "@views/components/proposeForApproval/NPA/filterResigtration";
 import logo from "@src/assets/images/icons/logo.png";
-import RegisterNPAModal from "@views/components/proposeForApproval/registrationNPAModal";
-import FilterRegisNPA from "@views/components/proposeForApproval/filterResigtrationNpa";
 import {
   cleanData,
-  searchBigData,
   searchRegisteredNPA,
-  getdetailNPA,
   getContractNPAToList,
   removeContractNPAToList,
   addContractNPAToList,
   submitListNPA,
 } from "@services/api";
 
-const user = getUserData();
-
 const BranchOfferNPA = () => {
-  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
@@ -129,7 +123,7 @@ const BranchOfferNPA = () => {
               <span className="fas fa-file-upload"></span> อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ
             </button>
             {showModal && (
-              <RegisterNPAModal
+              <RegisterModal
                 isOpen={showModal}
                 setModal={setShowModal}
                 onClose={onCloseRegisterNPAModel}
@@ -138,7 +132,7 @@ const BranchOfferNPA = () => {
                 scrollable
                 children={
                   <>
-                    <FilterRegisNPA
+                    <FilterRegis
                       handleSubmit={onSearch}
                       setLoading={setLoadBigData}
                     />
@@ -162,7 +156,7 @@ const BranchOfferNPA = () => {
                     />
                     <br />
                     {data && (
-                      <BigDataTable result={data} handleSubmit={onAddBigData} />
+                      <PrepareRequestApproveTable result={data} handleSubmit={onAddBigData} />
                     )}
                   </>
                 }
@@ -171,7 +165,7 @@ const BranchOfferNPA = () => {
                 title={"เสนอขออนุมัติรายชื่อ"}
                 className={"mb-3"}
                 children={
-                  <SelectedTable
+                  <RequestApproveTable
                     result={addedData}
                     handleSubmit={handleSubmit}
                     handleRemove={onRemoveMakelist}

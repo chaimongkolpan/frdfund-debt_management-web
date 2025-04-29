@@ -9,7 +9,7 @@ import {
   getCheckingStatuses,
 } from "@services/api";
 
-const DebtRegisterFilterNpa = (props) => {
+const FilterResigtration = (props) => {
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
@@ -18,6 +18,12 @@ const DebtRegisterFilterNpa = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [statusDebtOp, setStatusDebtOp] = useState(null);
   const [checkingStatusOp, setCheckingStatusOp] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+    return () => console.log('Clear data')
+  }, []);
+
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -36,6 +42,7 @@ const DebtRegisterFilterNpa = (props) => {
       });
     }
   }
+
   const onChange = async (key, val) => {
     if (key == 'province') {
       setLoading(true);
@@ -83,6 +90,7 @@ const DebtRegisterFilterNpa = (props) => {
       ...({[key]: val})
     }))
   }
+
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
@@ -128,19 +136,10 @@ const DebtRegisterFilterNpa = (props) => {
     setLoading(false);
   }
 
-  //** ComponentDidMount
-  useEffect(() => {
-    fetchData();
-    return () => console.log('Clear data')
-  }, []);
-  // useEffect(() => {
-  //   if (isMounted) {
-  //   }
-  //   return () => {}
-  // }, [isMounted])
   if (!isMounted) {
     return null
   }
+
   return (
     <>
       <form className="row g-3">
@@ -194,39 +193,6 @@ const DebtRegisterFilterNpa = (props) => {
               hasAll />
           )}
         </div>
-        {/* <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
-            <Dropdown 
-              title={'รอบ NPA'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('npaRound', val)}
-              hasAll />
-          )}
-        </div> */}
-        {/* <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
-            <Dropdown 
-              title={'เลขที่หลักประกัน'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('collateralNo', val)}
-              hasAll />
-          )}
-        </div> */}
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {checkingStatusOp && (
-            <Dropdown 
-              title={'สถานะสัญญาจำแนกมูลหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={checkingStatusOp}
-              handleChange={(val) => onChange('checkingStatus', val)}
-              hasAll />
-          )}
-        </div>
         <div className="col-12 gy-6">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
@@ -238,4 +204,4 @@ const DebtRegisterFilterNpa = (props) => {
     </>
   );
 };
-export default DebtRegisterFilterNpa;
+export default FilterResigtration;

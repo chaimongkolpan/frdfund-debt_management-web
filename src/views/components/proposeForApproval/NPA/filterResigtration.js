@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
-import RangeTextbox from "@views/components/input/RangeTextbox";
 import { 
   getBigDataProvinces,
   getBigDataCreditors,
@@ -10,7 +9,7 @@ import {
   getCheckingStatuses,
 } from "@services/api";
 
-const DebtRegisterFilter = (props) => {
+const FilterResigtration = (props) => {
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
@@ -19,6 +18,12 @@ const DebtRegisterFilter = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [statusDebtOp, setStatusDebtOp] = useState(null);
   const [checkingStatusOp, setCheckingStatusOp] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+    return () => console.log('Clear data')
+  }, []);
+
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -37,6 +42,7 @@ const DebtRegisterFilter = (props) => {
       });
     }
   }
+
   const onChange = async (key, val) => {
     if (key == 'province') {
       setLoading(true);
@@ -84,6 +90,7 @@ const DebtRegisterFilter = (props) => {
       ...({[key]: val})
     }))
   }
+
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
@@ -129,19 +136,10 @@ const DebtRegisterFilter = (props) => {
     setLoading(false);
   }
 
-  //** ComponentDidMount
-  useEffect(() => {
-    fetchData();
-    return () => console.log('Clear data')
-  }, []);
-  // useEffect(() => {
-  //   if (isMounted) {
-  //   }
-  //   return () => {}
-  // }, [isMounted])
   if (!isMounted) {
     return null
   }
+
   return (
     <>
       <form className="row g-3">
@@ -153,7 +151,7 @@ const DebtRegisterFilter = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
-            <Dropdown 
+            <Dropdown
               title={'จังหวัด'} 
               containerClassname={'mb-3'} 
               defaultValue={'all'} 
@@ -195,25 +193,6 @@ const DebtRegisterFilter = (props) => {
               hasAll />
           )}
         </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {checkingStatusOp && (
-            <Dropdown 
-              title={'สถานะสัญญาจำแนกมูลหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={checkingStatusOp}
-              handleChange={(val) => onChange('checkingStatus', val)}
-              hasAll />
-          )}
-        </div>
-        <div className="col-sm-12 col-md-6">
-          <RangeTextbox 
-            title={'ยอดหนี้เริ่มต้น-สิ้นสุด'}
-            leftHandleChange={(val) => onChange('min', val)}
-            rightHandleChange={(val) => onChange('max', val)}
-            separator={'-'}
-          />
-        </div>
         <div className="col-12 gy-6">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
@@ -225,4 +204,4 @@ const DebtRegisterFilter = (props) => {
     </>
   );
 };
-export default DebtRegisterFilter;
+export default FilterResigtration;
