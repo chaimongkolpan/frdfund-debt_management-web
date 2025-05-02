@@ -503,6 +503,112 @@ export const searchNpaClassify = async (filter) => {
 };
 //#endregion
 
+//#region Approval
+export const getCommitteeNo = async () => {
+  const path = '/approval/no-filter';
+  try {
+    return {
+      isSuccess: true,
+      data: [{ name: '1/2566' },{ name: '2/2566' },{ name: '3/2566' },{ name: '4/2566' },{ name: '5/2568' },]
+    }
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getCommitteeDate = async () => {
+  const path = '/approval/date-filter';
+  try {
+    return {
+      isSuccess: true,
+      data: [{ name: '20/04/2568' },{ name: '25/04/2568' },{ name: '12/03/2567' },{ name: '20/04/2566' },{ name: '20/05/2568' },]
+    }
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchMakePetition = async (filter) => {
+  const path = '/approval/search';
+  try {
+    return {
+      isSuccess: true,
+      data: [{ },{ },{ },{ },{ },],
+      currentPage: 1,
+      total: 5,
+      totalPage: 1
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getMakePetitionAddedList = async (params) => {
+  const path = '/approval/add';
+  try {
+    return {
+      isSuccess: true,
+      data: [{ },{ },{ },{ },{ },]
+    }
+    const result = await axios.get(path, {params});
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const addMakePetitionList = async (selected) => {
+  const path = '/approval/add';
+  try {
+    const result = await axios.post(path,{ data: selected });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeMakePetitionList = async (selected) => {
+  const path = '/approval/remove';
+  try {
+    const result = await axios.post(path,{ data: selected });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+
 // #region NPA
 export const getNpaRoundFilter = async () => {
   const path = '/npa/npa-round-filter';

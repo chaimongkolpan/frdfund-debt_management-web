@@ -7,12 +7,12 @@ import {
 } from "@services/api";
 
 const user = getUserData();
-const NPL = () => {
+const Report = () => {
   const navigate = useNavigate();
   return (
     <>
       <div className="content">
-        <h4 className="mb-3">สาขาเสนอ NPL</h4>
+        <h4 className="mb-3">รายงาน</h4>
         <div className="mt-4">
           <div className="row g-4">
             <div className="col-12 col-xl-12 order-1 order-xl-0">
@@ -33,4 +33,4 @@ const NPL = () => {
     </>
   );
 };
-export default NPL;
+export default Report;

@@ -9,6 +9,8 @@ import { getUserData } from '../utility/Utils'
 const Error = lazy(() => import('../views/pages/Error'))
 const Version = lazy(() => import('../views/pages/Version'))
 const Login = lazy(() => import('../views/pages/authentication/Login'))
+const Setting = lazy(() => import('../views/pages/setting'))
+const Profile = lazy(() => import('../views/pages/profile'))
 const DebtRegister = lazy(() => import('../views/pages/debt-register'))
 const DebtRegisterNpa = lazy(() => import('../views/pages/debt-register/npa'))
 const ClassifyImport = lazy(() => import('../views/pages/classify/import'))
@@ -32,6 +34,9 @@ const ApprovalDisbursementStatusNpl = lazy(() => import('../views/pages/approval
 const ApprovalDisbursementStatusNpa = lazy(() => import('../views/pages/approval/disbursement-status/npa'))
 const ApprovalAdditionalActionNpl = lazy(() => import('../views/pages/approval/additional-action/npl'))
 const ApprovalAdditionalActionNpa = lazy(() => import('../views/pages/approval/additional-action/npa'))
+
+const Close = lazy(() => import('../views/pages/close'))
+const Report = lazy(() => import('../views/pages/report'))
 const Router = () => {
     const getHomeRoute = () => {
         const user = getUserData()
@@ -51,6 +56,16 @@ const Router = () => {
             path: '/login',
             element: <BlankLayout />,
             children: [{ path: '/login', element: <Login /> }]
+        },
+        {
+            path: '/profile',
+            element: <VerticalLayout />,
+            children: [{ path: '/profile', element: <Profile /> }]
+        },
+        {
+            path: '/settings',
+            element: <VerticalLayout />,
+            children: [{ path: '/settings', element: <Setting /> }]
         },
         {
             path: '/debt',
@@ -166,6 +181,16 @@ const Router = () => {
             path: '/approval/additional-action/npa',
             element: <VerticalLayout />,
             children: [{ path: '/approval/additional-action/npa', element: <ApprovalAdditionalActionNpa /> }]
+        },
+        {
+            path: '/close',
+            element: <VerticalLayout />,
+            children: [{ path: '/close', element: <Close /> }]
+        },
+        {
+            path: '/report',
+            element: <VerticalLayout />,
+            children: [{ path: '/report', element: <Report /> }]
         },
         {
             path: '/version',

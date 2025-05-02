@@ -255,6 +255,7 @@ const Sidebar = props => {
                           </ul>
                         </div>
                       </li>
+                      {/* more inner pages *  /}
                       <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/committee/waiting-list') ? 'active' : ''}`} href="#nv-ProposeCommitteeWaitingList" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-ProposeCommitteeWaitingList">
                           <div className="d-flex align-items-center">
@@ -264,7 +265,6 @@ const Sidebar = props => {
                             <span className="nav-link-text">รายชื่อรอเสนอ</span>
                           </div>
                         </a>
-                        {/* more inner pages*/}
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-ProposeCommitteeWaitingList">
                             <li className="nav-item">
@@ -282,6 +282,7 @@ const Sidebar = props => {
                           </ul>
                         </div>
                       </li>
+                      */}
                       <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/committee/update-list') ? 'active' : ''}`} href="#nv-ProposeCommitteeUpdateList" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-ProposeCommitteeUpdateList">
                           <div className="d-flex align-items-center">
@@ -614,7 +615,7 @@ const Sidebar = props => {
               <li className="nav-item">
                 <p className="navbar-vertical-label">ปิดสัญญา</p>
                 <div className="nav-item-wrapper">
-                  <a className="nav-link label-1" href="apps/CloseContract/CloseContract.html">
+                  <a className="nav-link label-1" href="/close">
                     <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-file-excel"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">ปิดสัญญา</span></div>
                     {(alert && alert?.closing && alert.closing > 0) && (
                       <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.closing)}</span>
@@ -629,7 +630,7 @@ const Sidebar = props => {
                 <p className="navbar-vertical-label">รายงาน</p>
                 {/* parent pages รายงาน*/}
                 <div className="nav-item-wrapper">
-                  <a className="nav-link label-1" href="apps/Report/Report.html">
+                  <a className="nav-link label-1" href="/report">
                   <div className="d-flex align-items-center"><span className="nav-link-icon"><PieChart size={16} /></span><div className="nav-link-text-wrapper"><span className="nav-link-text">รายงาน</span></div>
                   </div>
                   </a>

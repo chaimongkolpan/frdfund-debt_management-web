@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
-import RangeTextbox from "@views/components/input/RangeTextbox";
 import { 
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
   getDebtStatuses,
-  getCheckingStatuses,
+  getCommitteeNo,
+  getCommitteeDate,
 } from "@services/api";
 
-const DebtRegisterFilter = (props) => {
+const Filter = (props) => {
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
@@ -18,7 +18,8 @@ const DebtRegisterFilter = (props) => {
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
   const [statusDebtOp, setStatusDebtOp] = useState(null);
-  const [checkingStatusOp, setCheckingStatusOp] = useState(null);
+  const [committeeNoOp, setCommitteeNoOp] = useState(null);
+  const [committeeDateOp, setCommitteeDateOp] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -87,7 +88,8 @@ const DebtRegisterFilter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultChecking = await getCheckingStatuses();
+    const resultCommitteeNo = await getCommitteeNo();
+    const resultCommitteeDate = await getCommitteeDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -121,10 +123,15 @@ const DebtRegisterFilter = (props) => {
       const temp = resultDebtSt.data.map(item => item.name);
       await setStatusDebtOp(temp);
     } else await setStatusDebtOp(null);
-    if (resultChecking.isSuccess) {
-      const temp = resultChecking.data.map(item => item.name);
-      await setCheckingStatusOp(temp);
-    } else await setCheckingStatusOp(null);
+
+    if (resultCommitteeNo.isSuccess) {
+      const temp = resultCommitteeNo.data.map(item => item.name);
+      await setCommitteeNoOp(temp);
+    } else await setCommitteeNoOp(null);
+    if (resultCommitteeDate.isSuccess) {
+      const temp = resultCommitteeDate.data.map(item => item.name);
+      await setCommitteeDateOp(temp);
+    } else await setCommitteeDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }
@@ -150,6 +157,28 @@ const DebtRegisterFilter = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุลเกษตรกร'} handleChange={(val) => onChange('name', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {committeeNoOp && (
+            <Dropdown 
+              title={'ครั้งที่เสนอคณะกรมการ'} 
+              containerClassname={'mb-3'} 
+              defaultValue={committeeNoOp[0]} 
+              options={committeeNoOp}
+              handleChange={(val) => onChange('committeeNo', val)}
+            />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {committeeDateOp && (
+            <Dropdown 
+              title={'วันที่เสนอคณะกรรมการ'} 
+              containerClassname={'mb-3'} 
+              defaultValue={committeeDateOp[0]} 
+              options={committeeDateOp}
+              handleChange={(val) => onChange('committeeDate', val)}
+            />
+          )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
@@ -195,25 +224,6 @@ const DebtRegisterFilter = (props) => {
               hasAll />
           )}
         </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {checkingStatusOp && (
-            <Dropdown 
-              title={'สถานะสัญญาจำแนกมูลหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={checkingStatusOp}
-              handleChange={(val) => onChange('checkingStatus', val)}
-              hasAll />
-          )}
-        </div>
-        <div className="col-sm-12 col-md-6">
-          <RangeTextbox 
-            title={'ยอดหนี้เริ่มต้น-สิ้นสุด'}
-            leftHandleChange={(val) => onChange('min', val)}
-            rightHandleChange={(val) => onChange('max', val)}
-            separator={'-'}
-          />
-        </div>
         <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
@@ -225,4 +235,4 @@ const DebtRegisterFilter = (props) => {
     </>
   );
 };
-export default DebtRegisterFilter;
+export default Filter;

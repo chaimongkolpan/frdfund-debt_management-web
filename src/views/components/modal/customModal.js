@@ -2,11 +2,11 @@ import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const CustomModal = (props) => {
-  const {isOpen, setModal, fullscreen, centered, scrollable, title, children, hideFooter, onOk, okText, onClose, closeText} = props;
+  const {isOpen, setModal, fullscreen, size, centered, scrollable, title, children, hideFooter, onOk, okText, onClose, closeText} = props;
 
   const toggle = () => setModal(!isOpen);
   return (
-      <Modal isOpen={isOpen} toggle={toggle} centered={centered} scrollable={scrollable} fullscreen={fullscreen}>
+      <Modal isOpen={isOpen} toggle={toggle} size={size} centered={centered} scrollable={scrollable} fullscreen={fullscreen}>
         <ModalHeader toggle={toggle}>{title}</ModalHeader>
         <ModalBody>{children}</ModalBody>
         {!hideFooter && (

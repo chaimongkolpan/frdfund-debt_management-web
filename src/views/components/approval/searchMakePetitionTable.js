@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh } from "@utils";
-const DebtRegisterBigDataTable = (props) => {
+const SearchTable = (props) => {
   const { result, handleSubmit, filter, getData } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -85,6 +85,12 @@ const DebtRegisterBigDataTable = (props) => {
 
   return (
     <>
+      <div className="d-flex">
+        <div className="square border border-1"  style={{ background: "#fff", height: 20, width: 30 }}></div>
+        <div className="ms-1">ปกติ</div>
+        <div className="ms-2 square border border-1"  style={{ background: "rgb(255, 242, 205)", height: 20, width: 30 }}></div>
+        <div className="ms-1">เพิ่มเงิน</div>
+      </div>
       <div id="tableExample" data-list='{"valueNames":["name","email","age"]}'>
         <div className="table-responsive mx-n1 px-1">
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
@@ -95,43 +101,42 @@ const DebtRegisterBigDataTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th colspan="7">เกษตรกร</th>
-                <th colspan="2">องค์กร</th>
-                <th colspan="4">ทะเบียนหนี้</th>
-                <th colspan="4">เจ้าหนี้</th>
-                <th colspan="7">สัญญา</th>
+                <th colSpan="2">คณะกรรมการจัดการหนี้</th>
+                <th colSpan="4">เกษตรกร</th>
+                <th colSpan="4">เจ้าหนี้</th>
+                <th colSpan="11">สัญญา</th>
+                <th>หลักทรัพย์ค้ำประกัน</th>
+                <th rowSpan="2">สถานะสัญญา</th>
               </tr>
               <tr>
+                <th>ครั้งที่เสนอคณะกรรมการ</th>
+                <th>วันที่เสนอคณะกรรมการ</th>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
                 <th>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
-                <th>วันที่เป็นสมาชิก (ครั้งแรก)</th>
-                <th>วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
-                <th>รอบองค์กร</th>
-                <th>ชื่อองค์กรการเกษตร</th>
-                <th>หมายเลของค์กร</th>
-                <th>รอบหนี้</th>
-                <th>วันที่ยื่นขึ้นทะเบียนหนี้</th>
-                <th>ผ่านความเห็นชอบครั้งที่</th>
-                <th>ผ่านความเห็นชอบวันที่</th>
                 <th>ประเภทเจ้าหนี้</th>
                 <th>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
                 <th>สาขาเจ้าหนี้</th>
                 <th>เลขที่สัญญา</th>
-                <th>เงินต้นคงเหลือตามสัญญา</th>
+                <th>เงินต้น</th>
+                <th>ดอกเบี้ย</th>
+                <th>ค่าปรับ</th>
+                <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                <th>ค่าถอนการยึดทรัพย์</th>
+                <th>รวมค่าใช้จ่าย</th>
+                <th>รวมทั้งสิ้น</th>
+                <th>วัตถุประสงค์การกู้</th>
                 <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
-                <th>วัตถุประสงค์การกู้ตามสัญญา</th>
-                <th>ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
-                <th>สถานะการตรวจสอบจัดการหนี้</th>
+                <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={26}>
+                  <td className="fs-9 text-center align-middle" colSpan={24}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -148,11 +153,11 @@ const DebtRegisterBigDataTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาจัดทำรายชื่อเกษตรกร</button>
+            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
           </div>
         </div>
       </div>
     </>
   );
 };
-export default DebtRegisterBigDataTable;
+export default SearchTable;
