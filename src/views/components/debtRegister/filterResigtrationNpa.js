@@ -152,82 +152,78 @@ const DebtRegisterFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
-            <Dropdown
-              title={'จังหวัด'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={provOp}
-              handleChange={(val) => onChange('province', val)}
-              hasAll />
+            <div class="form-floating form-floating-advance-select mb-3">
+              <label htmlFor="Search_province">จังหวัด</label>
+              <select class="form-select" value={filter?.province} onChange={(e) => onChange('province', e.target?.value)}>
+                <option value="all" >ทั้งหมด</option>
+                {provOp && (
+                  provOp.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))
+                )}
+              </select>
+            </div>
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorTypeOp && (
-            <Dropdown 
-              title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={creditorTypeOp[0]} 
-              options={creditorTypeOp}
-              handleChange={(val) => onChange('creditorType', val)}
-            />
+            <div class="form-floating form-floating-advance-select mb-3">
+              <label htmlFor="Search_province">ประเภทเจ้าหนี้</label>
+              <select class="form-select" value={filter?.creditorType} onChange={(e) => onChange('creditorType', e.target?.value)}>
+                {creditorTypeOp && (
+                  creditorTypeOp.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))
+                )}
+              </select>
+            </div>
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorOp && (
-            <Dropdown 
-              title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={creditorOp[0]} 
-              options={creditorOp}
-              handleChange={(val) => onChange('creditor', val)}
-            />
+            <div class="form-floating form-floating-advance-select mb-3">
+              <label htmlFor="Search_province">สถาบันเจ้าหนี้</label>
+              <select class="form-select" value={filter?.creditor} onChange={(e) => onChange('creditor', e.target?.value)}>
+                {creditorOp && (
+                  creditorOp.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))
+                )}
+              </select>
+            </div>
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {statusDebtOp && (
-            <Dropdown 
-              title={'สถานะหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('debtStatus', val)}
-              hasAll />
+            <div class="form-floating form-floating-advance-select mb-3">
+              <label htmlFor="Search_province">สถานะหนี้</label>
+              <select class="form-select" value={filter?.debtStatus} onChange={(e) => onChange('debtStatus', e.target?.value)}>
+                <option value="all" >ทั้งหมด</option>
+                {statusDebtOp && (
+                  statusDebtOp.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))
+                )}
+              </select>
+            </div>
           )}
         </div>
-        {/* <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
-            <Dropdown 
-              title={'รอบ NPA'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('npaRound', val)}
-              hasAll />
-          )}
-        </div> */}
-        {/* <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
-            <Dropdown 
-              title={'เลขที่หลักประกัน'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('collateralNo', val)}
-              hasAll />
-          )}
-        </div> */}
         <div className="col-sm-12 col-md-6 col-lg-6">
           {checkingStatusOp && (
-            <Dropdown 
-              title={'สถานะสัญญาจำแนกมูลหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={'all'} 
-              options={checkingStatusOp}
-              handleChange={(val) => onChange('checkingStatus', val)}
-              hasAll />
+            <div class="form-floating form-floating-advance-select mb-3">
+              <label htmlFor="Search_province">สถานะสัญญาจำแนกมูลหนี้</label>
+              <select class="form-select" value={filter?.checkingStatus} onChange={(e) => onChange('checkingStatus', e.target?.value)}>
+                <option value="all" >ทั้งหมด</option>
+                {checkingStatusOp && (
+                  checkingStatusOp.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))
+                )}
+              </select>
+            </div>
           )}
         </div>
-        <div className="col-12 gy-6">
+        <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
               <button className="btn btn-subtle-success me-1 mb-1" type="button" onClick={() => onSubmit()}>ค้นหา</button>

@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { getUserData } from "@utils";
 import { 
   getDebtManagementDetailClassify,
+  combineClassify,
+  cancelCombineClassify,
+  splitClassify,
+  cancelSplitClassify,
 } from "@services/api";
 
 import According from "@views/components/panel/according";
@@ -36,12 +40,37 @@ const SearchClassifyNPLDetail = () => {
   const [isOpenSplitNPL, setOpenSplitNPL] = useState(false);
   const [isOpenNPLDetail, setOpenNPLDetail] = useState(false);
   const [isOpenCancelSplit, setOpenCancelSplit] = useState(false);
+  const [id_combine, setCombine] = useState(null);
+  const [contract_no, setContractNo] = useState(null);
+  const [id_split, setSplit] = useState(null);
+  const [id_cancel_split, setCancelSplit] = useState(null);
   const navigate = useNavigate();
-  const handleCombine = () => {
-    setOpenCombine(true);
+  const handleCombine = async(id) => {
+    await setCombine(id)
+    await setOpenCombine(true);
   }
-  const handleSplit = () => {
-    setOpenSplitNPL(true);
+  const submitCombine = async(param) => {
+    const result = await combineClassify(param);
+    if (result.isSuccess) {
+      await fetchData();
+      await setOpenCombine(false);
+      await setCombine(null);
+    }
+  }
+  const handleSplit = async(id) => {
+    const debt = debts.find(x => x.id_debt_management == id)
+    await setContractNo(debt?.debt_manage_contract_no)
+    await setSplit(id)
+    await setOpenSplitNPL(true);
+  }
+  const submitSplit = async(id) => {
+    const result = await splitClassify({ id_debt_management: id });
+    if (result.isSuccess) {
+      await fetchData();
+      await setOpenSplitNPL(false);
+      await setContractNo(null);
+      await setSplit(null);
+    }
   }
   const handleCloseDetail = async () => {
     await fetchData();
@@ -53,11 +82,26 @@ const SearchClassifyNPLDetail = () => {
     await setShowDebts(debt);
     await setOpenNPLDetail(true);
   }
-  const handleCancelCombine = () => {
-    
+  const handleCancelCombine = async(id) => {
+    const result = await cancelCombineClassify({ id_combining: id });
+    if (result.isSuccess) {
+      await fetchData();
+    }
   }
-  const handleCancelSplit = () => {
-    setOpenCancelSplit(true);
+  const handleCancelSplit = async(id) => {
+    const debt = debts.find(x => x.id_separate == id)
+    await setContractNo(debt?.debt_manage_contract_no)
+    await setCancelSplit(id)
+    await setOpenCancelSplit(true);
+  }
+  const submitCancelSplit = async(id) => {
+    const result = await cancelSplitClassify({ id_separate: id });
+    if (result.isSuccess) {
+      await fetchData();
+      await setOpenCancelSplit(false);
+      await setContractNo(null);
+      await setCancelSplit(null);
+    }
   }
   const handleBorrow = () => {
     setOpenBorrow(true);
@@ -68,6 +112,10 @@ const SearchClassifyNPLDetail = () => {
   }
   const handleDocument = () => {
     setOpenDocument(true);
+  }
+  const handleSubmitDocument = async () => {
+    await fetchData();
+    await setOpenDocument(false);
   }
   const fetchData = async() => {
     const result = await getDebtManagementDetailClassify(params.idcard, qprov, qcreditorType);
@@ -212,7 +260,7 @@ const SearchClassifyNPLDetail = () => {
 
               {/*start modal รวมสัญญา*/}
               {isOpenCombine && (
-                <CombineModal isOpen={isOpenCombine} setModal={setOpenCombine} onClose={() => setOpenCombine(false)} onOk={() => console.log('submit')} />
+                <CombineModal isOpen={isOpenCombine} setModal={setOpenCombine} data={debts.filter(x => !x.isCombine && !x.isSplit)} onClose={() => setOpenCombine(false)} onOk={submitCombine} id_debt_register={id_combine} />
               )}
               {/*end modal รวมสัญญา*/}
 
@@ -226,7 +274,7 @@ const SearchClassifyNPLDetail = () => {
               
               {/* start modal เอกสารประกอบ*/}
               {isOpenDocument && (
-                <DocumentModal isOpen={isOpenDocument} setModal={setOpenDocument} onClose={() => setOpenDocument(false)} data={debts} />
+                <DocumentModal isOpen={isOpenDocument} setModal={setOpenDocument} onOk={handleSubmitDocument} onClose={() => setOpenDocument(false)} data={debts} />
               )}
               {/* end modal เอกสารประกอบ*/}
 
@@ -243,9 +291,9 @@ const SearchClassifyNPLDetail = () => {
                 <CustomModal isOpen={isOpenSplitNPL} setModal={setOpenSplitNPL} 
                   title={'แยกสัญญา NPL'} 
                   onClose={() => setOpenSplitNPL(false)} closeText={'ยกเลิก'} 
-                  onOk={() => console.log('remove')} okText={'แยกสัญญา NPL'}
+                  onOk={() => submitSplit(id_split)} okText={'แยกสัญญา NPL'}
                 >
-                  <p className="text-body-tertiary lh-lg mb-0">ต้องการแยกสัญญา NPL (เลขที่สัญญา 1958) </p>
+                  <p className="text-body-tertiary lh-lg mb-0">ต้องการแยกสัญญา NPL (เลขที่สัญญา {contract_no}) </p>
                 </CustomModal>
               )}
               {/*end Modal แยกสัญญา NPL */}
@@ -255,9 +303,9 @@ const SearchClassifyNPLDetail = () => {
                 <CustomModal isOpen={isOpenCancelSplit} setModal={setOpenCancelSplit} 
                   title={'ยกเลิกการแยกสัญญา'} 
                   onClose={() => setOpenCancelSplit(false)} closeText={'ยกเลิก'} 
-                  onOk={() => console.log('remove')} okText={'ลบ'}
+                  onOk={() => submitCancelSplit(id_cancel_split)} okText={'ลบ'}
                 >
-                  <p className="text-body-tertiary lh-lg mb-0">ต้องการลบการแยกสัญญา (เลขที่สัญญา 1958_1) </p>
+                  <p className="text-body-tertiary lh-lg mb-0">ต้องการลบการแยกสัญญา (เลขที่สัญญา {contract_no}) </p>
                 </CustomModal>
               )}
               {/*end Modal ยกเลิกแยกสัญญา */}

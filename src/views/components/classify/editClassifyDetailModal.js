@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Textbox from "@views/components/input/Textbox";
+import AreaTextbox from "@views/components/input/AreaTextbox";
 import Textarea from "@views/components/input/Textarea";
 import DatePicker from "@views/components/input/DatePicker";
 import According from "@views/components/panel/according";
@@ -12,6 +13,8 @@ import {
   removeGuarantorClassify,
   getDebtManagementDetailClassify,
   updateDebtManagementDetailClassify,
+  upsertCollateralClassify,
+  removeCollateralClassify,
 } from "@services/api";
 
 const FullModal = (props) => {
@@ -34,10 +37,10 @@ const FullModal = (props) => {
   const [repayment, setRepaymentCon] = useState('');
   const [contract, setContractCon] = useState('');
   const [expense, setExpense] = useState(0);
+  const [not_correct_list, setNotCorrectList] = useState(null);
   const toggle = () => setModal(!isOpen);
 
   const submitDebt = async () => {
-    console.log('submit', debts)
     const result = await updateDebtManagementDetailClassify(debts);
     if (result.isSuccess) {
       await fetchData();
@@ -230,17 +233,19 @@ const FullModal = (props) => {
   }
 
   const addCollateral = async() => {
-    await setCollateralDetail({ id_debt_management: debts.id_debt_management, title_document_type: 'โฉนด' })
+    await setCollateralDetail({ id_debt_management: debts.id_debt_management, title_document_type: 'โฉนด', collateral_status: 'โอนได้' });
+    await setCollateralType('โฉนด')
     await setOpenCollateralAdd(true)
     await setOpenCollateralEdit(true)
   }
   const editCollateral = async(item) => {
     await setCollateralDetail(item)
+    await setCollateralType(item.title_document_type)
     await setOpenCollateralAdd(false)
     await setOpenCollateralEdit(true)
   }
   const saveCollateral = async() => {
-    const result = await upsertGuarantorClassify(guarantorDetail);
+    const result = await upsertCollateralClassify(collateralDetail);
     if (result.isSuccess) {
       await fetchData();
       await setOpenCollateralEdit(false)
@@ -248,7 +253,7 @@ const FullModal = (props) => {
     }
   }
   const removeCollateral = async(item) => {
-    const result = await removeGuarantorClassify(item);
+    const result = await removeCollateralClassify(item);
     if (result.isSuccess) {
       await fetchData();
       await setOpenCollateralEdit(false)
@@ -258,6 +263,10 @@ const FullModal = (props) => {
   const handleChangeCollateral = async (key, val) => {
     if (key == 'title_document_type') {
       await setCollateralType(val);
+      await setCollateralDetail((prevState) => ({
+        ...prevState,
+        ...({stock_status: (val == 'หุ้น')})
+      }))
     }
     await setCollateralDetail((prevState) => ({
       ...prevState,
@@ -331,7 +340,6 @@ const FullModal = (props) => {
     const result = await getDebtManagementDetailClassify(data.id_card, data.province, data.creditor_type);
     if (result.isSuccess) {
       const debt = result.contracts.find(x => x.id_debt_management == data.id_debt_management)
-      console.log('debt', debt);
       await setDebts({
         ...debt,
         debt_management_audit_status: (debt.debt_management_audit_status ?? 'อยู่ระหว่างการสอบยอด'),
@@ -342,8 +350,10 @@ const FullModal = (props) => {
         compensation_conditions: (debt.compensation_conditions ?? 'ไม่มีการชดเชย'),
         debt_manage_objective: (debt.debt_manage_objective ?? 'เพื่อการเกษตร'),
         debt_manage_legal_action: (debt.debt_manage_legal_action ?? 'ไม่มี'),
-        debt_agreement: (debts?.debt_agreement ?? 'ตามข้อตกลง')
+        debt_agreement: (debts?.debt_agreement ?? 'ตามข้อตกลง'),
+        debt_repayment_type: (debts?.debt_repayment_type ?? 'ชำระหนี้แทน')
       });
+      await setNotCorrectList((debts?.not_correct_list ? debts?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0','0']))
       await setCreditorType(debt.debt_manage_creditor_type);
       if (debt.debt_manage_creditor_type == "สหกรณ์") await setExpense(debt.debt_manage_total_expenses);
       else await setExpense(0);
@@ -407,7 +417,7 @@ const FullModal = (props) => {
                           </div>
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <Textbox title={'เลขที่สัญญา'} 
+                          <Textbox title={'เลขที่สัญญา'} classname={`${(not_correct_list && not_correct_list[0] == '1') ? 'border-danger' : ''}`}
                             handleChange={(val) => handleChangeDebt('debt_manage_contract_no', val)} 
                             containerClassname={'mb-3'} value={debts?.debt_manage_contract_no}
                           />
@@ -456,6 +466,16 @@ const FullModal = (props) => {
                         </div>
                         {(creditor_type == 'สหกรณ์') ? (
                           <>
+                            <div className="col-sm-12 col-md-6 col-lg-6">
+                              <div className="form-floating">
+                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_agreement', e.target?.value)}>
+                                  <option value="ชำระหนี้แทน">ชำระหนี้แทน</option>
+                                  <option value="วางเงินชำระหนี้แทน-บังคับคดี">วางเงินชำระหนี้แทน-บังคับคดี</option>
+                                </select>
+                                <label htmlFor="floatingSelectPrivacy">ประเภทการชำระหนี้</label>
+                              </div>
+                            </div>
+                            <div className="col-sm-12 col-md-6 col-lg-6"></div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
                                 <select className="form-select" value={debts?.debt_repayment_conditions ?? ''} onChange={(e) => handleChangeDebt('debt_repayment_conditions', e.target?.value)}>
@@ -517,7 +537,7 @@ const FullModal = (props) => {
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating form-floating-advance-select mb-3">
                                 <label htmlFor="floaTingLabelSingleSelect">สถานะหนี้</label>
-                                <select className="form-select" value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
+                                <select className={`form-select ${(not_correct_list && not_correct_list[8] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
                                   <option value="ปกติ">ปกติ</option>
                                   <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
                                 </select>
@@ -525,7 +545,7 @@ const FullModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
+                                <select className={`form-select ${(not_correct_list && not_correct_list[9] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
                                   <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
                                   <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
                                   <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
@@ -534,37 +554,37 @@ const FullModal = (props) => {
                               </div>
                             </div>
                             <div className="col-sm-12 col-md-12 col-lg-12">
-                              <Textbox title={'รายละเอียดวัตถุประสงค์'} 
+                              <Textarea title={'รายละเอียดวัตถุประสงค์'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_objective_details', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_objective_details}
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ต้นเงินคงค้าง'} 
+                              <Textbox title={'ต้นเงินคงค้าง'} classname={`${(not_correct_list && not_correct_list[1] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_outstanding_principal', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_outstanding_principal} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ดอกเบี้ยคงค้าง'} 
+                              <Textbox title={'ดอกเบี้ยคงค้าง'} classname={`${(not_correct_list && not_correct_list[2] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_accrued_interest', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_accrued_interest} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าปรับ'} 
+                              <Textbox title={'ค่าปรับ'} classname={`${(not_correct_list && not_correct_list[3] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_fine', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_fine} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} 
+                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} classname={`${(not_correct_list && not_correct_list[4] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_litigation_expenses', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_litigation_expenses} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าถอนการยึดทรัพย์'} 
+                              <Textbox title={'ค่าถอนการยึดทรัพย์'} classname={`${(not_correct_list && not_correct_list[5] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_forfeiture_withdrawal_fee', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_forfeiture_withdrawal_fee} isNumber
                               />
@@ -650,7 +670,7 @@ const FullModal = (props) => {
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating form-floating-advance-select mb-3">
                                 <label htmlFor="floaTingLabelSingleSelect">สถานะหนี้</label>
-                                <select className="form-select" value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
+                                <select className={`form-select ${(not_correct_list && not_correct_list[8] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
                                   <option value="ปกติ">ปกติ</option>
                                   <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
                                 </select>
@@ -658,7 +678,7 @@ const FullModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
+                                <select className={`form-select ${(not_correct_list && not_correct_list[9] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
                                   <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
                                   <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
                                   <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
@@ -667,13 +687,13 @@ const FullModal = (props) => {
                               </div>
                             </div>
                             <div className="col-sm-12 col-md-12 col-lg-12">
-                              <Textbox title={'รายละเอียดวัตถุประสงค์'} 
+                              <Textarea title={'รายละเอียดวัตถุประสงค์'} 
                                 handleChange={(val) => handleChangeDebt('debt_manage_objective_details', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_objective_details}
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ต้นเงินคงค้าง'} 
+                              <Textbox title={'ต้นเงินคงค้าง'} classname={`${(not_correct_list && not_correct_list[1] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_outstanding_principal', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_outstanding_principal} isNumber
                               />
@@ -686,37 +706,37 @@ const FullModal = (props) => {
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ดอกเบี้ยคงค้าง'} 
+                              <Textbox title={'ดอกเบี้ยคงค้าง'} classname={`${(not_correct_list && not_correct_list[2] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_accrued_interest', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_accrued_interest} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าปรับ'} 
+                              <Textbox title={'ค่าปรับ'} classname={`${(not_correct_list && not_correct_list[3] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_fine', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_fine} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} 
+                              <Textbox title={'ค่าใช้จ่ายในการดำเนินคดี'} classname={`${(not_correct_list && not_correct_list[4] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_litigation_expenses', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_litigation_expenses} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าถอนการยึดทรัพย์'} 
+                              <Textbox title={'ค่าถอนการยึดทรัพย์'} classname={`${(not_correct_list && not_correct_list[5] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_forfeiture_withdrawal_fee', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_forfeiture_withdrawal_fee} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าเบี้ยประกัน'} 
+                              <Textbox title={'ค่าเบี้ยประกัน'} classname={`${(not_correct_list && not_correct_list[6] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_insurance_premium', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_insurance_premium} isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'ค่าใช้จ่ายอื่นๆ'} 
+                              <Textbox title={'ค่าใช้จ่ายอื่นๆ'} classname={`${(not_correct_list && not_correct_list[7] == '1') ? 'border-danger' : ''}`}
                                 handleChange={(val) => handleChangeDebt('debt_manage_other_expenses', val)} 
                                 containerClassname={'mb-3'} value={debts?.debt_manage_other_expenses} isNumber
                               />
@@ -742,28 +762,22 @@ const FullModal = (props) => {
                           />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <div className="flatpickr-input-container">
-                            <div className="form-floating">
-                              <input className="form-control datetimepicker" type="text" placeholder="end date" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
-                              <label className="ps-6" htmlFor="floatingInputStartDate">คำนวนเงิน ณ วันที่</label><span className="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-                            </div>
-                          </div>
+                          <DatePicker title={'คำนวนเงิน ณ วันที่'}
+                            value={debts?.debt_manage_calculate_ondate} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_calculate_ondate', val)} 
+                          />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <div className="flatpickr-input-container">
-                            <div className="form-floating">
-                              <input className="form-control datetimepicker" type="text" placeholder="end date" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
-                              <label className="ps-6" htmlFor="floatingInputStartDate">วันที่ทำสัญญา</label><span className="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-                            </div>
-                          </div>
+                          <DatePicker title={'วันที่ทำสัญญา'}
+                            value={debts?.debt_manage_contract_date} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_contract_date', val)} 
+                          />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <div className="flatpickr-input-container">
-                            <div className="form-floating">
-                              <input className="form-control datetimepicker" type="text" placeholder="end date" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
-                              <label className="ps-6" htmlFor="floatingInputStartDate">วันที่ผิดนัดชำระ</label><span className="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-                            </div>
-                          </div>
+                          <DatePicker title={'วันที่ผิดนัดชำระ'}
+                            value={debts?.debt_manage_payment_default_date} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_payment_default_date', val)} 
+                          />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <div className="form-floating">
@@ -777,12 +791,10 @@ const FullModal = (props) => {
                           </div>
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <div className="flatpickr-input-container">
-                            <div className="form-floating">
-                              <input className="form-control datetimepicker" type="text" placeholder="end date" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' />
-                              <label className="ps-6" htmlFor="floatingInputStartDate">วันที่ดำเนินการทางกฎหมาย</label><span className="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-                            </div>
-                          </div>
+                          <DatePicker title={'วันที่ดำเนินการทางกฎหมาย'}
+                            value={debts?.debt_manage_legal_action_date} 
+                            handleChange={(val) => handleChangeDebt('debt_manage_legal_action_date', val)} 
+                          />
                         </div>
                         <div className="col-sm-12 col-md-12 col-lg-12">
                           <Textarea title={'หมายเหตุ'} 
@@ -922,39 +934,40 @@ const FullModal = (props) => {
                                               <h4 className="text-center">โฉนดที่ดิน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'เลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่ม</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'เล่ม'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_volume', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_volume}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'หน้า'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_page', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_page}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                   <div className="form-floating form-floating-advance-select ">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.parceL_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('parceL_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_district}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -970,28 +983,28 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ระวาง</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'ระวาง'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_map_sheet', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_map_sheet}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขที่ดิน</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'เลขที่ดิน'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_parcel_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_parcel_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้าสำรวจ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'หน้าสำรวจ'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_explore_page', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_explore_page}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดโฉนดที่ดิน" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} 
+                                                    handleChange={(val) => handleChangeCollateral('parceL_sub_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.parceL_sub_district}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1001,6 +1014,78 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียดโฉนดที่ดิน */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'ตราจอง' && (
@@ -1016,34 +1101,34 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ตราจอง</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่มที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดตราจอง" />
-                                                  </div>
+                                                  <Textbox title={'เล่มที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('pre_emption_volume_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่ม</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดตราจอง" />
-                                                  </div>
+                                                  <Textbox title={'เล่ม'} 
+                                                    handleChange={(val) => handleChangeCollateral('pre_emption_volume', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดตราจอง" />
-                                                  </div>
+                                                  <Textbox title={'หน้า'} 
+                                                    handleChange={(val) => handleChangeCollateral('pre_emption_page', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_page}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ระวาง</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดตราจอง" />
-                                                  </div>
+                                                  <Textbox title={'ระวาง'} 
+                                                    handleChange={(val) => handleChangeCollateral('pre_emption_map_sheet', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_map_sheet}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขที่ดิน</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดตราจอง" />
-                                                  </div>
+                                                  <Textbox title={'เลขที่ดิน'} 
+                                                    handleChange={(val) => handleChangeCollateral('pre_emption_parcel_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_parcel_no}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1061,25 +1146,26 @@ const FullModal = (props) => {
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.pre_emption_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('pre_emption_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดตราจอง" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} 
+                                                    handleChange={(val) => handleChangeCollateral('pre_emption_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดตราจอง" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} 
+                                                    handleChange={(val) => handleChangeCollateral('pre_emption_sub_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_sub_district}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1089,6 +1175,78 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียดตราจอง */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'น.ส.3' && (
@@ -1106,25 +1264,26 @@ const FullModal = (props) => {
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.nS3_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3_sub_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_sub_district}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1140,28 +1299,28 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ทะเบียน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่ม</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3" />
-                                                  </div>
+                                                  <Textbox title={'เล่ม'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3_emption_volume', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_volume}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3" />
-                                                  </div>
+                                                  <Textbox title={'หน้า'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3_emption_page', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_page}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">สารบบเล่ม/เลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3" />
-                                                  </div>
+                                                  <Textbox title={'สารบบเล่ม/เลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3_dealing_file_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_file_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3" />
-                                                  </div>
+                                                  <Textbox title={'สารบบหน้า'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3_dealing_page_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_page_no}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1171,6 +1330,78 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียดหนังสือรับรองการทำประโยชน์(น.ส.3) */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'น.ส.3 ก' && (
@@ -1188,31 +1419,32 @@ const FullModal = (props) => {
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.nS3A_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3A_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_sub_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_sub_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ระวางรูปถ่ายทางออกชื่อ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'ระวางรูปถ่ายทางออกชื่อ'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_map_sheet', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_map_sheet}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1228,40 +1460,40 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ทะเบียน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'เลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่มที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'เล่มที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_volume_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_volume_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'หน้า'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_page', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_page}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขที่ดิน</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'เลขที่ดิน'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_parcel_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_parcel_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หมายเลข</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'หมายเลข'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_number', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_number}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">แผ่นที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ก" />
-                                                  </div>
+                                                  <Textbox title={'แผ่นที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3A_sheet_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_sheet_no}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1271,6 +1503,78 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'น.ส.3 ข' && (
@@ -1288,31 +1592,32 @@ const FullModal = (props) => {
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.nS3B_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3B_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ข" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3B_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ข" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3B_sub_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_sub_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หมู่ที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ข" />
-                                                  </div>
+                                                  <Textbox title={'หมู่ที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3B_village', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_village}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1328,22 +1633,22 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ทะเบียน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่ม</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ข" />
-                                                  </div>
+                                                  <Textbox title={'เล่ม'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3B_volume', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_volume}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ข" />
-                                                  </div>
+                                                  <Textbox title={'หน้า'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3B_page', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_page}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน.ส.3 ข" />
-                                                  </div>
+                                                  <Textbox title={'เลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('nS3B_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_no}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1353,6 +1658,78 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'ส.ป.ก.' && (
@@ -1370,31 +1747,32 @@ const FullModal = (props) => {
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.alrO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('alrO_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_sub_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_sub_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หมู่ที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'หมู่ที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_village', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_village}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1410,36 +1788,34 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ทะเบียน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">แปลงเลขที่
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'แปลงเลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_plot_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_plot_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ระวาง ส.ป.ก. ที่
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'ระวาง ส.ป.ก. ที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_map_sheet', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_map_sheet}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'เลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่ม</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'เล่ม'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_volume', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_volume}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ส.ป.ก." />
-                                                  </div>
+                                                  <Textbox title={'หน้า'} 
+                                                    handleChange={(val) => handleChangeCollateral('alrO_page', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_page}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1449,6 +1825,78 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียด ส.ป.ก. */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'หนังสือแสดงกรรมสิทธิ์ห้องชุด' && (
@@ -1464,44 +1912,44 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">โฉนดที่ดินเลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'โฉนดที่ดินเลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_parcel_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_parcel_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.condO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('condO_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_sub_district', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_sub_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เนื้อที่</span>
-                                                    <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                    <span className="input-group-text" id="Search_id_card">ไร่</span>
-                                                    <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                    <span className="input-group-text" id="Search_id_card">งาน</span>
-                                                    <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                    <span className="input-group-text" id="Search_id_card">ตารางวา</span>
-                                                  </div>
+                                                  <AreaTextbox title={'เนื้อที่'} containerClassname={'mb-3'}
+                                                    handleChangeRai={(val) => handleChangeCollateral('condO_rai', val)} 
+                                                    rai={collateralDetail?.condO_rai}
+                                                    handleChangeNgan={(val) => handleChangeCollateral('condO_ngan', val)} 
+                                                    ngan={collateralDetail?.condO_ngan}
+                                                    handleChangeWa={(val) => handleChangeCollateral('condO_sqaure_wa', val)} 
+                                                    wa={collateralDetail?.condO_sqaure_wa}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1517,39 +1965,34 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ที่ตั้งห้องชุด</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ห้องชุดเลขที่
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'ห้องชุดเลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ชั้นที่
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'ชั้นที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_floor', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_floor}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อาคารเลขที่
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'อาคารเลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_building_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_building_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ชื่ออาคารชุด
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'ชื่ออาคารชุด'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_building_name', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_building_name}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ทะเบียนอาคารชุดเลขที่
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                  <Textbox title={'ทะเบียนอาคารชุดเลขที่'} 
+                                                    handleChange={(val) => handleChangeCollateral('condO_registration_no', val)} 
+                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_registration_no}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1557,7 +2000,7 @@ const FullModal = (props) => {
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="col-sm-12 col-md-12 col-lg-12">
+                                    <div className="col-sm-12 col-md-12 col-lg-12">                
                                       <div className="mb-1">
                                         <div className="card shadow-none border my-4" data-component-card="data-component-card">
                                           <div className="card-body p-0">
@@ -1565,58 +2008,55 @@ const FullModal = (props) => {
                                               <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ผู้ให้สัญญา</span>
-                                                    <textarea className="form-control" aria-label="สารบัญจดทะเบียน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)"></textarea>
-                                                  </div>
+                                                  <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                    value={collateralDetail?.promisor}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ผู้รับสัญญา</span>
-                                                    <textarea className="form-control" aria-label="สารบัญจดทะเบียน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)"></textarea>
-                                                  </div>
+                                                  <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                    value={collateralDetail?.contract_recipient}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เนื้อที่ประมาณ</span>
-                                                    <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                    <span className="input-group-text" id="Search_id_card">ตารางเมตร</span>
-                                                  </div>
+                                                  <Textbox title={'เนื้อที่ประมาณ'} footer={'ตารางเมตร'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('area_square_meter', val)} 
+                                                    value={collateralDetail?.area_square_meter}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">สูง</span>
-                                                    <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                    <span className="input-group-text" id="Search_id_card">เมตร</span>
-                                                  </div>
+                                                  <Textbox title={'สูง'} footer={'เมตร'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('high_meter', val)} 
+                                                    value={collateralDetail?.high_meter}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="form-floating form-floating-advance-select mb-3">
-                                                    <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์
-                                                    </label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>เลือกข้อมูล...</option>
-                                                      <option value="1">จำนอง</option>
-                                                      <option value="2">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
-                                                      <option value="3">สืบทรัพย์</option>
-                                                      <option value="4">โอนตามมาตรา 76</option>
-                                                      <option value="5">ตีโอนชำระหนี้</option>
-                                                      <option value="6">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <div className="form-floating form-floating-advance-select ">
+                                                    <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                    <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                      <option value="จำนอง">จำนอง</option>
+                                                      <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                      <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                      <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                      <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                      <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                      <option value="อื่นๆ">อื่นๆ</option>
                                                     </select>
                                                   </div>
                                                 </div>
-                                                <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อื่นๆโปรดระบุ
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)" />
-                                                  </div>
+                                                <div className="col-sm-12 col-md-12 col-lg-6">
+                                                  <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                    value={collateralDetail?.source_of_wealth_other}
+                                                    disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หมายเหตุ</span>
-                                                    <textarea className="form-control" aria-label="สารบัญจดทะเบียน หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)"></textarea>
-                                                  </div>
+                                                  <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                    value={collateralDetail?.remark}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1641,39 +2081,40 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ที่ดินตั้งอยู่</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ที่ดินตั้งอยู่เลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ภ.ท.บ.5" />
-                                                  </div>
+                                                  <Textbox title={'ที่ดินตั้งอยู่เลขที่'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('labT5_parcel_no', val)} 
+                                                    value={collateralDetail?.labT5_parcel_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.labT5_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('labT5_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ภ.ท.บ.5" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('labT5_district', val)} 
+                                                    value={collateralDetail?.labT5_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ภ.ท.บ.5" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('labT5_sub_district', val)} 
+                                                    value={collateralDetail?.labT5_sub_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หมู่ที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน ภ.ท.บ.5" />
-                                                  </div>
+                                                  <Textbox title={'หมู่ที่'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('labT5_village', val)} 
+                                                    value={collateralDetail?.labT5_village}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1683,6 +2124,56 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียด ภ.ท.บ.5 */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ทั้งหมด'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('total_area_rai', val)} 
+                                                rai={collateralDetail?.total_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('total_area_ngan', val)} 
+                                                ngan={collateralDetail?.total_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('total_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.total_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'บ้าน' && (
@@ -1698,6 +2189,10 @@ const FullModal = (props) => {
                                               <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
+                                                  <Textbox title={'สิ่งปลูกสร้างเลขที่'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('house_no', val)} 
+                                                    value={collateralDetail?.house_no}
+                                                  />
                                                   <div className="input-group mb-3">
                                                     <span className="input-group-text" id="Search_id_card">สิ่งปลูกสร้างเลขที่</span>
                                                     <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
@@ -1706,37 +2201,38 @@ const FullModal = (props) => {
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.house_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('house_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('house_district', val)} 
+                                                    value={collateralDetail?.house_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('house_sub_district', val)} 
+                                                    value={collateralDetail?.house_sub_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตั้งอยู่บนที่ดินเลขที่</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'ตั้งอยู่บนที่ดินเลขที่'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('house_parcel_no', val)} 
+                                                    value={collateralDetail?.house_parcel_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ลักษณะสิ่งปลูกสร้าง</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'ลักษณะสิ่งปลูกสร้าง'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('house_type', val)} 
+                                                    value={collateralDetail?.house_type}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1746,6 +2242,78 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียด บ้าน */}
+                                  {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                                  <div className="mb-1">
+                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                                      <div className="card-body p-0">
+                                        <div className="p-4 code-to-copy">
+                                          <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                                          <div className="row g-3">
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <div className="form-floating form-floating-advance-select ">
+                                                <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                                <select className="form-select" value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                  <option value="จำนอง">จำนอง</option>
+                                                  <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                                  <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                                  <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                                  <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                                  <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                                  <option value="อื่นๆ">อื่นๆ</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-6">
+                                              <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                                value={collateralDetail?.source_of_wealth_other}
+                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ'}
+                                              />
+                                            </div>
+                                            <div className="col-sm-12 col-md-12 col-lg-12">
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                 </>
                               )}
                               {collateral_type == 'สังหาริมทรัพย์' && (
@@ -1761,54 +2329,52 @@ const FullModal = (props) => {
                                               <h4 className="text-center">รายการจดทะเบียน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">วันที่จดทะเบียน
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'วันที่จดทะเบียน'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_registration_date', val)} 
+                                                    value={collateralDetail?.chattel_registration_date}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ยี่ห้อ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'ยี่ห้อ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_brand', val)} 
+                                                    value={collateralDetail?.chattel_brand}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ประเภท</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'ประเภท'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_type', val)} 
+                                                    value={collateralDetail?.chattel_type}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขทะเบียน</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'เลขทะเบียน'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_registration_no', val)} 
+                                                    value={collateralDetail?.chattel_registration_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ลักษณะ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'ลักษณะ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_style', val)} 
+                                                    value={collateralDetail?.chattel_style}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขตัวรถ
-                                                    </span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'เลขตัวรถ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_vehicle_no', val)} 
+                                                    value={collateralDetail?.chattel_vehicle_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เลขเครื่องยนต์</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'เลขเครื่องยนต์'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_engine_no', val)} 
+                                                    value={collateralDetail?.chattel_engine_no}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">สี</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน บ้าน" />
-                                                  </div>
+                                                  <Textbox title={'สี'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('chattel_color', val)} 
+                                                    value={collateralDetail?.chattel_color}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1824,23 +2390,22 @@ const FullModal = (props) => {
                                               <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ชื่อผู้ถือกรรมสิทธิ์
-                                                    </span>
-                                                    <textarea className="form-control" aria-label="สารบัญจดทะเบียน สังหาริมทรัพย์"></textarea>
-                                                  </div>
+                                                  <Textarea title={'ชื่อผู้ถือกรรมสิทธิ์'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('name_legal_owner', val)} 
+                                                    value={collateralDetail?.name_legal_owner}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ชื่อผู้ครอบครอง</span>
-                                                    <textarea className="form-control" aria-label="สารบัญจดทะเบียน สังหาริมทรัพย์"></textarea>
-                                                  </div>
+                                                  <Textarea title={'ชื่อผู้ครอบครอง'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('name_occupier', val)} 
+                                                    value={collateralDetail?.name_occupier}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หมายเหตุ</span>
-                                                    <textarea className="form-control" aria-label="สารบัญจดทะเบียน สังหาริมทรัพย์"></textarea>
-                                                  </div>
+                                                  <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                    value={collateralDetail?.remark}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1870,10 +2435,10 @@ const FullModal = (props) => {
                                   {/* start card รายละเอียด อื่นๆ */}
                                   <h3 className="text-center">อื่นๆ</h3>
                                   <div className="col-sm-12 col-md-12 col-lg-12 g-3">
-                                    <div className="input-group mb-3">
-                                      <span className="input-group-text" id="Search_id_card">ชื่อเอกสารสิทธิ์ (อื่นๆ)                                          </span>
-                                      <input className="form-control" type="text" aria-label="รายละเอียดน อื่นๆ" />
-                                    </div>
+                                    <Textbox title={'หลักประกันอื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                      handleChange={(val) => handleChangeCollateral('title_document_type_other', val)} 
+                                      value={collateralDetail?.title_document_type_other}
+                                    />
                                   </div>
                                   <div className="row">
                                     <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1884,39 +2449,40 @@ const FullModal = (props) => {
                                               <h4 className="text-center">เลขที่</h4><br />
                                               <div className="row g-3">
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">เล่ม</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน อื่นๆ" />
-                                                  </div>
+                                                  <Textbox title={'เล่ม'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('otheR_volume', val)} 
+                                                    value={collateralDetail?.otheR_volume}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">หน้า</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน อื่นๆ" />
-                                                  </div>
+                                                  <Textbox title={'หน้า'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('otheR_page', val)} 
+                                                    value={collateralDetail?.otheR_page}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                   <div className="form-floating form-floating-advance-select mb-3">
                                                     <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                    <select className="form-select" id="floaTingLabelSingleSelect" data-choices="data-choices" data-options='{"removeItemButton":true,"placeholder":true}'>
-                                                      <option>ทั้งหมด</option>
-                                                      <option>University of Chicago</option>
-                                                      <option>GSAS Open Labs At Harvard</option>
-                                                      <option>California Institute of Technology</option>
+                                                    <select className="form-select" value={collateralDetail?.otheR_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('otheR_province', e.target?.value)}>
+                                                      {provinces && (
+                                                        provinces.map((option, index) => (
+                                                          <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                      )}
                                                     </select>
                                                   </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">อำเภอ</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน อื่นๆ" />
-                                                  </div>
+                                                  <Textbox title={'อำเภอ'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('otheR_district', val)} 
+                                                    value={collateralDetail?.otheR_district}
+                                                  />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <div className="input-group mb-3">
-                                                    <span className="input-group-text" id="Search_id_card">ตำบล</span>
-                                                    <input className="form-control" type="text" aria-label="รายละเอียดน อื่นๆ" />
-                                                  </div>
+                                                  <Textbox title={'ตำบล'} containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChangeCollateral('otheR_sub_district', val)} 
+                                                    value={collateralDetail?.otheR_sub_district}
+                                                  />
                                                 </div>
                                               </div>
                                             </div>
@@ -1926,8 +2492,6 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียด อื่นๆ */}
-                                </>
-                              )}
                                   {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
                                   <div className="mb-1">
                                     <div className="card shadow-none border my-4" data-component-card="data-component-card">
@@ -1936,44 +2500,42 @@ const FullModal = (props) => {
                                           <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
                                           <div className="row g-3">
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <div className="input-group mb-3">
-                                                <span className="input-group-text" id="Search_id_card">ผู้ให้สัญญา</span>
-                                                <textarea className="form-control" aria-label="With textarea"></textarea>
-                                              </div>
+                                              <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                                value={collateralDetail?.promisor}
+                                              />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <div className="input-group mb-3">
-                                                <span className="input-group-text" id="Search_id_card">ผู้รับสัญญา</span>
-                                                <textarea className="form-control" aria-label="With textarea"></textarea>
-                                              </div>
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                                value={collateralDetail?.contract_recipient}
+                                              />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
-                                              <div className="input-group mb-3">
-                                                <span className="input-group-text" id="Search_id_card">เนื้อที่ตามสัญญา</span>
-                                                <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                <span className="input-group-text" id="Search_id_card">ไร่</span>
-                                                <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                <span className="input-group-text" id="Search_id_card">งาน</span>
-                                                <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                <span className="input-group-text" id="Search_id_card">ตารางวา</span>
-                                              </div>
+                                              <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                                rai={collateralDetail?.contract_area_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                                ngan={collateralDetail?.contract_area_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                                wa={collateralDetail?.contract_area_sqaure_wa}
+                                              />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
-                                              <div className="input-group mb-3">
-                                                <span className="input-group-text" id="Search_id_card">เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)</span>
-                                                <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                <span className="input-group-text" id="Search_id_card">ไร่</span>
-                                                <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                <span className="input-group-text" id="Search_id_card">งาน</span>
-                                                <input className="form-control" type="text" aria-label="สารบัญจดทะเบียน" />
-                                                <span className="input-group-text" id="Search_id_card">ตารางวา</span>
-                                              </div>
+                                              <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                                handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                                rai={collateralDetail?.area_transfer_rai}
+                                                handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                                wa={collateralDetail?.area_transfer_sqaure_wa}
+                                              />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
-                                              <div className="input-group mb-3">
-                                                <span className="input-group-text" id="Search_id_card">หมายเหตุ</span>
-                                                <textarea className="form-control" aria-label="With textarea"></textarea>
-                                              </div>
+                                              <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                                handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                                value={collateralDetail?.remark}
+                                              />
                                             </div>
                                           </div>
                                         </div>
@@ -1981,16 +2543,17 @@ const FullModal = (props) => {
                                     </div>
                                   </div>
                                   {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                                </>
+                              )}
                               <br />
                               <div className="d-flex justify-content-center ">
                                 <button className="btn btn-success me-2" type="button" onClick={() => saveCollateral()}>บันทึก</button>
                                 {isOpenCollateralAdd ? (
-                                  <button button className="btn btn-secondary" type="button" onClick={() => setOpenCollateralEdit(false)}>ยกเลิก</button>
+                                  <button className="btn btn-secondary" type="button" onClick={() => setOpenCollateralEdit(false)}>ยกเลิก</button>
                                 ) : (
-                                  <button button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
+                                  <button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
                                 )}
                               </div>
-
                             </div>
                           </div>
                         </div>
@@ -2171,9 +2734,9 @@ const FullModal = (props) => {
                               <div className="d-flex justify-content-center ">
                                 <button className="btn btn-success me-2" type="button" onClick={() => saveGuarantor()}>บันทึก</button>
                                 {isOpenGuarantorAdd ? (
-                                  <button button className="btn btn-secondary" type="button" onClick={() => setOpenGuarantorEdit(false)}>ยกเลิก</button>
+                                  <button className="btn btn-secondary" type="button" onClick={() => setOpenGuarantorEdit(false)}>ยกเลิก</button>
                                 ) : (
-                                  <button button className="btn btn-danger" type="button" onClick={() => removeGuarantor(guarantorDetail)}>ลบบุคคลค้ำประกัน</button>
+                                  <button className="btn btn-danger" type="button" onClick={() => removeGuarantor(guarantorDetail)}>ลบบุคคลค้ำประกัน</button>
                                 )}
                               </div>
                               <br />

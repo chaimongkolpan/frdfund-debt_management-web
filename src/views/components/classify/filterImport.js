@@ -12,7 +12,6 @@ const ClassifyImportFilter = (props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [clearFile, setClear] = useState(false);
   const listToString = (list) => {
-    console.log('list', list, list.join(','))
     if (list && list.length > 0)
       return list.join(',');
     else return "-"
@@ -96,10 +95,10 @@ const ClassifyImportFilter = (props) => {
           <div className="collapse code-collapse" id="single-file-upload-code">
           </div>
           <div className="p-4">
-            <DropZone onChange={onFileChange} clearFile={clearFile} />
+            <DropZone onChange={onFileChange} clearFile={clearFile} accept={{'Custom Files': ['.csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']}} maxFiles={1} />
           </div>
         </div>
-        <div className="col-12 gy-6">
+        <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
               <button className="btn btn-subtle-success me-1 mb-1" type="button" onClick={onSubmit}>นำไฟล์เข้าระบบ</button>

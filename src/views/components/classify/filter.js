@@ -171,10 +171,10 @@ const ClassifySearchFilter = (props) => {
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
               containerClassname={'mb-3'} 
-              defaultValue={'all'} 
+              defaultValue={creditorOp[0]} 
               options={creditorOp}
               handleChange={(val) => onChange('creditor', val)}
-              hasAll />
+            />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">

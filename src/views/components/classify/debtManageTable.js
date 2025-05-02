@@ -29,22 +29,22 @@ const ClassifyDebtManageTable = (props) => {
             <div className="btn-reveal-trigger position-static">
               <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
-                <button className="dropdown-item text-danger" onClick={() => handleCancelCombine()}>ยกเลิกรวมสัญญา</button>
+                <button className="dropdown-item text-danger" onClick={() => handleCancelCombine(item.id_combining)}>ยกเลิกรวมสัญญา</button>
               </div>
             </div>
           ) : (item.isSplit ? (
             <div className="btn-reveal-trigger position-static">
               <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
-                <button className="dropdown-item text-danger" type="button" onClick={() => handleCancelSplit()}>ยกเลิกแยกสัญญา</button>
+                <button className="dropdown-item text-danger" type="button" onClick={() => handleCancelSplit(item.id_separate)}>ยกเลิกแยกสัญญา</button>
               </div>
             </div>
           ) : (
             <div className="btn-reveal-trigger position-static">
               <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
-                <button className="dropdown-item" type="button" onClick={() => handleSplit()}>แยกสัญญา</button>
-                <button className="dropdown-item" type="button" onClick={() => handleCombine()}>รวมสัญญา</button>
+                <button className="dropdown-item" type="button" onClick={() => handleSplit(item.id_debt_management)}>แยกสัญญา</button>
+                <button className="dropdown-item" type="button" onClick={() => handleCombine(item.id_debt_register)}>รวมสัญญา</button>
               </div>
             </div>
           ))}
