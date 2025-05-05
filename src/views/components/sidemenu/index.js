@@ -630,10 +630,40 @@ const Sidebar = props => {
                 <p className="navbar-vertical-label">รายงาน</p>
                 {/* parent pages รายงาน*/}
                 <div className="nav-item-wrapper">
-                  <a className="nav-link label-1" href="/report">
-                  <div className="d-flex align-items-center"><span className="nav-link-icon"><PieChart size={16} /></span><div className="nav-link-text-wrapper"><span className="nav-link-text">รายงาน</span></div>
-                  </div>
+                  <a className="nav-link dropdown-indicator label-1" href="#nv-Report" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Report">
+                    <div className="d-flex align-items-center">
+                      <div className="dropdown-indicator-icon-wrapper">
+                        <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                      </div>
+                      <span className="nav-link-icon"><PieChart size={16} /></span>
+                      <span className="nav-link-text">รายงาน</span>
+                    </div>
                   </a>
+                  <div className="parent-wrapper label-1">
+                    <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-Report">
+                      <li className="collapsed-nav-item-title d-none">รายงาน</li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/report">
+                          <div className="d-flex align-items-center"><span className="nav-link-text">จัดการหนี้</span></div>
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/report/asset">
+                          <div className="d-flex align-items-center"><span className="nav-link-text">บริหารสินทรัพย์</span></div>
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/report/restruct">
+                          <div className="d-flex align-items-center"><span className="nav-link-text">ปรับโครงสร้างหนี้ฯ</span></div>
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/report/postpone">
+                          <div className="d-flex align-items-center"><span className="nav-link-text">ชะลอหนี้</span></div>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </li>
             </ul>

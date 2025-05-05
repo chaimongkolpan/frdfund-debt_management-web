@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
+import Paging from "@views/components/Paging";
 import CooperativeTable from "@views/components/proposeForApproval/NPL/cooperativeTable";
 import CommercialBanksOrLegalEntitiesTable from "@views/components/proposeForApproval/NPL/commercialBanksOrLegalEntitiesTable";
 
 const PrepareRequestApproveTable = (props) => {
   const { result, handleSubmit } = props;
   const [data, setData] = useState([]);
+  const [paging, setPaging] = useState(null);
   const [cooperativeSelected, setCooperativeSelected] = useState([]);
-  const [
-    commercialBanksOrLegalEntitiesSelected,
-    setCommercialBanksOrLegalEntitiesSelected,
-  ] = useState([]);
+  const [commercialBanksOrLegalEntitiesSelected,setCommercialBanksOrLegalEntitiesSelected] = useState([]);
 
   const commercialBanksOrLegalEntitiesData = data.filter(
     (i) =>
@@ -33,6 +32,9 @@ const PrepareRequestApproveTable = (props) => {
   useEffect(() => {
     if (result) {
       setData(result.data);
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
+      setCooperativeSelected([])
+      setCommercialBanksOrLegalEntitiesSelected([])
     }
 
     return () => {
@@ -42,8 +44,8 @@ const PrepareRequestApproveTable = (props) => {
 
   const onSubmit = () => {
     handleSubmit([
-      ...cooperativeSelected,
-      ...commercialBanksOrLegalEntitiesSelected,
+      ...(data.filter((i) => cooperativeSelected.includes(i.id_debt_register))),
+      ...(data.filter((i) => commercialBanksOrLegalEntitiesSelected.includes(i.id_debt_register))),
     ]);
   };
 
@@ -81,29 +83,29 @@ const PrepareRequestApproveTable = (props) => {
   return (
     <>
       <div id="tableExample" data-list='{"valueNames":["name","email","age"]}'>
-        <CooperativeTable
-          data={cooperativeData}
-          selected={cooperativeSelected}
-          isSelectedAll={isSelectedAllCooperative}
-          onSelect={onSelectCooperative}
-          onSelectAll={onSelectAllCooperative}
-        />
-        <CommercialBanksOrLegalEntitiesTable
-          data={commercialBanksOrLegalEntitiesData}
-          selected={commercialBanksOrLegalEntitiesSelected}
-          isSelectedAll={isSelectedAllCommercialBanksOrLegalEntities}
-          onSelect={onSelectCommercialBanksOrLegalEntities}
-          onSelectAll={onSelectAllCommercialBanksOrLegalEntities}
-        />
-        {/* <div className="d-flex justify-content-between mt-3"><span className="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
-          <div className="d-flex">
-            <button className="page-link" data-list-pagination="prev"><span className="fas fa-chevron-left"></span></button>
-            <ul className="mb-0 pagination">
-
-            </ul>
-            <button className="page-link pe-0" data-list-pagination="next"><span className="fas fa-chevron-right"></span></button>
-          </div>
-        </div> */}
+        {(cooperativeData && cooperativeData.length > 0) && (
+          <CooperativeTable
+            data={cooperativeData}
+            selected={cooperativeSelected}
+            isSelectedAll={isSelectedAllCooperative}
+            onSelect={onSelectCooperative}
+            onSelectAll={onSelectAllCooperative}
+          />
+        )}
+        {(commercialBanksOrLegalEntitiesData && commercialBanksOrLegalEntitiesData.length > 0) && (
+          <CommercialBanksOrLegalEntitiesTable
+            data={commercialBanksOrLegalEntitiesData}
+            selected={commercialBanksOrLegalEntitiesSelected}
+            isSelectedAll={isSelectedAllCommercialBanksOrLegalEntities}
+            onSelect={onSelectCommercialBanksOrLegalEntities}
+            onSelectAll={onSelectAllCommercialBanksOrLegalEntities}
+          />
+        )}
+        {paging?.total > 0 && (
+          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
+            setPage={(page) => getData({ ...filter, currentPage: page })} 
+          />
+        )}
       </div>
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSelectedSome ? "" : "d-none"}`}>

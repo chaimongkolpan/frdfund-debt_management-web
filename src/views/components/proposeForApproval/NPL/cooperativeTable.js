@@ -32,7 +32,7 @@ const CooperativeTable = ({
     return (
       item && (
         <tr key={index}>
-          {selectable && (
+          {selectable ? (
             <td className="fs-9 align-middle">
               <div className="form-check ms-2 mb-0 fs-8">
                 <input
@@ -43,6 +43,8 @@ const CooperativeTable = ({
                 />
               </div>
             </td>
+          ) : (
+            <td className="fs-9 align-middle">{index + 1}</td>
           )}
           <td className="align-middle">{item.id_card}</td>
           <td className="align-middle">{item.name_prefix}</td>
@@ -54,15 +56,15 @@ const CooperativeTable = ({
           <td className="align-middle">{item.debt_manage_creditor_name}</td>
           <td className="align-middle">{item.debt_manage_creditor_province}</td>
           <td className="align-middle">{item.debt_manage_creditor_branch}</td>
-          <td className="align-middle">{item.organization_no}</td>
-          <td className="align-middle">{item.debt_register_round}</td>
-          <td className="align-middle">{item.date_submit_debt_register}</td>
-          <td className="align-middle">{item.passed_approval_no}</td>
-          <td className="align-middle">{item.passed_approval_date}</td>
-          <td className="align-middle">{item.creditor_type}</td>
-          <td className="align-middle">{item.creditor_name}</td>
-          <td className="align-middle">{item.creditor_province}</td>
-          <td className="align-middle">{item.creditor_branch}</td>
+          <td className="align-middle">{item.debt_manage_contract_no}</td>
+          <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
+          <td className="align-middle">{item.debt_manage_accrued_interest}</td>
+          <td className="align-middle">{item.debt_manage_fine}</td>
+          <td className="align-middle">{item.debt_manage_litigation_expenses}</td>
+          <td className="align-middle">{item.debt_manage_forfeiture_withdrawal_fee}</td>
+          <td className="align-middle">{item.debt_manage_total_expenses}</td>
+          <td className="align-middle">{item.debt_manage_total}</td>
+          <td className="align-middle">{item.debt_manage_status}</td>
           <td className="align-middle">{item.collateral_type}</td>
           <td className="align-middle">{item.debt_manage_objective}</td>
         </tr>
@@ -79,7 +81,7 @@ const CooperativeTable = ({
             style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}
           >
             <tr>
-              {selectable && (
+              {selectable ? (
                 <th
                   className="white-space-nowrap fs-9 align-middle ps-0"
                   rowSpan="2"
@@ -93,6 +95,8 @@ const CooperativeTable = ({
                     />
                   </div>
                 </th>
+              ) : (
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>#</th>
               )}
               <th className="text-center" colSpan="4">
                 เกษตรกร

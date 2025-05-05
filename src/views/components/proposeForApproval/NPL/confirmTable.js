@@ -16,11 +16,12 @@ const ConfirmTable = (props) => {
   return (
     <>
       <div id="tableExample" data-list='{"valueNames":["name","email","age"]}'>
-        <CooperativeTable selectable={false} data={cooperativeData} />
-        <CommercialBanksOrLegalEntitiesTable
-          selectable={false}
-          data={commercialBanksOrLegalEntitiesData}
-        />
+        {(cooperativeData && cooperativeData.length > 0) && (
+          <CooperativeTable selectable={false} data={cooperativeData} />
+        )}
+        {(commercialBanksOrLegalEntitiesData && commercialBanksOrLegalEntitiesData.length > 0) && (
+          <CommercialBanksOrLegalEntitiesTable selectable={false} data={commercialBanksOrLegalEntitiesData} />
+        )}
       </div>
     </>
   );

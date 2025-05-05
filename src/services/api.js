@@ -27,6 +27,28 @@ export const login = async (params) => {
     return defaultErrorResponse;
   }
 };
+export const getUsers = async (params) => {
+  const path = "/users";
+  try {
+    const result = await axios.get(path, { params: { ...params }});
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getNplCondition = async () => {
+  const path = "/npl-condition";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 export const getAlertSide = async () => {
   const path = "/common/alert";
   try {
@@ -216,17 +238,6 @@ export const submitListNPLExport = async (params) => {
     console.error("error: " + path + " =>", e);
   }
   return;
-};
-export const searchBranchOffer = async (filter) => {
-  const path = "/BranchOffer/search-branch-offer";
-  try {
-    const result = await axios.post(path, filter);
-    if (result.status == 200) return result.data;
-    else return defaultErrorResponse;
-  } catch (e) {
-    console.error("error: " + path + " =>", e);
-    return defaultErrorResponse;
-  }
 };
 
 //#endregion
@@ -487,6 +498,55 @@ export const searchNpaClassify = async (filter) => {
     return defaultErrorResponse;
   }
 };
+//#endregion
+
+//#region BranchOffer
+export const searchBranchOffer = async (filter) => {
+  const path = "/BranchOffer/search-branch-offer";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchOffer = async () => {
+  const path = "/BranchOffer/prepare-branch-offer";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const addBranchOffer = async (selected) => {
+  const path = "/BranchOffer/add-branch-proposes-for-approval";
+  try {
+    const result = await axios.post(path, { data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const removeBranchOffer = async (selected) => {
+  const path = "/BranchOffer/remove-branch-proposes-for-approval";
+  try {
+    const result = await axios.post(path, { data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+
+
 //#endregion
 
 //#region Approval

@@ -6,10 +6,7 @@ const DebtRegisterSelectedTableNpa = (props) => {
   const { result, handleSubmit, handleRemove } = props;
   const [data, setData] = useState([]);
   const [cooperativeSelected, setCooperativeSelected] = useState([]);
-  const [
-    commercialBanksOrLegalEntitiesSelected,
-    setCommercialBanksOrLegalEntitiesSelected,
-  ] = useState([]);
+  const [commercialBanksOrLegalEntitiesSelected,setCommercialBanksOrLegalEntitiesSelected] = useState([]);
 
   const commercialBanksOrLegalEntitiesData = data.filter(
     (i) =>
@@ -33,6 +30,8 @@ const DebtRegisterSelectedTableNpa = (props) => {
   useEffect(() => {
     if (result) {
       setData(result.data);
+      setCooperativeSelected([])
+      setCommercialBanksOrLegalEntitiesSelected([])
     }
 
     return () => {
@@ -42,14 +41,14 @@ const DebtRegisterSelectedTableNpa = (props) => {
 
   const onSubmit = () => {
     handleSubmit([
-      ...cooperativeSelected,
-      ...commercialBanksOrLegalEntitiesSelected,
+      ...(data.filter((i) => cooperativeSelected.includes(i.id_debt_register))),
+      ...(data.filter((i) => commercialBanksOrLegalEntitiesSelected.includes(i.id_debt_register))),
     ]);
   };
   const onRemove = () => {
     handleRemove([
-      ...cooperativeSelected,
-      ...commercialBanksOrLegalEntitiesSelected,
+      ...(data.filter((i) => cooperativeSelected.includes(i.id_debt_register))),
+      ...(data.filter((i) => commercialBanksOrLegalEntitiesSelected.includes(i.id_debt_register))),
     ]);
   };
 
@@ -87,20 +86,24 @@ const DebtRegisterSelectedTableNpa = (props) => {
   return (
     <>
       <div id="tableExample1" data-list='{"valueNames":["name","email","age"]'>
-        <CooperativeTable
-          data={cooperativeData}
-          selected={cooperativeSelected}
-          isSelectedAll={isSelectedAllCooperative}
-          onSelect={onSelectCooperative}
-          onSelectAll={onSelectAllCooperative}
-        />
-        <CommercialBanksOrLegalEntitiesTable
-          data={commercialBanksOrLegalEntitiesData}
-          selected={commercialBanksOrLegalEntitiesSelected}
-          isSelectedAll={isSelectedAllCommercialBanksOrLegalEntities}
-          onSelect={onSelectCommercialBanksOrLegalEntities}
-          onSelectAll={onSelectAllCommercialBanksOrLegalEntities}
-        />
+        {(cooperativeData && cooperativeData.length > 0) && (
+          <CooperativeTable
+            data={cooperativeData}
+            selected={cooperativeSelected}
+            isSelectedAll={isSelectedAllCooperative}
+            onSelect={onSelectCooperative}
+            onSelectAll={onSelectAllCooperative}
+          />
+        )}
+        {(commercialBanksOrLegalEntitiesData && commercialBanksOrLegalEntitiesData.length > 0) && (
+          <CommercialBanksOrLegalEntitiesTable
+            data={commercialBanksOrLegalEntitiesData}
+            selected={commercialBanksOrLegalEntitiesSelected}
+            isSelectedAll={isSelectedAllCommercialBanksOrLegalEntities}
+            onSelect={onSelectCommercialBanksOrLegalEntities}
+            onSelectAll={onSelectAllCommercialBanksOrLegalEntities}
+          />
+        )}
         {/* <div className="d-flex justify-content-between mt-3"><span className="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
           <div className="d-flex">
             <button className="page-link" data-list-pagination="prev"><span className="fas fa-chevron-left"></span></button>

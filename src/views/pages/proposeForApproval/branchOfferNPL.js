@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import According from "@views/components/panel/according";
+import BookNo from "@views/components/input/BookNo";
+import DatePicker from "@views/components/input/DatePicker";
 import Modal from "@views/components/modal/FullModal";
 import Loading from "@views/components/modal/loading";
 import Filter from "@views/components/proposeForApproval/NPL/filter";
@@ -13,8 +15,9 @@ import logo from "@src/assets/images/icons/logo.png";
 import {
   cleanData,
   searchBranchOffer,
-  getContractNPAToList,
-  updateNPLstatus,
+  getBranchOffer,
+  addBranchOffer,
+  removeBranchOffer,
   submitListNPA,
 } from "@services/api";
 
@@ -23,10 +26,11 @@ const BranchOfferNPL = () => {
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
   const [data, setData] = useState(null);
-  const [data2, setData2] = useState(null);
   const [addedData, setAddedData] = useState(null);
   const [filter, setFilter] = useState({});
   const [makelistSelected, setMakeList] = useState(null);
+  const [bookNo, setBookNo] = useState(null);
+  const [bookDate, setBookDate] = useState(null);
   const [filterAdded, setFilterAdded] = useState({
     currentPage: 1,
     pageSize: process.env.PAGESIZE,
@@ -51,32 +55,17 @@ const BranchOfferNPL = () => {
     setLoadBigData(false);
   };
 
-  const onSearchBottom = async (filter) => {
-    setLoadBigData(true);
-    const result = await searchBranchOffer({
-      DebtClassifyStatus: "สาขาเตรียมนำเสนอ",
-      ...filter,
-    });
-    if (result.isSuccess) {
-      console.log("onSearchBottom", result);
-      setData2(result);
-    } else {
-      setData2(null);
-    }
-    setLoadBigData(false);
-  };
-
   const onAddBigData = async (selected) => {
-    const result = await updateNPLstatus(selected, "สาขาเตรียมนำเสนอ");
+    const result = await addBranchOffer(selected);
     if (result.isSuccess) {
-      await onSearchTop(filter);
+      await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     }
   };
 
   const fetchData = async (query) => {
     setFilterAdded(query);
-    const result = await getContractNPAToList(query);
+    const result = await getBranchOffer();
     if (result.isSuccess) {
       setAddedData(result);
     } else {
@@ -85,28 +74,24 @@ const BranchOfferNPL = () => {
   };
 
   const onRemoveMakelist = async (selected) => {
-    const result = await updateNPLstatus(selected, "จำแนกมูลหนี้แล้ว");
+    const result = await removeBranchOffer(selected);
     if (result.isSuccess) {
+      await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     }
   };
 
   const onSubmitMakelist = async () => {
-    setSubmit(false);
-    setLoadBigData(true);
-    const clearTimer = setTimeout(() => {
-      setLoadBigData(false);
-    }, 10000);
     const result = await submitListNPA({
       type: "application/octet-stream",
-      filename: "จัดทำรายชื่อเกษตรกร_" + new Date().getTime() + ".zip",
+      filename: "สาขาเสนออนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
       data: makelistSelected,
     });
     if (result.isSuccess) {
+      await setBookNo(null);
+      await setBookDate(null);
       await fetchData(filterAdded);
     }
-    clearTimeout(clearTimer);
-    setLoadBigData(false);
   };
 
   const onCloseMakelist = async () => {
@@ -118,10 +103,7 @@ const BranchOfferNPL = () => {
   };
 
   const handleSubmit = async (selected) => {
-    // console.log('data2', data2.data.filter((x) => selected.includes(x.id_debt_register)))
-    setRequestApproveData(
-      data2.data.filter((x) => selected.includes(x.id_debt_register))
-    );
+    setRequestApproveData(selected);
     setSubmit(true);
   };
 
@@ -130,8 +112,7 @@ const BranchOfferNPL = () => {
   useEffect(() => {
     setLoadBigData(true);
     fetchData(filterAdded);
-    onSearchTop(filter);
-    onSearchBottom();
+    // onSearchTop(filter);
     return cleanData;
   }, []);
 
@@ -196,7 +177,7 @@ const BranchOfferNPL = () => {
                 className={"mb-3"}
                 children={
                   <RequestApproveTable
-                    result={data2}
+                    result={addedData}
                     handleSubmit={handleSubmit}
                     handleRemove={onRemoveMakelist}
                     filter={filterAdded}
@@ -219,33 +200,14 @@ const BranchOfferNPL = () => {
         scrollable
       >
         <div class="row">
-          <div class="col-sm-12 col-md-12 col-lg-6">
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="Search_id_card">
-                เลขหนังสือ
-              </span>
-              <span class="input-group-text" id="Search_id_card">
-                กฟก.
-              </span>
-              <input class="form-control" type="text" aria-label="ค้นหา" />
-            </div>
+          <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+            <BookNo title={'เลขหนังสือ'} subtitle={'กฟก.'} handleChange={(val) => setBookDate(val)} value={bookNo} />
           </div>
-          <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="flatpickr-input-container">
-              <div class="form-floating">
-                <input
-                  class="form-control datetimepicker"
-                  id="floatingInputStartDate"
-                  type="text"
-                  placeholder="end date"
-                  data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}'
-                />
-                <label class="ps-6" for="floatingInputStartDate">
-                  วันที่หนังสือ
-                </label>
-                <span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-              </div>
-            </div>
+          <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+            <DatePicker title={'วันที่หนังสือ'}
+              value={bookDate} 
+              handleChange={(val) => setBookDate(val)} 
+            />
           </div>
         </div>
         <ConfirmTable data={requestApproveData} />

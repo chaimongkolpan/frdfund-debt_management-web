@@ -32,7 +32,7 @@ const CommercialBanksOrLegalEntitiesTable = ({
     return (
       item && (
         <tr key={index}>
-          {selectable && (
+          {selectable ? (
             <td className="fs-9 align-middle">
               <div className="form-check ms-2 mb-0 fs-8">
                 <input
@@ -43,6 +43,8 @@ const CommercialBanksOrLegalEntitiesTable = ({
                 />
               </div>
             </td>
+          ) : (
+            <td className="fs-9 align-middle">{index + 1}</td>
           )}
           <td className="align-middle">{item.id_card}</td>
           <td className="align-middle">{item.name_prefix}</td>
@@ -54,15 +56,17 @@ const CommercialBanksOrLegalEntitiesTable = ({
           <td className="align-middle">{item.debt_manage_creditor_name}</td>
           <td className="align-middle">{item.debt_manage_creditor_province}</td>
           <td className="align-middle">{item.debt_manage_creditor_branch}</td>
-          <td className="align-middle">{item.organization_no}</td>
-          <td className="align-middle">{item.debt_register_round}</td>
-          <td className="align-middle">{item.date_submit_debt_register}</td>
-          <td className="align-middle">{item.passed_approval_no}</td>
-          <td className="align-middle">{item.passed_approval_date}</td>
-          <td className="align-middle">{item.creditor_type}</td>
-          <td className="align-middle">{item.creditor_name}</td>
-          <td className="align-middle">{item.creditor_province}</td>
-          <td className="align-middle">{item.creditor_branch}</td>
+          <td className="align-middle">{item.debt_manage_contract_no}</td>
+          <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
+          <td className="align-middle">{item.debt_manage_accrued_interest}</td>
+          <td className="align-middle">{item.debt_manage_fine}</td>
+          <td className="align-middle">{item.debt_manage_litigation_expenses}</td>
+          <td className="align-middle">{item.debt_manage_forfeiture_withdrawal_fee}</td>
+          <td className="align-middle">{item.debt_manage_insurance_premium}</td>
+          <td className="align-middle">{item.debt_manage_other_expenses}</td>
+          <td className="align-middle">{item.debt_manage_total_expenses}</td>
+          <td className="align-middle">{item.debt_manage_total}</td>
+          <td className="align-middle">{item.debt_manage_status}</td>
           <td className="align-middle">{item.collateral_type}</td>
           <td className="align-middle">{item.debt_manage_objective}</td>
         </tr>
@@ -79,7 +83,7 @@ const CommercialBanksOrLegalEntitiesTable = ({
             style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}
           >
             <tr>
-              {selectable && (
+              {selectable ? (
                 <th
                   className="white-space-nowrap fs-9 align-middle ps-0"
                   rowSpan="2"
@@ -93,6 +97,8 @@ const CommercialBanksOrLegalEntitiesTable = ({
                     />
                   </div>
                 </th>
+              ) : (
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>#</th>
               )}
               <th className="text-center" colSpan="4">
                 เกษตรกร
@@ -105,67 +111,67 @@ const CommercialBanksOrLegalEntitiesTable = ({
               </th>
             </tr>
             <tr>
-              <th className="align-middle text-center" data-sort="name">
+              <th className="align-middle text-center">
                 เลขบัตรประชาชน
               </th>
-              <th className="align-middle text-center" data-sort="email">
+              <th className="align-middle text-center">
                 คำนำหน้า
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ชื่อ-นามสกุล
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 จังหวัด
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ประเภทเจ้าหนี้
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 สถาบันเจ้าหนี้
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 จังหวัดเจ้าหนี้
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 สาขาเจ้าหนี้
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 เลขที่สัญญา
               </th>
-              <th className="align-middle text-center" data-sort="email">
+              <th className="align-middle text-center">
                 เงินต้น
               </th>
-              <th className="align-middle text-center" data-sort="email">
+              <th className="align-middle text-center">
                 ดอกเบี้ย
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ค่าปรับ
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ค่าใช้จ่ายในการดำเนินคดี
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ค่าถอนการยึดทรัพย์
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ค่าเบี้ยประกัน
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ค่าใช้จ่ายอื่นๆ
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 รวมค่าใช้จ่าย
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 รวมทั้งสิ้น
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 สถานะหนี้
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 ประเภทหลักประกัน
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center">
                 วัตถุประสงค์การกู้
               </th>
             </tr>

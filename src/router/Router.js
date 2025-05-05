@@ -40,6 +40,9 @@ const ApprovalAdditionalActionNpa = lazy(() => import('../views/pages/approval/a
 
 const Close = lazy(() => import('../views/pages/close'))
 const Report = lazy(() => import('../views/pages/report'))
+const ReportAsset = lazy(() => import('../views/pages/report/asset'))
+const ReportRestruct = lazy(() => import('../views/pages/report/restruct'))
+const ReportPostpone = lazy(() => import('../views/pages/report/postpone'))
 const Router = () => {
     const getHomeRoute = () => {
         const user = getUserData()
@@ -96,16 +99,6 @@ const Router = () => {
             children: [{ path: '/classify/searchNPL/detail/:idcard', element: <ClassifySearchDetail /> }]
         },
         {
-            path: '/proposeForApproval/branchOfferNPA',
-            element: <VerticalLayout />,
-            children: [{ path: '/proposeForApproval/branchOfferNPA', element: <ProposeForApprovalBranchOfferNPA /> }]
-        },
-        {
-            path: '/proposeForApproval/branchOfferNPL',
-            element: <VerticalLayout />,
-            children: [{ path: '/proposeForApproval/branchOfferNPL', element: <ProposeForApprovalBranchOfferNPL /> }]
-        },
-        {
             path: '/classify/searchNPA',
             element: <VerticalLayout />,
             children: [{ path: '/classify/searchNPA', element: <ClassifySearchNpa /> }]
@@ -116,14 +109,24 @@ const Router = () => {
             children: [{ path: '/classify/searchNPA/detail/:idcard', element: <ClassifySearchNpaDetail /> }]
         },
         {
+            path: '/proposeForApproval/branchOfferNPA',
+            element: <VerticalLayout />,
+            children: [{ path: '/proposeForApproval/branchOfferNPA', element: <ProposeForApprovalBranchOfferNPA /> }]
+        },
+        {
+            path: '/proposeForApproval/branchOfferNPL',
+            element: <VerticalLayout />,
+            children: [{ path: '/proposeForApproval/branchOfferNPL', element: <ProposeForApprovalBranchOfferNPL /> }]
+        },
+        {
             path: '/branch/offer/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/offer/npl', element: <BranchOfferNpl /> }]
+            children: [{ path: '/branch/offer/npl', element: <ProposeForApprovalBranchOfferNPL /> }]
         },
         {
             path: '/branch/offer/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/offer/npa', element: <BranchOfferNpa /> }]
+            children: [{ path: '/branch/offer/npa', element: <ProposeForApprovalBranchOfferNPA /> }]
         },
         {
             path: '/branch/prepare/npl',
@@ -204,6 +207,21 @@ const Router = () => {
             path: '/report',
             element: <VerticalLayout />,
             children: [{ path: '/report', element: <Report /> }]
+        },
+        {
+            path: '/report/asset',
+            element: <VerticalLayout />,
+            children: [{ path: '/report/asset', element: <ReportAsset /> }]
+        },
+        {
+            path: '/report/restruct',
+            element: <VerticalLayout />,
+            children: [{ path: '/report/restruct', element: <ReportRestruct /> }]
+        },
+        {
+            path: '/report/postpone',
+            element: <VerticalLayout />,
+            children: [{ path: '/report/postpone', element: <ReportPostpone /> }]
         },
         {
             path: '/version',
