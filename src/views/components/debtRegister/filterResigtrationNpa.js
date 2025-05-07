@@ -223,7 +223,7 @@ const DebtRegisterFilterNpa = (props) => {
             </div>
           )}
         </div>
-        <div className="col-12 gy-6">
+        <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
               <button className="btn btn-subtle-success me-1 mb-1" type="button" onClick={() => onSubmit()}>ค้นหา</button>

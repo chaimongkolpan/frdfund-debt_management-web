@@ -9,11 +9,16 @@ import { getUserData } from '../utility/Utils'
 const Error = lazy(() => import('../views/pages/Error'))
 const Version = lazy(() => import('../views/pages/Version'))
 const Login = lazy(() => import('../views/pages/authentication/Login'))
+const Setting = lazy(() => import('../views/pages/setting'))
+const Profile = lazy(() => import('../views/pages/profile'))
 const DebtRegister = lazy(() => import('../views/pages/debt-register'))
 const DebtRegisterNpa = lazy(() => import('../views/pages/debt-register/npa'))
 const ClassifyImport = lazy(() => import('../views/pages/classify/import'))
 const ClassifySearch = lazy(() => import('../views/pages/classify/search'))
 const ClassifySearchDetail = lazy(() => import('../views/pages/classify/searchDetail'))
+const ProposeForApprovalBranchOfferNPA = lazy(() => import('../views/pages/proposeForApproval/branchOfferNPA'))
+const ProposeForApprovalBranchOfferNPL = lazy(() => import('../views/pages/proposeForApproval/branchOfferNPL'))
+
 const ClassifySearchNpa = lazy(() => import('../views/pages/classify/searchNpa'))
 const ClassifySearchNpaDetail = lazy(() => import('../views/pages/classify/searchNpaDetail'))
 const BranchOfferNpl = lazy(() => import('../views/pages/branch/offer/npl'))
@@ -32,6 +37,12 @@ const ApprovalDisbursementStatusNpl = lazy(() => import('../views/pages/approval
 const ApprovalDisbursementStatusNpa = lazy(() => import('../views/pages/approval/disbursement-status/npa'))
 const ApprovalAdditionalActionNpl = lazy(() => import('../views/pages/approval/additional-action/npl'))
 const ApprovalAdditionalActionNpa = lazy(() => import('../views/pages/approval/additional-action/npa'))
+
+const Close = lazy(() => import('../views/pages/close'))
+const Report = lazy(() => import('../views/pages/report'))
+const ReportAsset = lazy(() => import('../views/pages/report/asset'))
+const ReportRestruct = lazy(() => import('../views/pages/report/restruct'))
+const ReportPostpone = lazy(() => import('../views/pages/report/postpone'))
 const Router = () => {
     const getHomeRoute = () => {
         const user = getUserData()
@@ -51,6 +62,16 @@ const Router = () => {
             path: '/login',
             element: <BlankLayout />,
             children: [{ path: '/login', element: <Login /> }]
+        },
+        {
+            path: '/profile',
+            element: <VerticalLayout />,
+            children: [{ path: '/profile', element: <Profile /> }]
+        },
+        {
+            path: '/settings',
+            element: <VerticalLayout />,
+            children: [{ path: '/settings', element: <Setting /> }]
         },
         {
             path: '/debt',
@@ -88,14 +109,24 @@ const Router = () => {
             children: [{ path: '/classify/searchNPA/detail/:idcard', element: <ClassifySearchNpaDetail /> }]
         },
         {
+            path: '/proposeForApproval/branchOfferNPA',
+            element: <VerticalLayout />,
+            children: [{ path: '/proposeForApproval/branchOfferNPA', element: <ProposeForApprovalBranchOfferNPA /> }]
+        },
+        {
+            path: '/proposeForApproval/branchOfferNPL',
+            element: <VerticalLayout />,
+            children: [{ path: '/proposeForApproval/branchOfferNPL', element: <ProposeForApprovalBranchOfferNPL /> }]
+        },
+        {
             path: '/branch/offer/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/offer/npl', element: <BranchOfferNpl /> }]
+            children: [{ path: '/branch/offer/npl', element: <ProposeForApprovalBranchOfferNPL /> }]
         },
         {
             path: '/branch/offer/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/offer/npa', element: <BranchOfferNpa /> }]
+            children: [{ path: '/branch/offer/npa', element: <ProposeForApprovalBranchOfferNPA /> }]
         },
         {
             path: '/branch/prepare/npl',
@@ -166,6 +197,31 @@ const Router = () => {
             path: '/approval/additional-action/npa',
             element: <VerticalLayout />,
             children: [{ path: '/approval/additional-action/npa', element: <ApprovalAdditionalActionNpa /> }]
+        },
+        {
+            path: '/close',
+            element: <VerticalLayout />,
+            children: [{ path: '/close', element: <Close /> }]
+        },
+        {
+            path: '/report',
+            element: <VerticalLayout />,
+            children: [{ path: '/report', element: <Report /> }]
+        },
+        {
+            path: '/report/asset',
+            element: <VerticalLayout />,
+            children: [{ path: '/report/asset', element: <ReportAsset /> }]
+        },
+        {
+            path: '/report/restruct',
+            element: <VerticalLayout />,
+            children: [{ path: '/report/restruct', element: <ReportRestruct /> }]
+        },
+        {
+            path: '/report/postpone',
+            element: <VerticalLayout />,
+            children: [{ path: '/report/postpone', element: <ReportPostpone /> }]
         },
         {
             path: '/version',

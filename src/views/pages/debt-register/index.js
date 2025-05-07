@@ -30,7 +30,7 @@ const DebtRegister = () => {
   const [makelistSelected, setMakeList] = useState(null);
   const [filterAdded, setFilterAdded] = useState({
     currentPage: 1,
-    pageSize: process.env.PAGESIZE
+    pageSize: 0
   });
   const onSearch = async (filter) => {
     setLoadBigData(true);

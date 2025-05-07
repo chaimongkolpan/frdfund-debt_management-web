@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserData } from "@utils";
 import According from "@views/components/panel/according";
 import { 
-  importClassify
+  cleanData
 } from "@services/api";
 
 const user = getUserData();
@@ -12,7 +12,7 @@ const NPA = () => {
   return (
     <>
       <div className="content">
-        <h4 className="mb-3">สาขาเสนอ NPA</h4>
+        <h4 className="mb-3">ขออนุมัติชำระหนี้แทน NPA</h4>
         <div className="mt-4">
           <div className="row g-4">
             <div className="col-12 col-xl-12 order-1 order-xl-0">

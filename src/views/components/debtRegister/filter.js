@@ -214,7 +214,7 @@ const DebtRegisterFilter = (props) => {
             separator={'-'}
           />
         </div>
-        <div className="col-12 gy-6">
+        <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
               <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span class="fas fa-search"></span> ค้นหา</button>

@@ -1,8 +1,8 @@
 // ** React Imports
 import { Fragment, useState, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { LogOut, Settings, User } from "react-feather";
-import { Button } from "reactstrap";
+import { Button, UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap'
 // ** Utils
 import { isUserLoggedIn } from '@utils'
 // ** Store & Actions
@@ -27,6 +27,9 @@ const ThemeNavbar = props => {
     dispatch(handleLogout());
     navigate('/login');
   }
+  const isLinkActive = (linkUrl) => {
+    return location.pathname === linkUrl;
+  };
   useEffect(() => {
     if (window !== undefined) {
       window.addEventListener('resize', handleWindowWidth)
@@ -40,7 +43,7 @@ const ThemeNavbar = props => {
   }, [])
   return (
     <Fragment>
-      <nav className="navbar navbar-top fixed-top navbar-expand" id="navbarDefault">
+      <nav className="navbar navbar-top fixed-top navbar-expand">
         <div className="collapse navbar-collapse justify-content-between">
           <div className="navbar-logo">
             <button className="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span className="navbar-toggle-icon"><i className="toggle-line"></i></span></button>
@@ -52,8 +55,40 @@ const ThemeNavbar = props => {
               </div>
             </a>
           </div>
-          <ul className="navbar-nav navbar-nav-icons flex-row">
-            <li className="nav-item dropdown"><a className="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+          <UncontrolledDropdown tag='ul' className='navbar-nav navbar-nav-icons flex-row'>
+            <DropdownToggle href='/' tag='a' className='nav-link lh-1 pe-0' onClick={e => e.preventDefault()}>
+              <div className='user-nav d-sm-flex d-none'>
+                <div className="avatar avatar-l ">
+                  <img className="rounded-circle " src="/assets/img/team/user.png" alt="" />
+                </div>
+              </div>
+            </DropdownToggle>
+            <DropdownMenu end style={{ minWidth: 250 }}>
+              <div className="card-body p-0">
+                <div className="text-center pb-3">
+                  <h6 className="mt-2 text-body-emphasis">ผู้ดูแลระบบ</h6>
+                </div>
+              </div>
+              <DropdownItem tag={Link} to='/profile'>
+                <User className="me-2 text-body align-bottom" size={16} />ข้อมูลโปรไฟล์
+              </DropdownItem>
+              <DropdownItem tag={Link} to='/settings'>
+                <Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ
+              </DropdownItem>
+              <DropdownItem divider />
+              <div className="card-footer">
+                <div className="px-3"> 
+                  <Button className="btn btn-phoenix-secondary d-flex flex-center w-100" onClick={() => Logout()}>
+                    <LogOut className="me-2" size={16} />
+                    ออกจากระบบ
+                  </Button>
+                </div>
+              </div>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          {/* <ul className="navbar-nav navbar-nav-icons flex-row">
+            <li className="nav-item dropdown">
+              <a className="nav-link lh-1 pe-0" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                 <div className="avatar avatar-l ">
                   <img className="rounded-circle " src="/assets/img/team/user.png" alt="" />
                 </div>
@@ -66,11 +101,18 @@ const ThemeNavbar = props => {
                     </div>
                   </div>
                   <div className="overflow-auto scrollbar" style={{ height: "5rem" }}>
-                    
-                  <ul className="nav d-flex flex-column mb-2 pb-1">
-                    <li className="nav-item"><NavLink className="nav-link px-3 d-block" to="/profile"> <User className="me-2 text-body align-bottom" size={16} />ข้อมูลโปรไฟล์</NavLink></li>                 
-                    <li className="nav-item"><NavLink className="nav-link px-3 d-block" to="/settings"><Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ</NavLink></li>
-                  </ul>
+                    <ul className="nav d-flex flex-column mb-2 pb-1">
+                      <li className="nav-item">
+                        <NavLink tag={Link} active={isLinkActive('/profile')} className="nav-link px-3 d-block" to="/profile"> 
+                          <User className="me-2 text-body align-bottom" size={16} />ข้อมูลโปรไฟล์
+                        </NavLink>
+                      </li>                 
+                      <li className="nav-item">
+                        <NavLink tag={Link} active={isLinkActive('/settings')} className="nav-link px-3 d-block" to="/settings">
+                          <Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ
+                        </NavLink>
+                      </li>
+                    </ul>
                   </div>
                   <div className="card-footer">
                     <div className="px-3"> 
@@ -83,7 +125,7 @@ const ThemeNavbar = props => {
                 </div>
               </div>
             </li>
-          </ul>
+          </ul> */}
         </div>
       </nav>
     </Fragment>
