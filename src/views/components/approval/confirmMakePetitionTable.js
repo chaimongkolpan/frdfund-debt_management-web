@@ -1,6 +1,30 @@
+import { useEffect, useState } from "react";
 import { stringToDateTh } from "@utils";
 const ConfirmTable = (props) => {
   const { data } = props;
+  const [receiverType, setReceiveType] = useState("เจ้าหนี้");
+  const [paymentType, setPaymentType] = useState("เบิกจ่ายเต็มจำนวน");
+  const [amountCheck, setAmountCheck] = useState([0, 0, 0, 0, 0, 0, 0]);
+  const [cheques, setCheques] = useState([]);
+  const AddCheque = () => {
+    setCheques(prev => [
+      ...prev,
+      {
+        total: 0,
+        checked: [0, 0, 0, 0, 0, 0, 0],
+        prevCheck: amountCheck
+      }
+    ])
+  }
+  const RemoveCheque = () => {
+    
+  }
+  const SaveCheque = () => {
+    
+  }
+  const ChequeChange = (index, key) => {
+    
+  }
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index}>
@@ -27,8 +51,6 @@ const ConfirmTable = (props) => {
         <td>{item.remaining_principal_contract}</td>
         <td>{item.dept_status}</td>
         <td>{item.collateral_type}</td>
-        <td>{item.purpose_loan_contract}</td>
-        <td>{item.purpose_type_loan_contract}</td>
         <td>{item.status}</td>
       </tr>
     ))
@@ -36,7 +58,7 @@ const ConfirmTable = (props) => {
   return (
     <>
       <br />
-      <div class="row">
+      <div className="row">
         <div className="d-flex">
           <div className="square border border-1"  style={{ background: "#fff", height: 20, width: 30 }}></div>
           <div className="ms-1">ปกติ</div>
@@ -94,16 +116,15 @@ const ConfirmTable = (props) => {
           </div>
         </div>
       </div>
-      <div class="card-body p-0">
-        <div class="p-4 code-to-copy">
-          <div class="row g-3">
-            <div class="d-flex justify-content-center p-3">
-              <div class="col-sm-12 col-md-12 col-lg-8">
-                <div class="form-floating">
-                  <select class="form-select" id="floatingSelectPrivacy">
-                    <option value="" selected>เลือกข้อมูล...</option>
-                    <option value="เจ้าหนี้" >เจ้าหนี้</option>
-                    <option value="เจ้าสาขาหนี้">สาขา</option>
+      <div className="card-body p-0">
+        <div className="p-4 code-to-copy">
+          <div className="row g-3">
+            <div className="d-flex justify-content-center p-3">
+              <div className="col-sm-12 col-md-12 col-lg-8">
+                <div className="form-floating">
+                  <select value={receiverType} className="form-select" onChange={(e) => setReceiveType(e.target?.value)}>
+                    <option value="เจ้าหนี้">เจ้าหนี้</option>
+                    <option value="สาขา">สาขา</option>
                   </select>
                   <label for="floatingSelectPrivacy">เบิกจ่ายให้</label>
                 </div>
@@ -111,243 +132,119 @@ const ConfirmTable = (props) => {
             </div>
           </div>
           <br />
-          <div class="row g-3">
-            <div class="card p-3" >
-              <h3>
-                <div class="d-flex justify-content-center">
-                  <div>เจ้าหนี้</div>
-                </div>
-              </h3>
-                <div class="row">
-                  <div class="d-flex justify-content-center p-3">
-                    <div class="col-sm-12 col-md-12 col-lg-8">
-                      <div class="form-floating">
-                        <select class="form-select" id="floatingSelectPrivacy">
-                          <option value="" selected>เลือกข้อมูล...</option>
-                          <option value="เบิกจ่ายเต็มจำนวน" >เบิกจ่ายเต็มจำนวน</option>
-                          <option value="แยกเช็ค">แยกเช็ค</option>
-                        </select>
-                        <label for="floatingSelectPrivacy">ประเภทการเบิกจ่าย</label>
-                      </div>
-                    </div>
+          {receiverType == 'เจ้าหนี้' && (
+            <div className="row g-3">
+              <div className="card p-3" >
+                <h3>
+                  <div className="d-flex justify-content-center">
+                    <div>เจ้าหนี้</div>
                   </div>
-                  <div class="d-flex justify-content-center p-3">
-                    <div class="col-sm-12 col-md-12 col-lg-8" >
-                    <div class="card p-3">
-                      <h5>
-                        <div class="d-flex justify-content-center p-3">
-                          <div>เบิกจ่ายเต็มจำนวน</div>
+                </h3>
+                  <div className="row">
+                    <div className="d-flex justify-content-center p-3">
+                      <div className="col-sm-12 col-md-12 col-lg-8">
+                        <div className="form-floating">
+                          <select value={paymentType} className="form-select" onChange={(e) => setPaymentType(e.target?.value)}>
+                            <option value="เบิกจ่ายเต็มจำนวน" >เบิกจ่ายเต็มจำนวน</option>
+                            <option value="แยกเช็ค">แยกเช็ค</option>
+                          </select>
+                          <label for="floatingSelectPrivacy">ประเภทการเบิกจ่าย</label>
                         </div>
-                      </h5>
-                      <div class="input-group mb-3">
-                        <span class="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                        <input class="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                        <span class="input-group-text" id="Search_id_card">บาท</span>
-                      </div>
-                      <div class="d-flex justify-content-center ">
-                        <button class="btn btn-success" type="submit">บันทึก</button>
-                      </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="d-flex justify-content-center p-3">
-                    <div class="col-sm-12 col-md-12 col-lg-8">
-                      <div class="card p-3">
-                        <h5>
-                          <div class="d-flex justify-content-center ">
-                            <div>จ่ายแยกเช็ค</div>
+                    {paymentType == 'เบิกจ่ายเต็มจำนวน' && (
+                      <div className="d-flex justify-content-center p-3">
+                        <div className="col-sm-12 col-md-12 col-lg-8" >
+                        <div className="card p-3">
+                          <h5>
+                            <div className="d-flex justify-content-center p-3">
+                              <div>เบิกจ่ายเต็มจำนวน</div>
+                            </div>
+                          </h5>
+                          <div className="input-group mb-3">
+                            <span className="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
+                            <input className="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
+                            <span className="input-group-text" id="Search_id_card">บาท</span>
                           </div>
-                        </h5>
-                          <div class="col-sm-12 col-md-12 col-lg-12" >
-                            <div class="table-responsive mx-n1 px-1">
-                              <table class="table table-borderless">
-                                <tr class="list text-center align-middle">
-                                  <td colspan="5">                                    
-                                    <div class="input-group mb-3">
-                                    <span class="input-group-text" id="Search_id_card">เช็คที่ 1</span>
-                                    <span class="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                                    <input class="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                                    <span class="input-group-text" id="Search_id_card">บาท</span>
+                          <div className="d-flex justify-content-center ">
+                            <button className="btn btn-success" type="submit">บันทึก</button>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {paymentType == 'แยกเช็ค' && (
+                      <div className="d-flex justify-content-center p-3">
+                        <div className="col-sm-12 col-md-12 col-lg-8">
+                          <div className="card p-3">
+                            <h5 className="mb-3">
+                              <div className="d-flex justify-content-center ">
+                                <div>จ่ายแยกเช็ค</div>
+                              </div>
+                            </h5>
+                            {(cheques && cheques.length > 0) && (cheques.map((item, index) => (
+                                  <div className="col-sm-12 col-md-12 col-lg-12 mb-2" >
+                                    <div className="table-responsive mx-n1 px-1">
+                                      <div className="d-flex flex-column">
+                                        <div className="input-group mb-3">
+                                          <span className="input-group-text">เช็คที่ {index + 1}</span>
+                                          <span className="input-group-text">จำนวนเบิกจ่าย</span>
+                                          <input className="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled value={item.total}/>
+                                          <span className="input-group-text">บาท</span>
+                                        </div>
+                                        <div className="d-flex flex-wrap">
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[0]} value={item.checked[0]}/> &nbsp;เงินต้น</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[1]} value={item.checked[1]}/> &nbsp;ดอกเบี้ย</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[2]} value={item.checked[2]}/> &nbsp;ค่าปรับ</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[3]} value={item.checked[3]}/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[4]} value={item.checked[4]}/> &nbsp;ค่าถอนการยึดทรัพย์</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[5]} value={item.checked[5]}/> &nbsp;ค่าเบี้ยประกัน</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[6]} value={item.checked[6]}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;เงินต้น</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ดอกเบี้ย</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าปรับ</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าถอนการยึดทรัพย์</td>
-                                </tr>
-                              </table>
+                            )))}
+                            <div className="d-flex justify-content-center ">
+                              <button className="btn btn-primary me-2" type="button" onClick={() => AddCheque()}>เพิ่มเช็ค</button>
+                              <button className="btn btn-danger me-2" type="button">ลบเช็ค</button>
+                              <button className="btn btn-success" type="button">บันทึก</button>
                             </div>
                           </div>
-                        <div class="col-sm-12 col-md-12 col-lg-12" >
-                          <div class="table-responsive mx-n1 px-1">
-                            <table class="table table-borderless">
-                              <tr class="list text-center align-middle">
-                                <td colspan="5">                                    
-                                  <div class="input-group mb-3">
-                                  <span class="input-group-text" id="Search_id_card">เช็คที่ 2</span>
-                                  <span class="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                                  <input class="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                                  <span class="input-group-text" id="Search_id_card">บาท</span>
-                                </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;เงินต้น</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ดอกเบี้ย</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าปรับ</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าถอนการยึดทรัพย์</td>
-                              </tr>
-                            </table>
-                          </div>
                         </div>
-                        <div class="d-flex justify-content-center ">
-                        <button class="btn btn-primary" type="button">เพิ่มเช็ค</button>&nbsp;
-                        <button class="btn btn-danger" type="button">ลบเช็ค</button>&nbsp;
-                        <button class="btn btn-success" type="submit">บันทึก</button>
                       </div>
-                      </div>
-                    </div>
+                    )}
                   </div>
-                </div>
+              </div>
             </div>
-          </div>
-          <div class="row g-3">
-            <div class="card p-3" >
-              <h3>
-                <div class="d-flex justify-content-center">
-                  <div>เจ้าหนี้</div>
-                </div>
-              </h3>
-                <div class="row">
-                  <div class="d-flex justify-content-center p-3">
-                    <div class="col-sm-12 col-md-12 col-lg-8">
-                      <div class="form-floating">
-                        <select class="form-select" id="floatingSelectPrivacy">
-                          <option value="" selected>เลือกข้อมูล...</option>
-                          <option value="เบิกจ่ายเต็มจำนวน" >เบิกจ่ายเต็มจำนวน</option>
-                          <option value="แยกเช็ค">แยกเช็ค</option>
-                        </select>
-                        <label for="floatingSelectPrivacy">ประเภทการเบิกจ่าย</label>
-                      </div>
-                    </div>
+          )}
+          {receiverType == 'สาขา' && (
+            <div className="row g-3">
+              <div className="card p-3" >
+                <h3>
+                  <div className="d-flex justify-content-center">
+                    <div>โอนเงินให้สาขา</div>
                   </div>
-                  <div class="d-flex justify-content-center p-3">
-                    <div class="col-sm-12 col-md-12 col-lg-8" >
-                    <div class="card p-3">
-                      <h5>
-                        <div class="d-flex justify-content-center p-3">
-                          <div>เบิกจ่ายเต็มจำนวน</div>
+                </h3>
+                  <div className="row">
+                    <div className="d-flex justify-content-center p-3">
+                      <div className="col-sm-12 col-md-12 col-lg-8" >
+                      <div className="card p-3">
+                        <div className="input-group mb-3">
+                          <span className="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
+                          <input className="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
+                          <span className="input-group-text" id="Search_id_card">บาท</span>
                         </div>
-                      </h5>
-                      <div class="input-group mb-3">
-                        <span class="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                        <input class="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                        <span class="input-group-text" id="Search_id_card">บาท</span>
-                      </div>
-                      <div class="d-flex justify-content-center ">
-                        <button class="btn btn-success" type="submit">บันทึก</button>
-                      </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="d-flex justify-content-center p-3">
-                    <div class="col-sm-12 col-md-12 col-lg-8">
-                      <div class="card p-3">
-                        <h5>
-                          <div class="d-flex justify-content-center ">
-                            <div>จ่ายแยกเช็ค</div>
-                          </div>
-                        </h5>
-                          <div class="col-sm-12 col-md-12 col-lg-12" >
-                            <div class="table-responsive mx-n1 px-1">
-                              <table class="table table-borderless">
-                                <tr class="list text-center align-middle">
-                                  <td colspan="7">                                    
-                                    <div class="input-group mb-3">
-                                    <span class="input-group-text" id="Search_id_card">เช็คที่ 1</span>
-                                    <span class="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                                    <input class="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                                    <span class="input-group-text" id="Search_id_card">บาท</span>
-                                  </div>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;เงินต้น</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ดอกเบี้ย</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าปรับ</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าถอนการยึดทรัพย์</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าเบี้ยประกัน</td>
-                                  <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าใช้จ่ายอื่นๆ</td>
-                                </tr>
-                              </table>
-                            </div>
-                          </div>
-                        <div class="col-sm-12 col-md-12 col-lg-12" >
-                          <div class="table-responsive mx-n1 px-1">
-                            <table class="table table-borderless">
-                              <tr class="list text-center align-middle">
-                                <td colspan="7">                                    
-                                  <div class="input-group mb-3">
-                                  <span class="input-group-text" id="Search_id_card">เช็คที่ 2</span>
-                                  <span class="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                                  <input class="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                                  <span class="input-group-text" id="Search_id_card">บาท</span>
-                                </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;เงินต้น</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ดอกเบี้ย</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าปรับ</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าถอนการยึดทรัพย์</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าเบี้ยประกัน</td>
-                                <td><input class="form-check-input" type="checkbox"/> &nbsp;ค่าใช้จ่ายอื่นๆ</td>
-                              </tr>
-                            </table>
-                          </div>
+                        <div className="d-flex justify-content-center ">
+                          <button className="btn btn-success" type="submit">บันทึก</button>
                         </div>
-                        <div class="d-flex justify-content-center ">
-                        <button class="btn btn-primary" type="button">เพิ่มเช็ค</button>&nbsp;
-                        <button class="btn btn-danger" type="button">ลบเช็ค</button>&nbsp;
-                        <button class="btn btn-success" type="submit">บันทึก</button>
-                      </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+              </div>
             </div>
-          </div>
-          <div class="row g-3">
-            <div class="card p-3" >
-              <h3>
-                <div class="d-flex justify-content-center">
-                  <div>โอนเงินให้สาขา</div>
-                </div>
-              </h3>
-                <div class="row">
-                  <div class="d-flex justify-content-center p-3">
-                    <div class="col-sm-12 col-md-12 col-lg-8" >
-                    <div class="card p-3">
-                      <div class="input-group mb-3">
-                        <span class="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                        <input class="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                        <span class="input-group-text" id="Search_id_card">บาท</span>
-                      </div>
-                      <div class="d-flex justify-content-center ">
-                        <button class="btn btn-success" type="submit">บันทึก</button>
-                      </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </>

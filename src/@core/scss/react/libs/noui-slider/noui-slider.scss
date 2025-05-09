@@ -1,6 +1,6 @@
 @import '~nouislider/dist/nouislider.css';
-@import '../../../base/plugins/extensions/ext-component-sliders.scss';
-@import '../../../base/core/colors/palette-noui';
+@import '@styles/base/plugins/extensions/ext-component-sliders.scss';
+@import '@styles/base/core/colors/palette-noui';
 
 .noUi-vertical .noUi-origin {
   top: 0;

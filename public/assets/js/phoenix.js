@@ -2965,7 +2965,7 @@
         const options = getData(item, 'options');
         window.bodymovin.loadAnimation({
           container: item,
-          path: '../img/animated-icons/warning-light.json',
+          path: '@assets/img/animated-icons/warning-light.json',
           renderer: 'svg',
           loop: true,
           autoplay: true,

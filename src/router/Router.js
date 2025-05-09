@@ -33,6 +33,8 @@ const CommitteeUpdateNpl = lazy(() => import('../views/pages/committee/update/np
 const CommitteeUpdateNpa = lazy(() => import('../views/pages/committee/update/npa'))
 const ApprovalMakePetitionNpl = lazy(() => import('../views/pages/approval/make-petition/npl'))
 const ApprovalMakePetitionNpa = lazy(() => import('../views/pages/approval/make-petition/npa'))
+const ApprovalMakePetitionBranchNpl = lazy(() => import('../views/pages/approval/make-petition/branch-npl'))
+const ApprovalMakePetitionBranchNpa = lazy(() => import('../views/pages/approval/make-petition/branch-npa'))
 const ApprovalDisbursementStatusNpl = lazy(() => import('../views/pages/approval/disbursement-status/npl'))
 const ApprovalDisbursementStatusNpa = lazy(() => import('../views/pages/approval/disbursement-status/npa'))
 const ApprovalAdditionalActionNpl = lazy(() => import('../views/pages/approval/additional-action/npl'))
@@ -177,6 +179,16 @@ const Router = () => {
             path: '/approval/make-petition/npa',
             element: <VerticalLayout />,
             children: [{ path: '/approval/make-petition/npa', element: <ApprovalMakePetitionNpa /> }]
+        },
+        {
+            path: '/approval/make-branch-petition/npl',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/make-branch-petition/npl', element: <ApprovalMakePetitionBranchNpl /> }]
+        },
+        {
+            path: '/approval/make-branch-petition/npa',
+            element: <VerticalLayout />,
+            children: [{ path: '/approval/make-branch-petition/npa', element: <ApprovalMakePetitionBranchNpa /> }]
         },
         {
             path: '/approval/disbursement-status/npl',
