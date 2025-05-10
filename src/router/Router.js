@@ -6,7 +6,6 @@ import VerticalLayout from '../layouts/VerticalLayout'
 
 import { getUserData } from '../utility/Utils'
 const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
-console.log('pre', prefix_url, process.env.ENVIRONMENT)
 const Error = lazy(() => import('../views/pages/Error'))
 const Version = lazy(() => import('../views/pages/Version'))
 const Login = lazy(() => import('../views/pages/authentication/Login'))
