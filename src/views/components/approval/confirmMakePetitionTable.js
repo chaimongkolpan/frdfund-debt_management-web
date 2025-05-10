@@ -193,13 +193,13 @@ const ConfirmTable = (props) => {
                                           <span className="input-group-text">บาท</span>
                                         </div>
                                         <div className="d-flex flex-wrap">
-                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[0]} value={item.checked[0]}/> &nbsp;เงินต้น</div>
-                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[1]} value={item.checked[1]}/> &nbsp;ดอกเบี้ย</div>
-                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[2]} value={item.checked[2]}/> &nbsp;ค่าปรับ</div>
-                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[3]} value={item.checked[3]}/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</div>
-                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[4]} value={item.checked[4]}/> &nbsp;ค่าถอนการยึดทรัพย์</div>
-                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[5]} value={item.checked[5]}/> &nbsp;ค่าเบี้ยประกัน</div>
-                                          <div className="me-3"><input className="form-check-input" type="checkbox" disabled={item.prevCheck[6]} value={item.checked[6]}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[0]}/> &nbsp;เงินต้น</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[1]}/> &nbsp;ดอกเบี้ย</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[2]}/> &nbsp;ค่าปรับ</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[3]}/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[4]}/> &nbsp;ค่าถอนการยึดทรัพย์</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[5]}/> &nbsp;ค่าเบี้ยประกัน</div>
+                                          <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[6]}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
                                         </div>
                                       </div>
                                     </div>
@@ -229,15 +229,30 @@ const ConfirmTable = (props) => {
                   <div className="row">
                     <div className="d-flex justify-content-center p-3">
                       <div className="col-sm-12 col-md-12 col-lg-8" >
-                      <div className="card p-3">
-                        <div className="input-group mb-3">
-                          <span className="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
-                          <input className="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
-                          <span className="input-group-text" id="Search_id_card">บาท</span>
-                        </div>
-                        <div className="d-flex justify-content-center ">
-                          <button className="btn btn-success" type="submit">บันทึก</button>
-                        </div>
+                        <div className="card p-3">
+                          <div className="col-sm-12 col-md-12 col-lg-12 mb-2" >
+                            <div className="table-responsive mx-n1 px-1">
+                              <div className="d-flex flex-column">
+                                <div className="input-group mb-3">
+                                  <span className="input-group-text" id="Search_id_card">จำนวนเบิกจ่าย</span>
+                                  <input className="form-control" type="text" aria-label="รายละเอียดเช็ค" disabled/>
+                                  <span className="input-group-text" id="Search_id_card">บาท</span>
+                                </div>
+                                <div className="d-flex flex-wrap">
+                                  <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[0]}/> &nbsp;เงินต้น</div>
+                                  <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[1]}/> &nbsp;ดอกเบี้ย</div>
+                                  <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[2]}/> &nbsp;ค่าปรับ</div>
+                                  <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[3]}/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</div>
+                                  <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[4]}/> &nbsp;ค่าถอนการยึดทรัพย์</div>
+                                  <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[5]}/> &nbsp;ค่าเบี้ยประกัน</div>
+                                  <div className="me-3"><input className="form-check-input" type="checkbox" value={item.checked[6]}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="d-flex justify-content-center ">
+                            <button className="btn btn-success" type="submit">บันทึก</button>
+                          </div>
                         </div>
                       </div>
                     </div>
