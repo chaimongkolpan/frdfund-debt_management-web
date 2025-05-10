@@ -242,9 +242,9 @@ const Router = () => {
             children: [{ path: prefix_url + '/version', element: <Version /> }]
         },
         {
-            path: prefix_url + '*',
+            path: prefix_url + '/*',
             element: <BlankLayout />,
-            children: [{ path: prefix_url + '*', element: <Error /> }]
+            children: [{ path: prefix_url + '/*', element: <Error /> }]
         },
     ])
     return routes
