@@ -1,5 +1,10 @@
 import axios from "axios";
-const url = process.env.API_URL ?? "http://localhost:8080";
+const url = process.env.API_URL ?? (process.env.ENVIRONMENT == 'develop' 
+                                      ? 'https://localhost:7039' : (
+                                        process.env.ENVIRONMENT == 'uat' 
+                                        ? 'https://debtinfo.frdfund.org/uat/api' 
+                                        : 'https://debtinfo.frdfund.org/api'
+                                    ));
 axios.defaults.baseURL = url;
 const defaultErrorResponse = { statusCode: 400, isSuccess: false, data: null };
 function SaveAs(blob, filename) {
