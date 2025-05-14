@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
   const { result, handleSubmit, filter, getData } = props;
   const [data, setData] = useState([]);
+  const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
@@ -32,30 +33,35 @@ const SearchTable = (props) => {
             <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
+        <td>{item.proposal_committee_no}</td>
+        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.organization_register_date ? stringToDateTh(item.organization_register_date, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.organization_register_round}</td>
-        <td>{item.organization_name}</td>
-        <td>{item.organization_no}</td>
-        <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.creditor_type}</td>
-        <td>{item.creditor_name}</td>
-        <td>{item.creditor_province}</td>
-        <td>{item.creditor_branch}</td>
-        <td>{item.contract_no}</td>
-        <td>{item.remaining_principal_contract}</td>
-        <td>{item.dept_status}</td>
+        <td>{item.debt_manage_creditor_type}</td>
+        <td>{item.debt_manage_creditor_name}</td>
+        <td>{item.debt_manage_creditor_province}</td>
+        <td>{item.debt_manage_creditor_branch}</td>
+        <td>{item.debt_manage_contract_no}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest)}</td>
+        <td>{toCurrency(item.debt_manage_fine)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
+        {!coop && (
+          <>
+            <td>{toCurrency(item.debt_manage_insurance_premium)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses)}</td>
+          </>
+        )}
+        <td>{toCurrency(item.debt_manage_total_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_total)}</td>
+        <td>{item.debt_manage_objective_details}</td>
+        <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
-        <td>{item.purpose_loan_contract}</td>
-        <td>{item.purpose_type_loan_contract}</td>
-        <td>{item.status}</td>
+        <td>{item.collateral_no}</td>
+        <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
   }
@@ -77,6 +83,7 @@ const SearchTable = (props) => {
   useEffect(() => {
     if(result) {
       setData(result.data);
+      setCoop(result.data && result.data[0]?.debt_manage_creditor_type == 'สหกรณ์')
       setSelected(result.data.map(() => false));
       setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
@@ -91,7 +98,7 @@ const SearchTable = (props) => {
         <div className="ms-2 square border border-1"  style={{ background: "rgb(255, 242, 205)", height: 20, width: 30 }}></div>
         <div className="ms-1">เพิ่มเงิน</div>
       </div>
-      <div id="tableExample" data-list='{"valueNames":["name","email","age"]}'>
+      <div data-list='{"valueNames":["name","email","age"]}'>
         <div className="table-responsive mx-n1 px-1">
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
@@ -104,7 +111,7 @@ const SearchTable = (props) => {
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="11">สัญญา</th>
+                <th colSpan={coop ? "11" : "13"}>สัญญา</th>
                 <th>หลักทรัพย์ค้ำประกัน</th>
                 <th rowSpan="2">สถานะสัญญา</th>
               </tr>
@@ -125,6 +132,12 @@ const SearchTable = (props) => {
                 <th>ค่าปรับ</th>
                 <th>ค่าใช้จ่ายในการดำเนินคดี</th>
                 <th>ค่าถอนการยึดทรัพย์</th>
+                {!coop && (
+                  <>
+                    <th>ค่าเบี้ยประกัน</th>
+                    <th>ค่าใช้จ่ายอื่นๆ</th>
+                  </>
+                )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
                 <th>วัตถุประสงค์การกู้</th>
@@ -136,7 +149,7 @@ const SearchTable = (props) => {
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={24}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>

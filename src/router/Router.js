@@ -31,6 +31,10 @@ const CommitteeWaitingNpl = lazy(() => import('../views/pages/committee/waiting/
 const CommitteeWaitingNpa = lazy(() => import('../views/pages/committee/waiting/npa'))
 const CommitteeUpdateNpl = lazy(() => import('../views/pages/committee/update/npl'))
 const CommitteeUpdateNpa = lazy(() => import('../views/pages/committee/update/npa'))
+const ConfirmCommitteePrepareNpl = lazy(() => import('../views/pages/confirm-committee/prepare/npl'))
+const ConfirmCommitteePrepareNpa = lazy(() => import('../views/pages/confirm-committee/prepare/npa'))
+const ConfirmCommitteeConfirmNpl = lazy(() => import('../views/pages/confirm-committee/confirm/npl'))
+const ConfirmCommitteeConfirmNpa = lazy(() => import('../views/pages/confirm-committee/confirm/npa'))
 const ApprovalMakePetitionNpl = lazy(() => import('../views/pages/approval/make-petition/npl'))
 const ApprovalMakePetitionNpa = lazy(() => import('../views/pages/approval/make-petition/npa'))
 const ApprovalMakePetitionBranchNpl = lazy(() => import('../views/pages/approval/make-petition/branch-npl'))
@@ -169,6 +173,26 @@ const Router = () => {
             path: prefix_url + '/committee/update-list/npa',
             element: <VerticalLayout />,
             children: [{ path: prefix_url + '/committee/update-list/npa', element: <CommitteeUpdateNpa /> }]
+        },
+        {
+            path: prefix_url + '/confirm-committee/prepare-list/npl',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/confirm-committee/prepare-list/npl', element: <ConfirmCommitteePrepareNpl /> }]
+        },
+        {
+            path: prefix_url + '/confirm-committee/prepare-list/npa',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/confirm-committee/prepare-list/npa', element: <ConfirmCommitteePrepareNpa /> }]
+        },
+        {
+            path: prefix_url + '/confirm-committee/confirm-list/npl',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/confirm-committee/confirm-list/npl', element: <ConfirmCommitteeConfirmNpl /> }]
+        },
+        {
+            path: prefix_url + '/confirm-committee/confirm-list/npa',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/confirm-committee/confirm-list/npa', element: <ConfirmCommitteeConfirmNpa /> }]
         },
         {
             path: prefix_url + '/approval/make-petition/npl',

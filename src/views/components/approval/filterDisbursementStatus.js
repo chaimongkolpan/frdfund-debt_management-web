@@ -5,13 +5,13 @@ import {
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
-  getDebtStatuses,
-  getCommitteeNo,
-  getCommitteeDate,
+  getCommitteeOfficeNo,
+  getCommitteeOfficeDate,
+  getPetitionNo,
+  getPetitionDate,
 } from "@services/api";
 
 const Filter = (props) => {
-  const status = 'ยืนยันยอดสำเร็จ';
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
@@ -21,6 +21,8 @@ const Filter = (props) => {
   const [statusDebtOp, setStatusDebtOp] = useState(null);
   const [committeeNoOp, setCommitteeNoOp] = useState(null);
   const [committeeDateOp, setCommitteeDateOp] = useState(null);
+  const [petitionNoOp, setPetitionNoOp] = useState(null);
+  const [petitionDateOp, setPetitionDateOp] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -29,8 +31,6 @@ const Filter = (props) => {
         province: "",
         creditorType: "",
         creditor: "",
-        debtStatus: "",
-        debtClassifyStatus: status,
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
@@ -86,9 +86,10 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNo(status);
-    const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCommitteeNo = await getCommitteeOfficeNo();
+    const resultCommitteeDate = await getCommitteeOfficeDate();
+    const resultPetitionNo = await getPetitionNo();
+    const resultPetitionDate = await getPetitionDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -118,11 +119,12 @@ const Filter = (props) => {
        await setCreditorTypeOp(null);
        await setCreditorOp(null);
     }
-    if (resultDebtSt.isSuccess) {
-      const temp = resultDebtSt.data.map(item => item.name);
-      await setStatusDebtOp(temp);
-    } else await setStatusDebtOp(null);
-
+    await setStatusDebtOp([
+      'รอชำระหนี้แทน',
+      'อยู่ระหว่างการโอนเงินให้สาขา',
+      'โอนเงินให้สาขาแล้ว',
+      'ชำระหนี้แทนแล้ว'
+    ]);
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
@@ -139,6 +141,22 @@ const Filter = (props) => {
         ...({proposal_committee_date: temp[0]})
       }))
     } else await setCommitteeDateOp(null);
+    if (resultPetitionNo.isSuccess) {
+      const temp = resultPetitionNo.data.map(item => item.name);
+      await setPetitionNoOp(temp);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({petition_no: temp[0]})
+      }))
+    } else await setPetitionNoOp(null);
+    if (resultPetitionDate.isSuccess) {
+      const temp = resultPetitionDate.data.map(item => item.name);
+      await setPetitionDateOp(temp);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({petition_date: temp[0]})
+      }))
+    } else await setPetitionDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }
@@ -188,6 +206,28 @@ const Filter = (props) => {
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
+          {petitionNoOp && (
+            <Dropdown 
+              title={'เลขที่หนังสือฎีกาจัดการหนี้'} 
+              containerClassname={'mb-3'} 
+              defaultValue={petitionNoOp[0]} 
+              options={petitionNoOp}
+              handleChange={(val) => onChange('petition_no', val)}
+            />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {petitionDateOp && (
+            <Dropdown 
+              title={'วันที่หนังสือฎีกาจัดการหนี้'} 
+              containerClassname={'mb-3'} 
+              defaultValue={petitionDateOp[0]} 
+              options={petitionDateOp}
+              handleChange={(val) => onChange('petition_date', val)}
+            />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
@@ -223,7 +263,7 @@ const Filter = (props) => {
         <div className="col-sm-12 col-md-6 col-lg-6">
           {statusDebtOp && (
             <Dropdown 
-              title={'สถานะหนี้'} 
+              title={'สถานะการชำระหนี้แทน'} 
               containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={statusDebtOp}

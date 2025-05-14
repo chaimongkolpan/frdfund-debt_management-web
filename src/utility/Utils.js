@@ -35,6 +35,14 @@ export const formatDate = (
   if (!value) return value;
   return new Intl.DateTimeFormat("en-US", formatting).format(new Date(value));
 };
+export const toCurrency = (value, digit = 0) => {
+  if (!value) return value;
+  if (typeof value == 'number')
+    return value.toLocaleString();
+  if (!isNaN(parseFloat(value)))
+    return parseFloat(value).toLocaleString()
+  return value;
+};
 
 // ** Returns short month of passed date
 export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {

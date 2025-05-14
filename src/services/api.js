@@ -555,14 +555,10 @@ export const removeBranchOffer = async (selected) => {
 //#endregion
 
 //#region Approval
-export const getCommitteeNo = async () => {
-  const path = '/approval/no-filter';
+export const getCommitteeNo = async (status) => {
+  const path = '/common/proposal-committee-no';
   try {
-    return {
-      isSuccess: true,
-      data: [{ name: '1/2566' },{ name: '2/2566' },{ name: '3/2566' },{ name: '4/2566' },{ name: '5/2568' },]
-    }
-    const result = await axios.get(path);
+    const result = await axios.get(path, { params: {status} });
     if (result.status == 200)
       return result.data;
     else
@@ -573,14 +569,10 @@ export const getCommitteeNo = async () => {
     return defaultErrorResponse;
   }
 };
-export const getCommitteeDate = async () => {
-  const path = '/approval/date-filter';
+export const getCommitteeDate = async (status) => {
+  const path = '/common/proposal-committee-date';
   try {
-    return {
-      isSuccess: true,
-      data: [{ name: '20/04/2568' },{ name: '25/04/2568' },{ name: '12/03/2567' },{ name: '20/04/2566' },{ name: '20/05/2568' },]
-    }
-    const result = await axios.get(path);
+    const result = await axios.get(path, { params: {status} });
     if (result.status == 200)
       return result.data;
     else
@@ -592,15 +584,8 @@ export const getCommitteeDate = async () => {
   }
 };
 export const searchMakePetition = async (filter) => {
-  const path = '/approval/search';
+  const path = '/MakePetition/search-make-petition';
   try {
-    return {
-      isSuccess: true,
-      data: [{ },{ },{ },{ },{ },],
-      currentPage: 1,
-      total: 5,
-      totalPage: 1
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
@@ -612,14 +597,10 @@ export const searchMakePetition = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getMakePetitionAddedList = async (params) => {
-  const path = '/approval/add';
+export const getMakePetitionAddedList = async (filter) => {
+  const path = '/MakePetition/search-make-petition';
   try {
-    return {
-      isSuccess: true,
-      data: [{ },{ },{ },{ },{ },]
-    }
-    const result = await axios.get(path, {params});
+    const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
     else
@@ -631,9 +612,9 @@ export const getMakePetitionAddedList = async (params) => {
   }
 };
 export const addMakePetitionList = async (selected) => {
-  const path = '/approval/add';
+  const path = '/share/update-statusnpl';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,{ ids: selected, status: 'เตรียมการชำระหนี้แทน' });
     if (result.status == 200)
       return result.data;
     else
@@ -645,9 +626,135 @@ export const addMakePetitionList = async (selected) => {
   }
 };
 export const removeMakePetitionList = async (selected) => {
-  const path = '/approval/remove';
+  const path = '/share/update-statusnpl';
   try {
-    const result = await axios.post(path,{ data: selected });
+    const result = await axios.post(path,{ ids: selected, status: 'ยืนยันยอดสำเร็จ' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const insertPetition = async (filter) => {
+  const path = '/MakePetition/get-petition-contracts';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const exportPetition = async (filter) => {
+  const path = '/MakePetition/get-petition-contracts';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getPetitionList = async (filter) => {
+  const path = '/MakePetition/get-petition-contracts';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getPetitionById = async (filter) => {
+  const path = '/MakePetition/get-petition-contracts';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getCommitteeOfficeNo = async () => {
+  const path = '/common/get-update-proposal-committee-no';
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getCommitteeOfficeDate = async () => {
+  const path = '/common/get-update-proposal-committee-date';
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getPetitionNo = async () => {
+  const path = '/common/get-petition_no_office';
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getPetitionDate = async (status) => {
+  const path = '/common/get-petition_date_office';
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchDisbursementStatus = async (filter) => {
+  const path = '/MakePetition/search-disbursement-status';
+  try {
+    const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
     else

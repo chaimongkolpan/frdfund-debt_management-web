@@ -95,6 +95,11 @@ const Login = () => {
       console.log(err);
     }
   };
+  const keyDownHandle = async(e) => {
+    if(e.keyCode == 13){
+      await onSubmit(defaultValues);
+    }
+  }
   const onSubmit = async(data) => {
     try {
       localStorage.setItem("email", data.username);
@@ -166,7 +171,7 @@ const Login = () => {
               </div>
               <div className="wrap-input100 validate-input">
                 
-                <input className="input100" type="username" name="username" placeholder="ชื่อผู้ใช้งาน" onChange={(newval) => onChange('username', newval)} value={defaultValues.username} />
+                <input className="input100" type="username" name="username" placeholder="ชื่อผู้ใช้งาน" onChange={(newval) => onChange('username', newval)} value={defaultValues.username} onKeyDown={keyDownHandle}/>
                 <span className="focus-input100"></span>
                 <span className="symbol-input100">
                   <i className="fa fa-user" aria-hidden="true"></i>
@@ -177,7 +182,7 @@ const Login = () => {
                 )}
 
               <div className="wrap-input100 validate-input" data-validate="Password is required">
-                <input className="input100" type="password" name="password" placeholder="รหัสผ่าน" onChange={(newval) => onChange('password', newval)} value={defaultValues.password} />
+                <input className="input100" type="password" name="password" placeholder="รหัสผ่าน" onChange={(newval) => onChange('password', newval)} value={defaultValues.password} onKeyDown={keyDownHandle} />
                 <span className="focus-input100"></span>
                 <span className="symbol-input100">
                   <i className="fa fa-lock" aria-hidden="true"></i>
