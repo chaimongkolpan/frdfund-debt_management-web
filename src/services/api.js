@@ -66,6 +66,19 @@ export const getAlertSide = async () => {
   }
 };
 //#region Common
+export const getYears = async () => {
+  try {
+    let year = new Date().getFullYear();
+    if (year < 2500) year += 543;
+    return {
+      isSuccess: true,
+      data: [...Array(year-2544).keys()].map(i => (year - i).toString())
+    };
+  } catch (e) {
+    console.error("error: year =>", e);
+    return defaultErrorResponse;
+  }
+};
 export const getProvinces = async () => {
   const path = "/common/provinces";
   try {
@@ -550,7 +563,80 @@ export const removeBranchOffer = async (selected) => {
     return defaultErrorResponse;
   }
 };
-
+export const updateBranchOffer = async (param) => {
+  const path = "/share/update-brn-proposes-approval";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const submitBranchOffer = async (params) => {
+  const path = "/BranchOffer/submit-proposes-for-approval";
+  try {
+    const result = await axios.post(
+      path,
+      { data: params.data },
+      { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchBookNo = async (status) => {
+  const path = "/common/brn-propose-approval-no";
+  try {
+    const result = await axios.get(path, { params: { status } });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchBookDate = async (status, bookNo) => {
+  const path = "/common/brn-propose-approval-date";
+  try {
+    const result = await axios.get(path, { params: { status, brn_proposes_approval_no: bookNo ?? '' } });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const uploadBranchOffer = async (filter) => {
+  const path = "/BranchOffer/upload-proposes-for-approval";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const searchPrepareForPresent = async (filter) => {
+  const path = "/PrepareForPresent/search-prepare-for-present";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 
 //#endregion
 
@@ -930,4 +1016,22 @@ export const updateNPLstatus = async (selected, status) => {
   }
 };
 
+// #endregion
+// #region Report
+export const downloadReport = async (filter, filename) => {
+  const path = "/report/download";
+  try {
+    const result = await axios.post(
+      path, filter, { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, filename);
+      return true
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return false;
+};
 // #endregion

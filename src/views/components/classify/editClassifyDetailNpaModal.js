@@ -119,7 +119,7 @@ const FullModal = (props) => {
     }
     if (key == 'debt_manage_litigation_expenses') {
       const exp = val + debts?.debt_manage_forfeiture_withdrawal_fee;
-      await setContractCon(exp);
+      await setExpense(exp);
       await setDebts((prevState) => ({
         ...prevState,
         ...({debt_manage_total_expenses: exp})
@@ -156,7 +156,7 @@ const FullModal = (props) => {
     }
     if (key == 'debt_manage_forfeiture_withdrawal_fee') {
       const exp = debts?.debt_manage_litigation_expenses + val;
-      await setContractCon(exp);
+      await setExpense(exp);
       await setDebts((prevState) => ({
         ...prevState,
         ...({debt_manage_total_expenses: exp})

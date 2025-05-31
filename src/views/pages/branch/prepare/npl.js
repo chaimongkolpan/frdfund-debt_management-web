@@ -10,7 +10,8 @@ import According from "@views/components/panel/according";
 import Filter from "@views/components/branch/filter";
 import SearchTable from "@views/components/branch/searchTable";
 import { 
-  importClassify
+  searchPrepareForPresent,
+  addMakePetitionList,
 } from "@services/api";
 
 const user = getUserData();
@@ -32,6 +33,7 @@ const NPL = () => {
       await fetchData({ ...filterAdded, currentPage: 1 });
     }
   }
+  /*
   const onRemoveMakelist = async (selected) => {
     const ids = selected.map((item) => item.id_debt_management);
     const result = await removeMakePetitionList(ids);
@@ -56,10 +58,11 @@ const NPL = () => {
       alert('กรุณาบันทึกฎืกาก่อน ดาวน์โหลดเอกสาร');
     }
   }
+  */
   const onSearch = async (filter) => {
     setLoadBigData(true);
-    setFilter({ ...filter, DebtClassifyStatus: 'ยืนยันยอดสำเร็จ' })
-    const result = await searchMakePetition(filter);
+    setFilter({ ...filter, DebtClassifyStatus: 'รอรวบรวมเตรียมนำเสนอ' })
+    const result = await searchPrepareForPresent(filter);
     if (result.isSuccess) {
       setData(result)
     } else {

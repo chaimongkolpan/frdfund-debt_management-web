@@ -95,11 +95,11 @@ const DebtRegisterBigDataTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th colspan="7">เกษตรกร</th>
-                <th colspan="2">องค์กร</th>
-                <th colspan="4">ทะเบียนหนี้</th>
-                <th colspan="4">เจ้าหนี้</th>
-                <th colspan="7">สัญญา</th>
+                <th colSpan="7">เกษตรกร</th>
+                <th colSpan="2">องค์กร</th>
+                <th colSpan="4">ทะเบียนหนี้</th>
+                <th colSpan="4">เจ้าหนี้</th>
+                <th colSpan="7">สัญญา</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>

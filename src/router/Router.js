@@ -240,9 +240,9 @@ const Router = () => {
             children: [{ path: prefix_url + '/close', element: <Close /> }]
         },
         {
-            path: prefix_url + '/report',
+            path: prefix_url + '/report/manage',
             element: <VerticalLayout />,
-            children: [{ path: prefix_url + '/report', element: <Report /> }]
+            children: [{ path: prefix_url + '/report/manage', element: <Report /> }]
         },
         {
             path: prefix_url + '/report/asset',

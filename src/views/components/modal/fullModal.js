@@ -13,7 +13,7 @@ const FullModal = (props) => {
           <ModalFooter>
             {!hideOk && (
               <>
-                <Button color="primary" onClick={onOk}>{okText}</Button>{' '}
+                <Button color="success" onClick={onOk}>{okText}</Button>{' '}
               </>
             )}
             <Button color="secondary" onClick={onClose}>{closeText}</Button>

@@ -118,6 +118,13 @@ export const stringToDateTh = (value, showTime = true, format) => {
     ? `${day}/${month}/${year} ${time}`
     : `${day}/${month}/${year}`;
 };
+export const ToDateDb = (value, toThai = false, format) => {
+  const date = moment(value, format).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear() + (toThai ? 543 : 0);
+  return `${year}-${month}-${day}`;
+};
 export const stringToDateThShort = (value, showTime = true, format) => {
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");

@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
-import Textbox from "@views/components/input/Textbox";
 import { 
-  getCommitteeNo,
-  getCommitteeDate,
+  getBranchBookNo,
+  getBranchBookDate,
 } from "@services/api";
 
 const Filter = (props) => {
-  const status = 'ยืนยันยอดสำเร็จ';
+  const status = 'รอรวบรวมเตรียมนำเสนอ';
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
@@ -30,14 +29,14 @@ const Filter = (props) => {
     }))
   }
   async function fetchData() {
-    const resultCommitteeNo = await getCommitteeNo(status);
-    const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCommitteeNo = await getBranchBookNo(status);
+    const resultCommitteeDate = await getBranchBookDate(status);
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_no: temp[0]})
+        ...({branch_proposes_approval_no: temp[0]})
       }))
     } else await setCommitteeNoOp(null);
     if (resultCommitteeDate.isSuccess) {
@@ -45,11 +44,26 @@ const Filter = (props) => {
       await setCommitteeDateOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_date: temp[0]})
+        ...({branch_proposes_approval_date: temp[0]})
       }))
     } else await setCommitteeDateOp(null);
     setIsMounted(true);
   }
+  useEffect(() => {
+    async function getDate() {
+      const resultCommitteeDate = await getBranchBookDate(status, filter?.branch_proposes_approval_no);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_proposes_approval_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
+    }
+    getDate();
+    return () => console.log('Clear data')
+  }, [filter?.branch_proposes_approval_no]);
 
   //** ComponentDidMount
   useEffect(() => {
@@ -72,9 +86,9 @@ const Filter = (props) => {
             <Dropdown 
               title={'เลขหนังสือ'} 
               containerClassname={'mb-3'} 
-              defaultValue={committeeNoOp[0]} 
+              defaultValue={filter?.branch_proposes_approval_no} 
               options={committeeNoOp}
-              handleChange={(val) => onChange('proposal_committee_no', val)}
+              handleChange={(val) => onChange('branch_proposes_approval_no', val)}
             />
           )}
         </div>
@@ -83,9 +97,9 @@ const Filter = (props) => {
             <Dropdown 
               title={'วันที่หนังสือ'} 
               containerClassname={'mb-3'} 
-              defaultValue={committeeDateOp[0]} 
+              defaultValue={filter?.branch_proposes_approval_date} 
               options={committeeDateOp}
-              handleChange={(val) => onChange('proposal_committee_date', val)}
+              handleChange={(val) => onChange('branch_proposes_approval_date', val)}
             />
           )}
         </div>

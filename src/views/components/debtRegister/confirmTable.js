@@ -41,11 +41,11 @@ const DebtRegisterConfirmTable = (props) => {
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th rowSpan="2" style={{ minWidth: 40 }}>#</th>
-                <th colspan="4">เกษตรกร</th>
-                <th colspan="5">องค์กร</th>
-                <th colspan="5">ทะเบียนหนี้</th>
-                <th colspan="4">เจ้าหนี้</th>
-                <th colspan="7">สัญญา</th>
+                <th colSpan="4">เกษตรกร</th>
+                <th colSpan="5">องค์กร</th>
+                <th colSpan="5">ทะเบียนหนี้</th>
+                <th colSpan="4">เจ้าหนี้</th>
+                <th colSpan="7">สัญญา</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>

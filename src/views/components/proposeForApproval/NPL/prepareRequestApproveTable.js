@@ -12,8 +12,7 @@ const PrepareRequestApproveTable = (props) => {
 
   const commercialBanksOrLegalEntitiesData = data.filter(
     (i) =>
-      i.debt_manage_creditor_type == "ธนาคารพาณิชย์" ||
-      i.debt_manage_creditor_type == "นิติบุคคล"
+      i.debt_manage_creditor_type != "สหกรณ์"
   );
   const cooperativeData = data.filter(
     (i) => i.debt_manage_creditor_type == "สหกรณ์"

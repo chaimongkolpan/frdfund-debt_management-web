@@ -2,6 +2,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import { PieChart } from 'react-feather'
 import { Link } from "react-router-dom"
+import moment from 'moment';
 // ** Third Party Components
 // import PerfectScrollbar from 'react-perfect-scrollbar'
 import {
@@ -15,7 +16,7 @@ const Sidebar = props => {
   // ** Props
   const { menuCollapsed,setMenuCollapsed } = props
   const path = window.location.pathname
-  const [alert, setAlert] = useState({});
+  const [alert, setAlert] = useState(null);
   const branchList = [1,4];
   const officeList = [1,2,7,8];
   const user = getUserData();
@@ -25,16 +26,20 @@ const Sidebar = props => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const result = await getAlertSide();
-        if (result.isSuccess) {
-          setAlert(result.data);
+        if (!alert || moment().diff(moment(alert?.updateDate), 'minutes') > 5) {
+          const result = await getAlertSide();
+          if (result.isSuccess) {
+            setAlert(result.data);
+          }
         }
       } catch(e) {
         console.error('error', e);
       }
     };
     fetchData();
-  }, [])
+    const id = setInterval(fetchData, 60000);
+    return () => clearInterval(id);
+  }, [alert])
   return (
     <Fragment>
       <nav className="navbar navbar-vertical navbar-expand-lg" style={{ position: 'fixed' }}>
@@ -724,7 +729,7 @@ const Sidebar = props => {
                 <p className="navbar-vertical-label">รายงาน</p>
                 {/* parent pages รายงาน*/}
                 <div className="nav-item-wrapper">
-                  <a className="nav-link dropdown-indicator label-1" href="#nv-Report" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Report">
+                  <a className={`nav-link dropdown-indicator label-1 ${path.includes('/report') ? 'active' : ''}`} href="#nv-Report" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Report">
                     <div className="d-flex align-items-center">
                       <div className="dropdown-indicator-icon-wrapper">
                         <span className="fas fa-caret-right dropdown-indicator-icon"></span>
@@ -737,22 +742,22 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-Report">
                       <li className="collapsed-nav-item-title d-none">รายงาน</li>
                       <li className="nav-item">
-                        <Link className="nav-link" to={`${prefix_url + "/report"}`}>
+                        <Link className={`nav-link ${path.includes('/report/manage') ? 'active' : ''}`} to={`${prefix_url + "/report/manage"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">จัดการหนี้</span></div>
                         </Link>
                       </li>
                       <li className="nav-item">
-                        <Link className="nav-link" to={`${prefix_url + "/report/asset"}`}>
+                        <Link className={`nav-link ${path.includes('/report/asset') ? 'active' : ''}`} to={`${prefix_url + "/report/asset"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">บริหารสินทรัพย์</span></div>
                         </Link>
                       </li>
                       <li className="nav-item">
-                        <Link className="nav-link" to={`${prefix_url + "/report/restruct"}`}>
+                        <Link className={`nav-link ${path.includes('/report/restruct') ? 'active' : ''}`} to={`${prefix_url + "/report/restruct"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ปรับโครงสร้างหนี้ฯ</span></div>
                         </Link>
                       </li>
                       <li className="nav-item">
-                        <Link className="nav-link" to={`${prefix_url + "/report/postpone"}`}>
+                        <Link className={`nav-link ${path.includes('/report/postpone') ? 'active' : ''}`} to={`${prefix_url + "/report/postpone"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ชะลอหนี้</span></div>
                         </Link>
                       </li>
