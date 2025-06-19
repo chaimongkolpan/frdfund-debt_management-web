@@ -17,8 +17,27 @@ const ClassifySearchFilter = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [statusDebtOp, setStatusDebtOp] = useState(null);
   const [checkingStatusOp, setCheckingStatusOp] = useState(null);
+  const [errors, setErrors] = useState({
+    creditor: null,
+    creditorType: null,
+  });
+  const setError = (key, value) => {
+    try {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          [key]: value,
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const onSubmit = () => {
     if (handleSubmit) {
+      if (!filter.idCard && !filter.name && !filter.creditor) setError('creditor', 'error');
+      if (!filter.idCard && !filter.name && !filter.creditorType) setError('creditorType', 'error');
+      if (!filter.idCard && !filter.name && (!filter.creditor || !filter.creditorType)) return;
       handleSubmit({
         idCard: "",
         name: "",
@@ -45,22 +64,29 @@ const ClassifySearchFilter = (props) => {
           ...({creditorType: temp1[0]})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getCreditors(val, temp1[0]);
-        if (resultCreditor.isSuccess) {
-          const temp2 = resultCreditor.data.map(item => item.name);
-          await setCreditorOp(temp2);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...({creditor: 'all'})
-          }))
-        } else await setCreditorOp(null);
+        if (val) {
+          const resultCreditor = await getCreditors(val, temp1[0]);
+          if (resultCreditor.isSuccess) {
+            const temp2 = resultCreditor.data.map(item => item.name);
+            await setCreditorOp(temp2);
+            await setError('creditor', null);
+            await setFilter((prevState) => ({
+              ...prevState,
+              ...({creditor: 'all'})
+            }))
+          } else await setCreditorOp(null);
+        }
       } else {
         await setCreditorTypeOp(null);
         await setCreditorOp(null);
       } 
     }
+    if (key == 'creditor') {
+      setError('creditor', null);
+    }
     if (key == 'creditorType') {
       await setCreditorOp(null);
+      setError('creditorType', null);
       const resultCreditor = await getCreditors(filter.province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
@@ -90,9 +116,9 @@ const ClassifySearchFilter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getCreditors(null, temp1[0]);
+        const resultCreditor = await getCreditors(null, 'all');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -159,22 +185,22 @@ const ClassifySearchFilter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
+              containerClassname={`mb-3 ${errors?.creditorType ? 'border-error' : ''}`}
               defaultValue={'all'} 
               options={creditorTypeOp}
               handleChange={(val) => onChange('creditorType', val)}
-               />
+              hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={creditorOp[0]} 
+              containerClassname={`mb-3 ${errors?.creditor ? 'border-error' : ''}`}
+              defaultValue={'all'} 
               options={creditorOp}
               handleChange={(val) => onChange('creditor', val)}
-            />
+              hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">

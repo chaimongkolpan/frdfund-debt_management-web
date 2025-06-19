@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, handleSubmit, handleSubmitFail, filter, getData } = props;
+  const { result, handleSubmit, filter, getData } = props;
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
@@ -13,12 +13,6 @@ const SearchTable = (props) => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleSubmit(selectedData)
-    }
-  }
-  const onSubmitFail = () => {
-    if (handleSubmit) {
-      const selectedData = data.filter((i, index) => selected[index]);
-      handleSubmitFail(selectedData)
     }
   }
   const onChange = async (id) => {
@@ -41,18 +35,10 @@ const SearchTable = (props) => {
         </td>
         <td>{item.branch_proposes_approval_no}</td>
         <td>{item.branch_proposes_approval_date ? stringToDateTh(item.branch_proposes_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
-        {coop && (
-          <td>{item.debt_repayment_type}</td>
-        )}
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.organization_register_round}</td>
-        <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.debt_manage_creditor_type}</td>
         <td>{item.debt_manage_creditor_name}</td>
         <td>{item.debt_manage_creditor_province}</td>
@@ -71,18 +57,10 @@ const SearchTable = (props) => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
-        <td>{item.debt_manage_status}</td>
         <td>{item.debt_manage_objective_details}</td>
-        <td>{item.collateral_type}</td>
-        {coop ? (
-          <td>{item.debt_management_audit_status}</td>
-        ) : (
-          <td>{item.debt_management_audit_status}</td>
-        )}
+        <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
         <td>{item.collateral_no}</td>
-        <td>{0}</td>
-        <td>{''}</td>
       </tr>
     ))
   }
@@ -123,28 +101,19 @@ const SearchTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th rowSpan="2">เลขที่หนังสือ</th>
-                <th rowSpan="2">วันที่หนังสือ</th>
-                {coop && (
-                  <th rowSpan="2">ขออนุมัติโดย (ชำระหนี้แทน/วางเงินชำระหนี้)</th>
-                )}
+                <th colSpan="2">สาขาเสนอขออนุมัติ</th>
                 <th colSpan="4">เกษตรกร</th>
-                <th colSpan="1">องค์กร</th>
-                <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={coop ? "13" : "15"}>สัญญา</th>
-                <th colSpan="3">หลักทรัพย์ค้ำประกัน</th>
+                <th colSpan={coop ? "11" : "13"}>สัญญา</th>
+                <th>หลักทรัพย์ค้ำประกัน</th>
               </tr>
               <tr>
+                <th>เลขที่หนังสือ</th>
+                <th>วันที่หนังสือ</th>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
                 <th>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
-                <th>รอบองค์กร</th>
-                <th>รอบหนี้</th>
-                <th>วันที่ยื่นขึ้นทะเบียนหนี้</th>
-                <th>ผ่านความเห็นชอบครั้งที่</th>
-                <th>ผ่านความเห็นชอบวันที่</th>
                 <th>ประเภทเจ้าหนี้</th>
                 <th>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
@@ -163,20 +132,16 @@ const SearchTable = (props) => {
                 )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
-                <th>สถานะหนี้</th>
                 <th>วัตถุประสงค์การกู้</th>
-                <th>วันที่ผิดนัดชำระ</th>
-                <th>คำนวณดอกเบี้ยถึงวันที่</th>
+                <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
                 <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
-                <th>จำนวนแปลง</th>
-                <th>การตรวจสอบการอายัด</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={coop ? 33 : 34}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 23 : 25}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -193,8 +158,7 @@ const SearchTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span class="fas fa-check"></span> รวบรวมเตรียมนำเสนอ</button>
-            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onSubmitFail()}><span class="fas fa-times"></span> ข้อมูลไม่ถูกต้องครบถ้วน</button>
+            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
           </div>
         </div>
       </div>

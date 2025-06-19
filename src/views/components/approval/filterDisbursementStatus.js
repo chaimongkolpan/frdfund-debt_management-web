@@ -186,7 +186,7 @@ const Filter = (props) => {
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeNoOp && (
             <Dropdown 
-              title={'ครั้งที่เสนอคณะกรมการ'} 
+              title={'ครั้งที่เสนอคณะกรรมการ'} 
               containerClassname={'mb-3'} 
               defaultValue={committeeNoOp[0]} 
               options={committeeNoOp}

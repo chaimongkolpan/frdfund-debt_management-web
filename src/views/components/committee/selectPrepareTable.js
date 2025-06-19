@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
-const SearchTable = (props) => {
-  const { result, handleSubmit, handleSubmitFail, filter, getData } = props;
+const SelectedTable = (props) => {
+  const { result, handleSubmit, handleRemove, filter, getData } = props;
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
+  const [count, setCount] = useState(0);
+  const [contracts, setContracts] = useState(0);
+  const [sumTotal, setSumTotal] = useState(0);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const onSubmit = () => {
@@ -15,21 +18,41 @@ const SearchTable = (props) => {
       handleSubmit(selectedData)
     }
   }
-  const onSubmitFail = () => {
-    if (handleSubmit) {
+  const onRemove = () => {
+    if (handleRemove) {
       const selectedData = data.filter((i, index) => selected[index]);
-      handleSubmitFail(selectedData)
+      handleRemove(selectedData)
     }
   }
   const onChange = async (id) => {
+    const newSelected = [
+      ...(selected.map((item, index) => (id == index ? !item : item))),
+    ]
     await setSelected((prev) => {
       prev[id] = !prev[id];
       return [...prev]
     })
+    const selectedData = data.filter((i, index) => newSelected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+    await setCount(toCurrency(custs.length));
+    await setContracts(toCurrency(selectedData.length));
+    await setSumTotal(toCurrency(sum,2));
   }
   const onHeaderChange = async (checked) => {
     await setSelected(result.data.map(() => checked));
     await setIsAll(checked)
+    if (checked) {
+      const custs = result.data.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+      const sum = result.data.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+      await setCount(toCurrency(custs.length));
+      await setContracts(toCurrency(result.data.length));
+      await setSumTotal(toCurrency(sum,2));
+    } else {
+      await setCount(0);
+      await setContracts(0);
+      await setSumTotal(0);
+    }
   }
   const RenderData = (item, index, checked) => {
     return (item && (
@@ -41,18 +64,10 @@ const SearchTable = (props) => {
         </td>
         <td>{item.branch_proposes_approval_no}</td>
         <td>{item.branch_proposes_approval_date ? stringToDateTh(item.branch_proposes_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
-        {coop && (
-          <td>{item.debt_repayment_type}</td>
-        )}
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.organization_register_round}</td>
-        <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.debt_manage_creditor_type}</td>
         <td>{item.debt_manage_creditor_name}</td>
         <td>{item.debt_manage_creditor_province}</td>
@@ -71,18 +86,10 @@ const SearchTable = (props) => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
-        <td>{item.debt_manage_status}</td>
         <td>{item.debt_manage_objective_details}</td>
-        <td>{item.collateral_type}</td>
-        {coop ? (
-          <td>{item.debt_management_audit_status}</td>
-        ) : (
-          <td>{item.debt_management_audit_status}</td>
-        )}
+        <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
         <td>{item.collateral_no}</td>
-        <td>{0}</td>
-        <td>{''}</td>
       </tr>
     ))
   }
@@ -110,41 +117,31 @@ const SearchTable = (props) => {
     }
     return () => { setData([]) }
   },[result])
-
   return (
     <>
-      <div data-list='{"valueNames":["name","email","age"]}'>
+      <div id="tableExample1" data-list='{"valueNames":["name","email","age"]'>
         <div className="table-responsive mx-n1 px-1">
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
-                  <div className="form-check ms-2 me-0 mb-0 fs-8">
+                  <div className="form-check ms-2 mb-0 fs-8">
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th rowSpan="2">เลขที่หนังสือ</th>
-                <th rowSpan="2">วันที่หนังสือ</th>
-                {coop && (
-                  <th rowSpan="2">ขออนุมัติโดย (ชำระหนี้แทน/วางเงินชำระหนี้)</th>
-                )}
+                <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
-                <th colSpan="1">องค์กร</th>
-                <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={coop ? "13" : "15"}>สัญญา</th>
-                <th colSpan="3">หลักทรัพย์ค้ำประกัน</th>
+                <th colSpan={coop ? "11" : "13"}>สัญญา</th>
+                <th>หลักทรัพย์ค้ำประกัน</th>
               </tr>
               <tr>
+                <th>เลขที่หนังสือ</th>
+                <th>วันที่หนังสือ</th>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
                 <th>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
-                <th>รอบองค์กร</th>
-                <th>รอบหนี้</th>
-                <th>วันที่ยื่นขึ้นทะเบียนหนี้</th>
-                <th>ผ่านความเห็นชอบครั้งที่</th>
-                <th>ผ่านความเห็นชอบวันที่</th>
                 <th>ประเภทเจ้าหนี้</th>
                 <th>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
@@ -163,20 +160,16 @@ const SearchTable = (props) => {
                 )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
-                <th>สถานะหนี้</th>
                 <th>วัตถุประสงค์การกู้</th>
-                <th>วันที่ผิดนัดชำระ</th>
-                <th>คำนวณดอกเบี้ยถึงวันที่</th>
+                <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
                 <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
-                <th>จำนวนแปลง</th>
-                <th>การตรวจสอบการอายัด</th>
               </tr>
             </thead>
-            <tbody className="list text-center align-middle" id="bulk-select-body">
+            <tbody className="list text-center align-middle">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={coop ? 33 : 34}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 23 : 25}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -186,19 +179,21 @@ const SearchTable = (props) => {
         </div>
         {paging?.total > 0 && (
           <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
-            setPage={(page) => getData({ ...filter, currentPage: page })} 
+            setPage={(page) => getData({ ...filter, currentPage: page })}  pageSize={0}
+            count={count} contracts={contracts} sumTotal={sumTotal}
           />
         )}
       </div>
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span class="fas fa-check"></span> รวบรวมเตรียมนำเสนอ</button>
-            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onSubmitFail()}><span class="fas fa-times"></span> ข้อมูลไม่ถูกต้องครบถ้วน</button>
+            <button type="button" className="btn btn-success btn-sm ms-2" onClick={() => onSubmit()}>เสนอขออนุมัติรายชื่อ</button>
+            {' '}
+            <button type="button" className="btn btn-danger btn-sm ms-2" onClick={() => onRemove()}>ไม่เสนอขออนุมัติรายชื่อ</button>
           </div>
         </div>
       </div>
     </>
   );
 };
-export default SearchTable;
+export default SelectedTable;

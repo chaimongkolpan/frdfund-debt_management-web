@@ -75,9 +75,8 @@ const PrepareRequestApproveTable = (props) => {
   const onSelectAllCooperative = () =>
     cooperativeSelected.length === cooperativeData.length
       ? setCooperativeSelected([])
-      : setCooperativeSelected(
-          cooperativeData.map((item) => item.id_debt_register)
-        );
+      : setCooperativeSelected(cooperativeData.map((item) => item.id_debt_register)
+  );
 
   return (
     <>

@@ -19,8 +19,27 @@ const DebtRegisterFilter = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [statusDebtOp, setStatusDebtOp] = useState(null);
   const [checkingStatusOp, setCheckingStatusOp] = useState(null);
+  const [errors, setErrors] = useState({
+    creditor: null,
+    creditorType: null,
+  });
+  const setError = (key, value) => {
+    try {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          [key]: value,
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const onSubmit = () => {
     if (handleSubmit) {
+      if (!filter.idCard && !filter.name && !filter.creditor) setError('creditor', 'error');
+      if (!filter.idCard && !filter.name && !filter.creditorType) setError('creditorType', 'error');
+      if (!filter.idCard && !filter.name && (!filter.creditor || !filter.creditorType)) return;
       handleSubmit({
         idCard: "",
         name: "",
@@ -65,18 +84,26 @@ const DebtRegisterFilter = (props) => {
       } 
       setLoading(false);
     }
+    if (key == 'creditor') {
+      setError('creditor', null);
+    }
     if (key == 'creditorType') {
       setLoading(true);
+      setError('creditorType', null);
       await setCreditorOp(null);
-      const resultCreditor = await getBigDataCreditors(filter.province, val);
-      if (resultCreditor.isSuccess) {
-        const temp2 = resultCreditor.data.map(item => item.name);
-        await setCreditorOp(temp2);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...({creditor: temp2[0]})
-        }))
-      } else await setCreditorOp(null);
+      console.log('type', val)
+      if (val) {
+        const resultCreditor = await getBigDataCreditors(filter.province, val);
+        if (resultCreditor.isSuccess) {
+          const temp2 = resultCreditor.data.map(item => item.name);
+          await setCreditorOp(temp2);
+          await setError('creditor', null);
+          await setFilter((prevState) => ({
+            ...prevState,
+            ...({creditor: temp2[0]})
+          }))
+        } else await setCreditorOp(null);
+      }
       setLoading(false);
     }
     setFilter((prevState) => ({
@@ -131,6 +158,9 @@ const DebtRegisterFilter = (props) => {
 
   //** ComponentDidMount
   useEffect(() => {
+    return () => console.log('Clear data')
+  }, [errors]);
+  useEffect(() => {
     fetchData();
     return () => console.log('Clear data')
   }, []);
@@ -166,7 +196,7 @@ const DebtRegisterFilter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
+              containerClassname={`mb-3 ${errors?.creditorType ? 'border-error' : ''}`}
               defaultValue={creditorTypeOp[0]} 
               options={creditorTypeOp}
               handleChange={(val) => onChange('creditorType', val)}
@@ -177,7 +207,7 @@ const DebtRegisterFilter = (props) => {
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
+              containerClassname={`mb-3 ${errors?.creditor ? 'border-error' : ''}`}
               defaultValue={creditorOp[0]} 
               options={creditorOp}
               handleChange={(val) => onChange('creditor', val)}

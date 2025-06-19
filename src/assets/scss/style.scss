@@ -128,8 +128,8 @@
   width: 20px;
 }
 .logo-text {
-  font-size: 1.636rem;
-  color: rgba(82, 91, 117,0.8);
+  font-size: 1.1rem !important;
+  color: #141824 !important;
   font-weight: 600;
   letter-spacing: -0.04em;
   margin-bottom: 0;
@@ -151,6 +151,10 @@
     align-items: center;
     padding: 15px;
     background: linear-gradient(-135deg, #54e1cb, #00e980);
+}
+
+.border-error {
+  border: 2px solid #ff0000;
 }
 
 .wrap-login100 {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Textbox from "@views/components/input/Textbox";
 import AreaTextbox from "@views/components/input/AreaTextbox";
@@ -18,6 +18,8 @@ import {
 } from "@services/api";
 
 const FullModal = (props) => {
+  const guarantorRef = useRef(null);
+  const collateralRef = useRef(null);
   const {isOpen, setModal, onClose, data} = props;
   const [isMounted, setMounted] = useState(false);
   const [collateral_type, setCollateralType] = useState(null);
@@ -61,6 +63,7 @@ const FullModal = (props) => {
       contract_debt_manage_other_expenses: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_other_expenses,
       contract_debt_manage_total_expenses: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_total_expenses,
       contract_debt_manage_total: ((debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine) * rate) + expense,
+      not_correct_list: '0,0,0,0,0,0,0,0,0,0'
     }
     const result = await updateDebtManagementDetailClassify(param);
     if (result.isSuccess) {
@@ -333,12 +336,18 @@ const FullModal = (props) => {
     await setCollateralType('โฉนด')
     await setOpenCollateralAdd(true)
     await setOpenCollateralEdit(true)
+    if (collateralRef.current) {
+      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const editCollateral = async(item) => {
     await setCollateralDetail(item)
     await setCollateralType(item.title_document_type)
     await setOpenCollateralAdd(false)
     await setOpenCollateralEdit(true)
+    if (collateralRef.current) {
+      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const saveCollateral = async() => {
     const result = await upsertCollateralClassify(collateralDetail);
@@ -374,11 +383,17 @@ const FullModal = (props) => {
     await setGuarantorDetail({ id_debt_management: debts.id_debt_management })
     await setOpenGuarantorAdd(true)
     await setOpenGuarantorEdit(true)
+    if (guarantorRef.current) {
+      guarantorRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const editGuarantor = async(item) => {
     await setGuarantorDetail(item)
     await setOpenGuarantorAdd(false)
     await setOpenGuarantorEdit(true)
+    if (guarantorRef.current) {
+      guarantorRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const saveGuarantor = async() => {
     const result = await upsertGuarantorClassify(guarantorDetail);
@@ -446,14 +461,14 @@ const FullModal = (props) => {
         compensation_conditions: (debt.compensation_conditions ?? 'ไม่มีการชดเชย'),
         debt_manage_objective: (debt.debt_manage_objective ?? 'เพื่อการเกษตร'),
         debt_manage_legal_action: (debt.debt_manage_legal_action ?? 'ไม่มี'),
-        debt_agreement: (debts?.debt_agreement ?? 'ตามข้อตกลง'),
-        debt_repayment_type: (debts?.debt_repayment_type ?? 'ชำระหนี้แทน'),
-        frD_paymen_amount: (debts?.frD_paymen_amount ?? 0),
-        contract_amount: (debts?.contract_amount ?? 0)
+        debt_agreement: (debt?.debt_agreement ?? 'ตามข้อตกลง'),
+        debt_repayment_type: (debt?.debt_repayment_type ?? 'ชำระหนี้แทน'),
+        frD_paymen_amount: (debt?.frD_paymen_amount ?? 0),
+        contract_amount: (debt?.contract_amount ?? 0)
       });
       await setRepaymentCon(debt.debt_repayment_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน');
       await setContractCon(debt.contract_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน');
-      await setNotCorrectList((debts?.not_correct_list ? debts?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0','0']))
+      await setNotCorrectList((debt?.not_correct_list ? debt?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0','0']))
       await setCreditorType(debt.debt_manage_creditor_type);
       await setPrinciple(debt.debt_manage_outstanding_principal ?? 0);
       await setExpense(debt.debt_manage_total_expenses ?? 0);
@@ -467,6 +482,8 @@ const FullModal = (props) => {
       await setGuarantors(null);
     }
   }
+  useEffect(() => {},[collateralRef]);
+  useEffect(() => {},[guarantorRef]);
   useEffect(() => {
     getCreditor(creditor_type);
   },[creditor_type])
@@ -974,7 +991,7 @@ const FullModal = (props) => {
                     <br />
                     {isOpenCollateralEdit && (
                     <>
-                      <div className="row g-3">
+                      <div ref={collateralRef} className="row g-3">
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <div className="form-floating needs-validation">
                             <select className="form-select" value={collateralDetail.title_document_type} onChange={(e) => handleChangeCollateral('title_document_type', e.target?.value)}>
@@ -2726,7 +2743,7 @@ const FullModal = (props) => {
                     </div>
                     <br />
                     {isOpenGuarantorEdit && (
-                      <div className="mb-1">
+                      <div ref={guarantorRef} className="mb-1">
                         <div className="card shadow-none border my-4" data-component-card="data-component-card">
                           <div className="card-body p-0">
                             <div className="p-4 code-to-copy">

@@ -2,18 +2,17 @@ import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
 import { 
-  getBigDataProvinces,
-  getBigDataCreditors,
-  getBigDataCreditorTypes,
+  getProvinces,
+  getCreditors,
+  getCreditorTypes,
   getDebtStatuses,
-  getCommitteeNo,
-  getCommitteeDate,
+  getBranchBookNo,
+  getBranchBookDate,
 } from "@services/api";
-
-const Filter = (props) => {
-  const status = 'ยืนยันยอดสำเร็จ';
-  const { handleSubmit, setLoading } = props;
-  const [isMounted, setIsMounted] = useState(false);
+const SearchFilter = (props) => {
+  const { handleSubmit } = props;
+  const status = 'รวบรวมเตรียมนำเสนอแล้ว';
+  const [isMounted, setIsMounted] = useState(false)
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
@@ -26,22 +25,22 @@ const Filter = (props) => {
       handleSubmit({
         idCard: "",
         name: "",
-        province: "",
-        creditorType: "",
-        creditor: "",
-        debtStatus: "",
-        debtClassifyStatus: status,
+        province: "all",
+        creditorType: "all",
+        creditor: "all",
+        debtStatus: "all",
+        checkingStatus: "all",
         ...filter,
+        debtClassifyStatus: status,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
       });
     }
   }
-  const onChange = async (key, val) => {
+  const onChange = async(key, val) => {
     if (key == 'province') {
-      setLoading(true);
       await setCreditorTypeOp(null);
-      const resultCreditorType = await getBigDataCreditorTypes(val);
+      const resultCreditorType = await getCreditorTypes(val);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
@@ -50,34 +49,31 @@ const Filter = (props) => {
           ...({creditorType: temp1[0]})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, temp1[0]);
+        const resultCreditor = await getCreditors(val, temp1[0]);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
         await setCreditorTypeOp(null);
         await setCreditorOp(null);
       } 
-      setLoading(false);
     }
     if (key == 'creditorType') {
-      setLoading(true);
       await setCreditorOp(null);
-      const resultCreditor = await getBigDataCreditors(filter.province, val);
+      const resultCreditor = await getCreditors(filter.province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
-      setLoading(false);
     }
     setFilter((prevState) => ({
       ...prevState,
@@ -85,14 +81,14 @@ const Filter = (props) => {
     }))
   }
   async function fetchData() {
-    const resultProv = await getBigDataProvinces();
+    const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNo(status);
-    const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCommitteeNo = await getBranchBookNo(status);
+    const resultCommitteeDate = await getBranchBookDate(status);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-      const resultCreditorType = await getBigDataCreditorTypes(null);
+      const resultCreditorType = await getCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
@@ -100,13 +96,13 @@ const Filter = (props) => {
           ...prevState,
           ...({creditorType: temp1[0]})
         }))
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getCreditors(null, temp1[0]);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -118,17 +114,17 @@ const Filter = (props) => {
        await setCreditorTypeOp(null);
        await setCreditorOp(null);
     }
+
     if (resultDebtSt.isSuccess) {
       const temp = resultDebtSt.data.map(item => item.name);
       await setStatusDebtOp(temp);
     } else await setStatusDebtOp(null);
-
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_no: temp[0]})
+        ...({branch_proposes_approval_no: temp[0]})
       }))
     } else await setCommitteeNoOp(null);
     if (resultCommitteeDate.isSuccess) {
@@ -136,11 +132,10 @@ const Filter = (props) => {
       await setCommitteeDateOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_date: temp[0]})
+        ...({branch_proposes_approval_date: temp[0]})
       }))
     } else await setCommitteeDateOp(null);
     setIsMounted(true);
-    setLoading(false);
   }
 
   //** ComponentDidMount
@@ -168,22 +163,20 @@ const Filter = (props) => {
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeNoOp && (
             <Dropdown 
-              title={'ครั้งที่เสนอคณะกรรมการ'} 
-              containerClassname={'mb-3'} 
-              defaultValue={committeeNoOp[0]} 
+              title={'เลขหนังสือ'} 
+              defaultValue={filter?.branch_proposes_approval_no} 
               options={committeeNoOp}
-              handleChange={(val) => onChange('proposal_committee_no', val)}
+              handleChange={(val) => onChange('branch_proposes_approval_no', val)}
             />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeDateOp && (
             <Dropdown 
-              title={'วันที่เสนอคณะกรรมการ'} 
-              containerClassname={'mb-3'} 
-              defaultValue={committeeDateOp[0]} 
+              title={'วันที่หนังสือ'} 
+              defaultValue={filter?.branch_proposes_approval_date} 
               options={committeeDateOp}
-              handleChange={(val) => onChange('proposal_committee_date', val)}
+              handleChange={(val) => onChange('branch_proposes_approval_date', val)}
             />
           )}
         </div>
@@ -191,7 +184,6 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
@@ -202,18 +194,16 @@ const Filter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={creditorTypeOp[0]} 
+              defaultValue={'all'} 
               options={creditorTypeOp}
               handleChange={(val) => onChange('creditorType', val)}
-            />
+               />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={creditorOp[0]} 
               options={creditorOp}
               handleChange={(val) => onChange('creditor', val)}
@@ -224,7 +214,6 @@ const Filter = (props) => {
           {statusDebtOp && (
             <Dropdown 
               title={'สถานะหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={statusDebtOp}
               handleChange={(val) => onChange('debtStatus', val)}
@@ -234,7 +223,7 @@ const Filter = (props) => {
         <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
-              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span class="fas fa-search"></span> ค้นหา</button>
+              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span className="fas fa-search"></span> ค้นหา</button>
             </div>
           </div>
         </div>
@@ -242,4 +231,4 @@ const Filter = (props) => {
     </>
   );
 };
-export default Filter;
+export default SearchFilter;

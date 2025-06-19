@@ -33,7 +33,7 @@ const SelectedTable = (props) => {
       return [...prev]
     })
     const selectedData = data.filter((i, index) => newSelected[index]);
-    const custs = result.data.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
     const sum = selectedData.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
     await setCount(toCurrency(custs.length));
     await setContracts(toCurrency(selectedData.length));

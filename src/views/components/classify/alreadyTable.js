@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toCurrency } from "@utils";
 import { 
   getDebtManagementAlreadyClassify,
 } from "@services/api";
@@ -12,10 +13,10 @@ const ClassifyAlreadyTable = (props) => {
         <td>{item.checking_management_status}</td>
         <td>{item.contract_number}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{item.debt_manage_outstanding_principal}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
         <td>{item.creditor_type}</td>
         <td>{item.creditor_name}</td>
-        <td>{item.frD_paymen_amount}</td>
+        <td>{toCurrency(item.frD_paymen_amount)}</td>
         <td>{item.debt_management_type}</td>
         <td>{item.dept_status}</td>
       </tr>

@@ -1,35 +1,178 @@
 import { useEffect, useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getUserData } from "@utils";
+import { getUserData, toCurrency, stringToDateTh } from "@utils";
+import { Spinner } from "reactstrap";
+import Loading from "@views/components/modal/loading";
+import logo from "@src/assets/images/icons/logo.png";
+import CustomerModal from "@views/components/modal/CustomModal";
 import According from "@views/components/panel/according";
+import Filter from "@views/components/committee/updateFilter";
+import DataTable from "@views/components/committee/updateTable";
+import EditDataTable from "@views/components/committee/downloadTable";
 import { 
+  searchCommitteeUpdate,
+  rejectCommitteeUpdate,
+  updateNPLstatus,
   cleanData
 } from "@services/api";
 
 const user = getUserData();
 const NPL = () => {
-  const navigate = useNavigate();
+  const status = 'คณะกรรมการจัดการหนี้อนุมัติ';
+  const [showModal, setShowModal] = useState(false);
+  const [isLoadBigData, setLoadBigData] = useState(false);
+  const [isSubmit, setSubmit] = useState(false);
+  const [isReject, setReject] = useState(false);
+  const [data, setData] = useState(null);
+  const [filter, setFilter] = useState({});
+  const [bookNoEdit, setBookNoEdit] = useState(null);
+  const [bookDateEdit, setBookDateEdit] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [remark, setRemark] = useState(null);
+  const onSearchTop = async (filter) => {
+    setLoadBigData(true);
+    setFilter(filter);
+    const result = await searchCommitteeUpdate({
+      ...filter,
+      // debtClassifyStatus: "รอเสนอคณะกรรมการจัดการหนี้",
+    });
+    if (result.isSuccess) {
+      setData(result);
+    } else {
+      setData(null);
+    }
+    setLoadBigData(false);
+  };
+  const onAddBigData = async (selected) => {
+    const selectId = selected.map(item => item.id_debt_management);
+    await setSelected(selectId);
+    await setSubmit(true);
+  };
+  const onRemoveMakelist = async (selected) => {
+    const selectId = selected.map(item => item.id_debt_management);
+    await setSelected(selectId);
+    await setReject(true);
+  };
+  const onApprove = async () => {
+    const result = await updateNPLstatus(selected,status);
+    if (result)
+      await setSubmit(false);
+  };
+  const onReject = async () => {
+    const result = await updateNPLstatus(selected,"คณะกรรมการจัดการหนี้ไม่อนุมัติ");
+    if (result) {
+      await rejectCommitteeUpdate({ ids: selected, remark });
+      await setReject(false);
+    }
+  };
   return (
     <>
       <div className="content">
-        <h4 className="mb-3">สาขาเสนอ NPL</h4>
-        <div className="mt-4">
-          <div className="row g-4">
-            <div className="col-12 col-xl-12 order-1 order-xl-0">
-              <div className="mb-9">
-                <According 
-                  title={'-'}
-                  className={"my-4"}
-                  children={(
-                    <>
-                    </>
-                  )}
-                />
-              </div>
+        <h4>ปรับปรุงรายชื่อที่ผ่านการอนุมัติจากคณะกรรมการ NPL</h4>
+        <div className="d-flex flex-row-reverse">
+          <div>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm ms-2"
+              onClick={() => setShowModal(true)}
+            >
+              <span className="fas fa-file-upload"></span>{" "}
+              ดาวน์โหลดเอกสารประกาศรายชื่อ
+            </button>
+            {showModal && (
+              <CustomerModal
+                isOpen={showModal}
+                setModal={setShowModal}
+                // onOk={onSubmitEdit}
+                onClose={() => setShowModal(false)}
+                title={"ดาวน์โหลดเอกสารประกาศรายชื่อ"}
+                okText={"ดาวน์โหลด"}
+                closeText={"ปิด"}
+                size={'xl'}
+                children={
+                  <EditDataTable 
+                    bookNo={bookNoEdit} 
+                    setBookNo={setBookNoEdit}
+                    bookDate={bookDateEdit}
+                    setBookDate={setBookDateEdit}
+                  />
+                }
+              />
+            )}
+          </div>
+        </div>
+        <div className="row g-4">
+          <div className="col-12 col-xl-12 order-1 order-xl-0">
+            <div className="mb-9">
+              <According 
+                title={'ค้นหา'}
+                className={"my-4"}
+                children={(
+                  <>
+                    <Filter
+                      handleSubmit={onSearchTop}
+                      setLoading={setLoadBigData}
+                    />
+                    <br />
+                    {data && (
+                      <DataTable
+                        result={data}
+                        handleSubmit={onAddBigData}
+                        handleReject={onRemoveMakelist}
+                      />
+                    )}
+                  </>
+                )}
+              />
             </div>
           </div>
         </div>
       </div>
+      <CustomerModal
+        isOpen={isSubmit}
+        setModal={setSubmit}
+        onOk={onApprove}
+        onClose={() => setSubmit(false)}
+        title={"ยืนยันการอนุมัติจากคณะกรรมการจัดการหนี้"}
+        okText={"ยืนยัน"}
+        closeText={"ยกเลิก"}
+        centered
+        children={<p class="text-body-tertiary lh-lg mb-0">ยืนยันอนุมัติ</p>}
+      />
+      <CustomerModal
+        isOpen={isReject}
+        setModal={setReject}
+        onOk={onReject}
+        onClose={() => setReject(false)}
+        title={"ยืนยันการไม่อนุมัติจากคณะกรรมการจัดการหนี้"}
+        okColor={'danger'}
+        okText={"ยืนยันไม่อนุมัติ"}
+        closeText={"ปิด"}
+        fullscreen
+        children={
+          <>
+          </>
+        }
+      />
+      <Loading
+        isOpen={isLoadBigData}
+        setModal={setLoadBigData}
+        centered
+        scrollable
+        size={"lg"}
+        title={"เรียกข้อมูลทะเบียนหนี้จาก BigData"}
+        hideFooter
+      >
+        <div className="d-flex flex-column align-items-center justify-content-center">
+          <img
+            className="mb-5"
+            src={logo}
+            alt="logo"
+            width={150}
+            height={150}
+          />
+          <Spinner className="mb-3" style={{ height: "3rem", width: "3rem" }} />
+        </div>
+      </Loading>
     </>
   );
 };

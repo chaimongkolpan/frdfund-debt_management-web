@@ -121,7 +121,7 @@ const BookDateTable = () => {
                     </div>
                   </div>
                   <div className="col-sm-12 col-md-12 col-lg-6">
-                    <BookNo title={'เลขที่หนังสือฎีกา'} subtitle={'กฟก'} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                    <BookNo title={'เลขที่หนังสือฎีกา'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
                   </div>
                   <div className="col-sm-12 col-md-12 col-lg-6">
                     <DatePicker title={'วันที่หนังสือฎีกา'}

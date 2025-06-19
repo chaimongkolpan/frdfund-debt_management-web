@@ -9,7 +9,7 @@ import {
   updateBorrowerClassify,
 } from "@services/api";
 const FullModal = (props) => {
-  const {isOpen, setModal, onClose, idcard, province, creditorType} = props;
+  const {isOpen, setModal, onClose, idcard, province, creditorType, ids } = props;
   const [isMounted, setMounted] = useState(false);
   const [data, setData] = useState([]);
   const [provinces, setProvOp] = useState(null);
@@ -64,7 +64,7 @@ const FullModal = (props) => {
     }))
   }
   const submitBorrower = async() => {
-    const result = await updateBorrowerClassify(editDetail);
+    const result = await updateBorrowerClassify({ ...editDetail, ids: ids });
     if (result.isSuccess) {
       await fetchData();
     }
@@ -163,9 +163,9 @@ const FullModal = (props) => {
                 <div className=" input-group">
                   <select value={selectedType} className="form-select" onChange={(e) => onTypeChange(e.target?.value)}>
                     <option value="ผู้กู้">ผู้กู้</option>
-                    {hasBorrower && (
-                      <option value="ผู้รับสภาพหนี้">ผู้รับสภาพหนี้</option>
-                    )}
+                    <option value="ผู้รับสภาพหนี้">ผู้รับสภาพหนี้</option>
+                    {/* hasBorrower && (
+                    )*/ }
                   </select>
                 </div>
               </div>

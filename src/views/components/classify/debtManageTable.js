@@ -1,3 +1,4 @@
+import { toCurrency } from "@utils";
 const ClassifyDebtManageTable = (props) => {
   const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit } = props;
   const RenderData = (item, index) => {
@@ -11,8 +12,8 @@ const ClassifyDebtManageTable = (props) => {
         <td>{item.debt_manage_contract_no}</td>
         <td>{item.creditor_type}</td>
         <td>{item.creditor_name}</td>
-        <td>{item.debt_manage_outstanding_principal}</td>
-        <td>{item.frD_paymen_amount}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(item.frD_paymen_amount)}</td>
         <td>{item.purpose_loan_contract}</td>
         <td>{item.dept_status}</td>
         <td>{item.collateral_type}</td>

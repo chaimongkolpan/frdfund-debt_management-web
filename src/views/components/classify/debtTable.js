@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { 
   getDebtRegisterDetailClassify,
 } from "@services/api";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 const ClassifyDebtTable = (props) => {
   const { idcard, province, creditorType } = props;
   const [data, setData] = useState(null);
@@ -19,11 +19,11 @@ const ClassifyDebtTable = (props) => {
         <td>{item.creditor_province}</td>
         <td>{item.creditor_branch}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{item.remaining_principal_contract}</td>
+        <td>{toCurrency(item.remaining_principal_contract)}</td>
         <td>{item.dept_status}</td>
         <td>{item.collateral_type}</td>
+        <td>{item.purpose_loan_contract}</td>
         <td>{item.purpose_type_loan_contract}</td>
-        <td>{item.remaining_principal_contract}</td>
       </tr>
     ))
   }

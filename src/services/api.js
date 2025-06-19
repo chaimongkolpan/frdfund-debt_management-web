@@ -517,7 +517,6 @@ export const searchNpaClassify = async (filter) => {
   }
 };
 //#endregion
-
 //#region BranchOffer
 export const searchBranchOffer = async (filter) => {
   const path = "/BranchOffer/search-branch-offer";
@@ -637,9 +636,142 @@ export const searchPrepareForPresent = async (filter) => {
     return defaultErrorResponse;
   }
 };
-
+export const submitBranchOfferPrepare = async (selected) => {
+  const path = "/PrepareForPresent/submit-prepare-for-present";
+  try {
+    const result = await axios.post(path, { status: 'รวบรวมเตรียมนำเสนอแล้ว', data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateIncorrect = async (selected) => {
+  const path = "/PrepareForPresent/update-notcorrectlist";
+  try {
+    const result = await axios.post(path, { data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
+//#region Committee
+export const searchCommitteePrepare = async (filter) => {
+  const path = "/ProposeCommittee/search-prepare-propose-committee";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const searchAddedCommitteePrepare = async (filter) => {
+  const path = "/ProposeCommittee/search-prepare-propose-committee";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const addCommitteePrepare = async (selected) => {
+  const path = '/share/update-statusnpl';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'เตรียมรอเสนอคณะกรรมการจัดการหนี้' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
 
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeCommitteePrepare = async (selected) => {
+  const path = '/share/update-statusnpl';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'รวบรวมเตรียมนำเสนอแล้ว' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateCommitteePrepare = async (param) => {
+  const path = "/ProposeCommittee/update-prepare-propoes-committee";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const submitCommitteePrepare = async (params) => {
+  const path = "/ProposeCommittee/submit-prepare-propose-committee";
+  try {
+    const result = await axios.post(
+      path,
+      { data: params.data,status: params.status },
+      { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
+export const searchCommitteeUpdate = async (filter) => {
+  const path = "/ProposeCommittee/search-update-propose-committee";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const approveCommitteeUpdate = async (filter) => {
+  const path = "/ProposeCommittee/approve-committee";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const rejectCommitteeUpdate = async (filter) => {
+  const path = "/ProposeCommittee/reject-committee";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
 //#region Approval
 export const getCommitteeNo = async (status) => {
   const path = '/common/proposal-committee-no';
