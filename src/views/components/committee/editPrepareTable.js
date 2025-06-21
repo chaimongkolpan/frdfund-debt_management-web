@@ -7,6 +7,7 @@ import BookNo from "@views/components/input/BookNo";
 import { 
   getCommitteeNo,
   getCommitteeDate,
+  getCreditorTypes,
   searchCommitteePrepare,
   cleanData
 } from "@services/api";
@@ -17,9 +18,10 @@ const EditDataTable = (props) => {
   const [filter, setFilter] = useState({});
   const [committeeNoOp, setCommitteeNoOp] = useState(null);
   const [committeeDateOp, setCommitteeDateOp] = useState(null);
+  const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [coop, setCoop] = useState(true);
   const onSubmit = async () => {
-    setFilter(filter);
+    await setFilter(filter);
     const result = await searchCommitteePrepare({
       ...filter,
       debtClassifyStatus: status,
@@ -33,7 +35,7 @@ const EditDataTable = (props) => {
     }
   }
   const onChange = async(key, val) => {
-    setFilter((prevState) => ({
+    await setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
@@ -41,6 +43,7 @@ const EditDataTable = (props) => {
   async function fetchData() {
     const resultCommitteeNo = await getCommitteeNo(status);
     const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCreditorType = await getCreditorTypes(null);
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
@@ -57,6 +60,16 @@ const EditDataTable = (props) => {
         ...({proposal_committee_date: temp[0]})
       }))
     } else await setCommitteeDateOp(null);
+    if (resultCreditorType.isSuccess) {
+      const temp1 = resultCreditorType.data.map(item => item.name);
+      await setCreditorTypeOp(temp1);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({creditorType: temp1[0]})
+      }))
+    } else {
+      await setCreditorTypeOp(null);
+    } 
   }
   const RenderData = (item, index) => {
     return (item && (
@@ -102,18 +115,12 @@ const EditDataTable = (props) => {
       <form className="row g-3">
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeNoOp && (
-            // <Dropdown 
-            //   title={'ครั้งที่เสนอคณะกรรมการ'} 
-            //   defaultValue={filter?.proposal_committee_no} 
-            //   options={committeeNoOp}
-            //   handleChange={(val) => onChange('proposal_committee_no', val)}
-            // />
             <div className={`form-floating form-floating-advance-select`}>
               <Label>{'ครั้งที่เสนอคณะกรรมการ'}</Label>
               <Input type="select" value={filter?.proposal_committee_no} 
                 className={`form-select`}
                 placeholder={'ครั้งที่เสนอคณะกรรมการ'}
-                onChange={(newval) => onChange('proposal_committee_no', newval)} 
+                onChange={(newval) => onChange('proposal_committee_no', newval.target.value)} 
               >
                 {committeeNoOp && (
                   committeeNoOp.map((option, index) => (
@@ -126,21 +133,33 @@ const EditDataTable = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeDateOp && (
-            // <Dropdown 
-            //   title={'วันที่เสนอคณะกรรมการ'} 
-            //   defaultValue={filter?.proposal_committee_date} 
-            //   options={committeeDateOp}
-            //   handleChange={(val) => onChange('proposal_committee_date', val)}
-            // />
             <div className={`form-floating form-floating-advance-select`}>
               <Label>{'วันที่เสนอคณะกรรมการ'}</Label>
               <Input type="select" value={filter?.proposal_committee_date} 
                 className={`form-select`}
                 placeholder={'วันที่เสนอคณะกรรมการ'}
-                onChange={(newval) => onChange('proposal_committee_date', newval)} 
+                onChange={(newval) => onChange('proposal_committee_date', newval.target.value)} 
               >
                 {committeeDateOp && (
                   committeeDateOp.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))
+                )}
+              </Input>
+            </div>
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {creditorTypeOp && (
+            <div className={`form-floating form-floating-advance-select`}>
+              <Label>{'ประเภทเจ้าหนี้'}</Label>
+              <Input type="select" value={filter?.creditorType} 
+                className={`form-select`}
+                placeholder={'ประเภทเจ้าหนี้'}
+                onChange={(newval) => onChange('creditorType', newval.target.value)} 
+              >
+                {creditorTypeOp && (
+                  creditorTypeOp.map((option, index) => (
                     <option key={index} value={option}>{option}</option>
                   ))
                 )}

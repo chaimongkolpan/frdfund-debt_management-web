@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
-const DataTable = (props) => {
-  const { result, handleSubmit, handleReject } = props;
+const SearchTable = (props) => {
+  const { result, handleSubmit, filter, getData } = props;
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
+  const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -11,12 +13,6 @@ const DataTable = (props) => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleSubmit(selectedData)
-    }
-  }
-  const onReject = () => {
-    if (handleReject) {
-      const selectedData = data.filter((i, index) => selected[index]);
-      handleReject(selectedData)
     }
   }
   const onChange = async (id) => {
@@ -34,30 +30,15 @@ const DataTable = (props) => {
       <tr key={index}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" 
-              disabled={item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้อนุมัติ' || item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ'} 
-              checked={checked} onChange={() => onChange(index)} />
+            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td>{item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้อนุมัติ' ? (
-          <i className="fas fa-check text-success fs-7"></i>
-        ) : (item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ' ? (
-          <i className="fas fa-times text-danger fs-7"></i>
-        ) : '')}</td>
-        <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
-        {coop && (
-          <td>{item.proposal_type ? 'ชำระหนี้แทน' : 'วางเงินชำระหนี้'}</td>
-        )}
+        <td>{item.branch_proposes_approval_no}</td>
+        <td>{item.branch_proposes_approval_date ? stringToDateTh(item.branch_proposes_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.organization_register_round}</td>
-        <td>{item.debt_register_round}</td>
-        <td>{item.province}</td>
-        <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.debt_manage_creditor_type}</td>
         <td>{item.debt_manage_creditor_name}</td>
         <td>{item.debt_manage_creditor_province}</td>
@@ -76,14 +57,10 @@ const DataTable = (props) => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
-        <td>{item.debt_manage_status}</td>
         <td>{item.debt_manage_objective_details}</td>
-        <td>{item.debt_manage_payment_default_date ? stringToDateTh(item.debt_manage_payment_default_date, false) : '-'}</td>
-        <td>{item.debt_manage_calculate_ondate ? stringToDateTh(item.debt_manage_calculate_ondate, false) : '-'}</td>
+        <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
         <td>{item.collateral_no}</td>
-        <td>{item.collateral_no ? '1' : '0'}</td>
-        <td>{item.collateral_status}</td>
       </tr>
     ))
   }
@@ -107,6 +84,7 @@ const DataTable = (props) => {
       setData(result.data);
       setCoop(result.data && result.data[0]?.debt_manage_creditor_type == 'สหกรณ์')
       setSelected(result.data.map(() => false));
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
     return () => { setData([]) }
   },[result])
@@ -123,29 +101,19 @@ const DataTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th rowSpan="2">สถานะอนุมัติ</th>
-                <th rowSpan="2">ครั้งที่เสนอคณะกรรมการ</th>
-                <th rowSpan="2">วันที่เสนอคณะกรรมการ</th>
-                {coop && (
-                  <th rowSpan="2">ขออนุมัติโดย (ชำระหนี้แทน/วางเงินชำระหนี้)</th>
-                )}
+                <th colSpan="2">สาขาเสนอขออนุมัติ</th>
                 <th colSpan="4">เกษตรกร</th>
-                <th colSpan="1">องค์กร</th>
-                <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={coop ? "13" : "15"}>สัญญา</th>
-                <th colSpan="3">หลักทรัพย์ค้ำประกัน</th>
+                <th colSpan={coop ? "11" : "13"}>สัญญา</th>
+                <th>หลักทรัพย์ค้ำประกัน</th>
               </tr>
               <tr>
+                <th>เลขที่หนังสือ</th>
+                <th>วันที่หนังสือ</th>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
                 <th>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
-                <th>รอบองค์กร</th>
-                <th>รอบหนี้</th>
-                <th>วันที่ยื่นขึ้นทะเบียนหนี้</th>
-                <th>ผ่านความเห็นชอบครั้งที่</th>
-                <th>ผ่านความเห็นชอบวันที่</th>
                 <th>ประเภทเจ้าหนี้</th>
                 <th>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
@@ -164,20 +132,16 @@ const DataTable = (props) => {
                 )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
-                <th>สถานะหนี้</th>
                 <th>วัตถุประสงค์การกู้</th>
-                <th>วันที่ผิดนัดชำระ</th>
-                <th>คำนวณดอกเบี้ยถึงวันที่</th>
+                <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
                 <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
-                <th>จำนวนแปลง</th>
-                <th>การตรวจสอบการอายัด</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 35}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 23 : 25}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -185,16 +149,20 @@ const DataTable = (props) => {
             </tbody>
           </table>
         </div>
+        {paging?.total > 0 && (
+          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
+            setPage={(page) => getData({ ...filter, currentPage: page })} 
+          />
+        )}
       </div>
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span class="fas fa-check"></span> อนุมัติ</button>
-            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onReject()}><span class="fas fa-times"></span> ไม่อนุมัติ</button>
+            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
           </div>
         </div>
       </div>
     </>
   );
 };
-export default DataTable;
+export default SearchTable;

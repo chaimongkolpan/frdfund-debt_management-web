@@ -6,12 +6,12 @@ import {
   getCreditors,
   getCreditorTypes,
   getDebtStatuses,
-  getBranchBookNo,
-  getBranchBookDate,
+  getCommitteeNo,
+  getCommitteeDate,
 } from "@services/api";
 const SearchFilter = (props) => {
   const { handleSubmit } = props;
-  const status = 'รวบรวมเตรียมนำเสนอแล้ว';
+  const status = 'คณะกรรมการจัดการหนี้อนุมัติ';
   const [isMounted, setIsMounted] = useState(false)
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
@@ -83,8 +83,8 @@ const SearchFilter = (props) => {
   async function fetchData() {
     const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getBranchBookNo(status);
-    const resultCommitteeDate = await getBranchBookDate(status);
+    const resultCommitteeNo = await getCommitteeNo(status);
+    const resultCommitteeDate = await getCommitteeDate(status);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -163,7 +163,7 @@ const SearchFilter = (props) => {
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeNoOp && (
             <Dropdown 
-              title={'เลขหนังสือ'} 
+              title={'ครั้งที่เสนอคณะกรรมการ'} 
               defaultValue={filter?.branch_proposes_approval_no} 
               options={committeeNoOp}
               handleChange={(val) => onChange('branch_proposes_approval_no', val)}
@@ -173,7 +173,7 @@ const SearchFilter = (props) => {
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeDateOp && (
             <Dropdown 
-              title={'วันที่หนังสือ'} 
+              title={'วันที่เสนอคณะกรรมการ'} 
               defaultValue={filter?.branch_proposes_approval_date} 
               options={committeeDateOp}
               handleChange={(val) => onChange('branch_proposes_approval_date', val)}

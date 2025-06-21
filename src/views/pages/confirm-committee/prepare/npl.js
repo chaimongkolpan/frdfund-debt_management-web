@@ -1,35 +1,250 @@
-import { useEffect, useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getUserData } from "@utils";
+import { useEffect, useState } from "react";
+import { getUserData, toCurrency, stringToDateTh } from "@utils";
+import { Spinner } from "reactstrap";
+import Loading from "@views/components/modal/loading";
+import logo from "@src/assets/images/icons/logo.png";
 import According from "@views/components/panel/according";
+import CustomerModal from "@views/components/modal/CustomModal";
+import Filter from "@views/components/confirm-committee/filter";
+import SearchDataTable from "@views/components/confirm-committee/searchPrepareTable";
+import SelectDataTable from "@views/components/confirm-committee/selectPrepareTable";
+import DatePicker from "@views/components/input/DatePicker";
+import BookNo from "@views/components/input/BookNo";
 import { 
+  searchCommitteePrepare,
+  searchAddedCommitteePrepare,
+  addCommitteePrepare,
+  removeCommitteePrepare,
+  submitCommitteePrepare,
+  updateCommitteePrepare,
+  updateNPLstatus,
   cleanData
 } from "@services/api";
 
 const user = getUserData();
 const NPL = () => {
-  const navigate = useNavigate();
+  const status = 'รอเสนอคณะกรรมการจัดการหนี้';
+  const [showModal, setShowModal] = useState(false);
+  const [isLoadBigData, setLoadBigData] = useState(false);
+  const [isSubmit, setSubmit] = useState(false);
+  const [data, setData] = useState(null);
+  const [addedData, setAddedData] = useState(null);
+  const [filter, setFilter] = useState({});
+  const [bookNo, setBookNo] = useState(null);
+  const [bookDate, setBookDate] = useState(null);
+  const [bookNoEdit, setBookNoEdit] = useState(null);
+  const [bookDateEdit, setBookDateEdit] = useState(null);
+  const [editData, setEditData] = useState([]);
+  const [count, setCount] = useState(0);
+  const [contracts, setContracts] = useState(0);
+  const [sumTotal, setSumTotal] = useState(0);
+  const [filterAdded, setFilterAdded] = useState({
+    debtClassifyStatus: "คณะกรรมการจัดการหนี้อนุมัติ",
+    currentPage: 1,
+    pageSize: 0,
+  });
+  const [requestApproveData, setRequestApproveData] = useState([]);
+  
+  const onSearchTop = async (filter) => {
+    setLoadBigData(true);
+    setFilter(filter);
+    const result = await searchCommitteePrepare({
+      ...filter,
+      ...(filter.creditorType === "ทั้งหมด" && { creditorType: "" }),
+      ...(filter.creditor === "ทั้งหมด" && { creditor: "" }),
+    });
+    if (result.isSuccess) {
+      setData(result);
+    } else {
+      setData(null);
+    }
+    setLoadBigData(false);
+  };
+  const fetchData = async (query) => {
+    setFilterAdded(query);
+    const result = await searchAddedCommitteePrepare(query);
+    if (result.isSuccess) {
+      setAddedData(result);
+    } else {
+      setAddedData(null);
+    }
+    setLoadBigData(false);
+  };
+  const onAddBigData = async (selected) => {
+    const selectId = selected.map(item => item.id_debt_management)
+    const result = await addCommitteePrepare(selectId);
+    if (result.isSuccess) {
+      await onSearchTop({ ...filter, currentPage: 1});
+      await fetchData(filterAdded);
+    }
+  };
+  const onRemoveMakelist = async (selected) => {
+    const selectId = selected.map(item => item.id_debt_management)
+    const result = await removeCommitteePrepare(selectId);
+    if (result.isSuccess) {
+      await onSearchTop({ ...filter, currentPage: 1});
+      await fetchData(filterAdded);
+    }
+  };
+  const handleSubmit = async(selected) => {
+    const custs = selected.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selected.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+    await setCount(toCurrency(custs.length));
+    await setContracts(toCurrency(selected.length));
+    await setSumTotal(toCurrency(sum,2));
+    await setRequestApproveData(selected);
+    await setSubmit(true);
+  }
+  const onSubmitMakelist = async () => {
+    const ids = requestApproveData.map(item => item.id_debt_management.toString())
+    const param = {
+      ids,
+      proposal_committee_no: 'กฟก.' + bookNo,
+      proposal_committee_date: stringToDateTh(bookDate,false)
+    }
+    const resultUpdate = await updateNPLstatus(ids, status)
+    if (resultUpdate.isSuccess) {
+      const resultUpdate = await updateCommitteePrepare(param);
+      if (resultUpdate) {
+        const result = await submitCommitteePrepare({
+          type: "application/octet-stream",
+          filename: "คณะกรรมการจัดการหนี้อนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
+          data: requestApproveData,
+          status
+        });
+        if (result) {
+          await setBookNo(null);
+          await setBookDate(null);
+          await fetchData(filterAdded);
+        }
+      }
+    }
+  };
+  const onSubmitEdit = async () => {
+    const ids = editData.map(item => item.id_debt_management.toString())
+    const param = {
+      ids,
+      proposal_committee_no: 'กฟก.' + bookNoEdit,
+      proposal_committee_date: stringToDateTh(bookDateEdit,false)
+    }
+    const resultUpdate = await updateCommitteePrepare(param);
+    if (resultUpdate) {
+      const result = await submitCommitteePrepare({
+        type: "application/octet-stream",
+        filename: "คณะกรรมการจัดการหนี้อนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
+        data: editData,
+        status
+      });
+      if (result) {
+        await setBookNoEdit(null);
+        await setBookDateEdit(null);
+      }
+    }
+  };
+  const onCloseMakelist = async () => {
+    await setSubmit(false);
+    await fetchData({ ...filterAdded, currentPage: 1 });
+  }
+  useEffect(() => {
+  },[data])
+  useEffect(() => {
+    setLoadBigData(true);
+    fetchData(filterAdded);
+    return cleanData
+  },[])
   return (
     <>
       <div className="content">
-        <h4 className="mb-3">สาขาเสนอ NPL</h4>
-        <div className="mt-4">
-          <div className="row g-4">
-            <div className="col-12 col-xl-12 order-1 order-xl-0">
-              <div className="mb-9">
-                <According 
-                  title={'-'}
-                  className={"my-4"}
-                  children={(
-                    <>
-                    </>
-                  )}
-                />
-              </div>
+        <h4>สาขายืนยัดยอด NPL</h4>
+        <div className="row g-4">
+          <div className="col-12 col-xl-12 order-1 order-xl-0">
+            <div className="mb-9">
+              <According 
+                title={'ค้นหา'}
+                className={"my-4"}
+                children={(
+                  <>
+                    <Filter
+                      handleSubmit={onSearchTop}
+                      setLoading={setLoadBigData}
+                    />
+                    <br />
+                    {data && (
+                      <SearchDataTable
+                        result={data}
+                        handleSubmit={onAddBigData}
+                      />
+                    )}
+                  </>
+                )}
+              />
+              <According 
+                title={'เสนอคณะกรรมการจัดการหนี้'}
+                className={"mb-3"}
+                children={(
+                  <>
+                    <SelectDataTable
+                      result={addedData}
+                      handleSubmit={handleSubmit}
+                      handleRemove={onRemoveMakelist}
+                      filter={filterAdded}
+                      getData={fetchData}
+                    />
+                  </>
+                )}
+              />
             </div>
           </div>
         </div>
       </div>
+      <CustomerModal isOpen={isSubmit} setModal={setSubmit} 
+        onOk={() => onSubmitMakelist()} 
+        onClose={onCloseMakelist}  
+        title={'จัดทำรายชื่อเสนอคณะกรรมการจัดการหนี้ NPL'} 
+        okText={'ดาวน์โหลดเอกสารและบันทึก'} 
+        closeText={'ปิด'} size={'xl'}
+      >
+        <div className="row">
+          <div className="col-sm-12 col-md-12 col-lg-6">
+            <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+          </div>
+          <div className="col-sm-12 col-md-12 col-lg-6">
+            <DatePicker title={'วันที่เสนอคณะกรรมการ'}
+              value={bookDate} 
+              handleChange={(val) => setBookDate(val)} 
+            />
+          </div>
+          <div className="col-12">
+            {(count && contracts && sumTotal) ? (
+              <h6>
+                <div class="d-flex">
+                  <div class="flex-grow-1 ">{`จำนวน ${count} ราย ,${contracts} สัญญา ,ยอดเงินรวม ${sumTotal} บาท`}</div>
+                </div>
+              </h6>
+            ) : null}
+          </div>
+        </div>
+      </CustomerModal>
+      <Loading
+        isOpen={isLoadBigData}
+        setModal={setLoadBigData}
+        centered
+        scrollable
+        size={"lg"}
+        title={"เรียกข้อมูลทะเบียนหนี้จาก BigData"}
+        hideFooter
+      >
+        <div className="d-flex flex-column align-items-center justify-content-center">
+          <img
+            className="mb-5"
+            src={logo}
+            alt="logo"
+            width={150}
+            height={150}
+          />
+          <Spinner className="mb-3" style={{ height: "3rem", width: "3rem" }} />
+        </div>
+      </Loading>
     </>
   );
 };

@@ -21,8 +21,6 @@ const ProposeForApprovalBranchOfferNPL = lazy(() => import('../views/pages/propo
 
 const ClassifySearchNpa = lazy(() => import('../views/pages/classify/searchNpa'))
 const ClassifySearchNpaDetail = lazy(() => import('../views/pages/classify/searchNpaDetail'))
-const BranchOfferNpl = lazy(() => import('../views/pages/branch/offer/npl'))
-const BranchOfferNpa = lazy(() => import('../views/pages/branch/offer/npa'))
 const BranchPrepareNpl = lazy(() => import('../views/pages/branch/prepare/npl'))
 const BranchPrepareNpa = lazy(() => import('../views/pages/branch/prepare/npa'))
 const CommitteePrepareNpl = lazy(() => import('../views/pages/committee/prepare/npl'))

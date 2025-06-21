@@ -3,6 +3,7 @@ import Dropdown from "@views/components/input/DropdownSearch";
 import { 
   getCommitteeNo,
   getCommitteeDate,
+  getCreditorTypes,
 } from "@services/api";
 const SearchFilter = (props) => {
   const { handleSubmit } = props;
@@ -11,11 +12,12 @@ const SearchFilter = (props) => {
   const [filter, setFilter] = useState({});
   const [committeeNoOp, setCommitteeNoOp] = useState(null);
   const [committeeDateOp, setCommitteeDateOp] = useState(null);
+  const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
         ...filter,
-        debtClassifyStatus: status,
+        // debtClassifyStatus: status,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
       });
@@ -28,8 +30,9 @@ const SearchFilter = (props) => {
     }))
   }
   async function fetchData() {
-    const resultCommitteeNo = await getCommitteeNo(status);
-    const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCommitteeNo = await getCommitteeNo('');
+    const resultCommitteeDate = await getCommitteeDate('');
+    const resultCreditorType = await getCreditorTypes(null);
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
@@ -46,6 +49,16 @@ const SearchFilter = (props) => {
         ...({proposal_committee_date: temp[0]})
       }))
     } else await setCommitteeDateOp(null);
+    if (resultCreditorType.isSuccess) {
+      const temp1 = resultCreditorType.data.map(item => item.name);
+      await setCreditorTypeOp(temp1);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({creditorType: temp1[0]})
+      }))
+    } else {
+      await setCreditorTypeOp(null);
+    } 
     setIsMounted(true);
   }
 
@@ -83,6 +96,16 @@ const SearchFilter = (props) => {
               options={committeeDateOp}
               handleChange={(val) => onChange('proposal_committee_date', val)}
             />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {creditorTypeOp && (
+            <Dropdown 
+              title={'ประเภทเจ้าหนี้'} 
+              defaultValue={creditorTypeOp[0]} 
+              options={creditorTypeOp}
+              handleChange={(val) => onChange('creditorType', val)}
+               />
           )}
         </div>
         <div className="col-12">

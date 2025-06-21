@@ -7,6 +7,7 @@ import CustomerModal from "@views/components/modal/CustomModal";
 import According from "@views/components/panel/according";
 import Filter from "@views/components/committee/updateFilter";
 import DataTable from "@views/components/committee/updateTable";
+import DataRejectTable from "@views/components/committee/updateRejectTable";
 import EditDataTable from "@views/components/committee/downloadTable";
 import { 
   searchCommitteeUpdate,
@@ -23,6 +24,7 @@ const NPL = () => {
   const [isSubmit, setSubmit] = useState(false);
   const [isReject, setReject] = useState(false);
   const [data, setData] = useState(null);
+  const [dataReject, setDataReject] = useState(null);
   const [filter, setFilter] = useState({});
   const [bookNoEdit, setBookNoEdit] = useState(null);
   const [bookDateEdit, setBookDateEdit] = useState(null);
@@ -31,6 +33,7 @@ const NPL = () => {
   const onSearchTop = async (filter) => {
     setLoadBigData(true);
     setFilter(filter);
+    setData(null);
     const result = await searchCommitteeUpdate({
       ...filter,
       // debtClassifyStatus: "รอเสนอคณะกรรมการจัดการหนี้",
@@ -49,6 +52,7 @@ const NPL = () => {
   };
   const onRemoveMakelist = async (selected) => {
     const selectId = selected.map(item => item.id_debt_management);
+    await setDataReject(selected);
     await setSelected(selectId);
     await setReject(true);
   };
@@ -150,6 +154,12 @@ const NPL = () => {
         fullscreen
         children={
           <>
+            {dataReject && (
+              <DataRejectTable
+                result={dataReject}
+                remark={remark} setRemark={setRemark}
+              />
+            )}
           </>
         }
       />
