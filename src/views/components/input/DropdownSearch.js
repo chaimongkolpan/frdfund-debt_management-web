@@ -91,6 +91,7 @@ const DropdownSearch = (props) => {
         data-choices="data-choices" 
         data-options='{"removeItemButton":true,"placeholder":true}'
       >
+        <option value="" selected>กรุณาเลือกข้อมูล...</option>
         {hasAll && (
           <option value="all">ทั้งหมด</option>
         )}

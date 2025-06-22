@@ -24,10 +24,10 @@ const PrivateRoute = ({ children, route }) => {
       restrictedRoute = route.meta.restricted
     }
     if (!user) {
-      return <Navigate to='/login' />
+      return <Navigate to={`${process.env.BASE_URL ?? ''}/login`} />
     }
     if (user && restrictedRoute) {
-      return <Navigate to='/' />
+      return <Navigate to={`${process.env.BASE_URL ?? ''}/`} />
     }
     // if (user && restrictedRoute && user.role === 'client') {
     //   return <Navigate to='/access-control' />

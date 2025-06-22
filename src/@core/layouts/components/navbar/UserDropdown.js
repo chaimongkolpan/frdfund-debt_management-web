@@ -53,7 +53,7 @@ const UserDropdown = () => {
           <span className='align-middle'>Change Password</span>
         </DropdownItem>
         <DropdownItem divider />
-        <DropdownItem tag={Link} to='/login' onClick={() => dispatch(handleLogout())}>
+        <DropdownItem tag={Link} to={`${process.env.BASE_URL ?? ''}/login`} onClick={() => dispatch(handleLogout())}>
           <Power size={14} className='me-75' />
           <span className='align-middle'>Logout</span>
         </DropdownItem>

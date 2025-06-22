@@ -75,7 +75,7 @@ const VerticalLayout = props => {
   useEffect(() => {
     if (isUserLoggedIn() == null) {
       dispatch(handleLogout());
-      navigate('/login');
+      navigate(`${process.env.BASE_URL ?? ''}/login`);
     }
     setIsMounted(true)
     return () => setIsMounted(false)
