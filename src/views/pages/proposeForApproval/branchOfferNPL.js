@@ -4,6 +4,7 @@ import According from "@views/components/panel/according";
 import BookNo from "@views/components/input/BookNo";
 import DatePicker from "@views/components/input/DatePicker";
 import Modal from "@views/components/modal/FullModal";
+import CustomerModal from "@views/components/modal/CustomModal";
 import Loading from "@views/components/modal/loading";
 import Filter from "@views/components/proposeForApproval/NPL/filter";
 import PrepareRequestApproveTable from "@views/components/proposeForApproval/NPL/prepareRequestApproveTable";
@@ -18,8 +19,11 @@ import {
   getBranchOffer,
   addBranchOffer,
   removeBranchOffer,
-  submitListNPA,
+  updateBranchOffer,
+  submitBranchOffer,
+  uploadBranchOffer,
 } from "@services/api";
+import { stringToDateTh } from "@utils";
 
 const BranchOfferNPL = () => {
   const [showModal, setShowModal] = useState(false);
@@ -28,26 +32,41 @@ const BranchOfferNPL = () => {
   const [data, setData] = useState(null);
   const [addedData, setAddedData] = useState(null);
   const [filter, setFilter] = useState({});
-  const [makelistSelected, setMakeList] = useState(null);
   const [bookNo, setBookNo] = useState(null);
   const [bookDate, setBookDate] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [uploadBookNo, setUploadBookNo] = useState(null);
+  const [uploadBookDate, setUploadBookDate] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [filterAdded, setFilterAdded] = useState({
     currentPage: 1,
     pageSize: process.env.PAGESIZE,
   });
   const [requestApproveData, setRequestApproveData] = useState([]);
+  const onUpload = async () => {
+    const form = new FormData();
+    form.append('book_no', uploadBookNo);
+    form.append('book_date', uploadBookDate);
+    await Promise.all(
+      files.map(async(file) => {
+        form.append('files', file);
+      })
+    )
 
+    const result = await uploadBranchOffer(form)
+    if (result.isSuccess) {
+      setUploadSuccess(true);
+    }
+  };
   const onSearchTop = async (filter) => {
     setLoadBigData(true);
     setFilter(filter);
     const result = await searchBranchOffer({
-      DebtClassifyStatus: "จำแนกมูลหนี้แล้ว",
       ...filter,
       ...(filter.creditorType === "ทั้งหมด" && { creditorType: "" }),
       ...(filter.creditor === "ทั้งหมด" && { creditor: "" }),
     });
     if (result.isSuccess) {
-      console.log("onSearchTop", result);
       setData(result);
     } else {
       setData(null);
@@ -82,15 +101,24 @@ const BranchOfferNPL = () => {
   };
 
   const onSubmitMakelist = async () => {
-    const result = await submitListNPA({
-      type: "application/octet-stream",
-      filename: "สาขาเสนออนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
-      data: makelistSelected,
-    });
-    if (result.isSuccess) {
-      await setBookNo(null);
-      await setBookDate(null);
-      await fetchData(filterAdded);
+    const ids = requestApproveData.map(item => item.id_debt_management.toString())
+    const param = {
+        ids,
+        text_no: 'กฟก.' + bookNo,
+        date: stringToDateTh(bookDate,false)
+    }
+    const resultUpdate = await updateBranchOffer(param)
+    if (resultUpdate.isSuccess) {
+      const result = await submitBranchOffer({
+        type: "application/octet-stream",
+        filename: "สาขาเสนออนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
+        data: requestApproveData,
+      });
+      if (result) {
+        await setBookNo(null);
+        await setBookDate(null);
+        await fetchData(filterAdded);
+      }
     }
   };
 
@@ -131,18 +159,24 @@ const BranchOfferNPL = () => {
               อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ
             </button>
             {showModal && (
-              <RegisterModal
+              <CustomerModal
                 isOpen={showModal}
                 setModal={setShowModal}
+                onOk={onUpload}
                 onClose={onCloseRegisterNPAModel}
                 title={"อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ"}
+                okText={"เสนอขออนุมัติรายชื่อ"}
                 closeText={"ปิด"}
-                scrollable
+                size={'xl'}
                 children={
                   <>
                     <FilterRegis
-                      handleSubmit={onSearchTop}
-                      setLoading={setLoadBigData}
+                      bookNo={uploadBookNo}
+                      setBookNo={setUploadBookNo}
+                      bookDate={uploadBookDate}
+                      setBookDate={setUploadBookDate}
+                      files={files}
+                      setFiles={setFiles}
                     />
                   </>
                 }
@@ -201,7 +235,7 @@ const BranchOfferNPL = () => {
       >
         <div class="row">
           <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
-            <BookNo title={'เลขหนังสือ'} subtitle={'กฟก.'} handleChange={(val) => setBookDate(val)} value={bookNo} />
+            <BookNo title={'เลขหนังสือ'} subtitle={'กฟก.'} handleChange={(val) => setBookNo(val)} value={bookNo} />
           </div>
           <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
             <DatePicker title={'วันที่หนังสือ'}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const FullModal = (props) => {
-  const {isOpen, setModal, centered, scrollable, title, children, hideFooter, onOk, okText, onClose, closeText} = props;
+  const {isOpen, setModal, centered, scrollable, title, children, hideFooter, hideOk, onOk, okText, okColor, onClose, closeText} = props;
 
   const toggle = () => setModal(!isOpen);
   return (
@@ -11,7 +11,11 @@ const FullModal = (props) => {
         <ModalBody>{children}</ModalBody>
         {!hideFooter && (
           <ModalFooter>
-            <Button color="primary" onClick={onOk}>{okText}</Button>{' '}
+            {!hideOk && (
+              <>
+                <Button color={`${okColor ? okColor : "success"}`} onClick={onOk}>{okText}</Button>{' '}
+              </>
+            )}
             <Button color="secondary" onClick={onClose}>{closeText}</Button>
           </ModalFooter>
         )}

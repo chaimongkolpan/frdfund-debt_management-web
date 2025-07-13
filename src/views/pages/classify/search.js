@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import { getUserData } from "@utils";
 
 import Filter from "@views/components/classify/filter";
@@ -14,9 +14,10 @@ const user = getUserData();
 const SearchClassifyNPL = () => {
   const [filter, setFilter] = useState(null);
   const [data, setData] = useState(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const viewDetail = async (debt) => {
-    navigate(`/classify/searchNPL/detail/${debt.idCard}?province=${debt.province}&creditor-type=${debt.creditorType}`);
+    // navigate(`/classify/searchNPL/detail/${debt.idCard}?province=${debt.province}&creditor-type=${debt.creditorType}`);
+    window.open(`${process.env.BASE_URL ?? ''}/classify/searchNPL/detail/${debt.idCard}?province=${debt.province}&creditor-type=${debt.creditorType}`, '_blank', 'noopener,noreferrer');
   }
   const onSearch = async (filter) => {
     setFilter(filter)

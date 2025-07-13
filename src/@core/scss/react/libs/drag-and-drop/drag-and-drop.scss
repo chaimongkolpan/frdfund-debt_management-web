@@ -1,6 +1,6 @@
-@import '../../../base/bootstrap-extended/include';
-@import '../../../base/components/include';
-@import '../../../base/plugins/extensions/ext-component-drag-drop.scss';
+@import '@styles/base/bootstrap-extended/include';
+@import '@styles/base/components/include';
+@import '@styles/base/plugins/extensions/ext-component-drag-drop.scss';
 
 // RTL
 html[dir='rtl'] {

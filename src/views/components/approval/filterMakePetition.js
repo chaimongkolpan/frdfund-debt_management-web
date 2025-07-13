@@ -11,6 +11,7 @@ import {
 } from "@services/api";
 
 const Filter = (props) => {
+  const status = 'ยืนยันยอดสำเร็จ';
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
@@ -29,9 +30,7 @@ const Filter = (props) => {
         creditorType: "",
         creditor: "",
         debtStatus: "",
-        checkingStatus: "",
-        min: 0,
-        max: 0,
+        debtClassifyStatus: status,
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
@@ -57,7 +56,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -75,7 +74,7 @@ const Filter = (props) => {
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -88,8 +87,8 @@ const Filter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNo();
-    const resultCommitteeDate = await getCommitteeDate();
+    const resultCommitteeNo = await getCommitteeNo(status);
+    const resultCommitteeDate = await getCommitteeDate(status);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -107,7 +106,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -127,10 +126,18 @@ const Filter = (props) => {
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({proposal_committee_no: temp[0]})
+      }))
     } else await setCommitteeNoOp(null);
     if (resultCommitteeDate.isSuccess) {
       const temp = resultCommitteeDate.data.map(item => item.name);
       await setCommitteeDateOp(temp);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({proposal_committee_date: temp[0]})
+      }))
     } else await setCommitteeDateOp(null);
     setIsMounted(true);
     setLoading(false);
@@ -161,11 +168,11 @@ const Filter = (props) => {
         <div className="col-sm-12 col-md-6 col-lg-6">
           {committeeNoOp && (
             <Dropdown 
-              title={'ครั้งที่เสนอคณะกรมการ'} 
+              title={'ครั้งที่เสนอคณะกรรมการ'} 
               containerClassname={'mb-3'} 
               defaultValue={committeeNoOp[0]} 
               options={committeeNoOp}
-              handleChange={(val) => onChange('committeeNo', val)}
+              handleChange={(val) => onChange('proposal_committee_no', val)}
             />
           )}
         </div>
@@ -176,7 +183,7 @@ const Filter = (props) => {
               containerClassname={'mb-3'} 
               defaultValue={committeeDateOp[0]} 
               options={committeeDateOp}
-              handleChange={(val) => onChange('committeeDate', val)}
+              handleChange={(val) => onChange('proposal_committee_date', val)}
             />
           )}
         </div>
@@ -207,9 +214,9 @@ const Filter = (props) => {
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
               containerClassname={'mb-3'} 
-              defaultValue={creditorOp[0]} 
+              defaultValue={'all'} 
               options={creditorOp}
-              handleChange={(val) => onChange('creditor', val)}
+              handleChange={(val) => onChange('creditor', val)} hasAll
             />
           )}
         </div>

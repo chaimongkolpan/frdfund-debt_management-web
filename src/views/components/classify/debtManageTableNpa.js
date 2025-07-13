@@ -1,5 +1,6 @@
+import { toCurrency } from "@utils";
 const ClassifyDebtManageTable = (props) => {
-  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit } = props;
+  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleCreateNPL } = props;
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index} style={{
@@ -13,10 +14,10 @@ const ClassifyDebtManageTable = (props) => {
         <td>{item.creditor_name}</td>
         <td>{item.npA_round}</td>
         <td>{item.title_document_no}</td>
-        <td>{item.estimated_price_creditors}</td>
-        <td>{item.npA_property_sales_price}</td>
-        <td>{item.npL_creditors_receive}</td>
-        <td>{item.frD_paymen_amount}</td>
+        <td>{toCurrency(item.estimated_price_creditors)}</td>
+        <td>{toCurrency(item.npA_property_sales_price)}</td>
+        <td>{toCurrency(item.npL_creditors_receive)}</td>
+        <td>{toCurrency(item.frD_total_payment)}</td>
         <td>{item.borrower_status}</td>
         <td>{item.hasDocument && (<i className="fas fa-check"></i>)}</td>
         <td>{item.hasNPL && (<i className="fas fa-check"></i>)}</td>
@@ -44,6 +45,9 @@ const ClassifyDebtManageTable = (props) => {
             <div className="btn-reveal-trigger position-static">
               <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
+                {!item.hasNPL && (
+                  <button className="dropdown-item" type="button" onClick={() => handleCreateNPL(item.id_debt_management)}>สร้างสัญญา NPL</button>
+                )}
                 <button className="dropdown-item" type="button" onClick={() => handleSplit(item.id_debt_management)}>แยกสัญญา</button>
                 <button className="dropdown-item" type="button" onClick={() => handleCombine(item.id_debt_register)}>รวมสัญญา</button>
               </div>

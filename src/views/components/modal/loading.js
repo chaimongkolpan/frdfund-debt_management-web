@@ -15,7 +15,7 @@ function Loading(props) {
         <ModalBody>{children}</ModalBody>
         {!hideFooter && (
           <ModalFooter>
-            <Button color="primary" onClick={onOk}>{okText}</Button>{' '}
+            <Button color="success" onClick={onOk}>{okText}</Button>{' '}
             <Button color="secondary" onClick={onClose}>{closeText}</Button>
           </ModalFooter>
         )}

@@ -1,33 +1,45 @@
 // ** React Imports
 import { Fragment, useEffect, useState } from 'react'
 import { PieChart } from 'react-feather'
+import { Link } from "react-router-dom"
+import moment from 'moment';
 // ** Third Party Components
 // import PerfectScrollbar from 'react-perfect-scrollbar'
 import {
   getAlertSide,
 } from "@src/services/api";
 
+// ** Utils
+import { getUserData } from '@utils'
+const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 const Sidebar = props => {
   // ** Props
   const { menuCollapsed,setMenuCollapsed } = props
   const path = window.location.pathname
-  const [alert, setAlert] = useState({});
+  const [alert, setAlert] = useState(null);
+  const branchList = [1,4];
+  const officeList = [1,2,7,8];
+  const user = getUserData();
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   useEffect(() => {
     async function fetchData() {
       try {
-        const result = await getAlertSide();
-        if (result.isSuccess) {
-          setAlert(result.data);
+        if (!alert || moment().diff(moment(alert?.updateDate), 'minutes') > 5) {
+          const result = await getAlertSide();
+          if (result.isSuccess) {
+            setAlert(result.data);
+          }
         }
       } catch(e) {
         console.error('error', e);
       }
     };
     fetchData();
-  }, [])
+    const id = setInterval(fetchData, 60000);
+    return () => clearInterval(id);
+  }, [alert])
   return (
     <Fragment>
       <nav className="navbar navbar-vertical navbar-expand-lg" style={{ position: 'fixed' }}>
@@ -50,14 +62,14 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-MakeList">
                       <li className="collapsed-nav-item-title d-none">จัดทำรายชื่อเกษตรกร</li>
                       <li className="nav-item">
-                        <a className={`nav-link ${path == '/debt' || path == '/' ? 'active' : ''}`} href="/debt">
+                        <Link className={`nav-link ${path == '/debt' || path == '/' ? 'active' : ''}`} to={`${prefix_url + "/debt"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className={`nav-link ${path == '/debt/npa' ? 'active' : ''}`} href="/debt/npa">
+                        <Link className={`nav-link ${path == '/debt/npa' ? 'active' : ''}`} to={`${prefix_url + "/debt/npa"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -83,10 +95,9 @@ const Sidebar = props => {
                       <li className="collapsed-nav-item-title d-none">จำแนกมูลหนี้
                       </li>
                       <li className="nav-item">
-                        <a className={`nav-link ${path == '/classify/import' ? 'active' : ''}`} href="/classify/import">
-                          <div className="d-flex align-items-center"><span className="nav-link-text">นำไฟล์เข้าระบบ</span>
-                          </div>
-                        </a>
+                        <Link className={`nav-link ${path == '/classify/import' ? 'active' : ''}`} to={`${prefix_url + "/classify/import"}`}>
+                          <div className="d-flex align-items-center"><span className="nav-link-text">นำไฟล์เข้าระบบ</span></div>
+                        </Link>
                         {/* more inner pages*/}
                       </li>
                       <li className="nav-item">
@@ -105,24 +116,24 @@ const Sidebar = props => {
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-Search">
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/classify/searchNPL') ? 'active' : ''}`} href="/classify/searchNPL">
+                              <Link className={`nav-link ${path.includes('/classify/searchNPL') ? 'active' : ''}`} to={`${prefix_url + "/classify/searchNPL"}`}>
                                 <div className="d-flex align-items-center">
                                   <span className="nav-link-text">NPL</span>
                                   {(alert && alert?.classify && alert.classify.search?.npl > 0) && (
                                     <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.classify.search?.npl)}</span>
                                   )}
                                 </div>
-                              </a>
+                              </Link>
                             </li>
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/classify/searchNPA') ? 'active' : ''}`} href="/classify/searchNPA">
+                              <Link className={`nav-link ${path.includes('/classify/searchNPA') ? 'active' : ''}`} to={`${prefix_url + "/classify/searchNPA"}`}>
                                 <div className="d-flex align-items-center">
                                   <span className="nav-link-text">NPA</span>
                                   {(alert && alert?.classify && alert.classify.search?.npa > 0) && (
                                     <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.classify.search?.npa)}</span>
                                   )}
                                 </div>
-                              </a>
+                              </Link>
                             </li>
                           </ul>
                         </div>
@@ -156,8 +167,8 @@ const Sidebar = props => {
                               <span className="fas fa-caret-right dropdown-indicator-icon"></span>
                             </div>
                             <span className="nav-link-text">สาขาเสนอ</span>
-                            {(alert && alert?.branch && alert.branch.request > 0) && (
-                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.request)}</span>
+                            {(alert && alert?.branch && alert.branch.request?.total > 0) && (
+                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.request?.total)}</span>
                             )}
                           </div>
                         </a>
@@ -165,16 +176,24 @@ const Sidebar = props => {
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-BranchOffer">
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/branch/offer/npl') ? 'active' : ''}`} href="/branch/offer/npl">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
+                              <Link className={`nav-link ${path.includes('/branch/offer/npl') ? 'active' : ''}`} to={`${prefix_url + "/branch/offer/npl"}`}>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPL</span>
+                                  {(alert && alert?.branch && alert.branch.request?.npl > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.request?.npl)}</span>
+                                  )}
                                 </div>
-                              </a>
+                              </Link>
                             </li>
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/branch/offer/npa') ? 'active' : ''}`} href="/branch/offer/npa">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
+                              <Link className={`nav-link ${path.includes('/branch/offer/npa') ? 'active' : ''}`} to={`${prefix_url + "/branch/offer/npa"}`}>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPA</span>
+                                  {(alert && alert?.branch && alert.branch.request?.npa > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.request?.npa)}</span>
+                                  )}
                                 </div>
-                              </a>
+                              </Link>
                             </li>
                           </ul>
                         </div>
@@ -186,8 +205,8 @@ const Sidebar = props => {
                               <span className="fas fa-caret-right dropdown-indicator-icon"></span>
                             </div>
                             <span className="nav-link-text">รวบรวมเตรียมนำเสนอ</span>
-                            {(alert && alert?.branch && alert.branch.prepare > 0) && (
-                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare)}</span>
+                            {(alert && alert?.branch && alert.branch.prepare?.total > 0) && (
+                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.total)}</span>
                             )}
                           </div>
                         </a>
@@ -195,16 +214,24 @@ const Sidebar = props => {
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-PrepareForPresent">
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/branch/prepare/npl') ? 'active' : ''}`} href="/branch/prepare/npl">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
+                              <Link className={`nav-link ${path.includes('/branch/prepare/npl') ? 'active' : ''}`} to={`${prefix_url + "/branch/prepare/npl"}`}>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPL</span>
+                                  {(alert && alert?.branch && alert.branch.prepare?.npl > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.npl)}</span>
+                                  )}
                                 </div>
-                              </a>
+                              </Link>
                             </li>
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/branch/prepare/npa') ? 'active' : ''}`} href="/branch/prepare/npa">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
+                              <Link className={`nav-link ${path.includes('/branch/prepare/npa') ? 'active' : ''}`} to={`${prefix_url + "/branch/prepare/npa"}`}>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPA</span>
+                                  {(alert && alert?.branch && alert.branch.prepare?.npa > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.npa)}</span>
+                                  )}
                                 </div>
-                              </a>
+                              </Link>
                             </li>
                           </ul>
                         </div>
@@ -241,16 +268,14 @@ const Sidebar = props => {
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-ProposeCommitteePrepareList">
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/committee/prepare-list/npl') ? 'active' : ''}`} href="/committee/prepare-list/npl">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
-                                </div>
-                              </a>
+                              <Link className={`nav-link ${path.includes('/committee/prepare-list/npl') ? 'active' : ''}`} to={`${prefix_url + "/committee/prepare-list/npl"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                              </Link>
                             </li>
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/committee/prepare-list/npa') ? 'active' : ''}`} href="/committee/prepare-list/npa">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
-                                </div>
-                              </a>
+                              <Link className={`nav-link ${path.includes('/committee/prepare-list/npa') ? 'active' : ''}`} to={`${prefix_url + "/committee/prepare-list/npa"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
+                              </Link>
                             </li>
                           </ul>
                         </div>
@@ -296,16 +321,99 @@ const Sidebar = props => {
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-ProposeCommitteeUpdateList">
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/committee/update-list/npl') ? 'active' : ''}`} href="/committee/update-list/npl">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
-                                </div>
-                              </a>
+                              <Link className={`nav-link ${path.includes('/committee/update-list/npl') ? 'active' : ''}`} to={`${prefix_url + "/committee/update-list/npl"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                              </Link>
                             </li>
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/committee/update-list/npa') ? 'active' : ''}`} href="/committee/update-list/npa">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
+                              <Link className={`nav-link ${path.includes('/committee/update-list/npa') ? 'active' : ''}`} to={`${prefix_url + "/committee/update-list/npa"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
+                              </Link>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                {/* parent pages สาขาตรวจสอบยืนยันยอด*/}
+                <div className="nav-item-wrapper">
+                  <a className={`nav-link dropdown-indicator label-1 ${path.includes('/confirm-committee') ? 'active' : ''}`}  href="#nv-ConfirmCommittee" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-ConfirmCommittee">
+                    <div className="d-flex align-items-center">
+                      <div className="dropdown-indicator-icon-wrapper">
+                        <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                      </div>
+                      <span className="nav-link-icon">
+                        <i className="fas fa-clipboard-check"></i>
+                      </span>
+                      <span className="nav-link-text">ยืนยันยอด</span>
+                      {(alert && alert?.confirm && alert.confirm.total > 0) && (
+                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.total)}</span>
+                      )}
+                    </div>
+                  </a>
+                  <div className="parent-wrapper label-1">
+                    <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-ConfirmCommittee">
+                      <li className="collapsed-nav-item-title d-none">สาขายืนยันยอด</li>
+                      <li className="nav-item">
+                        <a className={`nav-link dropdown-indicator ${path.includes('/confirm-committee/prepare-list') ? 'active' : ''}`} href="#nv-ConfirmCommitteePrepareList" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-ConfirmCommitteePrepareList">
+                          <div className="d-flex align-items-center">
+                            <div className="dropdown-indicator-icon-wrapper">
+                              <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                            </div>
+                            <span className="nav-link-text">สาขายืนยันยอด</span>
+                          </div>
+                        </a>
+                        {/* more inner pages*/}
+                        <div className="parent-wrapper">
+                          <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-ConfirmCommitteePrepareList">
+                            <li className="nav-item">
+                              <Link className={`nav-link ${path.includes('/confirm-committee/prepare-list/npl') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/prepare-list/npl"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                              </Link>
+                            </li>
+                            <li className="nav-item">
+                              <Link className={`nav-link ${path.includes('/confirm-committee/prepare-list/npa') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/prepare-list/npa"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
+                              </Link>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li className="nav-item">
+                        <a className={`nav-link dropdown-indicator ${path.includes('/confirm-committee/confirm-list') ? 'active' : ''}`} href="#nv-ConfirmCommitteeConfirmList" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-ConfirmCommitteeConfirmList">
+                          <div className="d-flex align-items-center">
+                            <div className="dropdown-indicator-icon-wrapper">
+                              <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                            </div>
+                            <span className="nav-link-text">รวบรวมยืนยันยอด</span>
+                            {(alert && alert?.confirm && alert.confirm.list?.total > 0) && (
+                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.total)}</span>
+                            )}
+                          </div>
+                        </a>
+                        {/* more inner pages*/}
+                        <div className="parent-wrapper">
+                          <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-ConfirmCommitteeConfirmList">
+                            <li className="nav-item">
+                              <Link className={`nav-link ${path.includes('/confirm-committee/confirm-list/npl') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/confirm-list/npl"}`}>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPL</span>
+                                  {(alert && alert?.confirm && alert.confirm.list?.npl > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.npl)}</span>
+                                  )}
                                 </div>
-                              </a>
+                              </Link>
+                            </li>
+                            <li className="nav-item">
+                              <Link className={`nav-link ${path.includes('/confirm-committee/confirm-list/npa') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/confirm-list/npa"}`}>
+                                <div className="d-flex align-items-center">
+                                  <span className="nav-link-text">NPA</span>
+                                  {(alert && alert?.confirm && alert.confirm.list?.npa > 0) && (
+                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.npa)}</span>
+                                  )}
+                                </div>
+                              </Link>
                             </li>
                           </ul>
                         </div>
@@ -330,33 +438,61 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-RequestApprovalPay">
                       <li className="collapsed-nav-item-title d-none">ขออนุมัติชำระหนี้แทน
                       </li>
-                      <li className="nav-item">
-                        <a className={`nav-link dropdown-indicator ${path.includes('/approval/make-petition') ? 'active' : ''}`} href="#nv-RequestApprovalPayMakePetition" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayMakePetition">
-                          <div className="d-flex align-items-center">
-                            <div className="dropdown-indicator-icon-wrapper">
-                              <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                      
+                      {(user && officeList.includes(user.role)) && (
+                        <li className="nav-item">
+                          <a className={`nav-link dropdown-indicator ${path.includes('/approval/make-petition') ? 'active' : ''}`} href="#nv-RequestApprovalPayMakePetition" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayMakePetition">
+                            <div className="d-flex align-items-center">
+                              <div className="dropdown-indicator-icon-wrapper">
+                                <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                              </div>
+                              <span className="nav-link-text">จัดทำฎีกา</span>
                             </div>
-                            <span className="nav-link-text">จัดทำฎีกา</span>
+                          </a>
+                          {/* more inner pages*/}
+                          <div className="parent-wrapper">
+                            <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayMakePetition">
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/approval/make-petition/npl') ? 'active' : ''}`} to={`${prefix_url + "/approval/make-petition/npl"}`}>
+                                  <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                                </Link>
+                              </li>
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/approval/make-petition/npa') ? 'active' : ''}`} to={`${prefix_url + "/approval/make-petition/npa"}`}>
+                                  <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
+                                </Link>
+                              </li>
+                            </ul>
                           </div>
-                        </a>
-                        {/* more inner pages*/}
-                        <div className="parent-wrapper">
-                          <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayMakePetition">
-                            <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/approval/make-petition/npl') ? 'active' : ''}`} href="/approval/make-petition/npl">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
-                                </div>
-                              </a>
-                            </li>
-                            <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/approval/make-petition/npa') ? 'active' : ''}`} href="/approval/make-petition/npa">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
-                                </div>
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </li>
+                        </li>
+                      )}
+                      {(user && branchList.includes(user.role)) && (
+                        <li className="nav-item">
+                          <a className={`nav-link dropdown-indicator ${path.includes('/approval/make-branch-petition') ? 'active' : ''}`} href="#nv-RequestApprovalPayMakePetitionBranch" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayMakePetitionBranch">
+                            <div className="d-flex align-items-center">
+                              <div className="dropdown-indicator-icon-wrapper">
+                                <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                              </div>
+                              <span className="nav-link-text">จัดทำฎีกา (สาขา){/*`${officeList.includes(user.role) ? '' : ''}`*/}</span>
+                            </div>
+                          </a>
+                          {/* more inner pages*/}
+                          <div className="parent-wrapper">
+                            <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayMakePetitionBranch">
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/approval/make-branch-petition/npl') ? 'active' : ''}`} to={`${prefix_url + "/approval/make-branch-petition/npl"}`}>
+                                  <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                                </Link>
+                              </li>
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/approval/make-branch-petition/npa') ? 'active' : ''}`} to={`${prefix_url + "/approval/make-branch-petition/npa"}`}>
+                                  <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
+                                </Link>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      )}
                       <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/approval/disbursement-status') ? 'active' : ''}`} href="#nv-RequestApprovalPayDisbursementStatus" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayDisbursementStatus">
                           <div className="d-flex align-items-center">
@@ -370,16 +506,14 @@ const Sidebar = props => {
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayDisbursementStatus">
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/approval/disbursement-status/npl') ? 'active' : ''}`} href="/approval/disbursement-status/npl">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
-                                </div>
-                              </a>
+                              <Link className={`nav-link ${path.includes('/approval/disbursement-status/npl') ? 'active' : ''}`} to={`${prefix_url + "/approval/disbursement-status/npl"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                              </Link>
                             </li>
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/approval/disbursement-status/npa') ? 'active' : ''}`} href="/approval/disbursement-status/npa">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
-                                </div>
-                              </a>
+                              <Link className={`nav-link ${path.includes('/approval/disbursement-status/npa') ? 'active' : ''}`} to={`${prefix_url + "/approval/disbursement-status/npa"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
+                              </Link>
                             </li>
                           </ul>
                         </div>
@@ -397,16 +531,15 @@ const Sidebar = props => {
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayAdditionalActions">
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/approval/additional-action/npl') ? 'active' : ''}`} href="/approval/additional-action/npl">
-                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span>
-                                </div>
-                              </a>
+                              <Link className={`nav-link ${path.includes('/approval/additional-action/npl') ? 'active' : ''}`} to={`${prefix_url + "/approval/additional-action/npl"}`}>
+                                <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                              </Link>
                             </li>
                             <li className="nav-item">
-                              <a className={`nav-link ${path.includes('/approval/additional-action/npa') ? 'active' : ''}`} href="/approval/additional-action/npa">
+                              <Link className={`nav-link ${path.includes('/approval/additional-action/npa') ? 'active' : ''}`} to={`${prefix_url + "/approval/additional-action/npa"}`}>
                                 <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span>
                                 </div>
-                              </a>
+                              </Link>
                             </li>
                           </ul>
                         </div>
@@ -433,35 +566,35 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-LegalContract">
                       <li className="collapsed-nav-item-title d-none">นิติกรรมสัญญา</li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/LegalContract/PrepareLegalContract.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/LegalContract/PrepareLegalContract.html"}`}>
                           <div className="d-flex align-items-center">
                             <span className="nav-link-text">จัดทำนิติกรรม</span>
                           </div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/LegalContract/SendLegalContract.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/LegalContract/SendLegalContract.html"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">จัดส่งนิติกรรม</span></div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/LegalContract/CheckLegalContract.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/LegalContract/CheckLegalContract.html"}`}>
                           <div className="d-flex align-items-center">
                             <span className="nav-link-text">ตรวจสอบนิติกรรม</span>
                           {(alert && alert?.legal && alert.legal.checking > 0) && (
                             <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.legal.checking)}</span>
                           )}
                           </div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/LegalContract/ManageLegalContract.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/LegalContract/ManageLegalContract.html"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">บริหารสินทรัพย์</span>
                           {(alert && alert?.legal && alert.legal.asset > 0) && (
                             <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.legal.asset)}</span>
                           )}
                           </div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -485,46 +618,46 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-Guarantee">
                       <li className="collapsed-nav-item-title d-none">หลักประกัน</li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/Guarantee/PrepareGuarantee.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/Guarantee/PrepareGuarantee.html"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ทะเบียนคุมหลักประกัน</span>
                           {(alert && alert?.collateral && alert.collateral.registration > 0) && (
                             <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.registration)}</span>
                           )}
                           </div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/Guarantee/CheckGuarantee.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/Guarantee/CheckGuarantee.html"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ตรวจสอบหลักประกัน</span>
                           {(alert && alert?.collateral && alert.collateral.checking > 0) && (
                             <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.checking)}</span>
                           )}
                           </div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/Guarantee/ManageGuarantee.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/Guarantee/ManageGuarantee.html"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">บริหารสินทรัพย์</span>
                           {(alert && alert?.collateral && alert.collateral.asset > 0) && (
                             <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.asset)}</span>
                           )}
                           </div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/Guarantee/OperationLand.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/Guarantee/OperationLand.html"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">การดำเนินการในที่ดิน</span>
                           </div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="apps/Guarantee/BorrowReturnDeed.html">
+                        <Link className="nav-link" to={`${prefix_url + "apps/Guarantee/BorrowReturnDeed.html"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ยืม-คืนโฉนด</span>
                           {(alert && alert?.collateral && alert.collateral.borrow > 0) && (
                             <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.borrow)}</span>
                           )}
                           </div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -630,7 +763,7 @@ const Sidebar = props => {
                 <p className="navbar-vertical-label">รายงาน</p>
                 {/* parent pages รายงาน*/}
                 <div className="nav-item-wrapper">
-                  <a className="nav-link dropdown-indicator label-1" href="#nv-Report" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Report">
+                  <a className={`nav-link dropdown-indicator label-1 ${path.includes('/report') ? 'active' : ''}`} href="#nv-Report" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Report">
                     <div className="d-flex align-items-center">
                       <div className="dropdown-indicator-icon-wrapper">
                         <span className="fas fa-caret-right dropdown-indicator-icon"></span>
@@ -643,24 +776,24 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-Report">
                       <li className="collapsed-nav-item-title d-none">รายงาน</li>
                       <li className="nav-item">
-                        <a className="nav-link" href="/report">
+                        <Link className={`nav-link ${path.includes('/report/manage') ? 'active' : ''}`} to={`${prefix_url + "/report/manage"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">จัดการหนี้</span></div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="/report/asset">
+                        <Link className={`nav-link ${path.includes('/report/asset') ? 'active' : ''}`} to={`${prefix_url + "/report/asset"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">บริหารสินทรัพย์</span></div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="/report/restruct">
+                        <Link className={`nav-link ${path.includes('/report/restruct') ? 'active' : ''}`} to={`${prefix_url + "/report/restruct"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ปรับโครงสร้างหนี้ฯ</span></div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="/report/postpone">
+                        <Link className={`nav-link ${path.includes('/report/postpone') ? 'active' : ''}`} to={`${prefix_url + "/report/postpone"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ชะลอหนี้</span></div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>

@@ -1,5 +1,5 @@
-@import '../../bootstrap-extended/include'; // Bootstrap includes
-@import '../../components/include'; // Components includes
+@import '@styles/base/bootstrap-extended/include'; // Bootstrap includes
+@import '@styles/base/components/include'; // Components includes
 
 // Number Inputs (Touch spin)
 $bootstrap-touchspin-width: 8.4rem;

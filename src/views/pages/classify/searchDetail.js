@@ -44,6 +44,7 @@ const SearchClassifyNPLDetail = () => {
   const [contract_no, setContractNo] = useState(null);
   const [id_split, setSplit] = useState(null);
   const [id_cancel_split, setCancelSplit] = useState(null);
+  const [ids, setIds] = useState(null);
   const navigate = useNavigate();
   const handleCombine = async(id) => {
     await setCombine(id)
@@ -121,6 +122,8 @@ const SearchClassifyNPLDetail = () => {
     const result = await getDebtManagementDetailClassify(params.idcard, qprov, qcreditorType);
     if (result.isSuccess) {
       await setDebts(result.contracts)
+      const id = result.contracts.map(item => item.id_debt_management)
+      await setIds(id)
       await setCollaterals(result.collaterals)
       await setGuarantors(result.guarantors)
       await setTotalColl(result.total_collateral)
@@ -267,7 +270,7 @@ const SearchClassifyNPLDetail = () => {
               {/*start modal ผู้รับสภาพหนี้แทน*/}
               {isOpenBorrow && (
                 <BorrowModal isOpen={isOpenBorrow} setModal={setOpenBorrow} onClose={() => handleBorrowerClose()} 
-                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} 
+                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} ids={ids}
                 />
               )}
               {/*end modal ผู้รับสภาพหนี้แทน*/}

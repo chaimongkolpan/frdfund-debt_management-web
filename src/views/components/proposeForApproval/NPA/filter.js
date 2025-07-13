@@ -80,7 +80,7 @@ const Filter = (props) => {
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...{ creditor: temp2[0] },
+          ...{ creditor: "all" },
         }));
       } else await setCreditorOp(null);
       setLoading(false);
@@ -102,18 +102,10 @@ const Filter = (props) => {
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map((item) => item.name);
         await setCreditorTypeOp(temp1);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...{ creditorType: temp1[0] },
-        }));
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map((item) => item.name);
           await setCreditorOp(temp2);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...{ creditor: temp2[0] },
-          }));
         } else await setCreditorOp(null);
       } else {
         await setCreditorTypeOp(null);
@@ -159,7 +151,6 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown
               title={"จังหวัด"}
-              containerClassname={"mb-3"}
               defaultValue={"all"}
               options={provOp}
               handleChange={(val) => onChange("province", val)}
@@ -171,10 +162,9 @@ const Filter = (props) => {
           {creditorTypeOp && (
             <Dropdown
               title={"ประเภทเจ้าหนี้"}
-              containerClassname={"mb-3"}
-              defaultValue={creditorTypeOp[0]}
+              defaultValue={"all"}
               options={creditorTypeOp}
-              handleChange={(val) => onChange("creditorType", val)}
+              handleChange={(val) => onChange("creditorType", val)} hasAll
             />
           )}
         </div>
@@ -182,10 +172,9 @@ const Filter = (props) => {
           {creditorOp && (
             <Dropdown
               title={"สถาบันเจ้าหนี้"}
-              containerClassname={"mb-3"}
-              defaultValue={creditorOp[0]}
+              defaultValue={"all"}
               options={creditorOp}
-              handleChange={(val) => onChange("creditor", val)}
+              handleChange={(val) => onChange("creditor", val)} hasAll
             />
           )}
         </div>
@@ -193,7 +182,6 @@ const Filter = (props) => {
           {statusDebtOp && (
             <Dropdown
               title={"สถานะหนี้"}
-              containerClassname={"mb-3"}
               defaultValue={"all"}
               options={statusDebtOp}
               handleChange={(val) => onChange("debtStatus", val)}
@@ -201,7 +189,7 @@ const Filter = (props) => {
             />
           )}
         </div>
-        <div className="col-12 gy-6">
+        <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
               <button

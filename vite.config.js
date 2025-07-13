@@ -40,6 +40,7 @@ export default defineConfig({
             { find: 'stream', replacement: 'stream-browserify' },
             { find: 'crypto', replacement: 'crypto-browserify' },
             { find: '@src', replacement: path.resolve(__dirname, 'src') },
+            { find: '@node_modules', replacement: path.resolve(__dirname, 'node_modules') },
             { find: '@core', replacement: path.resolve(__dirname, 'src/@core') },
             { find: '@views', replacement: path.resolve(__dirname, 'src/views') },
             { find: '@store', replacement: path.resolve(__dirname, 'src/redux') },
@@ -90,7 +91,7 @@ export default defineConfig({
     build: {
         minify: false,
         rollupOptions: {
-            external: ['immer'],
+            external: [/^node:.*/,],
             plugins: [rollupNodePolyFill()]
         }
     }

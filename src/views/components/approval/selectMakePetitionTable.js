@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 const SelectedTable = (props) => {
   const { result, handleSubmit, handleRemove, filter, getData } = props;
   const [data, setData] = useState([]);
+  const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
+  const [count, setCount] = useState(0);
+  const [contracts, setContracts] = useState(0);
+  const [sumTotal, setSumTotal] = useState(0);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const onSubmit = () => {
@@ -21,14 +25,34 @@ const SelectedTable = (props) => {
     }
   }
   const onChange = async (id) => {
+    const newSelected = [
+      ...(selected.map((item, index) => (id == index ? !item : item))),
+    ]
     await setSelected((prev) => {
       prev[id] = !prev[id];
       return [...prev]
     })
+    const selectedData = data.filter((i, index) => newSelected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+    await setCount(toCurrency(custs.length));
+    await setContracts(toCurrency(selectedData.length));
+    await setSumTotal(toCurrency(sum,2));
   }
   const onHeaderChange = async (checked) => {
     await setSelected(result.data.map(() => checked));
     await setIsAll(checked)
+    if (checked) {
+      const custs = result.data.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+      const sum = result.data.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+      await setCount(toCurrency(custs.length));
+      await setContracts(toCurrency(result.data.length));
+      await setSumTotal(toCurrency(sum,2));
+    } else {
+      await setCount(0);
+      await setContracts(0);
+      await setSumTotal(0);
+    }
   }
   const RenderData = (item, index, checked) => {
     return (item && (
@@ -38,30 +62,35 @@ const SelectedTable = (props) => {
             <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
+        <td>{item.proposal_committee_no}</td>
+        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
         <td>{item.province}</td>
-        <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.date_member_current ? stringToDateTh(item.date_member_current, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.organization_register_round}</td>
-        <td>{item.organization_name}</td>
-        <td>{item.organization_no}</td>
-        <td>{item.debt_register_round}</td>
-        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.passed_approval_no}</td>
-        <td>{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.creditor_type}</td>
-        <td>{item.creditor_name}</td>
-        <td>{item.creditor_province}</td>
-        <td>{item.creditor_branch}</td>
-        <td>{item.contract_no}</td>
-        <td>{item.remaining_principal_contract}</td>
-        <td>{item.dept_status}</td>
+        <td>{item.debt_manage_creditor_type}</td>
+        <td>{item.debt_manage_creditor_name}</td>
+        <td>{item.debt_manage_creditor_province}</td>
+        <td>{item.debt_manage_creditor_branch}</td>
+        <td>{item.debt_manage_contract_no}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest)}</td>
+        <td>{toCurrency(item.debt_manage_fine)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
+        {!coop && (
+          <>
+            <td>{toCurrency(item.debt_manage_insurance_premium)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses)}</td>
+          </>
+        )}
+        <td>{toCurrency(item.debt_manage_total_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_total)}</td>
+        <td>{item.debt_manage_objective_details}</td>
+        <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
-        <td>{item.purpose_loan_contract}</td>
-        <td>{item.purpose_type_loan_contract}</td>
-        <td>{item.status}</td>
+        <td>{item.collateral_no}</td>
+        <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
   }
@@ -83,6 +112,7 @@ const SelectedTable = (props) => {
   useEffect(() => {
     if(result) {
       setData(result.data);
+      setCoop(result.data && result.data[0]?.debt_manage_creditor_type == 'สหกรณ์')
       setSelected(result.data.map(() => false));
       setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
@@ -109,7 +139,7 @@ const SelectedTable = (props) => {
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="11">สัญญา</th>
+                <th colSpan={coop ? "11" : "13"}>สัญญา</th>
                 <th>หลักทรัพย์ค้ำประกัน</th>
                 <th rowSpan="2">สถานะสัญญา</th>
               </tr>
@@ -130,6 +160,12 @@ const SelectedTable = (props) => {
                 <th>ค่าปรับ</th>
                 <th>ค่าใช้จ่ายในการดำเนินคดี</th>
                 <th>ค่าถอนการยึดทรัพย์</th>
+                {!coop && (
+                  <>
+                    <th>ค่าเบี้ยประกัน</th>
+                    <th>ค่าใช้จ่ายอื่นๆ</th>
+                  </>
+                )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
                 <th>วัตถุประสงค์การกู้</th>
@@ -141,7 +177,7 @@ const SelectedTable = (props) => {
             <tbody className="list text-center align-middle">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={24}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -152,6 +188,7 @@ const SelectedTable = (props) => {
         {paging?.total > 0 && (
           <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
             setPage={(page) => getData({ ...filter, currentPage: page })} 
+            count={count} contracts={contracts} sumTotal={sumTotal}
           />
         )}
       </div>

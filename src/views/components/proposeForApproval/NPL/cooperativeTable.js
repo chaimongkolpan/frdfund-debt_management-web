@@ -1,33 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CooperativeTable = ({
   data = [],
   isSelectedAll = false,
-  selected = {},
+  selected = [],
   onSelect = () => {},
   onSelectAll = () => {},
   selectable = true,
 }) => {
-  useEffect(() => {
-    RenderAll();
-  }, [selected]);
-
-  const RenderAll = () => {
-    return data && data.length > 0 ? (
-      data.map((item, index) =>
-        RenderData(item, index, selected[index] ?? false)
-      )
-    ) : (
-      <tr>
-        <td className="fs-9 text-center align-middle" colSpan={26}>
-          <div className="mt-5 mb-5 fs-8">
-            <h5>ไม่มีข้อมูล</h5>
-          </div>
-        </td>
-      </tr>
-    );
-  };
-
+  
+  const [selData, setSelected] = useState([]);
+  const handleSelectAll = async() => {
+    await setSelected((prev) => { return prev.map(i => !isSelectedAll); })
+    await onSelectAll()
+  }
+  const handleSelect = async(id, ind) => {
+    await setSelected((prev) => {
+      prev[ind] = !prev[ind];
+      return prev;
+    })
+    await onSelect(id)
+  }
   const RenderData = (item, index, checked) => {
     return (
       item && (
@@ -39,7 +32,7 @@ const CooperativeTable = ({
                   className="form-check-input"
                   type="checkbox"
                   checked={checked}
-                  onChange={() => onSelect(item.id_debt_register)}
+                  onChange={() => handleSelect(item.id_debt_register, index)}
                 />
               </div>
             </td>
@@ -71,6 +64,9 @@ const CooperativeTable = ({
       )
     );
   };
+  useEffect(() => {
+    setSelected(data.map(i => false))
+  }, []);
 
   return (
     <>
@@ -91,7 +87,7 @@ const CooperativeTable = ({
                       className={"form-check-input"}
                       type="checkbox"
                       checked={isSelectedAll}
-                      onChange={() => onSelectAll()}
+                      onChange={() => handleSelectAll()}
                     />
                   </div>
                 </th>
@@ -170,7 +166,7 @@ const CooperativeTable = ({
           </thead>
           <tbody className="list text-center" id="bulk-select-body">
             {data && data.length > 0 ? (
-              data.map((item, index) => RenderData(item, index, isSelectedAll))
+              data.map((item, index) => RenderData(item, index, selData[index]))
             ) : (
               <tr>
                 <td className="fs-9 text-center align-middle" colSpan={26}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Textbox from "@views/components/input/Textbox";
 import AreaTextbox from "@views/components/input/AreaTextbox";
@@ -18,6 +18,8 @@ import {
 } from "@services/api";
 
 const FullModal = (props) => {
+  const guarantorRef = useRef(null);
+  const collateralRef = useRef(null);
   const {isOpen, setModal, onClose, data} = props;
   const [isMounted, setMounted] = useState(false);
   const [collateral_type, setCollateralType] = useState(null);
@@ -36,12 +38,34 @@ const FullModal = (props) => {
   const [creditor_type, setCreditorType] = useState(null);
   const [repayment, setRepaymentCon] = useState('');
   const [contract, setContractCon] = useState('');
+  const [principle, setPrinciple] = useState(0);
   const [expense, setExpense] = useState(0);
   const [not_correct_list, setNotCorrectList] = useState(null);
   const toggle = () => setModal(!isOpen);
 
   const submitDebt = async () => {
-    const result = await updateDebtManagementDetailClassify(debts);
+    let rate = 1;
+    let expense = 0;
+    if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') {  rate = 1; expense = debts?.debt_manage_total_expenses; }
+    else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { rate = 0.9; expense = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { rate = 0.5; expense = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { rate = 0.4; expense = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { rate = 0.3; expense = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน50%') { rate = 0.5; expense = 0;}
+    const param = {
+      ...debts,
+      contract_debt_manage_outstanding_principal: (debts?.debt_manage_outstanding_principal * rate),
+      contract_debt_manage_accrued_interest: (debts?.debt_manage_accrued_interest * rate),
+      contract_debt_manage_fine: (debts?.debt_manage_fine * rate),
+      contract_debt_manage_litigation_expenses: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_litigation_expenses,
+      contract_debt_manage_forfeiture_withdrawal_fee: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_forfeiture_withdrawal_fee,
+      contract_debt_manage_insurance_premium: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_insurance_premium,
+      contract_debt_manage_other_expenses: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_other_expenses,
+      contract_debt_manage_total_expenses: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_total_expenses,
+      contract_debt_manage_total: ((debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine) * rate) + expense,
+      not_correct_list: '0,0,0,0,0,0,0,0,0,0'
+    }
+    const result = await updateDebtManagementDetailClassify(param);
     if (result.isSuccess) {
       await fetchData();
     }
@@ -104,22 +128,22 @@ const FullModal = (props) => {
       }))
     }
     if (key == 'debt_manage_accrued_interest') {
-      const total = debts?.debt_manage_outstanding_principal + val + debts?.debt_manage_fine + debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee;
+      const total = debts?.debt_manage_outstanding_principal + val + debts?.debt_manage_fine + expense;
       await setDebts((prevState) => ({
         ...prevState,
         ...({debt_manage_total: total})
       }))
     }
     if (key == 'debt_manage_fine') {
-      const total = debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + val + debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee;
+      const total = debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + val + expense;
       await setDebts((prevState) => ({
         ...prevState,
         ...({debt_manage_total: total})
       }))
     }
     if (key == 'debt_manage_litigation_expenses') {
-      const exp = val + debts?.debt_manage_forfeiture_withdrawal_fee;
-      await setContractCon(exp);
+      const exp = val + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses;
+      await setExpense(exp);
       await setDebts((prevState) => ({
         ...prevState,
         ...({debt_manage_total_expenses: exp})
@@ -129,34 +153,10 @@ const FullModal = (props) => {
         ...prevState,
         ...({debt_manage_total: total + exp})
       }))
-      let frd = debts?.frD_paymen_amount;
-      if (repayment != 'ต้นเงิน50%') {
-        if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;}
-        else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.9;}
-        else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.5;}
-        else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.4;}
-        else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.3;}
-        await setDebts((prevState) => ({
-          ...prevState,
-          ...({frD_paymen_amount: frd + exp})
-        }))
-      }
-      if (contract != 'ต้นเงิน50%') {
-        let pri = debts?.contract_amount;
-        if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;}
-        else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;}
-        else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;}
-        else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;}
-        else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;}
-        await setDebts((prevState) => ({
-          ...prevState,
-          ...({contract_amount: pri + exp})
-        }))
-      }
     }
     if (key == 'debt_manage_forfeiture_withdrawal_fee') {
-      const exp = debts?.debt_manage_litigation_expenses + val;
-      await setContractCon(exp);
+      const exp = debts?.debt_manage_litigation_expenses + val + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses;
+      await setExpense(exp)
       await setDebts((prevState) => ({
         ...prevState,
         ...({debt_manage_total_expenses: exp})
@@ -166,30 +166,32 @@ const FullModal = (props) => {
         ...prevState,
         ...({debt_manage_total: total + exp})
       }))
-      let frd = debts?.frD_paymen_amount;
-      if (repayment != 'ต้นเงิน50%') {
-        if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;}
-        else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.9;}
-        else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.5;}
-        else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.4;}
-        else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.3;}
-        await setDebts((prevState) => ({
-          ...prevState,
-          ...({frD_paymen_amount: frd + exp})
-        }))
-      }
-      if (contract != 'ต้นเงิน50%') {
-        let pri = debts?.contract_amount;
-        if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;}
-        else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;}
-        else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;}
-        else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;}
-        else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;}
-        await setDebts((prevState) => ({
-          ...prevState,
-          ...({contract_amount: pri + exp})
-        }))
-      }
+    }
+    if (key == 'debt_manage_insurance_premium') {
+      const exp = debts?.debt_manage_litigation_expenses + val + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_other_expenses;
+      await setExpense(exp)
+      await setDebts((prevState) => ({
+        ...prevState,
+        ...({debt_manage_total_expenses: exp})
+      }))
+      const total = debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
+      await setDebts((prevState) => ({
+        ...prevState,
+        ...({debt_manage_total: total + exp})
+      }))
+    }
+    if (key == 'debt_manage_other_expenses') {
+      const exp = debts?.debt_manage_litigation_expenses + val + debts?.debt_manage_insurance_premium + debts?.debt_manage_forfeiture_withdrawal_fee;
+      await setExpense(exp)
+      await setDebts((prevState) => ({
+        ...prevState,
+        ...({debt_manage_total_expenses: exp})
+      }))
+      const total = debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
+      await setDebts((prevState) => ({
+        ...prevState,
+        ...({debt_manage_total: total + exp})
+      }))
     }
     if (key == 'debt_manage_outstanding_principal') {
       const total = val + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
@@ -197,52 +199,155 @@ const FullModal = (props) => {
         ...prevState,
         ...({debt_manage_total: total + expense})
       }))
-      let frd = debts?.frD_paymen_amount;
-      let ex = 0;
-      if (repayment != 'ต้นเงิน50%') {
-        if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
-        else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = val * 0.9;ex = expense;}
-        else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = val * 0.5;ex = expense;}
-        else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = val * 0.4;ex = expense;}
-        else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = val * 0.3;ex = expense;}
-        else if (repayment == 'ต้นเงิน50%') { frd = val * 0.5}
-        await setDebts((prevState) => ({
-          ...prevState,
-          ...({frD_paymen_amount: frd + ex})
-        }))
-      }
-      if (contract != 'ต้นเงิน50%') {
-        let pri = debts?.contract_amount;
-        let ex1 = 0;
-        if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
-        else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
-        else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
-        else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
-        else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
-        else if (contract == 'ต้นเงิน50%') { pri = frd * 0.5}
-        await setDebts((prevState) => ({
-          ...prevState,
-          ...({contract_amount: pri + ex1})
-        }))
-      }
+      await setPrinciple(val)
     }
     await setDebts((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
   }
+  useEffect(() => {
+    const total = principle + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
+    let frd = debts?.frD_paymen_amount;
+    let ex = 0;
+    if (repayment != 'ต้นเงิน50%') {
+      if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
+      else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = principle * 0.9;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = principle * 0.5;ex = expense;}
+      else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = principle * 0.4;ex = expense;}
+      else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = principle * 0.3;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%') { frd = principle * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({frD_paymen_amount: frd + ex})
+      }))
+    }
+    if (contract != 'ต้นเงิน50%') {
+      let pri = debts?.contract_amount;
+      let ex1 = 0;
+      if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
+      else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
+      else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
+      else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%') { pri = frd * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({contract_amount: pri + ex1})
+      }))
+    }
+  },[principle])
+  useEffect(() => {
+    const total = principle + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
+    let frd = debts?.frD_paymen_amount;
+    let ex = 0;
+    if (repayment != 'ต้นเงิน50%') {
+      if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
+      else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = principle * 0.9;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = principle * 0.5;ex = expense;}
+      else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = principle * 0.4;ex = expense;}
+      else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = principle * 0.3;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%') { frd = principle * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({frD_paymen_amount: frd + ex})
+      }))
+    }
+    if (contract != 'ต้นเงิน50%') {
+      let pri = debts?.contract_amount;
+      let ex1 = 0;
+      if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
+      else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
+      else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
+      else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%') { pri = frd * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({contract_amount: pri + ex1})
+      }))
+    }
+  },[repayment])
+  useEffect(() => {
+    const total = principle + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
+    let frd = debts?.frD_paymen_amount;
+    let ex = 0;
+    if (repayment != 'ต้นเงิน50%') {
+      if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
+      else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = principle * 0.9;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = principle * 0.5;ex = expense;}
+      else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = principle * 0.4;ex = expense;}
+      else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = principle * 0.3;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%') { frd = principle * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({frD_paymen_amount: frd + ex})
+      }))
+    }
+    if (contract != 'ต้นเงิน50%') {
+      let pri = debts?.contract_amount;
+      let ex1 = 0;
+      if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
+      else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
+      else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
+      else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%') { pri = frd * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({contract_amount: pri + ex1})
+      }))
+    }
+  },[contract])
+  useEffect(() => {
+    const total = principle + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
+    let frd = debts?.frD_paymen_amount;
+    let ex = 0;
+    if (repayment != 'ต้นเงิน50%') {
+      if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
+      else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = principle * 0.9;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = principle * 0.5;ex = expense;}
+      else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = principle * 0.4;ex = expense;}
+      else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = principle * 0.3;ex = expense;}
+      else if (repayment == 'ต้นเงิน50%') { frd = principle * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({frD_paymen_amount: frd + ex})
+      }))
+    }
+    if (contract != 'ต้นเงิน50%') {
+      let pri = debts?.contract_amount;
+      let ex1 = 0;
+      if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
+      else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
+      else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
+      else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
+      else if (contract == 'ต้นเงิน50%') { pri = frd * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({contract_amount: pri + ex1})
+      }))
+    }
+  },[expense])
 
   const addCollateral = async() => {
     await setCollateralDetail({ id_debt_management: debts.id_debt_management, title_document_type: 'โฉนด', collateral_status: 'โอนได้' });
     await setCollateralType('โฉนด')
     await setOpenCollateralAdd(true)
     await setOpenCollateralEdit(true)
+    if (collateralRef.current) {
+      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const editCollateral = async(item) => {
     await setCollateralDetail(item)
     await setCollateralType(item.title_document_type)
     await setOpenCollateralAdd(false)
     await setOpenCollateralEdit(true)
+    if (collateralRef.current) {
+      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const saveCollateral = async() => {
     const result = await upsertCollateralClassify(collateralDetail);
@@ -278,11 +383,17 @@ const FullModal = (props) => {
     await setGuarantorDetail({ id_debt_management: debts.id_debt_management })
     await setOpenGuarantorAdd(true)
     await setOpenGuarantorEdit(true)
+    if (guarantorRef.current) {
+      guarantorRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const editGuarantor = async(item) => {
     await setGuarantorDetail(item)
     await setOpenGuarantorAdd(false)
     await setOpenGuarantorEdit(true)
+    if (guarantorRef.current) {
+      guarantorRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
   const saveGuarantor = async() => {
     const result = await upsertGuarantorClassify(guarantorDetail);
@@ -350,13 +461,17 @@ const FullModal = (props) => {
         compensation_conditions: (debt.compensation_conditions ?? 'ไม่มีการชดเชย'),
         debt_manage_objective: (debt.debt_manage_objective ?? 'เพื่อการเกษตร'),
         debt_manage_legal_action: (debt.debt_manage_legal_action ?? 'ไม่มี'),
-        debt_agreement: (debts?.debt_agreement ?? 'ตามข้อตกลง'),
-        debt_repayment_type: (debts?.debt_repayment_type ?? 'ชำระหนี้แทน')
+        debt_agreement: (debt?.debt_agreement ?? 'ตามข้อตกลง'),
+        debt_repayment_type: (debt?.debt_repayment_type ?? 'ชำระหนี้แทน'),
+        frD_paymen_amount: (debt?.frD_paymen_amount ?? 0),
+        contract_amount: (debt?.contract_amount ?? 0)
       });
-      await setNotCorrectList((debts?.not_correct_list ? debts?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0','0']))
+      await setRepaymentCon(debt.debt_repayment_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน');
+      await setContractCon(debt.contract_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน');
+      await setNotCorrectList((debt?.not_correct_list ? debt?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0','0']))
       await setCreditorType(debt.debt_manage_creditor_type);
-      if (debt.debt_manage_creditor_type == "สหกรณ์") await setExpense(debt.debt_manage_total_expenses);
-      else await setExpense(0);
+      await setPrinciple(debt.debt_manage_outstanding_principal ?? 0);
+      await setExpense(debt.debt_manage_total_expenses ?? 0);
       const colls = result.collaterals.filter(x => x.id_debt_management == debt.id_debt_management);
       await setCollaterals(colls);
       const guas = result.guarantors.filter(x => x.id_debt_management == debt.id_debt_management);
@@ -367,6 +482,8 @@ const FullModal = (props) => {
       await setGuarantors(null);
     }
   }
+  useEffect(() => {},[collateralRef]);
+  useEffect(() => {},[guarantorRef]);
   useEffect(() => {
     getCreditor(creditor_type);
   },[creditor_type])
@@ -422,41 +539,41 @@ const FullModal = (props) => {
                             containerClassname={'mb-3'} value={debts?.debt_manage_contract_no}
                           />
                         </div>
-                        <div className="ccol-sm-12 col-md-6 col-lg-4">
-                          <div className="form-floating form-floating-advance-select mb-3">
-                            <label htmlFor="floaTingLabelSingleSelect">ประเภทเจ้าหนี้</label>
-                            <select className="form-select" value={debts?.debt_manage_creditor_type} onChange={(e) => handleChangeDebt('debt_manage_creditor_type', e.target?.value)}>
-                              {creditor_types && (
-                                creditor_types.map((option, index) => (
-                                  <option key={index} value={option}>{option}</option>
-                                ))
-                              )}
-                            </select>
-                          </div>
+                        <div className="col-sm-12 col-md-6 col-lg-4">
+                          {creditor_types && (
+                            <div className="form-floating form-floating-advance-select mb-3">
+                              <label htmlFor="floaTingLabelSingleSelect">ประเภทเจ้าหนี้</label>
+                              <select className="form-select" value={debts?.debt_manage_creditor_type} onChange={(e) => handleChangeDebt('debt_manage_creditor_type', e.target?.value)}>
+                                  {creditor_types.map((option, index) => (
+                                    <option key={index} value={option}>{option}</option>
+                                  ))}
+                              </select>
+                            </div>
+                          )}
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <div className="form-floating form-floating-advance-select mb-3">
-                            <label htmlFor="floaTingLabelSingleSelect">สถาบันเจ้าหนี้</label>
-                            <select className="form-select" value={debts?.debt_manage_creditor_name} onChange={(e) => handleChangeDebt('debt_manage_creditor_name', e.target?.value)}>
-                              {creditors && (
-                                creditors.map((option, index) => (
-                                  <option key={index} value={option}>{option}</option>
-                                ))
-                              )}
-                            </select>
-                          </div>
+                          {creditors && (
+                            <div className="form-floating form-floating-advance-select mb-3">
+                              <label htmlFor="floaTingLabelSingleSelect">สถาบันเจ้าหนี้</label>
+                              <select className="form-select" value={debts?.debt_manage_creditor_name} onChange={(e) => handleChangeDebt('debt_manage_creditor_name', e.target?.value)}>
+                                  {creditors.map((option, index) => (
+                                    <option key={index} value={option}>{option}</option>
+                                  ))}
+                              </select>
+                            </div>
+                          )}
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <div className="form-floating form-floating-advance-select mb-3">
-                            <label htmlFor="floaTingLabelSingleSelect">จังหวัดเจ้าหนี้</label>
-                            <select className="form-select" value={debts?.debt_manage_creditor_province ?? provinces[0]} onChange={(e) => handleChangeDebt('debt_manage_creditor_province', e.target?.value)}>
-                              {provinces && (
-                                provinces.map((option, index) => (
-                                  <option key={index} value={option}>{option}</option>
-                                ))
-                              )}
-                            </select>
-                          </div>
+                          {provinces && (
+                            <div className="form-floating form-floating-advance-select mb-3">
+                              <label htmlFor="floaTingLabelSingleSelect">จังหวัดเจ้าหนี้</label>
+                              <select className="form-select" value={debts?.debt_manage_creditor_province ?? provinces[0]} onChange={(e) => handleChangeDebt('debt_manage_creditor_province', e.target?.value)}>
+                                  {provinces.map((option, index) => (
+                                    <option key={index} value={option}>{option}</option>
+                                  ))}
+                              </select>
+                            </div>
+                          )}
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <Textbox title={'สาขาเจ้าหนี้'} 
@@ -468,7 +585,7 @@ const FullModal = (props) => {
                           <>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_agreement', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_repayment_type', e.target?.value)}>
                                   <option value="ชำระหนี้แทน">ชำระหนี้แทน</option>
                                   <option value="วางเงินชำระหนี้แทน-บังคับคดี">วางเงินชำระหนี้แทน-บังคับคดี</option>
                                 </select>
@@ -874,7 +991,7 @@ const FullModal = (props) => {
                     <br />
                     {isOpenCollateralEdit && (
                     <>
-                      <div className="row g-3">
+                      <div ref={collateralRef} className="row g-3">
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <div className="form-floating needs-validation">
                             <select className="form-select" value={collateralDetail.title_document_type} onChange={(e) => handleChangeCollateral('title_document_type', e.target?.value)}>
@@ -2626,7 +2743,7 @@ const FullModal = (props) => {
                     </div>
                     <br />
                     {isOpenGuarantorEdit && (
-                      <div className="mb-1">
+                      <div ref={guarantorRef} className="mb-1">
                         <div className="card shadow-none border my-4" data-component-card="data-component-card">
                           <div className="card-body p-0">
                             <div className="p-4 code-to-copy">

@@ -52,7 +52,7 @@ const DropZone = (props) => {
         alignItems: 'center',
         padding: '50px',
         borderWidth: 2,
-        borderRadius: 2,
+        borderRadius: 10,
         borderColor: '#eeeeee',
         borderStyle: 'dashed',
         backgroundColor: '#fafafa',

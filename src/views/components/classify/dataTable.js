@@ -11,7 +11,7 @@ const ClassifyDataTable = (props) => {
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index}>
-        <td className="align-middle">{index + 1}</td>
+        <td className="align-middle">{((paging?.currentPage - 1) * 10) + index + 1}</td>
         <td className="align-middle">{item.idCard}</td>
         <td className="align-middle">{item.namePrefix}</td>
         <td className="align-middle">{(item.fullName ?? '')}</td>

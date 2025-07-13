@@ -5,10 +5,10 @@ import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 
 // ** Languages Imports
-const en = new URL('../../assets/data/locales/en.json', import.meta.url).href
-const fr = new URL('../../assets/data/locales/fr.json', import.meta.url).href
-const de = new URL('../../assets/data/locales/de.json', import.meta.url).href
-const pt = new URL('../../assets/data/locales/pt.json', import.meta.url).href
+const en = new URL('@assets/data/locales/en.json', import.meta.url).href
+const fr = new URL('@assets/data/locales/fr.json', import.meta.url).href
+const de = new URL('@assets/data/locales/de.json', import.meta.url).href
+const pt = new URL('@assets/data/locales/pt.json', import.meta.url).href
 
 const languages = {
   en,

@@ -35,6 +35,15 @@ export const formatDate = (
   if (!value) return value;
   return new Intl.DateTimeFormat("en-US", formatting).format(new Date(value));
 };
+export const toCurrency = (value, digit = 0) => {
+
+  if (!value) return '0.00';
+  if (typeof value == 'number')
+    return value.toLocaleString();
+  if (!isNaN(parseFloat(value)))
+    return parseFloat(value).toLocaleString()
+  return value;
+};
 
 // ** Returns short month of passed date
 export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
@@ -65,9 +74,10 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
-  if (userRole === "admin") return '/debt';
-  if (userRole === "client") return "/debt";
-  return "/login";
+  const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
+  if (userRole === "admin") return prefix_url + '/debt';
+  if (userRole === "client") return prefix_url + "/debt";
+  return prefix_url + "/login";
 };
 
 // ** React Select Theme Colors
@@ -99,7 +109,8 @@ export const stringToDateTh = (value, showTime = true, format) => {
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear() + 543; // แปลงเป็นปี พ.ศ.
+  let y = date.getFullYear();
+  const year = y < 2500 ? y + 543 : y; // แปลงเป็นปี พ.ศ.
   const time = date.toLocaleTimeString("th-TH", {
     hour: "2-digit",
     minute: "2-digit",
@@ -109,11 +120,20 @@ export const stringToDateTh = (value, showTime = true, format) => {
     ? `${day}/${month}/${year} ${time}`
     : `${day}/${month}/${year}`;
 };
+export const ToDateDb = (value, toThai = false, format) => {
+  const date = moment(value, format).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  let y = date.getFullYear();
+  const year = (y < 2500 ? y: y - 543) + (toThai ? 543 : 0);
+  return `${year}-${month}-${day}`;
+};
 export const stringToDateThShort = (value, showTime = true, format) => {
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = String(date.getFullYear() + 543).slice(-2); // แปลงเป็นปี พ.ศ.
+  let y = date.getFullYear();
+  const year = String(y < 2500 ? y + 543 : y).slice(-2); // แปลงเป็นปี พ.ศ.
   const time = date.toLocaleTimeString("th-TH", {
     hour: "2-digit",
     minute: "2-digit",

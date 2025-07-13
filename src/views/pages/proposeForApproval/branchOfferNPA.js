@@ -1,23 +1,27 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import According from "@views/components/panel/according";
+import BookNo from "@views/components/input/BookNo";
+import DatePicker from "@views/components/input/DatePicker";
 import Modal from "@views/components/modal/FullModal";
 import Loading from "@views/components/modal/loading";
 import Filter from "@views/components/proposeForApproval/NPA/filter";
+import CustomerModal from "@views/components/modal/CustomModal";
 import PrepareRequestApproveTable from "@views/components/proposeForApproval/NPA/prepareRequestApproveTable";
 import RequestApproveTable from "@views/components/proposeForApproval/NPA/requestApproveTable";
 import ConfirmTable from "@views/components/proposeForApproval/NPA/confirmTable";
-import RegisterModal from "@views/components/proposeForApproval/NPA/registrationModal";
 import FilterRegis from "@views/components/proposeForApproval/NPA/filterResigtration";
 import logo from "@src/assets/images/icons/logo.png";
+import { stringToDateTh } from "@utils";
 import {
   cleanData,
-  searchRegisteredNPA,
-  getContractNPAToList,
-  removeContractNPAToList,
-  addContractNPAToList,
-  submitListNPA,
+  searchBranchOfferNpa,
+  getBranchOfferNpa,
+  addBranchOfferNpa,
+  removeBranchOfferNpa,
+  updateBranchOfferNpa,
+  submitBranchOfferNpa,
+  uploadBranchOfferNpa,
 } from "@services/api";
 
 const BranchOfferNPA = () => {
@@ -27,16 +31,36 @@ const BranchOfferNPA = () => {
   const [data, setData] = useState(null);
   const [addedData, setAddedData] = useState(null);
   const [filter, setFilter] = useState(null);
-  const [makelistSelected, setMakeList] = useState(null);
+  const [bookNo, setBookNo] = useState(null);
+  const [bookDate, setBookDate] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [uploadBookNo, setUploadBookNo] = useState(null);
+  const [uploadBookDate, setUploadBookDate] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [requestApproveData, setRequestApproveData] = useState([]);
   const [filterAdded, setFilterAdded] = useState({
     currentPage: 1,
     pageSize: process.env.PAGESIZE,
   });
+  const onUpload = async () => {
+    const form = new FormData();
+    form.append('book_no', uploadBookNo);
+    form.append('book_date', uploadBookDate);
+    await Promise.all(
+      files.map(async(file) => {
+        form.append('files', file);
+      })
+    )
 
+    const result = await uploadBranchOfferNpa(form)
+    if (result.isSuccess) {
+      setUploadSuccess(true);
+    }
+  };
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter);
-    const result = await searchRegisteredNPA(filter);
+    const result = await searchBranchOfferNpa(filter);
     if (result.isSuccess) {
       setData(result);
     } else {
@@ -44,64 +68,59 @@ const BranchOfferNPA = () => {
     }
     setLoadBigData(false);
   };
-
   const onAddBigData = async (selected) => {
-    const result = await addContractNPAToList(selected);
+    const result = await addBranchOfferNpa(selected);
     if (result.isSuccess) {
       await onSearch(filter);
       await fetchData(filterAdded);
     }
   };
-
   const fetchData = async (query) => {
     setFilterAdded(query);
-    const result = await getContractNPAToList(query);
+    const result = await getBranchOfferNpa(query);
     if (result.isSuccess) {
       setAddedData(result);
     } else {
       setAddedData(null);
     }
   };
-
   const onRemoveMakelist = async (selected) => {
-    const result = await removeContractNPAToList(selected);
+    const result = await removeBranchOfferNpa(selected);
     if (result.isSuccess) {
       await fetchData(filterAdded);
     }
   };
-
   const onSubmitMakelist = async () => {
-    setSubmit(false);
-    setLoadBigData(true);
-    const clearTimer = setTimeout(() => {
-      setLoadBigData(false);
-      // show timeout
-    }, 10000);
-    const result = await submitListNPA({
-      type: "application/octet-stream",
-      filename: "จัดทำรายชื่อเกษตรกร_" + new Date().getTime() + ".zip",
-      data: makelistSelected,
-    });
-    if (result.isSuccess) {
-      await fetchData(filterAdded);
+    const ids = requestApproveData.map(item => item.id_debt_management.toString())
+    const param = {
+        ids,
+        text_no: 'กฟก.' + bookNo,
+        date: stringToDateTh(bookDate,false)
     }
-    clearTimeout(clearTimer);
-    setLoadBigData(false);
+    const resultUpdate = await updateBranchOfferNpa(param)
+    if (resultUpdate.isSuccess) {
+      const result = await submitBranchOfferNpa({
+        type: "application/octet-stream",
+        filename: "สาขาเสนออนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
+        data: requestApproveData,
+      });
+      if (result) {
+        await setBookNo(null);
+        await setBookDate(null);
+        await fetchData(filterAdded);
+      }
+    }
   };
-
   const onCloseMakelist = async () => {
     setSubmit(false);
   };
-
   const onCloseRegisterNPAModel = () => {
     setShowModal(false);
   };
-
   const handleSubmit = async (selected) => {
-    await setMakeList(selected);
+    await setRequestApproveData(selected);
     await setSubmit(true);
   };
-
   useEffect(() => {}, [data]);
   useEffect(() => {
     setLoadBigData(true);
@@ -123,18 +142,24 @@ const BranchOfferNPA = () => {
               <span className="fas fa-file-upload"></span> อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ
             </button>
             {showModal && (
-              <RegisterModal
+              <CustomerModal
                 isOpen={showModal}
                 setModal={setShowModal}
+                onOk={onUpload}
                 onClose={onCloseRegisterNPAModel}
                 title={"อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ"}
+                okText={"เสนอขออนุมัติรายชื่อ"}
                 closeText={"ปิด"}
-                scrollable
+                size={'xl'}
                 children={
                   <>
                     <FilterRegis
-                      handleSubmit={onSearch}
-                      setLoading={setLoadBigData}
+                      bookNo={uploadBookNo}
+                      setBookNo={setUploadBookNo}
+                      bookDate={uploadBookDate}
+                      setBookDate={setUploadBookDate}
+                      files={files}
+                      setFiles={setFiles}
                     />
                   </>
                 }
@@ -188,7 +213,18 @@ const BranchOfferNPA = () => {
         closeText={"ปิด"}
         scrollable
       >
-        <ConfirmTable data={makelistSelected} />
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+            <BookNo title={'เลขหนังสือ'} subtitle={'กฟก.'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+            <DatePicker title={'วันที่หนังสือ'}
+              value={bookDate} 
+              handleChange={(val) => setBookDate(val)} 
+            />
+          </div>
+        </div>
+        <ConfirmTable data={requestApproveData} />
       </Modal>
       <Loading
         isOpen={isLoadBigData}

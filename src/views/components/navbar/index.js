@@ -12,6 +12,7 @@ import logo from '@src/assets/images/icons/logo.png'
 
 
 
+const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 const ThemeNavbar = props => {
   // ** Props
   const navigate = useNavigate()
@@ -25,7 +26,7 @@ const ThemeNavbar = props => {
   }
   const Logout = () => {
     dispatch(handleLogout());
-    navigate('/login');
+    navigate(prefix_url + '/login');
   }
   const isLinkActive = (linkUrl) => {
     return location.pathname === linkUrl;
@@ -69,10 +70,10 @@ const ThemeNavbar = props => {
                   <h6 className="mt-2 text-body-emphasis">ผู้ดูแลระบบ</h6>
                 </div>
               </div>
-              <DropdownItem tag={Link} to='/profile'>
+              <DropdownItem tag={Link} to={prefix_url + '/profile'}>
                 <User className="me-2 text-body align-bottom" size={16} />ข้อมูลโปรไฟล์
               </DropdownItem>
-              <DropdownItem tag={Link} to='/settings'>
+              <DropdownItem tag={Link} to={prefix_url + '/settings'}>
                 <Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ
               </DropdownItem>
               <DropdownItem divider />

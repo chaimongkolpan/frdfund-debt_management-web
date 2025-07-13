@@ -7,6 +7,8 @@ import {
   getCreditorTypes,
   getDebtStatuses,
   getCheckingStatuses,
+  getNpaRoundFilter,
+  getNpaCollateralFilter,
 } from "@services/api";
 const ClassifySearchFilter = (props) => {
   const { handleSubmit } = props;
@@ -17,6 +19,8 @@ const ClassifySearchFilter = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [statusDebtOp, setStatusDebtOp] = useState(null);
   const [checkingStatusOp, setCheckingStatusOp] = useState(null);
+  const [npaRoundOp, setRoundOp] = useState(null);
+  const [collateralOp, setCollateralOp] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -71,6 +75,18 @@ const ClassifySearchFilter = (props) => {
         }))
       } else await setCreditorOp(null);
     }
+    if (key == 'npaRound') {
+      await setCollateralOp(null);
+      const resultCollateral = await getNpaCollateralFilter(val);
+      if (resultCollateral.isSuccess) {
+        const temp = resultCollateral.data.map(item => item.name);
+        await setCollateralOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({collateralNo: 'all'})
+        }))
+      } else await setCollateralOp(null);
+    }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -80,6 +96,8 @@ const ClassifySearchFilter = (props) => {
     const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
     const resultChecking = await getCheckingStatuses();
+    const resultRound = await getNpaRoundFilter();
+    const resultCollateral = await getNpaCollateralFilter(null);
 
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
@@ -90,9 +108,9 @@ const ClassifySearchFilter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getCreditors(null, temp1[0]);
+        const resultCreditor = await getCreditors(null, 'all');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -119,6 +137,14 @@ const ClassifySearchFilter = (props) => {
       const temp = resultChecking.data.map(item => item.name);
       await setCheckingStatusOp(temp);
     } else await setCheckingStatusOp(null);
+    if (resultRound.isSuccess) {
+      const temp = resultRound.data.map(item => item.name);
+      await setRoundOp(temp);
+    } else await setRoundOp(null);
+    if (resultCollateral.isSuccess) {
+      const temp = resultCollateral.data.map(item => item.name);
+      await setCollateralOp(temp);
+    } else await setCollateralOp(null);
     setIsMounted(true);
   }
 
@@ -148,7 +174,6 @@ const ClassifySearchFilter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
@@ -159,29 +184,26 @@ const ClassifySearchFilter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={creditorTypeOp}
               handleChange={(val) => onChange('creditorType', val)}
-               />
+              hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={creditorOp[0]} 
+              defaultValue={'all'} 
               options={creditorOp}
               handleChange={(val) => onChange('creditor', val)}
-            />
+              hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {statusDebtOp && (
             <Dropdown 
               title={'สถานะหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={statusDebtOp}
               handleChange={(val) => onChange('debtStatus', val)}
@@ -189,24 +211,22 @@ const ClassifySearchFilter = (props) => {
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {checkingStatusOp && (
+          {npaRoundOp && (
             <Dropdown 
               title={'รอบ NPA'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
-              options={checkingStatusOp}
-              handleChange={(val) => onChange('checkingStatus', val)}
+              options={npaRoundOp}
+              handleChange={(val) => onChange('npaRound', val)}
               hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {checkingStatusOp && (
+          {collateralOp && (
             <Dropdown 
               title={'เอกสารสิทธิ์'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
-              options={checkingStatusOp}
-              handleChange={(val) => onChange('checkingStatus', val)}
+              options={collateralOp}
+              handleChange={(val) => onChange('collateralNo', val)}
               hasAll />
           )}
         </div>
@@ -214,7 +234,6 @@ const ClassifySearchFilter = (props) => {
           {checkingStatusOp && (
             <Dropdown 
               title={'สถานะสัญญาจำแนกมูลหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={checkingStatusOp}
               handleChange={(val) => onChange('checkingStatus', val)}

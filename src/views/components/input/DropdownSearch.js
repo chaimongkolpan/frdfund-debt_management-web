@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input, Label } from "reactstrap";
 const DropdownSearch = (props) => {
-  const { title, placeholder, handleChange, containerClassname, classname, hasAll, defaultValue, options } = props;
+  const { title, placeholder, handleChange, containerClassname, classname, hasAll, defaultValue, options, onModal } = props;
   const [val, setValue] = useState(defaultValue ?? null);
   const onChange = (newval) => {
     setValue(newval?.target.value);
@@ -79,7 +79,7 @@ const DropdownSearch = (props) => {
         });
       }
     };
-    choicesInit();
+    if (!onModal) choicesInit();
   },[options])
   return (
     <div className={`form-floating form-floating-advance-select ${containerClassname ?? ''}`}>
@@ -91,8 +91,10 @@ const DropdownSearch = (props) => {
         data-choices="data-choices" 
         data-options='{"removeItemButton":true,"placeholder":true}'
       >
-        {hasAll && (
-          <option value="all">ทั้งหมด</option>
+        {hasAll ? (
+          <option value="" selected>ทั้งหมด</option>
+        ) : (
+          <option value="" selected>กรุณาเลือกข้อมูล...</option>
         )}
         {options && (
           options.map((option, index) => (

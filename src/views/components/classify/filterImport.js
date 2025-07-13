@@ -60,16 +60,6 @@ const ClassifyImportFilter = (props) => {
     fetchData();
     return () => console.log('Clear data')
   }, []);
-  useEffect(() => {
-    if (isMounted) {
-      $('<script src="/assets/js/config.js"></script>').appendTo('body');
-      $('<script src="/assets/js/phoenix.js"></script>').appendTo('body');
-    }
-    return () => {}
-  }, [isMounted])
-  if (!isMounted) {
-    return null
-  }
   return (
     <>
       <form className="row g-3">

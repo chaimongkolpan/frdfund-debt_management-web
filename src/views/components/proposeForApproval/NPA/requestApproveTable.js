@@ -1,97 +1,168 @@
 import { useEffect, useState } from "react";
+import Paging from "@views/components/Paging";
+import { stringToDateTh, toCurrency } from "@utils";
 
-const RequestApproveTable = (props) => {
-  const { result, handleSubmit } = props;
+const DebtRegisterSelectedTableNpa = (props) => {
+  const { result, handleSubmit, handleRemove } = props;
   const [data, setData] = useState([]);
+  const [isSome, setIsSome] = useState(false);
+  const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
-
-  useEffect(() => {
-    RenderAll();
-  }, [selected]);
-
-  useEffect(() => {
-    if (result) {
-      setData(result.data);
-    }
-
-    return () => {
-      setData([]);
-    };
-  }, [result]);
+  const [paging, setPaging] = useState(null);
 
   const onSubmit = () => {
     if (handleSubmit) {
-      handleSubmit(selected);
+      const selectedData = data.filter((i, index) => selected[index]);
+      handleSubmit(selectedData)
     }
-  };
-
-  const onSelect = (id) =>
-    setSelected((prev) => {
-      if (prev.includes(id)) return prev.filter((item) => item !== id);
-
-      return [...prev, id];
-    });
-
-  const onSelectAll = () =>
-    selected.length === data.length
-      ? setSelected([])
-      : setSelected(data.map((item) => item.id_debt_register));
-
-  const RenderAll = () => {
-    return data && data.length > 0 ? (
-      data.map((item, index) =>
-        RenderData(item, index, selected[index] ?? false)
-      )
-    ) : (
-      <tr>
-        <td className="fs-9 text-center align-middle" colSpan={26}>
-          <div className="mt-5 mb-5 fs-8">
-            <h5>ไม่มีข้อมูล</h5>
+  }
+  const onRemove = () => {
+    if (handleRemove) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      handleRemove(selectedData)
+    }
+  }
+  const onChange = async (id) => {
+    await setSelected((prev) => {
+      prev[id] = !prev[id];
+      return [...prev]
+    })
+  }
+  const onHeaderChange = async (checked) => {
+    await setSelected(result.data.map(() => checked));
+    await setIsAll(checked)
+  }
+  const RenderData = (item, index, checked) => {
+    return (item && (
+      <tr key={index}>
+        <td className="fs-9 align-middle">
+          <div className="form-check ms-2 mb-0 fs-8">
+            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
+        <td>{item.id_card}</td>
+        <td>{item.name_prefix}</td>
+        <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
+        <td>{item.province}</td>
+        <td>{item.debt_manage_creditor_type}</td>
+        <td>{item.debt_manage_creditor_name}</td>
+        <td>{item.debt_manage_creditor_province}</td>
+        <td>{item.debt_manage_creditor_branch}</td>
+        <td>{item.npA_round}</td>
+        <td>{item.title_document_no}</td>
+        <td>{item.debt_manage_contract_no}</td>
+        <td>{toCurrency(item.estimated_price_creditors)}</td>
+        <td>{toCurrency(item.npA_property_sales_price)}</td>
+        <td>{toCurrency(item.npL_creditors_receive)}</td>
+        <td>{toCurrency(item.litigation_expenses)}</td>
+        <td>{toCurrency(item.insurance_premium)}</td>
+        <td>{toCurrency(item.total_xpenses)}</td>
+        <td>{toCurrency(item.frD_total_payment)}</td>
+        <td>{item.debt_manage_status}</td>
+        <td>{item.collateral_type}</td>
+        <td>{item.debt_manage_objective}</td>
+        <td>{item.regulation_no}</td>
       </tr>
-    );
-  };
-
-  const isSelectedAll = selected.length === data.length;
-  const isSelectedSome = selected.length > 0;
-  const CommercialBanksOrLegalEntitiesData = [{}];
-  const CooperativeData = [{}]
-
+    ))
+  }
+  
+  const RenderAll = () => {
+    return (data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index] ?? false))) : (
+      <tr>
+        <td className="fs-9 text-center align-middle" colSpan={23}>
+          <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+        </td>
+      </tr>
+    )
+  }
+  useEffect(() => {
+    setIsSome(selected.some(i => i))
+    setIsAll(selected.every(i => i) && selected.length > 0)
+    RenderAll();
+    return () => { console.log('Clear data.') }
+  },[selected])
+  useEffect(() => {
+    if(result) {
+      setData(result.data);
+      setSelected(result.data.map(() => false));
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
+    }
+    return () => { setData([]) }
+  },[result])
   return (
     <>
-      <div id="tableExample" data-list='{"valueNames":["name","email","age"]}'>
-        <CooperativeTable
-          data={CooperativeData}
-          isSelectedAll={isSelectedAll}
-          onSelect={onSelect}
-          onSelectAll={onSelectAll}
-        />
-        <CommercialBanksOrLegalEntitiesTable
-          data={CommercialBanksOrLegalEntitiesData}
-          isSelectedAll={isSelectedAll}
-          onSelect={onSelect}
-          onSelectAll={onSelectAll}
-        />
-        {/* <div className="d-flex justify-content-between mt-3"><span className="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
-          <div className="d-flex">
-            <button className="page-link" data-list-pagination="prev"><span className="fas fa-chevron-left"></span></button>
-            <ul className="mb-0 pagination">
-
-            </ul>
-            <button className="page-link pe-0" data-list-pagination="next"><span className="fas fa-chevron-right"></span></button>
-          </div>
-        </div> */}
+      <div id="tableExample1" data-list='{"valueNames":["name","email","age"]'>
+        <div className="table-responsive mx-n1 px-1">
+          <table className="table table-sm table-striped table-bordered fs-9 mb-0">
+            <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
+              <tr>
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
+                  <div className="form-check ms-2 me-0 mb-0 fs-8">
+                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                  </div>
+                </th>
+                <th colspan="4">เกษตรกร</th>
+                <th colspan="4">เจ้าหนี้</th>
+                <th colspan="14">สัญญา</th>
+              </tr>
+              <tr>
+                <th>เลขบัตรประชาชน</th>
+                <th>คำนำหน้า</th>
+                <th>ชื่อ-นามสกุล</th>
+                <th>จังหวัด</th>
+                <th>ประเภทเจ้าหนี้</th>
+                <th>สถาบันเจ้าหนี้</th>
+                <th>จังหวัดเจ้าหนี้</th>
+                <th>สาขาเจ้าหนี้</th>
+                <th>รอบ NPA</th>
+                <th>เอกสารสิทธิ์</th>
+                <th>เลขที่สัญญา</th>
+                <th>ราคาประเมินของเจ้าหนี้</th>
+                <th>ราคาขายทรัพย์ NPA</th>
+                <th>เจ้าหนี้รับชำระต้นเงินคงเหลือ (NPL)</th>
+                <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                <th>ค่าเบี้ยประกัน</th>
+                <th>รวมค่าใช้จ่าย</th>
+                <th>รวมทั้งสิ้น</th>
+                <th>สถานะหนี้</th>
+                <th>ประเภทหลักประกัน</th>
+                <th>วัตถุประสงค์การกู้</th>
+                <th>ซื้อทรัพย์ตามระเบียบฯ</th>
+              </tr>
+            </thead>
+            <tbody className="list text-center align-middle" id="bulk-select-body">
+              {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
+                <tr>
+                  <td className="fs-9 text-center align-middle" colSpan={23}>
+                    <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {/*paging?.total > 0 && (
+          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
+            setPage={(page) => getData({ ...filter, currentPage: page })} 
+          />
+        )*/}
       </div>
       <div className="d-flex align-items-center justify-content-center my-3">
-        <div className={`${isSelectedSome ? "" : "d-none"}`}>
+        <div className={`${isSome ? "" : "d-none"}`}>
           <div className="d-flex">
             <button
-              className="btn btn-subtle-success btn-sm ms-2"
               type="button"
+              className="btn btn-success btn-sm ms-2"
               onClick={() => onSubmit()}
             >
-              เลือกสัญญาจัดทำรายชื่อเกษตรกร
+              เสนอขออนุมัติรายชื่อ
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger btn-sm ms-2"
+              onClick={() => onRemove()}
+            >
+              ไม่เสนอขออนุมัติรายชื่อ
             </button>
           </div>
         </div>
@@ -100,321 +171,4 @@ const RequestApproveTable = (props) => {
   );
 };
 
-const CommercialBanksOrLegalEntitiesTable = ({
-  data,
-  isSelectedAll,
-  onSelect,
-  onSelectAll,
-}) => {
-  const RenderData = (item, index, checked) => {
-    return (
-      item && (
-        <tr key={index}>
-          <td className="fs-9 align-middle">
-            <div className="form-check ms-2 mb-0 fs-8">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={checked}
-                onChange={() => onSelect(item.id_debt_register)}
-              />
-            </div>
-          </td>
-          <td className="align-middle">{item.id_card}</td>
-          <td className="align-middle">{item.name_prefix}</td>
-          <td className="align-middle">
-            {(item.firstname ?? "") + " " + (item.lastname ?? "")}
-          </td>
-          <td className="align-middle">{item.province}</td>
-          <td className="align-middle">{item.debt_manage_creditor_type}</td>
-          <td className="align-middle">{item.debt_manage_creditor_name}</td>
-          <td className="align-middle">{item.debt_manage_creditor_province}</td>
-          <td className="align-middle">{item.debt_manage_creditor_branch}</td>
-          <td className="align-middle">{item.debt_manage_contract_no}</td>
-          <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
-          <td className="align-middle">{item.debt_manage_accrued_interest}</td>
-          <td className="align-middle">{item.debt_manage_fine}</td>
-          <td className="align-middle">{item.debt_manage_litigation_expenses}</td>
-          <td className="align-middle">{item.debt_manage_forfeiture_withdrawal_fee}</td>
-          <td className="align-middle">{item.debt_manage_insurance_premium}</td>
-          <td className="align-middle">{item.debt_manage_other_expenses}</td>
-          <td className="align-middle">{item.debt_manage_total_expenses}</td>
-          <td className="align-middle">{item.debt_manage_total}</td>
-          <td className="align-middle">{item.debt_manage_status}</td>
-          <td className="align-middle">{item.collateral_type}</td>
-          <td className="align-middle">{item.debt_manage_objective}</td>
-        </tr>
-      )
-    );
-  };
-
-  return (
-    <>
-      <div className="table-responsive mx-n1 px-1">
-        <table className="table table-sm table-striped table-bordered fs-9 mb-0">
-          <thead
-            className="align-middle text-center text-nowrap"
-            style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}
-          >
-            <tr>
-              <th
-                className="white-space-nowrap fs-9 align-middle ps-0"
-                rowSpan="2"
-              >
-                <div className="form-check ms-2 me-0 mb-0 fs-8">
-                  <input
-                    className={"form-check-input"}
-                    type="checkbox"
-                    checked={isSelectedAll}
-                    onChange={() => onSelectAll()}
-                  />
-                </div>
-              </th>
-              <th className="text-center" colSpan="4">
-                เกษตรกร
-              </th>
-              <th className="text-center" colSpan="4">
-                เจ้าหนี้
-              </th>
-              <th className="text-center" colSpan="15">
-                สัญญา
-              </th>
-            </tr>
-            <tr>
-              <th className="align-middle text-center" data-sort="name">
-                เลขบัตรประชาชน
-              </th>
-              <th className="align-middle text-center" data-sort="email">
-                คำนำหน้า
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ชื่อ-นามสกุล
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                จังหวัด
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ประเภทเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                สถาบันเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                จังหวัดเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                สาขาเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                เลขที่สัญญา
-              </th>
-              <th className="align-middle text-center" data-sort="email">
-                เงินต้น
-              </th>
-              <th className="align-middle text-center" data-sort="email">
-                ดอกเบี้ย
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าปรับ
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าใช้จ่ายในการดำเนินคดี
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าถอนการยึดทรัพย์
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าเบี้ยประกัน
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าใช้จ่ายอื่นๆ
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                รวมค่าใช้จ่าย
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                รวมทั้งสิ้น
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                สถานะหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ประเภทหลักประกัน
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                วัตถุประสงค์การกู้
-              </th>
-            </tr>
-          </thead>
-          <tbody className="list text-center" id="bulk-select-body">
-            {data && data.length > 0 ? (
-              data.map((item, index) => RenderData(item, index, isSelectedAll))
-            ) : (
-              <tr>
-                <td className="fs-9 text-center align-middle" colSpan={26}>
-                  <div className="mt-5 mb-5 fs-8">
-                    <h5>ไม่มีข้อมูล</h5>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-};
-
-const CooperativeTable = ({ data, isSelectedAll, onSelect, onSelectAll }) => {
-  const RenderData = (item, index, checked) => {
-    return (
-      item && (
-        <tr key={index}>
-          <td className="fs-9 align-middle">
-            <div className="form-check ms-2 mb-0 fs-8">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={checked}
-                onChange={() => onSelect(item.id_debt_register)}
-              />
-            </div>
-          </td>
-          <td className="align-middle">{item.id_card}</td>
-          <td className="align-middle">{item.name_prefix}</td>
-          <td className="align-middle">
-            {(item.firstname ?? "") + " " + (item.lastname ?? "")}
-          </td>
-          <td className="align-middle">{item.province}</td>
-          <td className="align-middle">{item.debt_manage_creditor_type}</td>
-          <td className="align-middle">{item.debt_manage_creditor_name}</td>
-          <td className="align-middle">{item.debt_manage_creditor_province}</td>
-          <td className="align-middle">{item.debt_manage_creditor_branch}</td>
-          <td className="align-middle">{item.debt_manage_contract_no}</td>
-          <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
-          <td className="align-middle">{item.debt_manage_accrued_interest}</td>
-          <td className="align-middle">{item.debt_manage_fine}</td>
-          <td className="align-middle">{item.debt_manage_litigation_expenses}</td>
-          <td className="align-middle">{item.debt_manage_forfeiture_withdrawal_fee}</td>
-          <td className="align-middle">{item.debt_manage_total_expenses}</td>
-          <td className="align-middle">{item.debt_manage_total}</td>
-          <td className="align-middle">{item.debt_manage_status}</td>
-          <td className="align-middle">{item.collateral_type}</td>
-          <td className="align-middle">{item.debt_manage_objective}</td>
-        </tr>
-      )
-    );
-  };
-
-  return (
-    <>
-      <div className="table-responsive mx-n1 px-1">
-        <table className="table table-sm table-striped table-bordered fs-9 mb-0">
-          <thead
-            className="align-middle text-center text-nowrap"
-            style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}
-          >
-            <tr>
-              <th
-                className="white-space-nowrap fs-9 align-middle ps-0"
-                rowSpan="2"
-              >
-                <div className="form-check ms-2 me-0 mb-0 fs-8">
-                  <input
-                    className={"form-check-input"}
-                    type="checkbox"
-                    checked={isSelectedAll}
-                    onChange={() => onSelectAll()}
-                  />
-                </div>
-              </th>
-              <th className="text-center" colSpan="4">
-                เกษตรกร
-              </th>
-              <th className="text-center" colSpan="4">
-                เจ้าหนี้
-              </th>
-              <th className="text-center" colSpan="14">
-                สัญญา
-              </th>
-            </tr>
-            <tr>
-              <th className="align-middle text-center" data-sort="name">
-                เลขบัตรประชาชน
-              </th>
-              <th className="align-middle text-center" data-sort="email">
-                คำนำหน้า
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ชื่อ-นามสกุล
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                จังหวัด
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ประเภทเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                สถาบันเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                จังหวัดเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                สาขาเจ้าหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                เลขที่สัญญา
-              </th>
-              <th className="align-middle text-center" data-sort="email">
-                เงินต้น
-              </th>
-              <th className="align-middle text-center" data-sort="email">
-                ดอกเบี้ย
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าปรับ
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าใช้จ่ายในการดำเนินคดี
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ค่าถอนการยึดทรัพย์
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                รวมค่าใช้จ่าย
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                รวมทั้งสิ้น
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                สถานะหนี้
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                ประเภทหลักประกัน
-              </th>
-              <th className="align-middle text-center" data-sort="age">
-                วัตถุประสงค์การกู้
-              </th>
-            </tr>
-          </thead>
-          <tbody className="list text-center" id="bulk-select-body">
-            {data && data.length > 0 ? (
-              data.map((item, index) => RenderData(item, index, isSelectedAll))
-            ) : (
-              <tr>
-                <td className="fs-9 text-center align-middle" colSpan={26}>
-                  <div className="mt-5 mb-5 fs-8">
-                    <h5>ไม่มีข้อมูล</h5>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-};
-
-export default RequestApproveTable;
+export default DebtRegisterSelectedTableNpa;

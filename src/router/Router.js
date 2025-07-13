@@ -5,7 +5,7 @@ import BlankLayout from '../layouts/BlankLayout'
 import VerticalLayout from '../layouts/VerticalLayout'
 
 import { getUserData } from '../utility/Utils'
-
+const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 const Error = lazy(() => import('../views/pages/Error'))
 const Version = lazy(() => import('../views/pages/Version'))
 const Login = lazy(() => import('../views/pages/authentication/Login'))
@@ -21,8 +21,6 @@ const ProposeForApprovalBranchOfferNPL = lazy(() => import('../views/pages/propo
 
 const ClassifySearchNpa = lazy(() => import('../views/pages/classify/searchNpa'))
 const ClassifySearchNpaDetail = lazy(() => import('../views/pages/classify/searchNpaDetail'))
-const BranchOfferNpl = lazy(() => import('../views/pages/branch/offer/npl'))
-const BranchOfferNpa = lazy(() => import('../views/pages/branch/offer/npa'))
 const BranchPrepareNpl = lazy(() => import('../views/pages/branch/prepare/npl'))
 const BranchPrepareNpa = lazy(() => import('../views/pages/branch/prepare/npa'))
 const CommitteePrepareNpl = lazy(() => import('../views/pages/committee/prepare/npl'))
@@ -31,8 +29,14 @@ const CommitteeWaitingNpl = lazy(() => import('../views/pages/committee/waiting/
 const CommitteeWaitingNpa = lazy(() => import('../views/pages/committee/waiting/npa'))
 const CommitteeUpdateNpl = lazy(() => import('../views/pages/committee/update/npl'))
 const CommitteeUpdateNpa = lazy(() => import('../views/pages/committee/update/npa'))
+const ConfirmCommitteePrepareNpl = lazy(() => import('../views/pages/confirm-committee/prepare/npl'))
+const ConfirmCommitteePrepareNpa = lazy(() => import('../views/pages/confirm-committee/prepare/npa'))
+const ConfirmCommitteeConfirmNpl = lazy(() => import('../views/pages/confirm-committee/confirm/npl'))
+const ConfirmCommitteeConfirmNpa = lazy(() => import('../views/pages/confirm-committee/confirm/npa'))
 const ApprovalMakePetitionNpl = lazy(() => import('../views/pages/approval/make-petition/npl'))
 const ApprovalMakePetitionNpa = lazy(() => import('../views/pages/approval/make-petition/npa'))
+const ApprovalMakePetitionBranchNpl = lazy(() => import('../views/pages/approval/make-petition/branch-npl'))
+const ApprovalMakePetitionBranchNpa = lazy(() => import('../views/pages/approval/make-petition/branch-npa'))
 const ApprovalDisbursementStatusNpl = lazy(() => import('../views/pages/approval/disbursement-status/npl'))
 const ApprovalDisbursementStatusNpa = lazy(() => import('../views/pages/approval/disbursement-status/npa'))
 const ApprovalAdditionalActionNpl = lazy(() => import('../views/pages/approval/additional-action/npl'))
@@ -47,191 +51,221 @@ const Router = () => {
     const getHomeRoute = () => {
         const user = getUserData()
         if (user) {
-            return '/debt'
+            return prefix_url + '/debt'
         } else {
-            return '/login'
+            return prefix_url + '/login'
         }
     }
     const routes = useRoutes([
         {
-            path: '/',
+            path: prefix_url + '/',
             index: true,
             element: <Navigate replace to={getHomeRoute()} />
         },
         {
-            path: '/login',
+            path: prefix_url + '/login',
             element: <BlankLayout />,
-            children: [{ path: '/login', element: <Login /> }]
+            children: [{ path: prefix_url + '/login', element: <Login /> }]
         },
         {
-            path: '/profile',
+            path: prefix_url + '/profile',
             element: <VerticalLayout />,
-            children: [{ path: '/profile', element: <Profile /> }]
+            children: [{ path: prefix_url + '/profile', element: <Profile /> }]
         },
         {
-            path: '/settings',
+            path: prefix_url + '/settings',
             element: <VerticalLayout />,
-            children: [{ path: '/settings', element: <Setting /> }]
+            children: [{ path: prefix_url + '/settings', element: <Setting /> }]
         },
         {
-            path: '/debt',
+            path: prefix_url + '/debt',
             element: <VerticalLayout />,
-            children: [{ path: '/debt', element: <DebtRegister /> }]
+            children: [{ path: prefix_url + '/debt', element: <DebtRegister /> }]
         },
         {
-            path: '/debt/npa',
+            path: prefix_url + '/debt/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/debt/npa', element: <DebtRegisterNpa /> }]
+            children: [{ path: prefix_url + '/debt/npa', element: <DebtRegisterNpa /> }]
         },
         {
-            path: '/classify/import',
+            path: prefix_url + '/classify/import',
             element: <VerticalLayout />,
-            children: [{ path: '/classify/import', element: <ClassifyImport /> }]
+            children: [{ path: prefix_url + '/classify/import', element: <ClassifyImport /> }]
         },
         {
-            path: '/classify/searchNPL',
+            path: prefix_url + '/classify/searchNPL',
             element: <VerticalLayout />,
-            children: [{ path: '/classify/searchNPL', element: <ClassifySearch /> }]
+            children: [{ path: prefix_url + '/classify/searchNPL', element: <ClassifySearch /> }]
         },
         {
-            path: '/classify/searchNPL/detail/:idcard',
+            path: prefix_url + '/classify/searchNPL/detail/:idcard',
             element: <VerticalLayout />,
-            children: [{ path: '/classify/searchNPL/detail/:idcard', element: <ClassifySearchDetail /> }]
+            children: [{ path: prefix_url + '/classify/searchNPL/detail/:idcard', element: <ClassifySearchDetail /> }]
         },
         {
-            path: '/classify/searchNPA',
+            path: prefix_url + '/classify/searchNPA',
             element: <VerticalLayout />,
-            children: [{ path: '/classify/searchNPA', element: <ClassifySearchNpa /> }]
+            children: [{ path: prefix_url + '/classify/searchNPA', element: <ClassifySearchNpa /> }]
         },
         {
-            path: '/classify/searchNPA/detail/:idcard',
+            path: prefix_url + '/classify/searchNPA/detail/:idcard',
             element: <VerticalLayout />,
-            children: [{ path: '/classify/searchNPA/detail/:idcard', element: <ClassifySearchNpaDetail /> }]
+            children: [{ path: prefix_url + '/classify/searchNPA/detail/:idcard', element: <ClassifySearchNpaDetail /> }]
         },
         {
-            path: '/proposeForApproval/branchOfferNPA',
+            path: prefix_url + '/proposeForApproval/branchOfferNPA',
             element: <VerticalLayout />,
-            children: [{ path: '/proposeForApproval/branchOfferNPA', element: <ProposeForApprovalBranchOfferNPA /> }]
+            children: [{ path: prefix_url + '/proposeForApproval/branchOfferNPA', element: <ProposeForApprovalBranchOfferNPA /> }]
         },
         {
-            path: '/proposeForApproval/branchOfferNPL',
+            path: prefix_url + '/proposeForApproval/branchOfferNPL',
             element: <VerticalLayout />,
-            children: [{ path: '/proposeForApproval/branchOfferNPL', element: <ProposeForApprovalBranchOfferNPL /> }]
+            children: [{ path: prefix_url + '/proposeForApproval/branchOfferNPL', element: <ProposeForApprovalBranchOfferNPL /> }]
         },
         {
-            path: '/branch/offer/npl',
+            path: prefix_url + '/branch/offer/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/offer/npl', element: <ProposeForApprovalBranchOfferNPL /> }]
+            children: [{ path: prefix_url + '/branch/offer/npl', element: <ProposeForApprovalBranchOfferNPL /> }]
         },
         {
-            path: '/branch/offer/npa',
+            path: prefix_url + '/branch/offer/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/offer/npa', element: <ProposeForApprovalBranchOfferNPA /> }]
+            children: [{ path: prefix_url + '/branch/offer/npa', element: <ProposeForApprovalBranchOfferNPA /> }]
         },
         {
-            path: '/branch/prepare/npl',
+            path: prefix_url + '/branch/prepare/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/prepare/npl', element: <BranchPrepareNpl /> }]
+            children: [{ path: prefix_url + '/branch/prepare/npl', element: <BranchPrepareNpl /> }]
         },
         {
-            path: '/branch/prepare/npa',
+            path: prefix_url + '/branch/prepare/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/branch/prepare/npa', element: <BranchPrepareNpa /> }]
+            children: [{ path: prefix_url + '/branch/prepare/npa', element: <BranchPrepareNpa /> }]
         },
         {
-            path: '/committee/prepare-list/npl',
+            path: prefix_url + '/committee/prepare-list/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/committee/prepare-list/npl', element: <CommitteePrepareNpl /> }]
+            children: [{ path: prefix_url + '/committee/prepare-list/npl', element: <CommitteePrepareNpl /> }]
         },
         {
-            path: '/committee/prepare-list/npa',
+            path: prefix_url + '/committee/prepare-list/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/committee/prepare-list/npa', element: <CommitteePrepareNpa /> }]
+            children: [{ path: prefix_url + '/committee/prepare-list/npa', element: <CommitteePrepareNpa /> }]
         },
         {
-            path: '/committee/waiting-list/npl',
+            path: prefix_url + '/committee/waiting-list/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/committee/waiting-list/npl', element: <CommitteeWaitingNpl /> }]
+            children: [{ path: prefix_url + '/committee/waiting-list/npl', element: <CommitteeWaitingNpl /> }]
         },
         {
-            path: '/committee/waiting-list/npa',
+            path: prefix_url + '/committee/waiting-list/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/committee/waiting-list/npa', element: <CommitteeWaitingNpa /> }]
+            children: [{ path: prefix_url + '/committee/waiting-list/npa', element: <CommitteeWaitingNpa /> }]
         },
         {
-            path: '/committee/update-list/npl',
+            path: prefix_url + '/committee/update-list/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/committee/update-list/npl', element: <CommitteeUpdateNpl /> }]
+            children: [{ path: prefix_url + '/committee/update-list/npl', element: <CommitteeUpdateNpl /> }]
         },
         {
-            path: '/committee/update-list/npa',
+            path: prefix_url + '/committee/update-list/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/committee/update-list/npa', element: <CommitteeUpdateNpa /> }]
+            children: [{ path: prefix_url + '/committee/update-list/npa', element: <CommitteeUpdateNpa /> }]
         },
         {
-            path: '/approval/make-petition/npl',
+            path: prefix_url + '/confirm-committee/prepare-list/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/approval/make-petition/npl', element: <ApprovalMakePetitionNpl /> }]
+            children: [{ path: prefix_url + '/confirm-committee/prepare-list/npl', element: <ConfirmCommitteePrepareNpl /> }]
         },
         {
-            path: '/approval/make-petition/npa',
+            path: prefix_url + '/confirm-committee/prepare-list/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/approval/make-petition/npa', element: <ApprovalMakePetitionNpa /> }]
+            children: [{ path: prefix_url + '/confirm-committee/prepare-list/npa', element: <ConfirmCommitteePrepareNpa /> }]
         },
         {
-            path: '/approval/disbursement-status/npl',
+            path: prefix_url + '/confirm-committee/confirm-list/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/approval/disbursement-status/npl', element: <ApprovalDisbursementStatusNpl /> }]
+            children: [{ path: prefix_url + '/confirm-committee/confirm-list/npl', element: <ConfirmCommitteeConfirmNpl /> }]
         },
         {
-            path: '/approval/disbursement-status/npa',
+            path: prefix_url + '/confirm-committee/confirm-list/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/approval/disbursement-status/npa', element: <ApprovalDisbursementStatusNpa /> }]
+            children: [{ path: prefix_url + '/confirm-committee/confirm-list/npa', element: <ConfirmCommitteeConfirmNpa /> }]
         },
         {
-            path: '/approval/additional-action/npl',
+            path: prefix_url + '/approval/make-petition/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/approval/additional-action/npl', element: <ApprovalAdditionalActionNpl /> }]
+            children: [{ path: prefix_url + '/approval/make-petition/npl', element: <ApprovalMakePetitionNpl /> }]
         },
         {
-            path: '/approval/additional-action/npa',
+            path: prefix_url + '/approval/make-petition/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/approval/additional-action/npa', element: <ApprovalAdditionalActionNpa /> }]
+            children: [{ path: prefix_url + '/approval/make-petition/npa', element: <ApprovalMakePetitionNpa /> }]
         },
         {
-            path: '/close',
+            path: prefix_url + '/approval/make-branch-petition/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/close', element: <Close /> }]
+            children: [{ path: prefix_url + '/approval/make-branch-petition/npl', element: <ApprovalMakePetitionBranchNpl /> }]
         },
         {
-            path: '/report',
+            path: prefix_url + '/approval/make-branch-petition/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/report', element: <Report /> }]
+            children: [{ path: prefix_url + '/approval/make-branch-petition/npa', element: <ApprovalMakePetitionBranchNpa /> }]
         },
         {
-            path: '/report/asset',
+            path: prefix_url + '/approval/disbursement-status/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/report/asset', element: <ReportAsset /> }]
+            children: [{ path: prefix_url + '/approval/disbursement-status/npl', element: <ApprovalDisbursementStatusNpl /> }]
         },
         {
-            path: '/report/restruct',
+            path: prefix_url + '/approval/disbursement-status/npa',
             element: <VerticalLayout />,
-            children: [{ path: '/report/restruct', element: <ReportRestruct /> }]
+            children: [{ path: prefix_url + '/approval/disbursement-status/npa', element: <ApprovalDisbursementStatusNpa /> }]
         },
         {
-            path: '/report/postpone',
+            path: prefix_url + '/approval/additional-action/npl',
             element: <VerticalLayout />,
-            children: [{ path: '/report/postpone', element: <ReportPostpone /> }]
+            children: [{ path: prefix_url + '/approval/additional-action/npl', element: <ApprovalAdditionalActionNpl /> }]
         },
         {
-            path: '/version',
+            path: prefix_url + '/approval/additional-action/npa',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/approval/additional-action/npa', element: <ApprovalAdditionalActionNpa /> }]
+        },
+        {
+            path: prefix_url + '/close',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/close', element: <Close /> }]
+        },
+        {
+            path: prefix_url + '/report/manage',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/report/manage', element: <Report /> }]
+        },
+        {
+            path: prefix_url + '/report/asset',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/report/asset', element: <ReportAsset /> }]
+        },
+        {
+            path: prefix_url + '/report/restruct',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/report/restruct', element: <ReportRestruct /> }]
+        },
+        {
+            path: prefix_url + '/report/postpone',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/report/postpone', element: <ReportPostpone /> }]
+        },
+        {
+            path: prefix_url + '/version',
             element: <BlankLayout />,
-            children: [{ path: '/version', element: <Version /> }]
+            children: [{ path: prefix_url + '/version', element: <Version /> }]
         },
         {
-            path: '*',
+            path: prefix_url + '/*',
             element: <BlankLayout />,
-            children: [{ path: '*', element: <Error /> }]
+            children: [{ path: prefix_url + '/*', element: <Error /> }]
         },
     ])
     return routes

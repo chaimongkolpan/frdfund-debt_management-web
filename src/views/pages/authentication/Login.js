@@ -95,6 +95,11 @@ const Login = () => {
       console.log(err);
     }
   };
+  const keyDownHandle = async(e) => {
+    if(e.keyCode == 13){
+      await onSubmit(defaultValues);
+    }
+  }
   const onSubmit = async(data) => {
     try {
       localStorage.setItem("email", data.username);
@@ -113,19 +118,10 @@ const Login = () => {
           ability.update('admin');
           navigate(getHomeRouteForLoggedInUser('admin'));
         } else {
-          // if (res.data.message == "รหัสผ่านไม่ถูกต้อง") {
-          //   setError("password", {
-          //     type: "manual",
-          //     message: res.data.message,
-          //   });
-          //   setError("username", null);
-          // } else {
-          //   setError("username", {
-          //     type: "manual",
-          //     message: res.data.message,
-          //   });
-          //   setError("password", null);
-          // }
+          setError("password", {
+            type: "manual",
+            message: res.message,
+          });
         }
       } catch (err) {
         console.log("try", err);
@@ -138,6 +134,7 @@ const Login = () => {
   
   const onChange = (key, val) => {
     const newval = val?.target.value ?? '';
+    setError('password', null);
     setDefault((prevState) => ({
       ...prevState,
       ...({[key]: newval})
@@ -166,25 +163,25 @@ const Login = () => {
               </div>
               <div className="wrap-input100 validate-input">
                 
-                <input className="input100" type="username" name="username" placeholder="ชื่อผู้ใช้งาน" onChange={(newval) => onChange('username', newval)} value={defaultValues.username} />
+                <input className={`input100 ${errors?.password ? 'border-error' : ''}`} type="username" name="username" placeholder="ชื่อผู้ใช้งาน" onChange={(newval) => onChange('username', newval)} value={defaultValues.username} onKeyDown={keyDownHandle}/>
                 <span className="focus-input100"></span>
                 <span className="symbol-input100">
                   <i className="fa fa-user" aria-hidden="true"></i>
                 </span>
               </div>
-                {errors.username && (
+                {/* {errors.username && (
                   <span style={{ color: 'red', fontSize: 'smaller' }}>{errors.username}</span>
-                )}
+                )} */}
 
               <div className="wrap-input100 validate-input" data-validate="Password is required">
-                <input className="input100" type="password" name="password" placeholder="รหัสผ่าน" onChange={(newval) => onChange('password', newval)} value={defaultValues.password} />
+                <input className={`input100 ${errors?.password ? 'border-error' : ''}`} type="password" name="password" placeholder="รหัสผ่าน" onChange={(newval) => onChange('password', newval)} value={defaultValues.password} onKeyDown={keyDownHandle} />
                 <span className="focus-input100"></span>
                 <span className="symbol-input100">
                   <i className="fa fa-lock" aria-hidden="true"></i>
                 </span>
               </div>
-                {errors.password && (
-                  <span style={{ color: 'red', fontSize: 'smaller' }}>{errors.password}</span>
+                {errors?.password && (
+                  <span style={{ color: 'red', fontSize: 'smaller' }}>{errors.password.message}</span>
                 )}
               <div className="container-login100-form-btn">
                 <Button
