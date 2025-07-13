@@ -55,7 +55,7 @@ const DebtRegisterBigDataTable = (props) => {
         <td>{item.collateral_type}</td>
         <td>{item.purpose_loan_contract}</td>
         <td>{item.purpose_type_loan_contract}</td>
-        <td>{item.status}</td>
+        <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
   }

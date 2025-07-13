@@ -9,7 +9,7 @@ import Filter from "@views/components/approval/filterDisbursementStatus";
 import SearchTable from "@views/components/approval/searchDisbursementStatusTable";
 import { 
   cleanData,
-  searchDisbursementStatus,
+  searchDisbursementStatusNpa,
 } from "@services/api";
 
 const user = getUserData();
@@ -21,7 +21,7 @@ const NPA = () => {
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter({ ...filter, DebtClassifyStatus: 'ยืนยันยอดสำเร็จ' })
-    const result = await searchDisbursementStatus(filter);
+    const result = await searchDisbursementStatusNpa(filter);
     if (result.isSuccess) {
       setData(result)
     } else {

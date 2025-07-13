@@ -7,7 +7,7 @@ import According from "@views/components/panel/according";
 import DataTable from "@views/components/classify/dataTable";
 
 import { 
-  searchClassify,
+  searchNpaClassify,
 } from "@services/api";
 
 const user = getUserData();
@@ -17,14 +17,13 @@ const SearchClassifyNPA = () => {
   const navigate = useNavigate();
   const viewDetail = async (debt) => {
     // navigate(`/classify/searchNPA/detail/${debt.idCard}?province=${debt.province}&creditor-type=${debt.creditorType}`);
-    console.log('url', process.env.BASE_URL)
     window.open(`${process.env.BASE_URL ?? ''}/classify/searchNPA/detail/${debt.idCard}?province=${debt.province}&creditor-type=${debt.creditorType}`, '_blank', 'noopener,noreferrer');
   }
   const onSearch = async (filter) => {
     setFilter(filter)
-    const result = await searchClassify(filter);
+    const result = await searchNpaClassify(filter);
     if (result.isSuccess) {
-      setData(result.data)
+      setData(result)
     } else {
       setData(null)
     }
@@ -44,7 +43,7 @@ const SearchClassifyNPA = () => {
                     <>
                       <Filter handleSubmit={onSearch} />
                       <br />
-                      <DataTable data={data} view={viewDetail}/>
+                      <DataTable result={data} filter={filter} view={viewDetail} getData={onSearch}/>
                     </>
                   )}
                 />

@@ -51,6 +51,7 @@ const Filter = (props) => {
   }
   useEffect(() => {
     async function getDate() {
+      await setCommitteeDateOp(null);
       const resultCommitteeDate = await getBranchBookDate(status, filter?.branch_proposes_approval_no);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);

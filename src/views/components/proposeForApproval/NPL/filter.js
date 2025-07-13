@@ -159,7 +159,6 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown
               title={"จังหวัด"}
-              containerClassname={"mb-3"}
               defaultValue={"all"}
               options={provOp}
               handleChange={(val) => onChange("province", val)}
@@ -171,7 +170,6 @@ const Filter = (props) => {
           {creditorTypeOp && (
             <Dropdown
               title={"ประเภทเจ้าหนี้"}
-              containerClassname={"mb-3"}
               defaultValue={creditorTypeOp[0]}
               options={creditorTypeOp}
               handleChange={(val) => onChange("creditorType", val)}
@@ -182,7 +180,6 @@ const Filter = (props) => {
           {creditorOp && (
             <Dropdown
               title={"สถาบันเจ้าหนี้"}
-              containerClassname={"mb-3"}
               defaultValue={'all'}
               options={creditorOp}
               handleChange={(val) => onChange("creditor", val)}
@@ -194,7 +191,6 @@ const Filter = (props) => {
           {statusDebtOp && (
             <Dropdown
               title={"สถานะหนี้"}
-              containerClassname={"mb-3"}
               defaultValue={"all"}
               options={statusDebtOp}
               handleChange={(val) => onChange("debtStatus", val)}
@@ -202,7 +198,7 @@ const Filter = (props) => {
             />
           )}
         </div>
-        <div className="col-12 gy-6">
+        <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
               <button

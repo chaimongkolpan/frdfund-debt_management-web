@@ -5,11 +5,12 @@ const Textbox = (props) => {
   const [val, setValue] = useState(value ?? '');
   const onBlur = () => {
     if (isNumber) {
-      setValue(Number(val).toLocaleString('en', { 
+      const newval = val.replace(',','')
+      setValue(Number(newval).toLocaleString('en', { 
         minimumFractionDigits: 2,
         maximumFractionDigits: 2 
       }));
-      if (handleChange) handleChange(Number(val));
+      if (handleChange) handleChange(Number(newval));
     } else if (handleChange) handleChange(val);
     
   }

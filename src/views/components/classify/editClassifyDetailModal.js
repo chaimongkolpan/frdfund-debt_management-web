@@ -539,7 +539,7 @@ const FullModal = (props) => {
                             containerClassname={'mb-3'} value={debts?.debt_manage_contract_no}
                           />
                         </div>
-                        <div className="ccol-sm-12 col-md-6 col-lg-4">
+                        <div className="col-sm-12 col-md-6 col-lg-4">
                           {creditor_types && (
                             <div className="form-floating form-floating-advance-select mb-3">
                               <label htmlFor="floaTingLabelSingleSelect">ประเภทเจ้าหนี้</label>
@@ -585,7 +585,7 @@ const FullModal = (props) => {
                           <>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_agreement', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_repayment_type', e.target?.value)}>
                                   <option value="ชำระหนี้แทน">ชำระหนี้แทน</option>
                                   <option value="วางเงินชำระหนี้แทน-บังคับคดี">วางเงินชำระหนี้แทน-บังคับคดี</option>
                                 </select>

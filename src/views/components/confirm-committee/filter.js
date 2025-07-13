@@ -31,7 +31,6 @@ const SearchFilter = (props) => {
         debtStatus: "all",
         checkingStatus: "all",
         ...filter,
-        debtClassifyStatus: status,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
       });
@@ -94,7 +93,7 @@ const SearchFilter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: temp1[0]}) 
         }))
         const resultCreditor = await getCreditors(null, temp1[0]);
         if (resultCreditor.isSuccess) {
@@ -124,7 +123,7 @@ const SearchFilter = (props) => {
       await setCommitteeNoOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({branch_proposes_approval_no: temp[0]})
+        ...({proposal_committee_no: temp[0]})
       }))
     } else await setCommitteeNoOp(null);
     if (resultCommitteeDate.isSuccess) {
@@ -132,7 +131,7 @@ const SearchFilter = (props) => {
       await setCommitteeDateOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({branch_proposes_approval_date: temp[0]})
+        ...({proposal_committee_date: temp[0]})
       }))
     } else await setCommitteeDateOp(null);
     setIsMounted(true);
@@ -164,9 +163,9 @@ const SearchFilter = (props) => {
           {committeeNoOp && (
             <Dropdown 
               title={'ครั้งที่เสนอคณะกรรมการ'} 
-              defaultValue={filter?.branch_proposes_approval_no} 
+              defaultValue={filter?.proposal_committee_no} 
               options={committeeNoOp}
-              handleChange={(val) => onChange('branch_proposes_approval_no', val)}
+              handleChange={(val) => onChange('proposal_committee_no', val)}
             />
           )}
         </div>
@@ -174,9 +173,9 @@ const SearchFilter = (props) => {
           {committeeDateOp && (
             <Dropdown 
               title={'วันที่เสนอคณะกรรมการ'} 
-              defaultValue={filter?.branch_proposes_approval_date} 
+              defaultValue={filter?.proposal_committee_date} 
               options={committeeDateOp}
-              handleChange={(val) => onChange('branch_proposes_approval_date', val)}
+              handleChange={(val) => onChange('proposal_committee_date', val)}
             />
           )}
         </div>

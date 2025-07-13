@@ -21,7 +21,7 @@ const FilterResigtration = (props) => {
       ]))
   }
   async function fetchData() {
-    const resultBookNo = await getBranchBookNo(status);
+    const resultBookNo = await getBranchBookNoNpa(status);
     if (resultBookNo.isSuccess) {
       const temp = resultBookNo.data.map(item => item.name);
       setBookNo(temp[0])
@@ -30,7 +30,7 @@ const FilterResigtration = (props) => {
   }
   useEffect(() => {
     async function getDate() {
-      const resultBookDate = await getBranchBookDate(status, bookNo);
+      const resultBookDate = await getBranchBookDateNpa(status, bookNo);
       if (resultBookDate.isSuccess) {
         const temp = resultBookDate.data.map(item => item.name);
         await setBookDate(temp[0])
@@ -57,7 +57,7 @@ const FilterResigtration = (props) => {
               title={'เลขหนังสือ'} 
               defaultValue={bookNo} 
               options={bookNoOp}
-              handleChange={(val) => setBookNo(val)} 
+              handleChange={(val) => setBookNo(val)} onModal
             />
           )}
         </div>
@@ -67,7 +67,7 @@ const FilterResigtration = (props) => {
               title={'วันที่หนังสือ'} 
               defaultValue={bookDate} 
               options={bookDateOp}
-              handleChange={(val) => setBookDate(val)}
+              handleChange={(val) => setBookDate(val)} onModal
               />
           )}
         </div>

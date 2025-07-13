@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
+import DatePicker from "@views/components/input/DatePicker";
+import BookNo from "@views/components/input/BookNo";
+import EditDetail from "@views/components/confirm-committee/editDetail";
+import CustomerModal from "@views/components/modal/CustomModal";
+import { 
+  updateConfirmCommitteeCreditor,
+  updateConfirmCommitteeNo,
+  submitConfirmCommitteePrepare,
+  updateNPLstatus,
+  cleanData
+} from "@services/api";
 const SearchTable = (props) => {
   const { result, handleSubmit, filter, getData } = props;
   const [data, setData] = useState([]);
@@ -9,6 +20,17 @@ const SearchTable = (props) => {
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
+  const [editData, setEditData] = useState(null);
+  const [isOpenDetail, setOpenDetail] = useState(false);
+  const [isOpenCreditor, setOpenCreditor] = useState(false);
+  const [isOpenCommittee, setOpenCommittee] = useState(false);
+  const [count, setCount] = useState(0);
+  const [contracts, setContracts] = useState(0);
+  const [sumTotal, setSumTotal] = useState(0);
+  const [creditorNo, setCreditorNo] = useState(null);
+  const [creditorDate, setCreditorDate] = useState(null);
+  const [committeeNo, setCommitteeNo] = useState(null);
+  const [committeeDate, setCommitteeDate] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
@@ -25,16 +47,77 @@ const SearchTable = (props) => {
     await setSelected(result.data.map(() => checked));
     await setIsAll(checked)
   }
+  const handleShowDetail = async(item) => {
+    await setEditData(item);
+    await setOpenDetail(true);
+  }
+  const handleShowCreditor = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
+    await setCount(toCurrency(custs.length));
+    await setContracts(toCurrency(selectedData.length));
+    await setSumTotal(toCurrency(sum,2));
+    await setOpenCreditor(true);
+  }
+  const handleCloseCreditor = async() => {
+    await getData(filter);
+    await setOpenCreditor(false);
+  }
+  const handleShowCommittee = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
+    await setCount(toCurrency(custs.length));
+    await setContracts(toCurrency(selectedData.length));
+    await setSumTotal(toCurrency(sum,2));
+    await setOpenCommittee(true);
+  }
+  const handleCloseCommittee = async() => {
+    await getData(filter);
+    await setOpenCommittee(false);
+  }
+  const submitCreditor = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const ids = selectedData.map(item => item.id_debt_confirm.toString());
+    const result = await updateConfirmCommitteeCreditor({
+      ids, creditor_confirm_no: 'กฟก.' + creditorNo, creditor_confirm_date: stringToDateTh(creditorDate, false)
+    });
+    if (result.isSuccess) {
+      await getData(filter);
+      await setOpenCreditor(false);
+    }
+  }
+  const submitCommittee = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const ids = selectedData.map(item => item.id_debt_confirm.toString());
+    const result = await updateConfirmCommitteeNo({
+      ids, debt_manage_type: 'NPL', proposal_committee_no: 'กฟก.' + committeeNo, proposal_committee_date: stringToDateTh(committeeDate, false)
+    });
+    if (result.isSuccess) {
+      await getData(filter);
+      await setOpenCommittee(false);
+    }
+  }
+  const handleCloseDetail = async() => {
+    await getData(filter);
+    await setOpenDetail(false);
+  }
   const RenderData = (item, index, checked) => {
     return (item && (
-      <tr key={index}>
+      <tr key={index} style={{ backgroundColor: `${item.status_confirm == "แก้ไขยืนยันยอด" ? "#fdeae7" : "#ffffff" }`  }}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
             <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td>{item.branch_proposes_approval_no}</td>
-        <td>{item.branch_proposes_approval_date ? stringToDateTh(item.branch_proposes_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>
+          <div className="d-flex justify-content-center"> 
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleShowDetail(item)}><i className="far fa-edit "></i></button>
+          </div>
+        </td>
+        <td>{item.proposal_committee_no}</td>
+        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
@@ -57,10 +140,39 @@ const SearchTable = (props) => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
-        <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
-        <td>{item.collateral_no}</td>
+        <td>{item.debt_manage_objective_details}</td>
+        {item.status_confirm == "แก้ไขยืนยันยอด" ? (
+          <>
+            <td>{toCurrency(item.debt_manage_outstanding_principal_cf)}</td>
+            <td>{toCurrency(item.debt_manage_accrued_interest_cf)}</td>
+            <td>{toCurrency(item.debt_manage_fine_cf)}</td>
+            <td>{toCurrency(item.debt_manage_litigation_expenses_cf)}</td>
+            <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_cf)}</td>
+            {!coop && (
+              <>
+                <td>{toCurrency(item.debt_manage_insurance_premium_cf)}</td>
+                <td>{toCurrency(item.debt_manage_other_expenses_cf)}</td>
+              </>
+            )}
+            <td>{toCurrency(item.debt_manage_total_expenses_cf)}</td>
+            <td>{toCurrency(item.debt_manage_total_cf)}</td>
+            <td>{item.debt_manage_status_cf}</td>
+            <td>{item.status_confirm}</td>
+            <td>{item.results_confirm}</td>
+          </>
+        ) : (
+          <>
+            <td></td><td></td><td></td><td></td><td></td>
+            {!coop && (
+              <>
+                <td></td><td></td>
+              </>
+            )}
+            <td></td><td></td><td></td><td></td><td></td>
+          </>
+        )}
       </tr>
     ))
   }
@@ -101,15 +213,16 @@ const SearchTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th colSpan="2">สาขาเสนอขออนุมัติ</th>
+                <th rowSpan="2">ดำเนินการ</th>
+                <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan={coop ? "11" : "13"}>สัญญา</th>
-                <th>หลักทรัพย์ค้ำประกัน</th>
+                <th colSpan="10">ยืนยันยอด</th>
               </tr>
               <tr>
-                <th>เลขที่หนังสือ</th>
-                <th>วันที่หนังสือ</th>
+                <th>ครั้งที่เสนอคณะกรรมการ</th>
+                <th>วันที่เสนอคณะกรรมการ</th>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
                 <th>ชื่อ-นามสกุล</th>
@@ -132,16 +245,25 @@ const SearchTable = (props) => {
                 )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
-                <th>วัตถุประสงค์การกู้</th>
                 <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
-                <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
+                <th>วัตถุประสงค์การกู้</th>
+                <th>เงินต้น</th>
+                <th>ดอกเบี้ย</th>
+                <th>ค่าปรับ</th>
+                <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                <th>ค่าถอนการยึดทรัพย์</th>
+                <th>รวมค่าใช้จ่าย</th>
+                <th>รวมทั้งสิ้น</th>
+                <th>สถานะหนี้</th>
+                <th>สถานะยืนยันยอด</th>
+                <th>ผลการยืนยันยอด</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={coop ? 23 : 25}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 36}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -158,10 +280,67 @@ const SearchTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+            <button className="btn btn-info btn-sm ms-2" type="button" onClick={() => handleShowCreditor()}>เพิ่มหนังสือเจ้าหนี้</button>
+            <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => handleShowCommittee()}>แก้ไขคณะกรรมการจัดการหนี้</button>
+            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญายืนยันยอด</button>
           </div>
         </div>
       </div>
+      <CustomerModal isOpen={isOpenCreditor} setModal={setOpenCreditor} 
+        onOk={() => submitCreditor()} 
+        title={'เพิ่มหนังสือเจ้าหนี้'} 
+        okText={'บันทึก'} size={'xl'}
+        onClose={() => handleCloseCreditor()}
+        closeText={'ปิด'} centered
+      >
+        <form>
+          <br />
+          <div class="row">
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
+            </div>
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <DatePicker title={'วันที่หนังสือเจ้าหนี้ยืนยันยอด'}
+                value={creditorDate} 
+                handleChange={(val) => setCreditorDate(val)} 
+              />
+            </div>
+            <div class="d-flex">
+              <h5><div class="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
+            </div>
+          </div>
+        </form>
+      </CustomerModal>
+      <CustomerModal isOpen={isOpenCommittee} setModal={setOpenCommittee} 
+        onOk={() => submitCommittee()} 
+        title={'แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ'} 
+        okText={'บันทึก'} size={'xl'}
+        onClose={() => handleCloseCommittee()}
+        closeText={'ปิด'} centered
+      >
+        <form>
+          <br />
+          <div class="row">
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
+            </div>
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <DatePicker title={'วันที่เสนอคณะกรรมการ'}
+                value={committeeDate} 
+                handleChange={(val) => setCommitteeDate(val)} 
+              />
+            </div>
+            <div class="d-flex">
+              <h5><div class="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
+            </div>
+          </div>
+        </form>
+      </CustomerModal>
+      {isOpenDetail && (
+        <EditDetail isOpen={isOpenDetail} setModal={setOpenDetail} onClose={() => handleCloseDetail()} 
+          data={editData}
+        />
+      )}
     </>
   );
 };

@@ -35,15 +35,15 @@ const DataTable = (props) => {
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
             <input className="form-check-input" type="checkbox" 
-              disabled={item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้อนุมัติ' || item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ'} 
+              disabled={item.debt_management_audit_status != 'รอเสนอคณะกรรมการจัดการหนี้'} 
               checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td>{item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้อนุมัติ' ? (
-          <i className="fas fa-check text-success fs-7"></i>
-        ) : (item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ' ? (
-          <i className="fas fa-times text-danger fs-7"></i>
-        ) : '')}</td>
+        <td>
+          {item.debt_management_audit_status == 'รอเสนอคณะกรรมการจัดการหนี้' ? null : 
+          (item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ' ? (<i className="fas fa-times text-danger fs-7"></i>) : 
+          (<i className="fas fa-check text-success fs-7"></i>))}
+        </td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
         {coop && (

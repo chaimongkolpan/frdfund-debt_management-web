@@ -361,11 +361,11 @@ export const updateDebtManagementDetailClassify = async (param) => {
     return defaultErrorResponse;
   }
 };
-export const getBorrowerClassify = async (idcard, province, creditor_type) => {
+export const getBorrowerClassify = async (idcard, province, creditor_type, debt_management_type = "NPL") => {
   const path = "/classify/borrower";
   try {
     const result = await axios.get(path, {
-      params: { idcard, province, creditor_type },
+      params: { idcard, province, creditor_type, debt_management_type },
     });
     if (result.status == 200) return result.data;
     else return defaultErrorResponse;
@@ -502,6 +502,31 @@ export const cancelSplitClassify = async (data) => {
     console.error('error: ' + path + ' =>', e);
   }
 };
+export const createNplClassify = async (data) => {
+  const path = '/classify/create-npl';
+  try {
+    const result = await axios.post(path,data);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateDebtManagementDetailClassifyNpa = async (param) => {
+  const path = "/classify/debt-management-contract-npa";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 export const searchNpaClassify = async (filter) => {
   const path = '/classify/search-npa';
   try {
@@ -513,6 +538,23 @@ export const searchNpaClassify = async (filter) => {
 
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getDebtManagementDetailClassifyNpa = async (
+  idcard,
+  province,
+  creditor_type
+) => {
+  const path = "/npa/debt-management-contracts-npa";
+  try {
+    const result = await axios.get(path, {
+      params: { idcard, province, creditor_type },
+    });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
     return defaultErrorResponse;
   }
 };
@@ -658,6 +700,147 @@ export const updateIncorrect = async (selected) => {
     return defaultErrorResponse;
   }
 };
+/******************************************************/
+export const searchBranchOfferNpa = async (filter) => {
+  const path = "/BranchOffer/search-branch-offer-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchOfferNpa = async () => {
+  const path = "/BranchOffer/prepare-branch-offer-npa";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const addBranchOfferNpa = async (selected) => {
+  const path = "/BranchOffer/add-branch-proposes-for-approval-npa";
+  try {
+    const result = await axios.post(path, { data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const removeBranchOfferNpa = async (selected) => {
+  const path = "/BranchOffer/remove-branch-proposes-for-approval-npa";
+  try {
+    const result = await axios.post(path, { data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateBranchOfferNpa = async (param) => {
+  const path = "/share/update-brn-proposes-approval-npa";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const submitBranchOfferNpa = async (params) => {
+  const path = "/BranchOffer/submit-proposes-for-approval-npa";
+  try {
+    const result = await axios.post(
+      path,
+      { data: params.data },
+      { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchBookNoNpa = async (status) => {
+  const path = "/common/brn-propose-approval-no-npa";
+  try {
+    const result = await axios.get(path, { params: { status } });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchBookDateNpa = async (status, bookNo) => {
+  const path = "/common/brn-propose-approval-date-npa";
+  try {
+    const result = await axios.get(path, { params: { status, brn_proposes_approval_no: bookNo ?? '' } });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const uploadBranchOfferNpa = async (filter) => {
+  const path = "/BranchOffer/upload-proposes-for-approval-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const searchPrepareForPresentNpa = async (filter) => {
+  const path = "/PrepareForPresent/search-prepare-for-present-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const submitBranchOfferPrepareNpa = async (selected) => {
+  const path = "/PrepareForPresent/submit-prepare-for-present-npa";
+  try {
+    const result = await axios.post(path, { status: 'รวบรวมเตรียมนำเสนอแล้ว', data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateIncorrectNpa = async (selected) => {
+  const path = "/PrepareForPresent/update-notcorrectlist-npa";
+  try {
+    const result = await axios.post(path, { data: selected });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
 //#region Committee
 export const searchCommitteePrepare = async (filter) => {
@@ -771,7 +954,316 @@ export const rejectCommitteeUpdate = async (filter) => {
     return defaultErrorResponse;
   }
 };
+/************************************************************/
+export const searchCommitteePrepareNpa = async (filter) => {
+  const path = "/ProposeCommittee/search-prepare-propose-committee-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const searchAddedCommitteePrepareNpa = async (filter) => {
+  const path = "/ProposeCommittee/search-prepare-propose-committee-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const addCommitteePrepareNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'เตรียมรอเสนอคณะกรรมการจัดการหนี้' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeCommitteePrepareNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'รวบรวมเตรียมนำเสนอแล้ว' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateCommitteePrepareNpa = async (param) => {
+  const path = "/ProposeCommittee/update-prepare-propoes-committee-npa";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const submitCommitteePrepareNpa = async (params) => {
+  const path = "/ProposeCommittee/submit-prepare-propose-committee-npa";
+  try {
+    const result = await axios.post(
+      path,
+      { data: params.data,status: params.status },
+      { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
+export const searchCommitteeUpdateNpa = async (filter) => {
+  const path = "/ProposeCommittee/search-update-propose-committee-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const approveCommitteeUpdateNpa = async (filter) => {
+  const path = "/ProposeCommittee/approve-committee-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const rejectCommitteeUpdateNpa = async (filter) => {
+  const path = "/ProposeCommittee/reject-committee-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
+// #region Confirm Committee
+export const getConfirmNo = async (status,type) => {
+  const path = '/common/branch-correspondence-no';
+  try {
+    const result = await axios.get(path, { params: {status,type} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getConfirmDate = async (status,type) => {
+  const path = '/common/branch-correspondence-date';
+  try {
+    const result = await axios.get(path, { params: {status,type} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchConfirmCommitteePrepare = async (filter) => {
+  const path = "/ConfirmCommittee/search-confirm-committee";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const searchConfirmCommitteePrepareAdded = async (filter) => {
+  const path = "/ConfirmCommittee/search-confirm-committee";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const addConfirmCommitteePrepare = async (selected) => {
+  const path = '/share/update-statusnpl';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'สาขาเตรียมยืนยันยอด' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeConfirmCommitteePrepare = async (selected) => {
+  const path = '/share/update-statusnpl';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'คณะกรรมการจัดการหนี้อนุมัติ' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+/************************************************************/
+export const searchConfirmCommitteePrepareNpa = async (filter) => {
+  const path = "/ConfirmCommittee/search-confirm-committee-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const searchConfirmCommitteePrepareAddedNpa = async (filter) => {
+  const path = "/ConfirmCommittee/search-confirm-committee-npa";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const addConfirmCommitteePrepareNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'สาขาเตรียมยืนยันยอด' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeConfirmCommitteePrepareNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'คณะกรรมการจัดการหนี้อนุมัติ' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getConfirmCommittee = async (id, type) => {
+  const path = "/ConfirmCommittee/confirm-committee-detail";
+  try {
+    const result = await axios.get(path, { params: { id, type }});
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateConfirmCommitteePrepare = async (param) => {
+  const path = "/ConfirmCommittee/confirm-committee-detail";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateConfirmCommitteeCreditor = async (param) => {
+  const path = "/ConfirmCommittee/confirm-committee-creditor";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateConfirmCommitteeNo = async (param) => {
+  const path = "/ConfirmCommittee/update-confirm-committee";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const submitConfirmCommitteePrepare = async (param) => {
+  const path = "/ConfirmCommittee/submit-confirm-committee";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const completeConfirmCommittee = async (param) => {
+  const path = "/ConfirmCommittee/complete-confirm-committee";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+// #endregion
 //#region Approval
 export const getCommitteeNo = async (status) => {
   const path = '/common/proposal-committee-no';
@@ -857,8 +1349,36 @@ export const removeMakePetitionList = async (selected) => {
     return defaultErrorResponse;
   }
 };
+export const addMakePetitionBranchList = async (selected) => {
+  const path = '/share/update-statusnpl';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'เตรียมการชำระหนี้แทน(สาขา)' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeMakePetitionBranchList = async (selected) => {
+  const path = '/share/update-statusnpl';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'อยู่ระหว่างการโอนเงินให้สาขา' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const insertPetition = async (filter) => {
-  const path = '/MakePetition/get-petition-contracts';
+  const path = '/MakePetition/insert-petition';
   try {
     const result = await axios.post(path, filter);
     if (result.status == 200)
@@ -955,7 +1475,7 @@ export const getPetitionNo = async () => {
     return defaultErrorResponse;
   }
 };
-export const getPetitionDate = async (status) => {
+export const getPetitionDate = async () => {
   const path = '/common/get-petition_date_office';
   try {
     const result = await axios.get(path);
@@ -971,6 +1491,175 @@ export const getPetitionDate = async (status) => {
 };
 export const searchDisbursementStatus = async (filter) => {
   const path = '/MakePetition/search-disbursement-status';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+/*********************************************************************/
+export const getCommitteeNoNpa = async (status) => {
+  const path = '/common/proposal-committee-no-npa';
+  try {
+    const result = await axios.get(path, { params: {status} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getCommitteeDateNpa = async (status) => {
+  const path = '/common/proposal-committee-date-npa';
+  try {
+    const result = await axios.get(path, { params: {status} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchMakePetitionNpa = async (filter) => {
+  const path = '/MakePetition/search-make-petition-npa';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getMakePetitionAddedListNpa = async (filter) => {
+  const path = '/MakePetition/search-make-petition-npa';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const addMakePetitionListNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'เตรียมการชำระหนี้แทน' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeMakePetitionListNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'ยืนยันยอดสำเร็จ' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const addMakePetitionBranchListNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'เตรียมการชำระหนี้แทน(สาขา)' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeMakePetitionBranchListNpa = async (selected) => {
+  const path = '/share/update-statusnpa';
+  try {
+    const result = await axios.post(path,{ ids: selected, status: 'อยู่ระหว่างการโอนเงินให้สาขา' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const insertPetitionNpa = async (filter) => {
+  const path = '/MakePetition/insert-petition-npa';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const exportPetitionNpa = async (filter) => {
+  const path = '/MakePetition/get-petition-contracts-npa';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getPetitionListNpa = async (filter) => {
+  const path = '/MakePetition/get-petition-contracts-npa';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchDisbursementStatusNpa = async (filter) => {
+  const path = '/MakePetition/search-disbursement-status-npa';
   try {
     const result = await axios.post(path, filter);
     if (result.status == 200)
@@ -1130,6 +1819,20 @@ export const submitListNPA = async (params) => {
   }
   return;
 };
+export const updateNPAstatus = async (selected, status) => {
+  const path = "/Share/update-statusnpa";
+  try {
+    const result = await axios.post(path, {
+      ids: selected,
+      status,
+    });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 // #endregion
 
 // #region NPL
@@ -1147,7 +1850,6 @@ export const updateNPLstatus = async (selected, status) => {
     return defaultErrorResponse;
   }
 };
-
 // #endregion
 // #region Report
 export const downloadReport = async (filter, filename) => {

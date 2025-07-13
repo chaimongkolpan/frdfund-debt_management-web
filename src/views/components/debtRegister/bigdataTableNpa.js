@@ -152,7 +152,7 @@ const DebtNPABigDataTable = (props) => {
                 <th className="align-middle text-center" data-sort="age">แก้ไขทะเบียนหนี้</th>
               </tr>
             </thead>
-            <tbody className="list text-center" id="bulk-select-body">
+            <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={26}>

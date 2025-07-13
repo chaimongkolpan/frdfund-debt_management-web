@@ -200,7 +200,7 @@ const NPL = () => {
       )}
       {isIncorrectAdd && (
         <Modal isOpen={isIncorrectAdd} setModal={setIncorrectAdd} 
-          title={'รวบรวมเตรียมนำเสนอ'} 
+          title={'ข้อมูลไม่ถูกต้องครบถ้วน'} 
           onClose={() => setIncorrectAdd(false)} closeText={'ปิด'} 
           onOk={() => onRemoveMakelist(selected)} okText={'ข้อมูลไม่ถูกต้องครบถ้วน'}
           okColor={"danger"}

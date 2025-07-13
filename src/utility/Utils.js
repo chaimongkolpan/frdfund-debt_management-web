@@ -36,7 +36,8 @@ export const formatDate = (
   return new Intl.DateTimeFormat("en-US", formatting).format(new Date(value));
 };
 export const toCurrency = (value, digit = 0) => {
-  if (!value) return value;
+
+  if (!value) return '0.00';
   if (typeof value == 'number')
     return value.toLocaleString();
   if (!isNaN(parseFloat(value)))

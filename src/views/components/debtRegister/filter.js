@@ -91,19 +91,16 @@ const DebtRegisterFilter = (props) => {
       setLoading(true);
       setError('creditorType', null);
       await setCreditorOp(null);
-      console.log('type', val)
-      if (val) {
-        const resultCreditor = await getBigDataCreditors(filter.province, val);
-        if (resultCreditor.isSuccess) {
-          const temp2 = resultCreditor.data.map(item => item.name);
-          await setCreditorOp(temp2);
-          await setError('creditor', null);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...({creditor: temp2[0]})
-          }))
-        } else await setCreditorOp(null);
-      }
+      const resultCreditor = await getBigDataCreditors(filter.province, val);
+      if (resultCreditor.isSuccess) {
+        const temp2 = resultCreditor.data.map(item => item.name);
+        await setCreditorOp(temp2);
+        await setError('creditor', null);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({creditor: temp2[0]})
+        }))
+      } else await setCreditorOp(null);
       setLoading(false);
     }
     setFilter((prevState) => ({

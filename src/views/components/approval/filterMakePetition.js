@@ -56,7 +56,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -74,7 +74,7 @@ const Filter = (props) => {
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -106,7 +106,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -214,9 +214,9 @@ const Filter = (props) => {
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
               containerClassname={'mb-3'} 
-              defaultValue={creditorOp[0]} 
+              defaultValue={'all'} 
               options={creditorOp}
-              handleChange={(val) => onChange('creditor', val)}
+              handleChange={(val) => onChange('creditor', val)} hasAll
             />
           )}
         </div>
