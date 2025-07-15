@@ -42,6 +42,26 @@ const ApprovalDisbursementStatusNpa = lazy(() => import('../views/pages/approval
 const ApprovalAdditionalActionNpl = lazy(() => import('../views/pages/approval/additional-action/npl'))
 const ApprovalAdditionalActionNpa = lazy(() => import('../views/pages/approval/additional-action/npa'))
 
+const LegalContractPrepare = lazy(() => import('../views/pages/legal-contract/index'))
+const LegalContractSend = lazy(() => import('../views/pages/legal-contract/send'))
+const LegalContractCheck = lazy(() => import('../views/pages/legal-contract/check'))
+const LegalContractManage = lazy(() => import('../views/pages/legal-contract/manage'))
+const GuaranteePrepare = lazy(() => import('../views/pages/guarantee/index'))
+const GuaranteeCheck = lazy(() => import('../views/pages/guarantee/check'))
+const GuaranteeManage = lazy(() => import('../views/pages/guarantee/manage'))
+const GuaranteeOperation = lazy(() => import('../views/pages/guarantee/operation'))
+const GuaranteeBorrow = lazy(() => import('../views/pages/guarantee/borrow'))
+const AccountReimbursement = lazy(() => import('../views/pages/account/reimbursement'))
+const AccountAdjustReceivable = lazy(() => import('../views/pages/account/adjust-receivable-debt'))
+const AccountAdjustNotValid = lazy(() => import('../views/pages/account/adjust-not-valid'))
+const AccountFollowing = lazy(() => import('../views/pages/account/following'))
+const AccountInvoice = lazy(() => import('../views/pages/account/invoice'))
+const AccountDebtAcknowledgment = lazy(() => import('../views/pages/account/debt-acknowledgment'))
+const AccountDebtAccept = lazy(() => import('../views/pages/account/debt-accept'))
+const AccountDebtRestructuring = lazy(() => import('../views/pages/account/debt-restructuring'))
+
+
+
 const Close = lazy(() => import('../views/pages/close'))
 const Report = lazy(() => import('../views/pages/report'))
 const ReportAsset = lazy(() => import('../views/pages/report/asset'))
@@ -221,6 +241,91 @@ const Router = () => {
             path: prefix_url + '/approval/disbursement-status/npa',
             element: <VerticalLayout />,
             children: [{ path: prefix_url + '/approval/disbursement-status/npa', element: <ApprovalDisbursementStatusNpa /> }]
+        },
+        {
+            path: prefix_url + '/legal-contract/prepare-legal-contract',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/legal-contract/prepare-legal-contract', element: <LegalContractPrepare /> }]
+        },
+        {
+            path: prefix_url + '/legal-contract/send-legal-contract',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/legal-contract/send-legal-contract', element: <LegalContractSend /> }]
+        },
+        {
+            path: prefix_url + '/legal-contract/check-legal-contract',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/legal-contract/check-legal-contract', element: <LegalContractCheck /> }]
+        },
+        {
+            path: prefix_url + '/legal-contract/manage-legal-contract',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/legal-contract/manage-legal-contract', element: <LegalContractManage /> }]
+        },
+        {
+            path: prefix_url + '/guarantee/prepare-guarantee',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/guarantee/prepare-guarantee', element: <GuaranteePrepare /> }]
+        },
+        {
+            path: prefix_url + '/guarantee/check-guarantee',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/guarantee/check-guarantee', element: <GuaranteeCheck /> }]
+        },
+        {
+            path: prefix_url + '/guarantee/manage-guarantee',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/guarantee/manage-guarantee', element: <GuaranteeManage /> }]
+        },
+        {
+            path: prefix_url + '/guarantee/operation-guarantee',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/guarantee/operation-guarantee', element: <GuaranteeOperation /> }]
+        },
+        {
+            path: prefix_url + '/guarantee/borrow-guarantee',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/guarantee/borrow-guarantee', element: <GuaranteeBorrow /> }]
+        },
+        {
+            path: prefix_url + '/account/reimbursement',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/reimbursement', element: <AccountReimbursement /> }]
+        },
+        {
+            path: prefix_url + '/account/adjust/receivable-debt',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/adjust/receivable-debt', element: <AccountAdjustReceivable /> }]
+        },
+        {
+            path: prefix_url + '/account/adjust/not-valid',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/adjust/not-valid', element: <AccountAdjustNotValid /> }]
+        },
+        {
+            path: prefix_url + '/account/following',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/following', element: <AccountFollowing /> }]
+        },
+        {
+            path: prefix_url + '/account/invoice',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/invoice', element: <AccountInvoice /> }]
+        },
+        {
+            path: prefix_url + '/account/debt-acknowledgment',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/debt-acknowledgment', element: <AccountDebtAcknowledgment /> }]
+        },
+        {
+            path: prefix_url + '/account/debt-accept',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/debt-accept', element: <AccountDebtAccept /> }]
+        },
+        {
+            path: prefix_url + '/account/debt-restructuring',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/debt-restructuring', element: <AccountDebtRestructuring /> }]
         },
         {
             path: prefix_url + '/approval/additional-action/npl',

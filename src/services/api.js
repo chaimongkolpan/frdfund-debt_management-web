@@ -1067,7 +1067,7 @@ export const rejectCommitteeUpdateNpa = async (filter) => {
   }
 };
 //#endregion
-// #region Confirm Committee
+//#region Confirm Committee
 export const getConfirmNo = async (status,type) => {
   const path = '/common/branch-correspondence-no';
   try {
@@ -1419,8 +1419,23 @@ export const getPetitionList = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getPetitionById = async (filter) => {
+export const getPetitionById = async (id_petition) => {
   const path = '/MakePetition/get-petition-contracts';
+  try {
+    const result = await axios.get(path, { params: {id_petition} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+
+export const savePetitionBook = async (filter) => {
+  const path = '/MakePetition/save-petition';
   try {
     const result = await axios.post(path, filter);
     if (result.status == 200)
@@ -1673,7 +1688,46 @@ export const searchDisbursementStatusNpa = async (filter) => {
   }
 };
 //#endregion
+//#region Legal Contract
+export const searchLegalPrepare = async (filter) => {
+  const path = '/LegalContract/search-prepare-legal-contract';
+  /*
+  return {
+    isSuccess: true,
+    data: [
+      { loan_debt_type: 'NPL', k_idcard: '5530100001439', loan_province: 'อุตรดิตถ์', loan_creditor_type: 'สหกรณ์', loan_amount: 150000 },
+      { loan_debt_type: 'NPA', k_idcard: '3220200083816', loan_province: 'จันทบุรี', loan_creditor_type: 'ธนาคารพาณิชย์', loan_amount: 240000 },
+    ],
+    currentPage: 1,total: 123,totalPage: 13
+  }
+  */
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
 
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const viewLegalDetail = async (id) => {
+  const path = '/LegalContract/legal-contract-debt-management';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
 // #region NPA
 export const getNpaRoundFilter = async () => {
   const path = '/npa/npa-round-filter';

@@ -30,7 +30,7 @@ const Filter = (props) => {
         creditorType: "",
         creditor: "",
         debtStatus: "",
-        debtClassifyStatus: status,
+        debtClassifyStatusList: ['ยืนยันยอดสำเร็จ','อยู่ระหว่างการชำระหนี้แทน'],
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
@@ -87,8 +87,8 @@ const Filter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNoNpa(status);
-    const resultCommitteeDate = await getCommitteeDateNpa(status);
+    const resultCommitteeNo = await getCommitteeNoNpa("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'");
+    const resultCommitteeDate = await getCommitteeDateNpa("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);

@@ -82,8 +82,8 @@ const SearchFilter = (props) => {
   async function fetchData() {
     const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNo(status);
-    const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCommitteeNo = await getCommitteeNo("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
+    const resultCommitteeDate = await getCommitteeDate("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);

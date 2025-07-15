@@ -41,8 +41,8 @@ const EditDataTable = (props) => {
     }))
   }
   async function fetchData() {
-    const resultCommitteeNo = await getCommitteeNoNpa(status);
-    const resultCommitteeDate = await getCommitteeDateNpa(status);
+    const resultCommitteeNo = await getCommitteeNoNpa("\'รอเสนอคณะกรรมการจัดการหนี้\'");
+    const resultCommitteeDate = await getCommitteeDateNpa("\'รอเสนอคณะกรรมการจัดการหนี้\'");
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);

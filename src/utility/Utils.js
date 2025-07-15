@@ -105,6 +105,26 @@ export const ToDateEn = (value) => {
     }
   } else return value;
 };
+function monthTh(m) {
+  if (m == 1) return 'มกราคม';
+  if (m == 2) return 'กุมภาพันธ์';
+  if (m == 3) return 'มีนาคม';
+  if (m == 4) return 'เมษายน';
+  if (m == 5) return 'พฤษภาคม';
+  if (m == 6) return 'มิถุนายน';
+  if (m == 7) return 'กรกฎาคม';
+  if (m == 8) return 'สิงหาคม';
+  if (m == 9) return 'กันยายน';
+  if (m == 10) return 'ตุลาคม';
+  if (m == 11) return 'พฤศจิกายน';
+  if (m == 12) return 'ธันวาคม';
+}
+export const spDate = (value, format) => {
+  const date = moment(value, format).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = monthTh(date.getMonth() + 1)
+  return `${day} ${month}`;
+};
 export const stringToDateTh = (value, showTime = true, format) => {
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");

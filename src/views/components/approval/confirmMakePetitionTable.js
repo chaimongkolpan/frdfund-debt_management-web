@@ -384,8 +384,12 @@ const ConfirmTable = (props) => {
                                   <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[2]} onChange={() => BranchChange(2)}/> &nbsp;ค่าปรับ</div>
                                   <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[3]} onChange={() => BranchChange(3)}/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</div>
                                   <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[4]} onChange={() => BranchChange(4)}/> &nbsp;ค่าถอนการยึดทรัพย์</div>
-                                  <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[5]} onChange={() => BranchChange(5)}/> &nbsp;ค่าเบี้ยประกัน</div>
-                                  <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[6]} onChange={() => BranchChange(6)}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
+                                  {!coop && (
+                                    <>
+                                      <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[5]} onChange={() => BranchChange(5)}/> &nbsp;ค่าเบี้ยประกัน</div>
+                                      <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[6]} onChange={() => BranchChange(6)}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
+                                    </>
+                                  )}
                                 </div>
                               </div>
                             </div>
