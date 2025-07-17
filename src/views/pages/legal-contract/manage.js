@@ -19,7 +19,7 @@ import {
 } from "@services/api";
 
 const user = getUserData();
-const LegalContractPrepare = () => {
+const LegalContractManage = () => {
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -77,7 +77,7 @@ const LegalContractPrepare = () => {
   return (
     <>
       <div className="content">
-        <h4>จัดทำนิติกรรมสัญญา</h4>
+        <h4>บริหารสินทรัพย์ (นิติกรรมสัญญา)</h4>
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -146,4 +146,4 @@ const LegalContractPrepare = () => {
     </>
   );
 };
-export default LegalContractPrepare;
+export default LegalContractManage;

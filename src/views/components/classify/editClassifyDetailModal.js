@@ -370,7 +370,7 @@ const FullModal = (props) => {
       await setCollateralType(val);
       await setCollateralDetail((prevState) => ({
         ...prevState,
-        ...({stock_status: (val == 'หุ้น')})
+        ...({stock_status: (val == 'หุ้น' ? 'Y' : 'N')})
       }))
     }
     await setCollateralDetail((prevState) => ({

@@ -86,8 +86,8 @@ const SearchFilter = (props) => {
   async function fetchData() {
     const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNoNpa(status);
-    const resultCommitteeDate = await getCommitteeDateNpa(status);
+    const resultCommitteeNo = await getCommitteeNoNpa("\'สาขายืนยันยอด\'");
+    const resultCommitteeDate = await getCommitteeDateNpa("\'สาขายืนยันยอด\'");
     const resultConfirmNo = await getConfirmNo(status, 'NPA');
     const resultConfirmDate = await getConfirmDate(status, 'NPA');
     if (resultProv.isSuccess) {

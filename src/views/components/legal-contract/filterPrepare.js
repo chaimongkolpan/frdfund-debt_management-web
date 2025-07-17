@@ -2,53 +2,52 @@ import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
 import { 
-  getProvinces,
-  getCreditors,
-  getCreditorTypes,
+  getBigDataProvinces,
+  getBigDataCreditors,
+  getBigDataCreditorTypes,
   getDebtStatuses,
-  getCommitteeNoNpa,
-  getCommitteeDateNpa,
+  getCommitteeNo,
+  getCommitteeDate,
 } from "@services/api";
-const SearchFilter = (props) => {
-  const { handleSubmit } = props;
-  const status = 'คณะกรรมการจัดการหนี้อนุมัติ';
-  const [isMounted, setIsMounted] = useState(false)
+
+const Filter = (props) => {
+  const { handleSubmit, setLoading } = props;
+  const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
-  const [statusDebtOp, setStatusDebtOp] = useState(null);
-  const [committeeNoOp, setCommitteeNoOp] = useState(null);
-  const [committeeDateOp, setCommitteeDateOp] = useState(null);
+  const statusOp = ["รอจัดทำนิติกรรมสัญญา","จัดทำนิติกรรมสัญญาแล้ว","จัดส่งนิติกรรมสัญญา","สาขาแก้ไขนิติกรรมสัญญา","ส่งคืนนิติกรรมสัญญา","ตรวจสอบนิติกรรมสัญญา","นิติกรรมสัญญาสมบูรณ์"];
+  const typeOp = ["NPA","NPL"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
         idCard: "",
         name: "",
-        province: "all",
-        creditorType: "all",
-        creditor: "all",
-        debtStatus: "all",
-        checkingStatus: "all",
+        province: "",
+        creditorType: "",
+        creditor: "",
+        debtStatus: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
       });
     }
   }
-  const onChange = async(key, val) => {
+  const onChange = async (key, val) => {
     if (key == 'province') {
+      setLoading(true);
       await setCreditorTypeOp(null);
-      const resultCreditorType = await getCreditorTypes(val);
+      const resultCreditorType = await getBigDataCreditorTypes(val);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getCreditors(val, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -61,10 +60,12 @@ const SearchFilter = (props) => {
         await setCreditorTypeOp(null);
         await setCreditorOp(null);
       } 
+      setLoading(false);
     }
     if (key == 'creditorType') {
+      setLoading(true);
       await setCreditorOp(null);
-      const resultCreditor = await getCreditors(filter.province, val);
+      const resultCreditor = await getBigDataCreditors(filter.province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
         await setCreditorOp(temp2);
@@ -73,6 +74,7 @@ const SearchFilter = (props) => {
           ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
+      setLoading(false);
     }
     setFilter((prevState) => ({
       ...prevState,
@@ -80,22 +82,19 @@ const SearchFilter = (props) => {
     }))
   }
   async function fetchData() {
-    const resultProv = await getProvinces();
-    const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNoNpa("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
-    const resultCommitteeDate = await getCommitteeDateNpa("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
+    const resultProv = await getBigDataProvinces();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-      const resultCreditorType = await getCreditorTypes(null);
+      const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -113,28 +112,8 @@ const SearchFilter = (props) => {
        await setCreditorTypeOp(null);
        await setCreditorOp(null);
     }
-
-    if (resultDebtSt.isSuccess) {
-      const temp = resultDebtSt.data.map(item => item.name);
-      await setStatusDebtOp(temp);
-    } else await setStatusDebtOp(null);
-    if (resultCommitteeNo.isSuccess) {
-      const temp = resultCommitteeNo.data.map(item => item.name);
-      await setCommitteeNoOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({proposal_committee_no: temp[0]})
-      }))
-    } else await setCommitteeNoOp(null);
-    if (resultCommitteeDate.isSuccess) {
-      const temp = resultCommitteeDate.data.map(item => item.name);
-      await setCommitteeDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({proposal_committee_date: temp[0]})
-      }))
-    } else await setCommitteeDateOp(null);
     setIsMounted(true);
+    setLoading(false);
   }
 
   //** ComponentDidMount
@@ -154,30 +133,13 @@ const SearchFilter = (props) => {
     <>
       <form className="row g-3">
         <div className="col-sm-12 col-md-6 col-lg-6">
+          <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'ชื่อ-นามสกุลเกษตรกร'} handleChange={(val) => onChange('name', val)} />
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {committeeNoOp && (
-            <Dropdown 
-              title={'ครั้งที่เสนอคณะกรรมการ'} 
-              defaultValue={filter?.proposal_committee_no} 
-              options={committeeNoOp}
-              handleChange={(val) => onChange('proposal_committee_no', val)}
-            />
-          )}
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {committeeDateOp && (
-            <Dropdown 
-              title={'วันที่เสนอคณะกรรมการ'} 
-              defaultValue={filter?.proposal_committee_date} 
-              options={committeeDateOp}
-              handleChange={(val) => onChange('proposal_committee_date', val)}
-            />
-          )}
+          <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
@@ -190,13 +152,21 @@ const SearchFilter = (props) => {
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
+          <Dropdown 
+            title={'ประเภทจัดการหนี้'} 
+            defaultValue={'all'} 
+            options={typeOp}
+            handleChange={(val) => onChange('loanDebtType', val)}
+            hasAll />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              defaultValue={creditorTypeOp[0]} 
-              options={creditorTypeOp}
+              defaultValue={'all'} 
+              options={creditorTypeOp} hasAll
               handleChange={(val) => onChange('creditorType', val)}
-               />
+            />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
@@ -210,19 +180,19 @@ const SearchFilter = (props) => {
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusDebtOp && (
+          {statusOp && (
             <Dropdown 
-              title={'สถานะหนี้'} 
+              title={'สถานะนิติกรรมสัญญา'} 
               defaultValue={'all'} 
-              options={statusDebtOp}
-              handleChange={(val) => onChange('debtStatus', val)}
+              options={statusOp}
+              handleChange={(val) => onChange('policyStatus', val)}
               hasAll />
           )}
         </div>
         <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
-              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span className="fas fa-search"></span> ค้นหา</button>
+              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span class="fas fa-search"></span> ค้นหา</button>
             </div>
           </div>
         </div>
@@ -230,4 +200,4 @@ const SearchFilter = (props) => {
     </>
   );
 };
-export default SearchFilter;
+export default Filter;

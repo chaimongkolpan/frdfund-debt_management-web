@@ -1,53 +1,77 @@
 import { useEffect, useState } from "react";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 import DatePicker from "@views/components/input/DatePicker";
 import BookNo from "@views/components/input/BookNo";
 import { 
   cleanData,
   getPetitionList,
+  getPetitionById,
 } from "@services/api";
-const BookDateTable = () => {
+const BookDateTable = (props) => {
+  const { savePetition, setSavePetition, loadPetition, setLoadPetition } = props;
   const [data, setData] = useState(null);
   const [filter, setFilter] = useState({
     currentPage: 1,
     pageSize: 0
   });
   const [showDetail, setShowDetail] = useState(false);
+  const [petition, setPetition] = useState(null);
   const [detail, setDetail] = useState(null);
-  const [bookNo, setBookNo] = useState(null);
-  const [bookDate, setBookDate] = useState(null);
+  const onChange = async (key, val) => {
+    await setSavePetition((prevState) => ({
+      ...prevState,
+      ...({[key]: val})
+    }))
+  }
   const GetDetail = async (item) => {
     await setShowDetail(false);
     await setDetail(null);
-    // get detail
-    await setDetail(null);
-    await setShowDetail(true);
+    const result = await getPetitionById(item.id_petition);
+    if (result.isSuccess) {
+      await setSavePetition((prevState) => ({
+        ...prevState,
+        id_petition: item.id_petition
+      }))
+      await setPetition(item);
+      await setDetail(result.data);
+      await setShowDetail(true);
+    }
   }
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index}>
         <td>{index + 1}</td>
         <td><div className="d-flex justify-content-center"><button type="button" className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => GetDetail(item)}><i className="far fa-list-alt "></i></button></div></td>
-        {/* <td>{item.id_card}</td> */}
-        <td>22/08/2566</td>
-        <td>3</td>
-        <td>เจ้าหนี้</td>
-        <td>3</td>
-        <td>120,000.00</td>
+        <td>{stringToDateTh(item.created_at,false)}</td>
+        <td>{item.num_of_contracts}</td>
+        <td>{item.disbursement}</td>
+        <td>{item.num_of_Cheques}</td>
+        <td>{toCurrency(item.petition_amount)}</td>
+      </tr>
+    ))
+  }
+  const RenderDetail = (item, index) => {
+    return (item && (
+      <tr key={index}>
+        <td>{item.cheques_no}</td>
+        <td>{toCurrency(item.cashier_check_amount)}</td>
+        <td>{item.disbursement}</td>
       </tr>
     ))
   }
   const fetchData = async () => {
     const result = await getPetitionList(filter);
     if (result.isSuccess) {
-      setData(result.data)
+      await setLoadPetition(false);
+      await setShowDetail(false);
+      await setData(result.data);
     } else {
-      setData(null)
+      await setData(null);
     }
   }
   useEffect(() => {
-    fetchData();
-  },[])
+    if (loadPetition) fetchData();
+  },[loadPetition])
   return (
     <>
       <form>
@@ -88,8 +112,8 @@ const BookDateTable = () => {
                 </div>
                 <div className="d-flex justify-content-start">
                   <h5>
-                    <div className="flex-grow-1">วันที่สร้างฎีกา : 22/08/2566</div>
-                    <div className="flex-grow-1">จำนวนสัญญา : 3</div>
+                    <div className="flex-grow-1">วันที่สร้างฎีกา : {stringToDateTh(petition.created_at,false)}</div>
+                    <div className="flex-grow-1">จำนวนสัญญา : {petition.num_of_contracts}</div>
                   </h5>
                 </div>
                 <div className="row">
@@ -105,28 +129,25 @@ const BookDateTable = () => {
                           </tr>
                         </thead>
                           <tbody className="list text-center align-middle">
-                            <tr>
-                              <td>1</td>
-                              <td>100,000.00</td>
-                              <td>เจ้าหนี้</td>
-                            </tr>
-                            <tr>
-                              <td>2</td>
-                              <td>20,000.00</td>
-                              <td>เจ้าหนี้</td>
-                            </tr>
+                            {(detail && detail.length > 0) ? (detail.map((item,index) => RenderDetail(item, index))) : (
+                              <tr>
+                                <td className="fs-9 text-center align-middle" colSpan={3}>
+                                  <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                                </td>
+                              </tr>
+                            )}
                           </tbody>
                         </table>
                       </div>
                     </div>
                   </div>
                   <div className="col-sm-12 col-md-12 col-lg-6">
-                    <BookNo title={'เลขที่หนังสือฎีกา'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                    <BookNo title={'เลขที่หนังสือฎีกา'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => onChange('petition_no_office',val)} value={savePetition?.petition_no_office} />
                   </div>
                   <div className="col-sm-12 col-md-12 col-lg-6">
                     <DatePicker title={'วันที่หนังสือฎีกา'}
-                      value={bookDate} 
-                      handleChange={(val) => setBookDate(val)} 
+                      value={savePetition?.petition_date_office} 
+                      handleChange={(val) => onChange('petition_date_office',val)} 
                     />
                   </div>
                 </div>

@@ -1067,7 +1067,7 @@ export const rejectCommitteeUpdateNpa = async (filter) => {
   }
 };
 //#endregion
-// #region Confirm Committee
+//#region Confirm Committee
 export const getConfirmNo = async (status,type) => {
   const path = '/common/branch-correspondence-no';
   try {
@@ -1419,8 +1419,23 @@ export const getPetitionList = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getPetitionById = async (filter) => {
+export const getPetitionById = async (id_petition) => {
   const path = '/MakePetition/get-petition-contracts';
+  try {
+    const result = await axios.get(path, { params: {id_petition} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+
+export const savePetitionBook = async (filter) => {
+  const path = '/MakePetition/save-petition';
   try {
     const result = await axios.post(path, filter);
     if (result.status == 200)
@@ -1673,7 +1688,120 @@ export const searchDisbursementStatusNpa = async (filter) => {
   }
 };
 //#endregion
+//#region Legal Contract
+export const searchLegalPrepare = async (filter) => {
+  const path = '/LegalContract/search-prepare-legal-contract';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
 
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const viewLegalDetail = async (id) => {
+  const path = '/LegalContract/legal-contract-debt-management';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getLegalAsset = async (id) => {
+  const path = '/LegalContract/asset';
+  try {
+    const result = await axios.get(path, { params: {id_KFKPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateLegalAsset = async (params) => {
+  const path = '/LegalContract/asset';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const deleteLegalAsset = async (id) => {
+  const path = '/LegalContract/remove-asset';
+  try {
+    const result = await axios.post(path, { params: {id_AssetPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getLegalGuarantor = async (id) => {
+  const path = '/LegalContract/guarantor';
+  try {
+    const result = await axios.get(path, { params: {id_KFKPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateLegalGuarantor = async (params) => {
+  const path = '/LegalContract/guarantor';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getLegalSpouses = async (id) => {
+  const path = '/LegalContract/getspouses';
+  try {
+    const result = await axios.get(path, { params: {id_KFKPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
 // #region NPA
 export const getNpaRoundFilter = async () => {
   const path = '/npa/npa-round-filter';
