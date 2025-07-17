@@ -70,7 +70,7 @@ const PlanPay = (props) => {
           <div className="col-sm-12 col-md-6 col-lg-6">
             <Textbox title={'จำนวนปี'} handleChange={(val) => setYear(val)} value={year} disabled={isView} />
           </div>
-          <div className="col-12">
+          <div className={`col-12 ${isView ? 'd-none' : ''}`}>
             <div className="row g-3 justify-content-center">
               <div className="col-auto">
                 <button className="btn btn-primary me-1 mb-1" type="button" onClick={() => cal()}> คำนวณแผนการชำระเงินคืน</button>
@@ -123,7 +123,11 @@ const PlanPay = (props) => {
           <div className="col-12 mt-3">
             <div className="row g-3 justify-content-center">
               <div className="col-auto">
-                <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึกแผนการชำระเงินคืน</button>
+                {isView ? (
+                  <button className="btn btn-primary me-1 mb-1" type="button" onClick={() => save()}>ปริ้นแผนการชำระเงินคืน</button>
+                ) : (
+                  <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึกแผนการชำระเงินคืน</button>
+                )}
               </div>
             </div>
           </div>

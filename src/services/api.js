@@ -1691,16 +1691,6 @@ export const searchDisbursementStatusNpa = async (filter) => {
 //#region Legal Contract
 export const searchLegalPrepare = async (filter) => {
   const path = '/LegalContract/search-prepare-legal-contract';
-  /*
-  return {
-    isSuccess: true,
-    data: [
-      { loan_debt_type: 'NPL', k_idcard: '5530100001439', loan_province: 'อุตรดิตถ์', loan_creditor_type: 'สหกรณ์', loan_amount: 150000 },
-      { loan_debt_type: 'NPA', k_idcard: '3220200083816', loan_province: 'จันทบุรี', loan_creditor_type: 'ธนาคารพาณิชย์', loan_amount: 240000 },
-    ],
-    currentPage: 1,total: 123,totalPage: 13
-  }
-  */
   try {
     const result = await axios.post(path, filter);
     if (result.status == 200)
@@ -1717,6 +1707,90 @@ export const viewLegalDetail = async (id) => {
   const path = '/LegalContract/legal-contract-debt-management';
   try {
     const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getLegalAsset = async (id) => {
+  const path = '/LegalContract/asset';
+  try {
+    const result = await axios.get(path, { params: {id_KFKPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateLegalAsset = async (params) => {
+  const path = '/LegalContract/asset';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const deleteLegalAsset = async (id) => {
+  const path = '/LegalContract/remove-asset';
+  try {
+    const result = await axios.post(path, { params: {id_AssetPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getLegalGuarantor = async (id) => {
+  const path = '/LegalContract/guarantor';
+  try {
+    const result = await axios.get(path, { params: {id_KFKPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateLegalGuarantor = async (params) => {
+  const path = '/LegalContract/guarantor';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getLegalSpouses = async (id) => {
+  const path = '/LegalContract/getspouses';
+  try {
+    const result = await axios.get(path, { params: {id_KFKPolicy: id} });
     if (result.status == 200)
       return result.data;
     else

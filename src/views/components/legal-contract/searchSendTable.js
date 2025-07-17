@@ -2,13 +2,40 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handlePrint } = props;
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
-  const RenderData = (item, index) => {
+  const [isSome, setIsSome] = useState(false);
+  const [isAll, setIsAll] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const onSubmit = () => {
+    if (handleSubmit) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      // save session
+      handleSubmit(selectedData)
+    }
+  }
+  const onChange = async (id) => {
+    await setSelected((prev) => {
+      prev[id] = !prev[id];
+      return [...prev]
+    })
+  }
+  const onHeaderChange = async (checked) => {
+    await setSelected(result.data.map(() => checked));
+    await setIsAll(checked)
+  }
+  const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index}>
-        <td className="fs-9 align-middle">{index + 1}</td>
+        <td className="fs-9 align-middle">
+          <div className="form-check ms-2 mb-0 fs-8">
+            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+          </div>
+        </td>
+        <td>
+          {item.k_idcard}
+        </td>
         <td>{item.k_idcard}</td>
         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
@@ -36,13 +63,27 @@ const SearchTable = (props) => {
               <button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>หลักทรัพย์ค้ำประกัน</button>
               <button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>บุคคลค้ำประกัน</button>
               <button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลคู่สมรส</button>
-              <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ปริ้นนิติกรรมสัญญา</button>
             </div>
           </div>
         </td>
       </tr>
     ))
   }
+  const RenderAll = () => {
+    return (data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index] ?? false))) : (
+      <tr>
+        <td className="fs-9 text-center align-middle" colSpan={26}>
+          <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+        </td>
+      </tr>
+    )
+  }
+  useEffect(() => {
+    setIsSome(selected.some(i => i))
+    setIsAll(selected.every(i => i) && selected.length > 0)
+    RenderAll();
+    return () => { console.log('Clear data.') }
+  },[selected])
   useEffect(() => {
     if(result) {
       setData(result.data);
@@ -58,7 +99,12 @@ const SearchTable = (props) => {
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
-                <th rowSpan="2" style={{ minWidth: 30 }}>#</th>
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
+                  <div className="form-check ms-2 me-0 mb-0 fs-8">
+                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                  </div>
+                </th>
+                <th rowSpan="2">อัพโหลดเอกสารนิติกรรมสัญญา</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan="8">นิติกรรมสัญญา</th>
@@ -87,7 +133,7 @@ const SearchTable = (props) => {
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
-              {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+              {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index] ?? false))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={20}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
@@ -102,6 +148,13 @@ const SearchTable = (props) => {
             setPage={(page) => getData({ ...filter, currentPage: page })} 
           />
         )}
+      </div>
+      <div className="d-flex align-items-center justify-content-center my-3">
+        <div className={`${isSome ? '' : 'd-none'}`}>
+          <div className="d-flex">
+            <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => onSubmit()}>จัดส่งนิติกรรมสัญญา</button>
+          </div>
+        </div>
       </div>
     </>
   );

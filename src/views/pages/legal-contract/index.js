@@ -10,6 +10,9 @@ import Filter from "@views/components/legal-contract/filterPrepare";
 import SearchTable from "@views/components/legal-contract/searchPrepareTable";
 import Detail from "@views/components/legal-contract/detail";
 import PlanPay from "@views/components/legal-contract/planPay";
+import Asset from "@views/components/legal-contract/assetModal";
+import Guarantor from "@views/components/legal-contract/guarantorModal";
+import Spouse from "@views/components/legal-contract/spouseModal";
 import { 
   cleanData,
   searchLegalPrepare,
@@ -63,6 +66,10 @@ const LegalContractPrepare = () => {
     await setPolicy(item);
     await setOpenPrint(true);
   }
+  const onPrint = async () => {
+    // print
+    await setOpenPrint(false);
+  }
   useEffect(() => {
     setLoadBigData(true);
     return cleanData
@@ -98,12 +105,38 @@ const LegalContractPrepare = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'รายละเอียดจัดการหนี้'} closeText={'ปิด'} scrollable fullscreen>
-        <Detail policy={policy} />
-      </Modal>
-      <Modal isOpen={openPlan} setModal={setOpenPlan} hideOk onClose={() => setOpenPlan(false)}  title={'แผนการชำระเงินคืน'} closeText={'ปิด'} scrollable fullscreen>
-        <PlanPay policy={policy} />
-      </Modal>
+      {openDetail && (
+        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'รายละเอียดจัดการหนี้'} closeText={'ปิด'} scrollable fullscreen>
+          <Detail policy={policy} />
+        </Modal>
+      )}
+      {openPlan && (
+        <Modal isOpen={openPlan} setModal={setOpenPlan} hideOk onClose={() => setOpenPlan(false)}  title={'แผนการชำระเงินคืน'} closeText={'ปิด'} scrollable fullscreen>
+          <PlanPay policy={policy} />
+        </Modal>
+      )}
+      {openAsset && (
+        <Modal isOpen={openAsset} setModal={setOpenAsset} hideOk onClose={() => setOpenAsset(false)}  title={'ข้อมูลหลักทรัพย์ค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
+          <Asset policy={policy} /> 
+        </Modal> 
+      )}
+      {openGuarantor && (
+        <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลบุคคลค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
+          <Guarantor policy={policy} /> 
+        </Modal> 
+      )}
+      {openSpouse && (
+        <Modal isOpen={openSpouse} setModal={setOpenSpouse} hideOk onClose={() => setOpenSpouse(false)}  title={'ข้อมูลคู่สมรส'} closeText={'ปิด'} scrollable fullscreen>
+          <Spouse policy={policy} /> 
+        </Modal> 
+      )}
+      {openPrint && (
+        <Modal isOpen={openPrint} setModal={setOpenPrint} onClose={() => setOpenPrint(false)}  
+          title={'ปริ้นนิติกรรมสัญญา'} okText={'ปริ้น'} centered onOk={onPrint}
+          closeText={'ยกเลิก'}>
+          <p class="text-body-tertiary lh-lg mb-0">ต้องการปริ้นนิติกรรมสัญญา</p>
+        </Modal> 
+      )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
         <div className="d-flex flex-column align-items-center justify-content-center">
           <img className='mb-5' src={logo} alt='logo' width={150} height={150} />

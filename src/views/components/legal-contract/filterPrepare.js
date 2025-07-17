@@ -44,10 +44,10 @@ const Filter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -92,9 +92,9 @@ const Filter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -163,8 +163,8 @@ const Filter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              defaultValue={creditorTypeOp[0]} 
-              options={creditorTypeOp}
+              defaultValue={'all'} 
+              options={creditorTypeOp} hasAll
               handleChange={(val) => onChange('creditorType', val)}
             />
           )}
