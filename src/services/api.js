@@ -1745,10 +1745,10 @@ export const updateLegalAsset = async (params) => {
     return defaultErrorResponse;
   }
 };
-export const deleteLegalAsset = async (id) => {
+export const deleteLegalAsset = async (params) => {
   const path = '/LegalContract/remove-asset';
   try {
-    const result = await axios.post(path, { params: {id_AssetPolicy: id} });
+    const result = await axios.post(path, params);
     if (result.status == 200)
       return result.data;
     else
@@ -1791,6 +1791,90 @@ export const getLegalSpouses = async (id) => {
   const path = '/LegalContract/getspouses';
   try {
     const result = await axios.get(path, { params: {id_KFKPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getPlanPay = async (id,no) => {
+  const path = '/LegalContract/get-refund-planpay';
+  try {
+    const result = await axios.get(path, { params: { id_KFKPolicy: id, policyNo: no } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const savePlanPay = async (params) => {
+  const path = '/LegalContract/save-refund-planpay';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const printPlanPay = async (params) => {
+  const path = '/LegalContract/print-refund-planpay';
+  try {
+    const result = await axios.post(
+      path,
+      { data: params.data },
+      { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
+export const saveDocumentPolicy = async (filter) => {
+  const path = "/share/save-documentpolicy";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const submitSendLegal = async (params) => {
+  const path = '/LegalContract/submit-sendlegalcontract';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchLegalCheck = async (filter) => {
+  const path = '/LegalContract/search-check-legal-contract';
+  try {
+    const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
     else
