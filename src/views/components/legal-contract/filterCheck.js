@@ -16,6 +16,8 @@ const Filter = (props) => {
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
+  const [noOp, setNoOp] = useState(null);
+  const [dateOp, setDateOp] = useState(null);
   const statusOp = ["รอจัดทำนิติกรรมสัญญา","จัดทำนิติกรรมสัญญาแล้ว","จัดส่งนิติกรรมสัญญา","สาขาแก้ไขนิติกรรมสัญญา","ส่งคืนนิติกรรมสัญญา","ตรวจสอบนิติกรรมสัญญา","นิติกรรมสัญญาสมบูรณ์"];
   const typeOp = ["NPA","NPL"];
   const onSubmit = () => {
@@ -83,6 +85,8 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
+    const resultNo = await getCommitteeNo();
+    const resultDate = await getCommitteeDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -112,6 +116,23 @@ const Filter = (props) => {
        await setCreditorTypeOp(null);
        await setCreditorOp(null);
     }
+    
+    if (resultNo.isSuccess) {
+      const temp = resultNo.data.map(item => item.name);
+      await setNoOp(temp);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({proposal_committee_no: temp[0]})
+      }))
+    } else await setNoOp(null);
+    if (resultDate.isSuccess) {
+      const temp = resultDate.data.map(item => item.name);
+      await setDateOp(temp);
+      await setFilter((prevState) => ({
+        ...prevState,
+        ...({proposal_committee_date: temp[0]})
+      }))
+    } else await setDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }
@@ -134,6 +155,28 @@ const Filter = (props) => {
       <form className="row g-3">
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {noOp && (
+            <Dropdown 
+              title={'เลขที่หนังสือนำส่งสาขา'} 
+              containerClassname={'mb-3'} 
+              defaultValue={noOp[0]} 
+              options={noOp}
+              handleChange={(val) => onChange('branch_policy_no', val)}
+            />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {dateOp && (
+            <Dropdown 
+              title={'วันที่หนังสือนำส่งสาขา'} 
+              containerClassname={'mb-3'} 
+              defaultValue={dateOp[0]} 
+              options={dateOp}
+              handleChange={(val) => onChange('branch_policy_date', val)}
+            />
+          )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />

@@ -17,11 +17,13 @@ const Asset = (props) => {
   const [collaterals, setCollaterals] = useState(null);
   const [collateral_type, setCollateralType] = useState(null);
   const [collateralDetail, setCollateralDetail] = useState(null);
+  const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(false);
   const [isOpenCollateralEdit, setOpenCollateralEdit] = useState(false);
   const [provinces, setProvOp] = useState(null);
   const addCollateral = async() => {
-    await setCollateralDetail({ id_debt_management: debts.id_debt_management, assetType: 'โฉนด', collateral_status: 'โอนได้' });
+    await setCollateralDetail({ id_KFKPolicy: policy.id_KFKPolicy, policyNO: policy.policyNO, assetType: 'โฉนด', collateral_status: 'โอนได้' });
     await setCollateralType('โฉนด')
+    await setOpenCollateralAdd(true)
     await setOpenCollateralEdit(true)
     if (collateralRef.current) {
       collateralRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -30,6 +32,7 @@ const Asset = (props) => {
   const editCollateral = async(item) => {
     await setCollateralDetail(item)
     await setCollateralType(item.assetType)
+    await setOpenCollateralAdd(false)
     await setOpenCollateralEdit(true)
     if (collateralRef.current) {
       collateralRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -39,6 +42,7 @@ const Asset = (props) => {
     const result = await updateLegalAsset(collateralDetail);
     if (result.isSuccess) {
       await fetchData();
+      await setOpenCollateralAdd(false)
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
     }
@@ -1837,7 +1841,11 @@ const Asset = (props) => {
                 <br />
                 <div className={`d-flex justify-content-center ${isView ? 'd-none' : ''}`}>
                   <button className="btn btn-success me-2" type="button" onClick={() => saveCollateral()}>บันทึก</button>
-                  <button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
+                  {isOpenCollateralAdd ? (
+                    <button className="btn btn-secondary" type="button" onClick={() => setOpenCollateralEdit(false)}>ยกเลิก</button>
+                  ) : (
+                    <button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
+                  )}
                 </div>
               </div>
             </div>

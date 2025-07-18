@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { stringToDateTh, spDate, toCurrency } from "@utils";
 import Textbox from "@views/components/input/Textbox";
+import { 
+  cleanData,
+  getPlanPay,
+  savePlanPay,
+  printPlanPay,
+} from "@services/api";
 
 const PlanPay = (props) => {
   const { policy, isView } = props;
@@ -13,22 +19,30 @@ const PlanPay = (props) => {
     if (installment && year) {
       let pl = [];
       let total = policy?.loan_amount;
-      const ins = policy?.loan_amount / installment;
+      const ins = Math.round((policy?.loan_amount / installment) * 100.0) / 100.0;
+      const monthPerInstall = 12 * year / installment;
+      const now = new Date();
+      let y = now.getFullYear();
+      let m = now.getMonth() + 1;
+      let d = now.getDate();
       for(let i = 0;i < installment;i++) {
+        m += monthPerInstall;
+        if (m / 12 > 1) y += 1;
+        m %= 12;
         if (i == installment - 1) {
           let inte = (total * interest / 100.0);
           let deduc = ins - inte;
           pl.push({ 
-            pnO: i + 1, pDate: new Date(), ppP: total, yokma: total, interes: inte, dD: total, bL: 0,
-            policyNo: policy.policyNo, inTrate: interest, pluBrate: 0, isKfk: 0
+            pno: i + 1, pDate: new Date(y, m-1, d), ppp: total, yokma: total, interes: inte, dd: total, bl: 0,
+            policyNo: policy.policyNO, intrate: interest, plubrate: 0, isKfk: 0
           });
           total -= deduc;
         } else {
           let inte = (total * interest / 100.0);
           let deduc = ins - inte;
           pl.push({ 
-            pnO: i + 1, pDate: new Date(), ppP: ins, yokma: total, interes: inte, dD: deduc, bL: total - deduc,
-            policyNo: policy.policyNo, inTrate: interest, pluBrate: 0, isKfk: 0
+            pno: i + 1, pDate: new Date(y, m-1, d), ppp: ins, yokma: total, interes: inte, dd: deduc, bl: total - deduc,
+            policyNo: policy.policyNO, intrate: interest, plubrate: 0, isKfk: 0
           });
           total -= deduc;
         }
@@ -37,8 +51,24 @@ const PlanPay = (props) => {
     }
   }
   const save = async () => {
+    const result = await savePlanPay(plans);
+    if (result.isSuccess) {
+      await fetchData();
+    } 
+  }
+  const print = async () => {
+    const result = await printPlanPay({ type: 'application/octet-stream', filename: 'แผนการชำระเงินคืน_' + (new Date().getTime()) + '.zip', data: { id_KFKPolicy: policy.id_KFKPolicy, policyNo: policy.policyNO }});
+    if (result.isSuccess) {
+    } 
   }
   const fetchData = async () => {
+    const result = await getPlanPay(policy.id_KFKPolicy, policy.policyNO);
+    if (result.isSuccess) {
+      await setDate(result.data.policyStartDate)
+      await setYear(result.data.numberOfYearPayback)
+      await setInstallment(result.data.numberOfPeriodPayback)
+      await setPlan(result.listData);
+    } 
   }
   useEffect(() => {
     if (isView) {
@@ -59,7 +89,7 @@ const PlanPay = (props) => {
             <Textbox title={'อัตราดอกเบี้ย'} value={interest.toLocaleString()} disabled />
           </div>
           <div className="col-sm-12 col-md-6 col-lg-6">
-            <Textbox title={'ชำระทุกวันที่'} value={spDate(policy)} disabled />
+            <Textbox title={'ชำระทุกวันที่'} value={spDate(date)} disabled />
           </div>
           <div className="col-sm-12 col-md-6 col-lg-6">
             <Textbox title={'ยอดเงินตามสัญญา'} value={toCurrency(policy?.loan_amount)} disabled />
@@ -105,13 +135,13 @@ const PlanPay = (props) => {
                     {(plans && plans?.length > 0) && (
                       plans.map((plan, index) => (
                         <tr key={index}>
-                          <td>{plan.pnO}</td>
+                          <td>{plan.pno}</td>
                           <td>{stringToDateTh(plan.pDate, false)}</td>
-                          <td>{toCurrency(plan.ppP)}</td>
+                          <td>{toCurrency(plan.ppp)}</td>
                           <td>{toCurrency(plan.yokma)}</td>
                           <td>{toCurrency(plan.interes)}</td>
-                          <td>{toCurrency(plan.dD)}</td>
-                          <td>{toCurrency(plan.bL)}</td>
+                          <td>{toCurrency(plan.dd)}</td>
+                          <td>{toCurrency(plan.bl)}</td>
                         </tr>
                       ))
                     )}
@@ -124,7 +154,7 @@ const PlanPay = (props) => {
             <div className="row g-3 justify-content-center">
               <div className="col-auto">
                 {isView ? (
-                  <button className="btn btn-primary me-1 mb-1" type="button" onClick={() => save()}>ปริ้นแผนการชำระเงินคืน</button>
+                  <button className="btn btn-primary me-1 mb-1" type="button" onClick={() => print()}>ปริ้นแผนการชำระเงินคืน</button>
                 ) : (
                   <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึกแผนการชำระเงินคืน</button>
                 )}
