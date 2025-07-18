@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { stringToDateTh, toCurrency, getUserData } from "@utils";
+import { stringToDateTh, toCurrency, getUserData, ToDateDb } from "@utils";
 import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/CustomModal";
 import Loading from "@views/components/modal/loading";
@@ -15,9 +15,12 @@ import Guarantor from "@views/components/legal-contract/guarantorModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
+import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchLegalPrepare,
+  saveDocumentPolicy,
+  submitSendLegal,
 } from "@services/api";
 
 const user = getUserData();
@@ -34,12 +37,46 @@ const LegalContractSend = () => {
   const [openGuarantor, setOpenGuarantor] = useState(false);
   const [openSpouse, setOpenSpouse] = useState(false);
   const [openSubmit, setOpenSubmit] = useState(false);
+  const [openUpload, setOpenUpload] = useState(false);
   const [bookNo, setBookNo] = useState(null);
   const [bookDate, setBookDate] = useState(null);
+  const [clearFile, setClear] = useState(false);
+  const [files, setFiles] = useState(null);
+  const [oldfiles, setOldFiles] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState(null);
+  const onFileChange = async (files) => {
+    if (files.length > 0) {
+      await setFiles(files);
+      await setClear(false);
+    }
+  }
+  const download = (file) => {
+    console.log('download', file)
+  }
+  const RemoveFile = (index) => {
+    oldfiles.splice(index, 1);
+    setOldFiles(oldfiles);
+  }
+  const onSubmitFile = async () => {
+    if (files && files.length > 0) {
+      const form = new FormData();
+      form.append('ids[]', policy.id_KFKPolicy);
+      form.append('document_type', 'เอกสารนิติกรรมสัญญา');
+      files.forEach((item) => form.append("files", item));
+      const result = await saveDocumentPolicy(form);
+      if (result.isSuccess) {
+        await setUploadStatus("success");
+      } else {
+        await setUploadStatus("fail");
+      }
+    } else {
+      console.error('no file upload');
+    }
+  }
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
-    const result = await searchLegalPrepare(filter);
+    const result = await searchLegalPrepare({ ...filter, document_type: 'เอกสารนิติกรรมสัญญา' });
     if (result.isSuccess) {
       setData(result)
     } else {
@@ -47,10 +84,32 @@ const LegalContractSend = () => {
     }
     setLoadBigData(false);
   }
+  const handleUpload = async (item) => {
+    await setPolicy(item);
+    if (item.document_name) {
+      await setOldFiles(item.document_name.split(','))
+    } else await setOldFiles(null)
+    await setUploadStatus(null);
+    await setOpenUpload(true);
+  }
+  const handleCloseUpload = async () => {
+    await onSearch(filter);
+    await setOpenUpload(false);
+  }
   const onSubmit = async () => {
-    // save
-    await setSelectedData(null);
-    await setOpenSubmit(false);
+    const param = selectedData.map(item => {
+      return {
+        id_KFKPolicy: item.id_KFKPolicy,
+        policyNO: item.policyNO,
+        policyStatus: "จัดส่งนิติกรรมสัญญา",
+        sendStatus: "จัดส่งนิติกรรมสัญญา",
+        branch_policy_no: bookNo,
+        branch_policy_date: ToDateDb(bookDate),
+      }
+    });
+    const result = await submitSendLegal(param);
+    if (result.isSuccess) {
+    } 
   }
   const handleSubmit = async (selected) => {
     await setBookNo(null);
@@ -104,6 +163,7 @@ const LegalContractSend = () => {
                         handleGuarantor={handleGuarantor} 
                         handleSpouse={handleSpouse} 
                         handleSubmit={handleSubmit} 
+                        handleUpload={handleUpload}
                       />
                     )}
                   </>
@@ -136,6 +196,55 @@ const LegalContractSend = () => {
       {openSpouse && (
         <Modal isOpen={openSpouse} setModal={setOpenSpouse} hideOk onClose={() => setOpenSpouse(false)}  title={'ข้อมูลคู่สมรส'} closeText={'ปิด'} scrollable fullscreen>
           <Spouse policy={policy} isView /> 
+        </Modal> 
+      )}
+      {openUpload && (
+        <Modal isOpen={openUpload} setModal={setOpenUpload} hideOk onClose={() => handleCloseUpload()}  title={`อัพโหลดเอกสารนิติกรรมสัญญาเลขที่ ${policy?.policyNO}`} closeText={'ปิด'} scrollable size={'xl'}>
+          <form>
+            <br />
+            <div className="row">
+              {oldfiles && (
+                <div className="col-12">
+                  {oldfiles.map((file, index) => (
+                    <div key={index} className="d-flex pb-3 border-bottom border-translucent media px-2">
+                      <div className="border p-2 rounded-2 me-2">
+                        <img className="rounded-2" width={25} src="/assets/img/icons/file.png" alt="..." data-dz-thumbnail="data-dz-thumbnail" />
+                      </div>
+                      <div className="flex-1 d-flex flex-between-center">
+                        <div>
+                          <h6 data-dz-name="data-dz-name">{file}</h6>
+                        </div>
+                        <div className="dropdown">
+                          <button className="btn btn-link text-body-quaternary btn-sm dropdown-toggle btn-reveal dropdown-caret-none" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span className="fas fa-ellipsis-h"></span>
+                          </button>
+                          <div className="dropdown-menu dropdown-menu-end border border-translucent py-2">
+                            <button className="dropdown-item" type="button" onClick={() => download(file)}>Download File</button>
+                            <button className="dropdown-item" type="button" onClick={() => RemoveFile(index)}>Remove File</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="col-12">
+                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+              </div>
+              <div className="row justify-content-center mt-3 mb-3">
+                <div className="col-auto">
+                  <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
+                </div>
+              </div>
+              {uploadStatus && (
+                <div className={`alert alert-outline-${uploadStatus == "success" ? 'success' : 'danger'} d-flex align-items-center`} role="alert">
+                  <p className="mb-0 flex-1 text-center"><span className={`fas ${uploadStatus == "success" ? 'fa-check-circle text-success' : 'fa-times-circle text-danger'} fs-5 me-3`} ></span>
+                    {uploadStatus == "success" ? 'บันทึกข้อมูลสำเร็จ' : 'บันทึกข้อมูลไม่สำเร็จ กรุณาตรวสอบไฟล์'}
+                  </p>
+                </div>
+              )}
+            </div>
+          </form>
         </Modal> 
       )}
       {openSubmit && (

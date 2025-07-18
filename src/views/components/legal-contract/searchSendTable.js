@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit } = props;
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit, handleUpload } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
@@ -22,19 +22,29 @@ const SearchTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map(() => checked));
-    await setIsAll(checked)
+    await setSelected(result.data.map((item) => (checked && item.document_name)));
   }
   const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            <input className="form-check-input" disabled={!item.document_name} type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td>
-          {item.k_idcard}
+        <td style={{ paddingBlock: 10 }}>
+          {item.document_name ? (
+            <>
+              <div class="d-flex justify-content-center"> 
+                <button class="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleUpload(item)}><i class="far fa-file"></i></button>
+              </div>
+              {item.document_name}
+            </>
+          ) : (
+            <div class="d-flex justify-content-center"> 
+              <button class="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" onClick={() => handleUpload(item)}><i class="far fa-file"></i></button>
+            </div>
+          )}
         </td>
         <td>{item.k_idcard}</td>
         <td>{item.k_name_prefix}</td>
@@ -87,7 +97,8 @@ const SearchTable = (props) => {
   useEffect(() => {
     if(result) {
       setData(result.data);
-      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage });
+      setSelected(result.data.map(() => false))
     }
     return () => { setData([]) }
   },[result])
