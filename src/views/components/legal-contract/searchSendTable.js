@@ -35,14 +35,14 @@ const SearchTable = (props) => {
         <td style={{ paddingBlock: 10 }}>
           {item.document_name ? (
             <>
-              <div class="d-flex justify-content-center"> 
-                <button class="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleUpload(item)}><i class="far fa-file"></i></button>
+              <div className="d-flex justify-content-center"> 
+                <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleUpload(item)}><i className="far fa-file"></i></button>
               </div>
               {item.document_name}
             </>
           ) : (
-            <div class="d-flex justify-content-center"> 
-              <button class="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" onClick={() => handleUpload(item)}><i class="far fa-file"></i></button>
+            <div className="d-flex justify-content-center"> 
+              <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" onClick={() => handleUpload(item)}><i className="far fa-file"></i></button>
             </div>
           )}
         </td>
@@ -64,10 +64,10 @@ const SearchTable = (props) => {
         <td>{item.policyStatus}</td>
         <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
         <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
-        <td class="align-middle white-space-nowrap text-center pe-0">
-          <div class="btn-reveal-trigger position-static">
-            <button class="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-            <div class="dropdown-menu dropdown-menu-end py-2">
+        <td className="align-middle white-space-nowrap text-center pe-0">
+          <div className="btn-reveal-trigger position-static">
+            <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+            <div className="dropdown-menu dropdown-menu-end py-2">
               <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>รายละเอียดจัดการหนี้</button>
               <button className="dropdown-item" type="button" onClick={() => handlePlan(item)}>แผนการชำระเงินคืน</button>
               <button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>หลักทรัพย์ค้ำประกัน</button>
