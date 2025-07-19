@@ -2094,14 +2094,8 @@ export const searchFollow = async (filter) => {
 //#endregion
 //#region Debt Acknowledge
 export const searchDebtAcknowledge = async (filter) => {
-  const path = '/DebtAcknowledge/search-legal-contract';
+  const path = '/Restructure/search-restructure';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
@@ -2116,14 +2110,8 @@ export const searchDebtAcknowledge = async (filter) => {
 //#endregion
 //#region Debt Accept
 export const searchDebtAccept = async (filter) => {
-  const path = '/DebtAccept/search-legal-contract';
+  const path = '/Restructure/search-restructure';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
@@ -2160,14 +2148,8 @@ export const searchInvoice = async (filter) => {
 //#endregion
 //#region Restructure
 export const searchRestructuring = async (filter) => {
-  const path = '/Restructuring/search-legal-contract';
+  const path = '/Restructure/search-restructure';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
