@@ -91,7 +91,6 @@ const SearchTable = (props) => {
               <button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>ข้อมูลโอนหลักทรัพย์</button>
               <button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>ข้อมูลแก้ไขโอนหลักทรัพย์</button>
               <button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลแก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)</button>
-              <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ข้อมูลส่งคืนโอนหลักทรัพย์</button>
               <button className="dropdown-item" type="button" onClick={() => handleReturnGuarantee(item)}>ข้อมูลส่งคืนโอนหลักทรัพย์</button>
             </div>
           </div>
