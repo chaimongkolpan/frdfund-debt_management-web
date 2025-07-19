@@ -1703,6 +1703,20 @@ export const searchLegalPrepare = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const searchGuaranteePrepare = async (filter) => {
+  const path = '/Guarantee/search-guarantee';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const viewLegalDetail = async (id) => {
   const path = '/LegalContract/legal-contract-debt-management';
   try {
