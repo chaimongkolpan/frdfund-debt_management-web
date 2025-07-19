@@ -10,7 +10,6 @@ const Filter = (props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
-  const statusOp = ["แจ้งเตือนปิดบัญชี","สัญญาปกติ"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -74,16 +73,6 @@ const Filter = (props) => {
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
-              hasAll />
-          )}
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusOp && (
-            <Dropdown 
-              title={'สถานะสัญญา'} 
-              defaultValue={'all'} 
-              options={statusOp}
-              handleChange={(val) => onChange('debtStatus', val)}
               hasAll />
           )}
         </div>

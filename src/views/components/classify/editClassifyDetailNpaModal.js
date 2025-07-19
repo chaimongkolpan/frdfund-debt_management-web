@@ -15,6 +15,9 @@ import {
   removeCollateralClassify,
 } from "@services/api";
 import { ToDateDb } from "@utils";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const FullModal = (props) => {
   const {isOpen, setModal, onClose, data} = props;
@@ -40,6 +43,13 @@ const FullModal = (props) => {
     });
     if (result.isSuccess) {
       await fetchData();
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeDebt = async (key, val) => {
@@ -69,6 +79,13 @@ const FullModal = (props) => {
       await fetchData();
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const removeCollateral = async(item) => {
@@ -77,6 +94,13 @@ const FullModal = (props) => {
       await fetchData();
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeCollateral = async (key, val) => {
