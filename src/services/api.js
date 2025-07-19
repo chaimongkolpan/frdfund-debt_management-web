@@ -2107,6 +2107,20 @@ export const searchDebtAcknowledge = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const saveRestructureDocumentPolicy = async (filter) => {
+  const path = '/Restructure/save-document-policy';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
 //#region Debt Accept
 export const searchDebtAccept = async (filter) => {

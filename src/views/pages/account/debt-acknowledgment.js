@@ -12,6 +12,7 @@ import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchDebtAcknowledge,
+  saveRestructureDocumentPolicy,
 } from "@services/api";
 
 const user = getUserData();
@@ -43,9 +44,11 @@ const PageContent = () => {
     if (files && files.length > 0) {
       const form = new FormData();
       form.append('ids[]', policy.id_KFKPolicy);
-      form.append('document_type', 'เอกสารนิติกรรมสัญญา');
+      form.append('document_type', 'เอกสารรับสภาพหนี้');
+      form.append('id_RestructurePolicy', policy.id_RestructurePolicy);
+      form.append('RestructurePolicyStatus', 'รับสภาพหนี้แล้ว');
       files.forEach((item) => form.append("files", item));
-      const result = await saveDocumentPolicy(form);
+      const result = await saveRestructureDocumentPolicy(form);
       if (result.isSuccess) {
         await setUploadStatus("success");
       } else {

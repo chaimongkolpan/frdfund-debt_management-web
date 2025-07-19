@@ -43,9 +43,11 @@ const PageContent = () => {
     if (files && files.length > 0) {
       const form = new FormData();
       form.append('ids[]', policy.id_KFKPolicy);
-      form.append('document_type', 'เอกสารนิติกรรมสัญญา');
+      form.append('document_type', 'เอกสารปรับโครงสร้างหนี้');
+      form.append('id_RestructurePolicy', policy.id_RestructurePolicy);
+      form.append('RestructurePolicyStatus', 'ปรับโครงสร้างหนี้แล้ว');
       files.forEach((item) => form.append("files", item));
-      const result = await saveDocumentPolicy(form);
+      const result = await saveRestructureDocumentPolicy(form);
       if (result.isSuccess) {
         await setUploadStatus("success");
       } else {
