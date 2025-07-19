@@ -175,7 +175,7 @@ const Spouse = (props) => {
           <div className="card shadow-none border my-4" data-component-card="data-component-card">
             <div className="card-body p-0">
               <div className="p-4 code-to-copy">
-                <div class="row g-3">
+                <div className="row g-3">
                   <div className="col-sm-12 col-md-6 col-lg-6">
                     <div className="form-floating needs-validation">
                       <select className="form-select" disabled={isView} value={spouseDetail?.p_spouses ?? 'ผู้กู้'} onChange={(e) => handleChangeSpouse('p_spouses', e.target?.value)}>
@@ -214,7 +214,7 @@ const Spouse = (props) => {
                       <label htmlFor="floatingSelectTeam">สถานะสมรส</label>
                     </div>
                   </div>
-                  <div class="mb-1">
+                  <div className="mb-1">
                     <div className="card shadow-none border my-4" data-component-card="data-component-card">
                       <div className="card-body p-0">
                         <div className="p-4 code-to-copy">

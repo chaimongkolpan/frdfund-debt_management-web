@@ -126,6 +126,7 @@ export const spDate = (value, format) => {
   return `${day} ${month}`;
 };
 export const stringToDateTh = (value, showTime = true, format) => {
+  if (!value) return value;
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -141,6 +142,7 @@ export const stringToDateTh = (value, showTime = true, format) => {
     : `${day}/${month}/${year}`;
 };
 export const ToDateDb = (value, toThai = false, format) => {
+  if (!value) return value;
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -149,6 +151,7 @@ export const ToDateDb = (value, toThai = false, format) => {
   return `${year}-${month}-${day}`;
 };
 export const stringToDateThShort = (value, showTime = true, format) => {
+  if (!value) return value;
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -165,6 +168,7 @@ export const stringToDateThShort = (value, showTime = true, format) => {
 };
 
 export const formatDateDatatable = (value, showTime = true) => {
+  if (!value) return value;
   const date = new Date(value);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -177,4 +181,14 @@ export const formatDateDatatable = (value, showTime = true) => {
   return showTime
     ? `${day}/${month}/${year} ${time}`
     : `${day}/${month}/${year}`;
+};
+
+export const saveDate = (value) => {
+  if (!value) return value;
+  const date = moment(value).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  let y = date.getFullYear();
+  const year = (y < 2500 ? y: y - 543) + (toThai ? 543 : 0);
+  return `${year}-${month}-${day}`;
 };

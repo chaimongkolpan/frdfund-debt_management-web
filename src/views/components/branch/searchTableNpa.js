@@ -171,8 +171,8 @@ const SearchTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span class="fas fa-check"></span> รวบรวมเตรียมนำเสนอ</button>
-            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onSubmitFail()}><span class="fas fa-times"></span> ข้อมูลไม่ถูกต้องครบถ้วน</button>
+            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span className="fas fa-check"></span> รวบรวมเตรียมนำเสนอ</button>
+            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onSubmitFail()}><span className="fas fa-times"></span> ข้อมูลไม่ถูกต้องครบถ้วน</button>
           </div>
         </div>
       </div>

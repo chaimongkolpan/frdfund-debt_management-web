@@ -251,8 +251,8 @@ const NPA = () => {
           <div className="col-12">
             {(count && contracts && sumTotal) ? (
               <h6>
-                <div class="d-flex">
-                  <div class="flex-grow-1 ">{`จำนวน ${count} ราย ,${contracts} สัญญา ,ยอดเงินรวม ${sumTotal} บาท`}</div>
+                <div className="d-flex">
+                  <div className="flex-grow-1 ">{`จำนวน ${count} ราย ,${contracts} สัญญา ,ยอดเงินรวม ${sumTotal} บาท`}</div>
                 </div>
               </h6>
             ) : null}

@@ -1900,6 +1900,310 @@ export const searchLegalCheck = async (filter) => {
   }
 };
 //#endregion
+//#region Guarantee
+
+//#endregion
+//#region Account
+//#region Operation Land
+export const searchOperation = async (filter) => {
+  const path = '/Operation/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchSurvey = async (filter) => {
+  const path = '/Operation/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchRental = async (filter) => {
+  const path = '/Operation/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchExpropriated = async (filter) => {
+  const path = '/Operation/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchBorrow = async (filter) => {
+  const path = '/Operation/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#region Reimbursement
+export const searchReimbursement = async (filter) => {
+  const path = '/Reimbursement/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#region Adjust
+export const searchAdjust = async (filter) => {
+  const path = '/Adjust/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchAdjustNotValid = async (filter) => {
+  const path = '/Adjust/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#region Follow
+export const searchFollow = async (filter) => {
+  const path = '/Follow/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#region Debt Acknowledge
+export const searchDebtAcknowledge = async (filter) => {
+  const path = '/DebtAcknowledge/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#region Debt Accept
+export const searchDebtAccept = async (filter) => {
+  const path = '/DebtAccept/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#region Invoice
+export const searchInvoice = async (filter) => {
+  const path = '/Invoice/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#region Restructure
+export const searchRestructuring = async (filter) => {
+  const path = '/Restructuring/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+//#endregion
+//#region Close
+export const searchClose = async (filter) => {
+  const path = '/Close/search-legal-contract';
+  try {
+    return {
+      isSuccess: true,
+      data: [
+        1,1,1,1,1,1
+      ]
+    }
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
+
 // #region NPA
 export const getNpaRoundFilter = async () => {
   const path = '/npa/npa-round-filter';

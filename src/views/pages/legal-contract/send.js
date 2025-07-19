@@ -253,7 +253,7 @@ const LegalContractSend = () => {
         >
           <form>
             <br />
-            <div class="row">
+            <div className="row">
               <div data-list='{"valueNames":["name","email","age"]}'>
                 <div className="table-responsive mx-n1 px-1">
                   <table className="table table-sm table-striped table-bordered fs-9 mb-0">

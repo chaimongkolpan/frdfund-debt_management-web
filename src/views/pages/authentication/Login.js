@@ -27,15 +27,13 @@ import "@assets/css/login.css";
 
 import { login } from "@src/services/api";
 
-const ToastContent = ({ t, name, role }) => {
+const ToastContent = ({ t, name }) => {
   return (
     <div className="d-flex align-items-center">
-      <div className="me-1">
-        <Avatar size="sm" color="success" icon={<CheckCircle size={12} />} />
-      </div>
+      <div className="me-1"><CheckCircle size={12} color="success" /></div>
       <div className="d-flex flex-column">
         <div className="d-flex justify-content-between">
-          <h6>{name}</h6>
+          <h6 style={{ color: '#1c6c09' }}>{name}</h6>
           <X
             size={12}
             className="cursor-pointer"
@@ -51,12 +49,10 @@ const ToastContent = ({ t, name, role }) => {
 const ToastError = ({ t, message }) => {
   return (
     <div className="d-flex">
-      <div className="me-1">
-        <Avatar size="sm" color="danger" icon={<X size={12} />} />
-      </div>
+      <div className="me-1"><X size={12} color="danger" /></div>
       <div className="d-flex flex-column">
         <div className="d-flex justify-content-between">
-          <h6>{message}</h6>
+          <h6 style={{ color: '#fa3b1d' }}>{message}</h6>
           <X
             size={12}
             className="cursor-pointer"
@@ -111,23 +107,33 @@ const Login = () => {
           };
           const data = {
             ...userData,
+            fullName: userData.firstname + ' ' + userData.lastname,
             accessToken: res.token,
             refreshToken: res.token,
           };
           dispatch(handleLogin(data));
           ability.update('admin');
           navigate(getHomeRouteForLoggedInUser('admin'));
+          toast((t) => (
+            <ToastContent t={t} name={data.fullName} />
+          ));
         } else {
           setError("password", {
             type: "manual",
             message: res.message,
           });
+          toast((t) => (
+            <ToastError t={t} message={res.message} />
+          ));
         }
       } catch (err) {
         console.log("try", err);
       }
     } catch (err) {
       console.error("Unexpected Error:", err);
+      toast((t) => (
+        <ToastError t={t} message={'เข้าสู่ระบบไม่สำเร็จ'} />
+      ));
       // alert("เกิดข้อผิดพลาด: " + (err?.message || "ไม่ทราบสาเหตุ"));
     }
   };

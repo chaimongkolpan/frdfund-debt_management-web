@@ -238,8 +238,8 @@ const LegalContractSend = () => {
         <Modal isOpen={openViewEdit} setModal={setOpenViewEdit} hideOk onClose={() => setOpenViewEdit(false)}  title={'ข้อมูลแก้ไขนิติกรรมสัญญา'} closeText={'ปิด'} scrollable size={'xl'}>
           <form>
             <br />
-            <div class="row">
-              <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
+            <div className="row">
+              <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
                 <Textbox title={'หมายเหตุ'} disabled containerClassname={'mb-3'} value={bookNo} />
               </div>
             </div>
@@ -250,8 +250,8 @@ const LegalContractSend = () => {
         <Modal isOpen={openViewEditAsset} setModal={setOpenViewEditAsset} hideOk onClose={() => setOpenViewEditAsset(false)}  title={'ข้อมูลแก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable size={'xl'}>
           <form>
             <br />
-            <div class="row">
-              <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
+            <div className="row">
+              <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
                 <Textbox title={'หมายเหตุ'} disabled containerClassname={'mb-3'} value={bookNo} />
               </div>
             </div>
@@ -262,11 +262,11 @@ const LegalContractSend = () => {
         <Modal isOpen={openViewReturn} setModal={setOpenViewReturn} hideOk onClose={() => setOpenViewReturn(false)}  title={'ข้อมูลส่งคืนนิติกรรมสัญญา'} closeText={'ปิด'} scrollable size={'xl'}>
           <form>
             <br />
-            <div class="row">
-              <div class="col-sm-12 col-md-12 col-lg-6 mt-3">
+            <div className="row">
+              <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
                 <Textbox title={'เลขที่หนังสือส่งคืน'} disabled containerClassname={'mb-3'} value={bookNo} />
               </div>
-              <div class="col-sm-12 col-md-12 col-lg-6 mt-3">
+              <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} disabled />
               </div>
               {oldfiles && (
@@ -426,7 +426,7 @@ const LegalContractSend = () => {
         >
           <form>
             <br />
-            <div class="row">
+            <div className="row">
               <div data-list='{"valueNames":["name","email","age"]}'>
                 <div className="table-responsive mx-n1 px-1">
                   <table className="table table-sm table-striped table-bordered fs-9 mb-0">
@@ -506,7 +506,7 @@ const LegalContractSend = () => {
         >
           <form>
             <br />
-            <div class="row">
+            <div className="row">
               <div data-list='{"valueNames":["name","email","age"]}'>
                 <div className="table-responsive mx-n1 px-1">
                   <table className="table table-sm table-striped table-bordered fs-9 mb-0">
