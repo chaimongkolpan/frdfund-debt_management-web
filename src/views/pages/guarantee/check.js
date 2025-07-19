@@ -11,7 +11,8 @@ import SearchTable from "@views/components/guarantee/searchCheckTable";
 import Detail from "@views/components/guarantee/detail";
 import PlanPay from "@views/components/guarantee/planPay";
 import Asset from "@views/components/guarantee/assetModal";
-import Guarantor from "@views/components/legal-contract/guarantorModal";
+import Guarantor from "@views/components/guarantee/editGuaranteeModal";
+import ReturnGuarantee from "@views/components/guarantee/returnGuaranteeModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
@@ -35,6 +36,7 @@ const LegalContractSend = () => {
   const [openPlan, setOpenPlan] = useState(false);
   const [openAsset, setOpenAsset] = useState(false);
   const [openGuarantor, setOpenGuarantor] = useState(false);
+  const [openReturnGuarantee, setOpenReturnGuarantee] = useState(false);
   const [openSpouse, setOpenSpouse] = useState(false);
   const [openSubmit, setOpenSubmit] = useState(false);
   const [openUpload, setOpenUpload] = useState(false);
@@ -160,6 +162,10 @@ const LegalContractSend = () => {
     await setPolicy(item);
     await setOpenAsset(true);
   }
+  const handleReturnGuarantee = async (item) => {
+    await setPolicy(item);
+    await setOpenReturnGuarantee(true);
+  }
   const handleGuarantor = async (item) => {
     await setPolicy(item);
     await setOpenGuarantor(true);
@@ -192,6 +198,7 @@ const LegalContractSend = () => {
                         handlePlan={handlePlan} 
                         handleAsset={handleAsset} 
                         handleGuarantor={handleGuarantor} 
+                        handleReturnGuarantee={handleReturnGuarantee}
                         handleSpouse={handleSpouse} 
                         handleSubmit={handleSubmit} 
                         handleUpload={handleUpload}
@@ -221,18 +228,23 @@ const LegalContractSend = () => {
         </Modal>
       )}
       {openAsset && (
-        <Modal isOpen={openAsset} setModal={setOpenAsset} hideOk onClose={() => setOpenAsset(false)}  title={'ข้อมูลหลักทรัพย์ค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openAsset} setModal={setOpenAsset} hideOk onClose={() => setOpenAsset(false)}  title={'เลื่อนโอนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
           <Asset policy={policy} isView /> 
         </Modal> 
       )}
       {openGuarantor && (
-        <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลบุคคลค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลแก้ไขโอนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
           <Guarantor policy={policy} isView /> 
         </Modal> 
       )}
       {openSpouse && (
-        <Modal isOpen={openSpouse} setModal={setOpenSpouse} hideOk onClose={() => setOpenSpouse(false)}  title={'ข้อมูลคู่สมรส'} closeText={'ปิด'} scrollable fullscreen>
-          <Spouse policy={policy} isView /> 
+        <Modal isOpen={openSpouse} setModal={setOpenSpouse} hideOk onClose={() => setOpenSpouse(false)}  title={'ข้อมูลแก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable fullscreen>
+          <Guarantor policy={policy} isView /> 
+        </Modal> 
+      )}
+      {openReturnGuarantee && (
+        <Modal isOpen={openReturnGuarantee} setModal={setOpenReturnGuarantee} hideOk onClose={() => setOpenReturnGuarantee(false)}  title={'ข้อมูลส่งคืนโอนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
+          <ReturnGuarantee policy={policy} /> 
         </Modal> 
       )}
       {openViewEdit && (

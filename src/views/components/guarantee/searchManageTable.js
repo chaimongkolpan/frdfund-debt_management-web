@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit, handleUpload, handleEdit, handleReturn
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor,  handleReturnGuarantee, handleSpouse, handleSubmit, handleUpload, handleEdit, handleReturn
     , handleViewEdit, handleViewEditAsset, handleViewReturn
   } = props;
   const [data, setData] = useState([]);
@@ -92,6 +92,7 @@ const SearchTable = (props) => {
               <button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>ข้อมูลแก้ไขโอนหลักทรัพย์</button>
               <button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลแก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)</button>
               <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ข้อมูลส่งคืนโอนหลักทรัพย์</button>
+              <button className="dropdown-item" type="button" onClick={() => handleReturnGuarantee(item)}>ข้อมูลส่งคืนโอนหลักทรัพย์</button>
             </div>
           </div>
         </td>
