@@ -181,7 +181,7 @@ const LegalContractSend = () => {
   return (
     <>
       <div className="content">
-        <h4>ตรวจสอบนิติกรรมสัญญา</h4>
+        <h4>ตรวจสอบหลักประกัน</h4>
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
