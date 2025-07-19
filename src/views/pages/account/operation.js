@@ -8,6 +8,7 @@ import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/operation-land/filter";
 import SearchTable from "@views/components/account/operation-land/searchTable";
+import OperationLand from "@views/components/account/operation-land/operationModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
@@ -82,8 +83,8 @@ const PageContent = () => {
         </div>
       </div>
       {openDetail && (
-        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'คำนวนยอดปิดสัญญา'} closeText={'ปิด'} scrollable fullscreen>
-          <form>
+        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'ดำเนินการในที่ดิน'} closeText={'ปิด'} scrollable fullscreen>
+          {/* <form>
             <br />
             <div className="row">
               <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
@@ -93,7 +94,8 @@ const PageContent = () => {
                 <button className="btn btn-primary ms-2" type="button" onClick={() => cal()}>คำนวณ</button>
               </div>
             </div>
-          </form>
+          </form> */}
+          <OperationLand  /> 
         </Modal>
       )}
       {openRequestClose && (
