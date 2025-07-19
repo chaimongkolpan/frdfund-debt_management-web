@@ -49,8 +49,13 @@ const LegalContractManage = lazy(() => import('../views/pages/legal-contract/man
 const GuaranteePrepare = lazy(() => import('../views/pages/guarantee/index'))
 const GuaranteeCheck = lazy(() => import('../views/pages/guarantee/check'))
 const GuaranteeManage = lazy(() => import('../views/pages/guarantee/manage'))
-const GuaranteeOperation = lazy(() => import('../views/pages/guarantee/operation'))
-const GuaranteeBorrow = lazy(() => import('../views/pages/guarantee/borrow'))
+// const GuaranteeOperation = lazy(() => import('../views/pages/guarantee/operation'))
+// const GuaranteeBorrow = lazy(() => import('../views/pages/guarantee/borrow'))
+const GuaranteeOperation = lazy(() => import('../views/pages/account/operation'))
+const GuaranteeLandSurvey = lazy(() => import('../views/pages/account/survey'))
+const GuaranteeLandRental = lazy(() => import('../views/pages/account/rental'))
+const GuaranteeExpropriatedLand = lazy(() => import('../views/pages/account/expropriated'))
+const GuaranteeBorrow = lazy(() => import('../views/pages/account/borrow'))
 const AccountReimbursement = lazy(() => import('../views/pages/account/reimbursement'))
 const AccountAdjustReceivable = lazy(() => import('../views/pages/account/adjust-receivable-debt'))
 const AccountAdjustNotValid = lazy(() => import('../views/pages/account/adjust-not-valid'))
@@ -278,14 +283,29 @@ const Router = () => {
             children: [{ path: prefix_url + '/guarantee/manage-guarantee', element: <GuaranteeManage /> }]
         },
         {
-            path: prefix_url + '/guarantee/operation-guarantee',
+            path: prefix_url + '/account/operation-land/operation',
             element: <VerticalLayout />,
-            children: [{ path: prefix_url + '/guarantee/operation-guarantee', element: <GuaranteeOperation /> }]
+            children: [{ path: prefix_url + '/account/operation-land/operation', element: <GuaranteeOperation /> }]
         },
         {
-            path: prefix_url + '/guarantee/borrow-guarantee',
+            path: prefix_url + '/account/operation-land/survey',
             element: <VerticalLayout />,
-            children: [{ path: prefix_url + '/guarantee/borrow-guarantee', element: <GuaranteeBorrow /> }]
+            children: [{ path: prefix_url + '/account/operation-land/survey', element: <GuaranteeLandSurvey /> }]
+        },
+        {
+            path: prefix_url + '/account/operation-land/rental',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/operation-land/rental', element: <GuaranteeLandRental /> }]
+        },
+        {
+            path: prefix_url + '/account/operation-land/expropriated',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/operation-land/expropriated', element: <GuaranteeExpropriatedLand /> }]
+        },
+        {
+            path: prefix_url + '/account/operation-land/borrow',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/operation-land/borrow', element: <GuaranteeBorrow /> }]
         },
         {
             path: prefix_url + '/account/reimbursement',

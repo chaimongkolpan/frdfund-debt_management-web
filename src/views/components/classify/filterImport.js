@@ -63,7 +63,7 @@ const ClassifyImportFilter = (props) => {
   return (
     <>
       <form className="row g-3">
-        <div class="col-sm-12 col-md-12 col-lg-6">
+        <div className="col-sm-12 col-md-12 col-lg-6">
           <Dropdown 
             title={'ประเภทจัดการหนี้'} 
             defaultValue={'NPL'} 
@@ -71,7 +71,7 @@ const ClassifyImportFilter = (props) => {
             handleChange={(val) => onChange('debtType', val)} 
           />
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-6">
+        <div className="col-sm-12 col-md-12 col-lg-6">
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 

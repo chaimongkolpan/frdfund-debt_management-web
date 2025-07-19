@@ -295,7 +295,7 @@ const SearchTable = (props) => {
       >
         <form>
           <br />
-          <div class="row">
+          <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6">
               <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
             </div>
@@ -305,8 +305,8 @@ const SearchTable = (props) => {
                 handleChange={(val) => setCreditorDate(val)} 
               />
             </div>
-            <div class="d-flex">
-              <h5><div class="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
+            <div className="d-flex">
+              <h5><div className="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
             </div>
           </div>
         </form>
@@ -320,7 +320,7 @@ const SearchTable = (props) => {
       >
         <form>
           <br />
-          <div class="row">
+          <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6">
               <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
             </div>
@@ -330,8 +330,8 @@ const SearchTable = (props) => {
                 handleChange={(val) => setCommitteeDate(val)} 
               />
             </div>
-            <div class="d-flex">
-              <h5><div class="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
+            <div className="d-flex">
+              <h5><div className="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
             </div>
           </div>
         </form>
