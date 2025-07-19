@@ -738,10 +738,12 @@ const Sidebar = props => {
                     to={`${prefix_url + "/account/reimbursement"}`}>
                     <div className="d-flex align-items-center">
                       <span className="nav-link-icon"><span className="fas fa-donate"></span></span>
-                      <div className="nav-link-text-wrapper"><span className="nav-link-text">การชำระเงินคืน</span></div>
-                      {(alert && alert?.pay && alert.pay > 0) && (
-                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.pay)}</span>
-                      )}
+                      <div className="nav-link-text-wrapper">
+                        <span className="nav-link-text">การชำระเงินคืน</span>
+                        {(alert && alert?.pay > 0) && (
+                          <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.pay)}</span>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -784,20 +786,26 @@ const Sidebar = props => {
                 <div className="nav-item-wrapper">
                   <Link className={`nav-link ${path.includes('/account/invoice') ? 'active' : ''}`}
                     to={`${prefix_url + "/account/invoice"}`}>
-                    <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-receipt"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">ออกใบแจ้งหนี้</span></div>
-                    {(alert && alert?.receipt && alert.receipt > 0) && (
-                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.receipt)}</span>
-                    )}
+                    <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-receipt"></i></span>
+                    <div className="nav-link-text-wrapper">
+                      <span className="nav-link-text">ออกใบแจ้งหนี้</span>
+                      {(alert && alert?.receipt > 0) && (
+                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.receipt)}</span>
+                      )}
+                    </div>
                     </div>
                   </Link>
                 </div>
                 <div className="nav-item-wrapper">
                   <Link className={`nav-link ${path.includes('/account/debt-acknowledgment') ? 'active' : ''}`}
                     to={`${prefix_url + "/account/debt-acknowledgment"}`}>
-                    <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="far fa-address-book"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">หนังสือรับสภาพหนี้</span></div>
-                    {(alert && alert?.instead && alert.instead > 0) && (
-                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.instead)}</span>
-                    )}
+                    <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="far fa-address-book"></i></span>
+                    <div className="nav-link-text-wrapper">
+                      <span className="nav-link-text">หนังสือรับสภาพหนี้</span>
+                      {(alert && alert?.instead > 0) && (
+                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.instead)}</span>
+                      )}
+                    </div>
                     </div>
                   </Link>
                 </div>
@@ -805,7 +813,7 @@ const Sidebar = props => {
                   <Link className={`nav-link label-1 ${path.includes('/account/debt-accept') ? 'active' : ''}`}
                     to={`${prefix_url + "/account/debt-accept"}`}>
                     <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-address-book"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">หนังสือรับสภาพบังคับ</span></div>
-                    {(alert && alert?.force && alert.force > 0) && (
+                    {(alert && alert?.force > 0) && (
                       <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.force)}</span>
                     )}
                     </div>
@@ -815,7 +823,7 @@ const Sidebar = props => {
                   <Link className={`nav-link label-1 ${path.includes('/account/debt-restructuring') ? 'active' : ''}`}
                     to={`${prefix_url + "/account/debt-restructuring"}`}>
                     <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-recycle"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">ปรับโครงสร้างหนี้</span></div>
-                    {(alert && alert?.restruct && alert.restruct > 0) && (
+                    {(alert && alert?.restruct > 0) && (
                       <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.restruct)}</span>
                     )}
                     </div>
@@ -827,7 +835,7 @@ const Sidebar = props => {
                 <div className="nav-item-wrapper">
                   <a className="nav-link label-1" href="/close">
                     <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-file-excel"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">ปิดสัญญา</span></div>
-                    {(alert && alert?.closing && alert.closing > 0) && (
+                    {(alert && alert?.closing > 0) && (
                       <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.closing)}</span>
                     )}
                     </div>
