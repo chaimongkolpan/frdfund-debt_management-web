@@ -268,7 +268,7 @@ const FullModal = (props) => {
                             containerClassname={'mb-3'} value={debts?.npA_round} disabled
                           />
                         </div>
-                        <div class="col-sm-12 col-md-6 col-lg-12">
+                        <div className="col-sm-12 col-md-6 col-lg-12">
                           <Textbox title={'เอกสารสิทธิ์'} containerClassname={'mb-3'} value={debts?.title_document_no} disabled />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">

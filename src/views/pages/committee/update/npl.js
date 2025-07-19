@@ -145,7 +145,7 @@ const NPL = () => {
         okText={"ยืนยัน"}
         closeText={"ยกเลิก"}
         centered
-        children={<p class="text-body-tertiary lh-lg mb-0">ยืนยันอนุมัติ</p>}
+        children={<p className="text-body-tertiary lh-lg mb-0">ยืนยันอนุมัติ</p>}
       />
       <CustomerModal
         isOpen={isReject}

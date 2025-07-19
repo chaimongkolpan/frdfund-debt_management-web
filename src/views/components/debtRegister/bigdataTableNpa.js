@@ -64,9 +64,9 @@ const DebtNPABigDataTable = (props) => {
         <td className="align-middle">{item.ngan}</td>
         <td className="align-middle">{item.sqaure_wa}</td>
         <td classname="align-middle">
-          <div class="d-flex justify-content-center"> 
-            <button class="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => onEditNpaRegister(item)}>
-              <i class="far fa-edit"></i>
+          <div className="d-flex justify-content-center"> 
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => onEditNpaRegister(item)}>
+              <i className="far fa-edit"></i>
             </button>
           </div>
         </td>

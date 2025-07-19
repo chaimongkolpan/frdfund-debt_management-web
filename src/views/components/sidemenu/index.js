@@ -615,8 +615,8 @@ const Sidebar = props => {
                         <i className="fas fa-landmark"></i>
                       </span>
                       <span className="nav-link-text">หลักประกัน</span>
-                      {(alert && alert?.collateral && alert.collateral.total > 0) && (
-                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.total)}</span>
+                      {(alert && alert?.collateral && (alert.collateral.total - alert.collateral.borrow) > 0) && (
+                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.total-alert.collateral.borrow)}</span>
                       )}
                     </div>
                   </a>
@@ -627,7 +627,7 @@ const Sidebar = props => {
                         <Link className={`nav-link ${path.includes('/guarantee/prepare-guarantee') ? 'active' : ''}`}
                           to={`${prefix_url + "/guarantee/prepare-guarantee"}`}>
                           <div className="d-flex align-items-center"><span className="nav-link-text">ทะเบียนคุมหลักประกัน</span>
-                          {(alert && alert?.collateral && alert.collateral.registration > 0) && (
+                          {(alert && alert?.collateral && alert.collateral.registration) > 0 && (
                             <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.registration)}</span>
                           )}
                           </div>
@@ -653,6 +653,7 @@ const Sidebar = props => {
                           </div>
                         </Link>
                       </li>
+                      {/* 
                       <li className="nav-item">
                         <Link className={`nav-link ${path.includes('/guarantee/operation-guarantee') ? 'active' : ''}`}
                           to={`${prefix_url + "/guarantee/operation-guarantee"}`}>
@@ -669,13 +670,69 @@ const Sidebar = props => {
                           )}
                           </div>
                         </Link>
-                      </li>
+                      </li> 
+                      */}
                     </ul>
                   </div>
                 </div>
               </li>
               <li className="nav-item">
                 <p className="navbar-vertical-label">บัญชีลูกหนี้</p>
+                <div className="nav-item-wrapper">
+                  <a className={`nav-link dropdown-indicator label-1 ${path.includes('/account/operation-land') ? 'active' : ''}`}  
+                    href="#nv-OperationLand" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-OperationLand">
+                    <div className="d-flex align-items-center">
+                      <div className="dropdown-indicator-icon-wrapper">
+                        <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                      </div>
+                      <span className="nav-link-icon"><i className="fas fa-landmark-flag"></i></span>
+                      <span className="nav-link-text">การดำเนินการในที่ดิน</span>
+                      {(alert && alert?.collateral && alert.collateral.borrow > 0) && (
+                        <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.borrow)}</span>
+                      )}
+                    </div>
+                  </a>
+                  <div className="parent-wrapper label-1">
+                    <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-OperationLand">
+                      <li className="collapsed-nav-item-title d-none">การดำเนินการในที่ดิน</li>
+                      <li className="nav-item">
+                        <Link className={`nav-link ${path.includes('/account/operation-land/operation') ? 'active' : ''}`}
+                          to={`${prefix_url + "/account/operation-land/operation"}`}>
+                          <div className="d-flex align-items-center"><span className="nav-link-text">การดำเนินการในที่ดิน</span></div>
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className={`nav-link ${path.includes('/account/operation-land/survey') ? 'active' : ''}`}
+                          to={`${prefix_url + "/account/operation-land/survey"}`}>
+                          <div className="d-flex align-items-center"><span className="nav-link-text">การรังวัด</span></div>
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className={`nav-link ${path.includes('/account/operation-land/rental') ? 'active' : ''}`}
+                          to={`${prefix_url + "/account/operation-land/rental"}`}>
+                          <div className="d-flex align-items-center"><span className="nav-link-text">การเช่า</span></div>
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className={`nav-link ${path.includes('/account/operation-land/expropriated') ? 'active' : ''}`}
+                          to={`${prefix_url + "/account/operation-land/expropriated"}`}>
+                          <div className="d-flex align-items-center"><span className="nav-link-text">การเวนคืน</span></div>
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className={`nav-link ${path.includes('/account/operation-land/borrow') ? 'active' : ''}`}
+                          to={`${prefix_url + "/account/operation-land/borrow"}`}>
+                          <div className="d-flex align-items-center">
+                            <span className="nav-link-text">ยืม-คืนโฉนด</span>
+                            {(alert && alert?.collateral && alert.collateral.borrow > 0) && (
+                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.borrow)}</span>
+                            )}
+                          </div>
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
                 <div className="nav-item-wrapper">
                   <Link className={`nav-link label-1 ${path.includes('/account/reimbursement') ? 'active' : ''}`}
                     to={`${prefix_url + "/account/reimbursement"}`}>
@@ -701,7 +758,7 @@ const Sidebar = props => {
                   </a>
                   <div className="parent-wrapper label-1">
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-AccountsReceivable">
-                      <li className="collapsed-nav-item-title d-none">จำแนกมูลหนี้</li>
+                      <li className="collapsed-nav-item-title d-none">การปรับปรุงหนี้</li>
                       <li className="nav-item">
                         <Link className={`nav-link ${path.includes('/account/adjust/receivable-debt') ? 'active' : ''}`}
                           to={`${prefix_url + "/account/adjust/receivable-debt"}`}>

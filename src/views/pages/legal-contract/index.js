@@ -134,7 +134,7 @@ const LegalContractPrepare = () => {
         <Modal isOpen={openPrint} setModal={setOpenPrint} onClose={() => setOpenPrint(false)}  
           title={'ปริ้นนิติกรรมสัญญา'} okText={'ปริ้น'} centered onOk={onPrint}
           closeText={'ยกเลิก'}>
-          <p class="text-body-tertiary lh-lg mb-0">ต้องการปริ้นนิติกรรมสัญญา</p>
+          <p className="text-body-tertiary lh-lg mb-0">ต้องการปริ้นนิติกรรมสัญญา</p>
         </Modal> 
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

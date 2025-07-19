@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData } from "@utils";
+import { getUserData, ToDateDb, saveDate } from "@utils";
 import According from "@views/components/panel/according";
 import DatePicker from "@views/components/input/DatePicker";
 import Dropdown from "@views/components/input/DropdownSearch";
@@ -15,7 +15,6 @@ import {
   getYears,
   downloadReport
 } from "@services/api";
-import { ToDateDb } from "@utils";
 
 const user = getUserData();
 const Report = () => {
@@ -47,22 +46,62 @@ const Report = () => {
     "รายงานการชำระหนี้แทนเกษตรกร.zip",
   ];
   const download = async (id) => {
-    setLoad(true);
-    const param = {
-      reportId: id,
-      accountType, 
-      committee, 
-      startDate: startDate ? ToDateDb(startDate) : null, 
-      endDate: endDate ? ToDateDb(endDate) : null, 
-      year, 
-      province, creditorType, creditor, debtType, debtStatus 
-    }
-    if (await downloadReport(param, filenames[id - 1])) {
-      setLoad(false);
-    } else {
-      alert('ไม่สามารถดาวน์โหลดรายงานได้');
-      setLoad(false);
-    }
+    // setLoad(true);
+    // const param = {
+    //   reportId: id,
+    //   accountType, 
+    //   committee, 
+    //   startDate: startDate ? ToDateDb(startDate) : null, 
+    //   endDate: endDate ? ToDateDb(endDate) : null, 
+    //   year, 
+    //   province, creditorType, creditor, debtType, debtStatus 
+    // }
+/*
+    //var a = document.createElement('a');
+    //a.style.display = 'none';
+    //a.href = '/Report/Download?' + param;
+    //a.download = filename;
+    //document.body.appendChild(a);
+    //a.click();   
+*/
+    // if (await downloadReport(param, filenames[id - 1])) {
+    //   setLoad(false);
+    // } else {
+    //   alert('ไม่สามารถดาวน์โหลดรายงานได้');
+    //   setLoad(false);
+    // }
+
+
+    
+    let reportId = 0;
+    if (id == 1) reportId = 4; if (id == 2) reportId = 5;
+    if (id == 3) reportId = 7; if (id == 4) reportId = 38;
+    if (id == 5) reportId = 9; if (id == 6) reportId = 20;
+    if (id == 7) reportId = 13; if (id == 8) reportId = 11;
+    if (id == 9) reportId = 14; if (id == 10) reportId = 39;
+
+    var param = 'id=' + reportId + '&';
+    var start =startDate;
+    if (start != null && start != undefined && start != '') param += 'start=' + saveDate(start) + '&';
+    var stop = endDate;
+    if (stop != null && stop != undefined && stop != '') param += 'stop=' + saveDate(stop) + '&';
+    if (year != null && year != undefined && year != '') param += 'year=' + (year == 'all' ? 'ทั้งหมด' : year) + '&';
+    var CreditorType = (creditorType == 'all' ? 'ทั้งหมด' : creditorType);
+    if (CreditorType != null && CreditorType != undefined && CreditorType != '') param += 'creditortype=' + CreditorType + '&';
+    var Creditor = (creditor == 'all' ? '0' : creditor);
+    if (Creditor != null && Creditor != undefined && Creditor != '') param += 'creditor=' + Creditor + '&';
+    var DebtType = (debtType == 'all' ? 'ทั้งหมด' : debtType);
+    if (DebtType != null && DebtType != undefined && DebtType != '') param += 'debttype=' + DebtType + '&';
+    var LegalNo = (accountType == 'all' ? 'ทั้งหมด' : accountType);
+    if (LegalNo != null && LegalNo != undefined && LegalNo != '') param += 'legalno=' + LegalNo + '&';
+    var ApproveNo = committee;
+    if (ApproveNo != null && ApproveNo != undefined && ApproveNo != '') param += 'approveno=' + ApproveNo + '&';
+    var ProvinceId = 0;
+    if (ProvinceId != null && ProvinceId != undefined && ProvinceId != '') param += 'province=' + ProvinceId + '&';
+    var AccountStatus = (debtStatus == 'all' ? 'ทั้งหมด' : debtStatus);
+    if (AccountStatus != null && AccountStatus != undefined && AccountStatus != '') param += 'account_status=' + AccountStatus + '&'; 
+    console.log('param', param);
+    window.open('https://debtinfo.frdfund.org/report/Download?exportpdf=true&' + param, '_blank').focus();
   }
   const onChange = async(key, val) => {
     if (key == 'province') {

@@ -51,7 +51,7 @@ const FilterResigtration = (props) => {
   return (
     <>
       <form className="row g-3">
-        <div class="col-sm-12 col-md-12 col-lg-6">
+        <div className="col-sm-12 col-md-12 col-lg-6">
           {bookNoOp && (
             <Dropdown 
               title={'เลขหนังสือ'} 
@@ -61,7 +61,7 @@ const FilterResigtration = (props) => {
             />
           )}
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-6">
+        <div className="col-sm-12 col-md-12 col-lg-6">
           {bookDateOp && (
             <Dropdown 
               title={'วันที่หนังสือ'} 

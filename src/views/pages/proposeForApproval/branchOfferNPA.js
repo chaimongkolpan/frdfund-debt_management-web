@@ -213,11 +213,11 @@ const BranchOfferNPA = () => {
         closeText={"ปิด"}
         scrollable
       >
-        <div class="row">
-          <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+        <div className="row">
+          <div className="col-sm-12 col-md-6 col-lg-6 mb-3">
             <BookNo title={'เลขหนังสือ'} subtitle={'กฟก.'} handleChange={(val) => setBookNo(val)} value={bookNo} />
           </div>
-          <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+          <div className="col-sm-12 col-md-6 col-lg-6 mb-3">
             <DatePicker title={'วันที่หนังสือ'}
               value={bookDate} 
               handleChange={(val) => setBookDate(val)} 
