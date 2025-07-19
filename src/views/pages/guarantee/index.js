@@ -16,7 +16,7 @@ import ReturnGuarantee from "@views/components/guarantee/returnGuaranteeModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
 import { 
   cleanData,
-  searchLegalPrepare,
+  searchGuaranteePrepare,
 } from "@services/api";
 
 const user = getUserData();
@@ -36,7 +36,7 @@ const LegalContractPrepare = () => {
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
-    const result = await searchLegalPrepare(filter);
+    const result = await searchGuaranteePrepare(filter);
     if (result.isSuccess) {
       setData(result)
     } else {

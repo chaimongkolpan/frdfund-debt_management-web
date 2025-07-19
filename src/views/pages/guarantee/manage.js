@@ -21,6 +21,7 @@ import {
   searchLegalCheck,
   saveDocumentPolicy,
   submitSendLegal,
+  searchGuaranteePrepare
 } from "@services/api";
 
 const user = getUserData();
@@ -84,7 +85,7 @@ const LegalContractSend = () => {
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
-    const result = await searchLegalCheck(filter);
+    const result = await searchGuaranteePrepare(filter);
     if (result.isSuccess) {
       setData(result)
     } else {

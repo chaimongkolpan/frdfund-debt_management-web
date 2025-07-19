@@ -18,66 +18,52 @@ const Filter = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [noOp, setNoOp] = useState(null);
   const [dateOp, setDateOp] = useState(null);
-  const statusOp = ["รอจัดทำนิติกรรมสัญญา","จัดทำนิติกรรมสัญญาแล้ว","จัดส่งนิติกรรมสัญญา","สาขาแก้ไขนิติกรรมสัญญา","ส่งคืนนิติกรรมสัญญา","ตรวจสอบนิติกรรมสัญญา","นิติกรรมสัญญาสมบูรณ์"];
+  const statusOp = ["โอนแล้ว","ยังไม่โอน"];
   const typeOp = ["NPA","NPL"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
-        idCard: "",
+        k_idCard: "",
         name: "",
-        province: "",
-        creditorType: "",
-        creditor: "",
-        debtStatus: "",
+        loan_province: "",
+        // creditorType: "",
+        // creditor: "",
+        // debtStatus: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE,
-        policyStatus: ((filter?.policyStatus == 'all' || !filter?.policyStatus) ? statusOp : [filter?.policyStatus])
+        // transferStatus: ((filter?.transferStatus == 'all' || !filter?.transferStatus) ? statusOp : [filter?.transferStatus])
       });
     }
   }
   const onChange = async (key, val) => {
-    if (key == 'province') {
-      setLoading(true);
-      await setCreditorTypeOp(null);
-      const resultCreditorType = await getBigDataCreditorTypes(val);
-      if (resultCreditorType.isSuccess) {
-        const temp1 = resultCreditorType.data.map(item => item.name);
-        await setCreditorTypeOp(temp1);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...({creditorType: 'all'})
-        }))
-        await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, '');
-        if (resultCreditor.isSuccess) {
-          const temp2 = resultCreditor.data.map(item => item.name);
-          await setCreditorOp(temp2);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...({creditor: 'all'})
-          }))
-        } else await setCreditorOp(null);
-      } else {
-        await setCreditorTypeOp(null);
-        await setCreditorOp(null);
-      } 
-      setLoading(false);
-    }
-    if (key == 'creditorType') {
-      setLoading(true);
-      await setCreditorOp(null);
-      const resultCreditor = await getBigDataCreditors(filter.province, val);
-      if (resultCreditor.isSuccess) {
-        const temp2 = resultCreditor.data.map(item => item.name);
-        await setCreditorOp(temp2);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...({creditor: 'all'})
-        }))
-      } else await setCreditorOp(null);
-      setLoading(false);
-    }
+    // if (key == 'loan_province') {
+    //   setLoading(true);
+    //   await setCreditorTypeOp(null);
+    //   const resultCreditorType = await getBigDataCreditorTypes(val);
+    //   if (resultCreditorType.isSuccess) {
+    //     const temp1 = resultCreditorType.data.map(item => item.name);
+    //     await setCreditorTypeOp(temp1);
+    //     await setFilter((prevState) => ({
+    //       ...prevState,
+    //       ...({creditorType: 'all'})
+    //     }))
+    //     await setCreditorOp(null);
+    //     const resultCreditor = await getBigDataCreditors(val, '');
+    //     if (resultCreditor.isSuccess) {
+    //       const temp2 = resultCreditor.data.map(item => item.name);
+    //       await setCreditorOp(temp2);
+    //       await setFilter((prevState) => ({
+    //         ...prevState,
+    //         ...({creditor: 'all'})
+    //       }))
+    //     } else await setCreditorOp(null);
+    //   } else {
+    //     await setCreditorTypeOp(null);
+    //     await setCreditorOp(null);
+    //   } 
+    //   setLoading(false);
+    // }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -157,7 +143,7 @@ const Filter = (props) => {
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('k_idCard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
@@ -169,7 +155,7 @@ const Filter = (props) => {
               containerClassname={'mb-3'} 
               defaultValue={noOp[0]} 
               options={noOp}
-              handleChange={(val) => onChange('branch_policy_no', val)}
+              handleChange={(val) => onChange('branch_asset_no', val)}
             />
           )}
         </div>
@@ -180,7 +166,7 @@ const Filter = (props) => {
               containerClassname={'mb-3'} 
               defaultValue={dateOp[0]} 
               options={dateOp}
-              handleChange={(val) => onChange('branch_policy_date', val)}
+              handleChange={(val) => onChange('branch_asset_date', val)}
             />
           )}
         </div>
@@ -191,7 +177,7 @@ const Filter = (props) => {
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
-              handleChange={(val) => onChange('province', val)}
+              handleChange={(val) => onChange('loan_province', val)}
               hasAll />
           )}
         </div>
@@ -202,7 +188,7 @@ const Filter = (props) => {
               title={'สถานะการโอนหลักทรัพย์'} 
               defaultValue={'all'} 
               options={statusOp}
-              handleChange={(val) => onChange('policyStatus', val)}
+              handleChange={(val) => onChange('transferStatus', val)}
               hasAll />
           )}
         </div>

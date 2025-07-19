@@ -41,20 +41,20 @@ const SearchTable = (props) => {
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
         <td>{item.loan_province}</td>
         <td>{item.loan_creditor_type}</td>
-        <td>{item.loan_creditor_name}</td>
-        <td>{item.loan_creditor_province}</td>
-        <td>{item.loan_creditor_branch}</td>
-        <td>{item.policyNO}</td>
         <td>{item.loan_debt_type}</td>
         <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
-        <td>{item.numberOfPeriodPayback}</td>
+        <td>{toCurrency(item.loan_amount)}</td>
+        <td>{toCurrency(item.compensation_amount)}</td>
+        <td>{item.transferStatus}</td>
+        <td>{item.numberOfDay}</td>
+        <td>{item.assetType}</td>
         <td>{item.numberOfYearPayback}</td>
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
-        <td></td>
+        <td>{`${item.contract_area_rai ? item.contract_area_rai : 0}`}</td>
+        <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
+        <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>
         <td class="align-middle white-space-nowrap text-center pe-0">
           <div class="btn-reveal-trigger position-static">
             <button class="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>

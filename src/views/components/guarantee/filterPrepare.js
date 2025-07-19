@@ -16,66 +16,63 @@ const Filter = (props) => {
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
-  const statusOp = ["รอจัดทำนิติกรรมสัญญา","จัดทำนิติกรรมสัญญาแล้ว","จัดส่งนิติกรรมสัญญา","สาขาแก้ไขนิติกรรมสัญญา","ส่งคืนนิติกรรมสัญญา","ตรวจสอบนิติกรรมสัญญา","นิติกรรมสัญญาสมบูรณ์"];
+  const statusOp = ["โอนแล้ว","ยังไม่โอน"];
   const typeOp = ["NPA","NPL"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
-        idCard: "",
+        k_idCard: "",
         name: "",
-        province: "",
-        creditorType: "",
-        creditor: "",
-        debtStatus: "",
+        loan_province: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE,
-        policyStatus: ((filter?.policyStatus == 'all' || !filter?.policyStatus) ? statusOp : [filter?.policyStatus])
+        //  transferStatus: ((filter?.transferStatus == 'all' || !filter?.transferStatus) ? statusOp : [filter?.transferStatus])
       });
     }
   }
   const onChange = async (key, val) => {
-    if (key == 'province') {
-      setLoading(true);
-      await setCreditorTypeOp(null);
-      const resultCreditorType = await getBigDataCreditorTypes(val);
-      if (resultCreditorType.isSuccess) {
-        const temp1 = resultCreditorType.data.map(item => item.name);
-        await setCreditorTypeOp(temp1);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...({creditorType: 'all'})
-        }))
-        await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, '');
-        if (resultCreditor.isSuccess) {
-          const temp2 = resultCreditor.data.map(item => item.name);
-          await setCreditorOp(temp2);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...({creditor: 'all'})
-          }))
-        } else await setCreditorOp(null);
-      } else {
-        await setCreditorTypeOp(null);
-        await setCreditorOp(null);
-      } 
-      setLoading(false);
-    }
-    if (key == 'creditorType') {
-      setLoading(true);
-      await setCreditorOp(null);
-      const resultCreditor = await getBigDataCreditors(filter.province, val);
-      if (resultCreditor.isSuccess) {
-        const temp2 = resultCreditor.data.map(item => item.name);
-        await setCreditorOp(temp2);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...({creditor: 'all'})
-        }))
-      } else await setCreditorOp(null);
-      setLoading(false);
-    }
+    // if (key == 'province') {
+    //   setLoading(true);
+    //   await setCreditorTypeOp(null);
+    //   const resultCreditorType = await getBigDataCreditorTypes(val);
+    //   if (resultCreditorType.isSuccess) {
+    //     const temp1 = resultCreditorType.data.map(item => item.name);
+    //     await setCreditorTypeOp(temp1);
+    //     await setFilter((prevState) => ({
+    //       ...prevState,
+    //       ...({creditorType: 'all'})
+    //     }))
+    //     await setCreditorOp(null);
+    //     const resultCreditor = await getBigDataCreditors(val, '');
+    //     if (resultCreditor.isSuccess) {
+    //       const temp2 = resultCreditor.data.map(item => item.name);
+    //       await setCreditorOp(temp2);
+    //       await setFilter((prevState) => ({
+    //         ...prevState,
+    //         ...({creditor: 'all'})
+    //       }))
+    //     } else await setCreditorOp(null);
+    //   } else {
+    //     await setCreditorTypeOp(null);
+    //     await setCreditorOp(null);
+    //   } 
+    //   setLoading(false);
+    // }
+    // if (key == 'creditorType') {
+    //   setLoading(true);
+    //   await setCreditorOp(null);
+    //   const resultCreditor = await getBigDataCreditors(filter.province, val);
+    //   if (resultCreditor.isSuccess) {
+    //     const temp2 = resultCreditor.data.map(item => item.name);
+    //     await setCreditorOp(temp2);
+    //     await setFilter((prevState) => ({
+    //       ...prevState,
+    //       ...({creditor: 'all'})
+    //     }))
+    //   } else await setCreditorOp(null);
+    //   setLoading(false);
+    // }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -136,7 +133,7 @@ const Filter = (props) => {
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('k_idCard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
@@ -147,7 +144,7 @@ const Filter = (props) => {
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
-              handleChange={(val) => onChange('province', val)}
+              handleChange={(val) => onChange('loan_province', val)}
               hasAll />
           )}
         </div>
@@ -155,8 +152,8 @@ const Filter = (props) => {
           <Dropdown 
             title={'สถานะการโอนหลักทรัพท์'} 
             defaultValue={'all'} 
-            options={typeOp}
-            handleChange={(val) => onChange('loanDebtType', val)}
+            options={statusOp}
+            handleChange={(val) => onChange('transferStatus', val)}
             hasAll />
         </div>
         <div className="col-12">
