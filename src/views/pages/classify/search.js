@@ -17,7 +17,6 @@ const SearchClassifyNPL = () => {
   // const navigate = useNavigate();
   const viewDetail = async (debt) => {
     // navigate(`/classify/searchNPL/detail/${debt.idCard}?province=${debt.province}&creditor-type=${debt.creditorType}`);
-    console.log('url', process.env.BASE_URL)
     window.open(`${process.env.BASE_URL ?? ''}/classify/searchNPL/detail/${debt.idCard}?province=${debt.province}&creditor-type=${debt.creditorType}`, '_blank', 'noopener,noreferrer');
   }
   const onSearch = async (filter) => {

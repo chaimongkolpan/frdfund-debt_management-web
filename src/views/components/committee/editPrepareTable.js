@@ -41,8 +41,8 @@ const EditDataTable = (props) => {
     }))
   }
   async function fetchData() {
-    const resultCommitteeNo = await getCommitteeNo(status);
-    const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCommitteeNo = await getCommitteeNo("\'รอเสนอคณะกรรมการจัดการหนี้\'");
+    const resultCommitteeDate = await getCommitteeDate("\'รอเสนอคณะกรรมการจัดการหนี้\'");
     const resultCreditorType = await getCreditorTypes(null);
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
@@ -177,8 +177,8 @@ const EditDataTable = (props) => {
       </form>
       {(data && data.length > 0) && (
         <div className="row">
-          <div class="d-flex">
-            <h5><div class="flex-grow-1 ">แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ (ใหม่)</div></h5>
+          <div className="d-flex">
+            <h5><div className="flex-grow-1 ">แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ (ใหม่)</div></h5>
           </div>
           <div className="col-sm-12 col-md-12 col-lg-6">
             <BookNo title={'ครั้งที่เสนอคณะกรรมการ(ใหม่)'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />

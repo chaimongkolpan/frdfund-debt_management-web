@@ -5,11 +5,11 @@ import { Spinner } from 'reactstrap'
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import According from "@views/components/panel/according";
-import Filter from "@views/components/approval/filterDisbursementStatus";
-import SearchTable from "@views/components/approval/searchDisbursementStatusTable";
+import Filter from "@views/components/approval/filterDisbursementStatusNpa";
+import SearchTable from "@views/components/approval/searchDisbursementStatusTableNpa";
 import { 
   cleanData,
-  searchDisbursementStatus,
+  searchDisbursementStatusNpa,
 } from "@services/api";
 
 const user = getUserData();
@@ -21,7 +21,7 @@ const NPA = () => {
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter({ ...filter, DebtClassifyStatus: 'ยืนยันยอดสำเร็จ' })
-    const result = await searchDisbursementStatus(filter);
+    const result = await searchDisbursementStatusNpa(filter);
     if (result.isSuccess) {
       setData(result)
     } else {

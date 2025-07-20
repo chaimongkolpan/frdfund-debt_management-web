@@ -16,8 +16,8 @@ import {
   cleanData,
   searchMakePetition,
   getMakePetitionAddedList,
-  addMakePetitionList,
-  removeMakePetitionList,
+  addMakePetitionBranchList,
+  removeMakePetitionBranchList,
   exportPetition,
 } from "@services/api";
 
@@ -33,14 +33,14 @@ const NPL = () => {
   const [isOpenAdd, setOpenAdd] = useState(false);
   const [filter, setFilter] = useState(null);
   const [filterAdded, setFilterAdded] = useState({
-    DebtClassifyStatus: 'เตรียมการชำระหนี้แทน',
+    DebtClassifyStatus: 'เตรียมการชำระหนี้แทน(สาขา)',
     currentPage: 1,
     pageSize: 0
   });
   
   const onAddBigData = async (selected) => {
     const ids = selected.map((item) => item.id_debt_management);
-    const result = await addMakePetitionList(ids);
+    const result = await addMakePetitionBranchList(ids);
     if (result.isSuccess) {
       await onSearch(filter);
       await fetchData({ ...filterAdded, currentPage: 1 });
@@ -48,7 +48,7 @@ const NPL = () => {
   }
   const onRemoveMakelist = async (selected) => {
     const ids = selected.map((item) => item.id_debt_management);
-    const result = await removeMakePetitionList(ids);
+    const result = await removeMakePetitionBranchList(ids);
     if (result.isSuccess) {
       await fetchData(filterAdded)
     }
@@ -72,7 +72,7 @@ const NPL = () => {
   }
   const onSearch = async (filter) => {
     setLoadBigData(true);
-    setFilter({ ...filter, DebtClassifyStatus: 'ยืนยันยอดสำเร็จ' })
+    setFilter({ ...filter, DebtClassifyStatus: 'อยู่ระหว่างการโอนเงินให้สาขา' })
     const result = await searchMakePetition(filter);
     if (result.isSuccess) {
       setData(result)

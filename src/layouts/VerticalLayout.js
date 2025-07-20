@@ -12,6 +12,7 @@ import { isUserLoggedIn } from "@utils";
 import { handleLogout } from '@store/authentication'
 
 import "@assets/css/theme.css"
+const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 
 const VerticalLayout = props => {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ const VerticalLayout = props => {
   useEffect(() => {
     if (isUserLoggedIn() == null) {
       dispatch(handleLogout());
-      navigate(`${process.env.BASE_URL ?? ''}/login`);
+      navigate(`${prefix_url}/login`);
     }
     setIsMounted(true)
     return () => setIsMounted(false)

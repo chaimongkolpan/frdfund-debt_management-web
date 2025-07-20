@@ -30,7 +30,7 @@ const Filter = (props) => {
         creditorType: "",
         creditor: "",
         debtStatus: "",
-        debtClassifyStatus: status,
+        debtClassifyStatusList: ['ยืนยันยอดสำเร็จ','อยู่ระหว่างการชำระหนี้แทน'],
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE
@@ -56,7 +56,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -74,7 +74,7 @@ const Filter = (props) => {
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -87,8 +87,8 @@ const Filter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNo(status);
-    const resultCommitteeDate = await getCommitteeDate(status);
+    const resultCommitteeNo = await getCommitteeNo("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'");
+    const resultCommitteeDate = await getCommitteeDate("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -106,7 +106,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -214,9 +214,9 @@ const Filter = (props) => {
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
               containerClassname={'mb-3'} 
-              defaultValue={creditorOp[0]} 
+              defaultValue={'all'} 
               options={creditorOp}
-              handleChange={(val) => onChange('creditor', val)}
+              handleChange={(val) => onChange('creditor', val)} hasAll
             />
           )}
         </div>
@@ -234,7 +234,7 @@ const Filter = (props) => {
         <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
-              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span class="fas fa-search"></span> ค้นหา</button>
+              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span className="fas fa-search"></span> ค้นหา</button>
             </div>
           </div>
         </div>

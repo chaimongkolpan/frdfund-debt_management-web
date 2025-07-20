@@ -9,7 +9,7 @@ import {
   updateBorrowerClassify,
 } from "@services/api";
 const FullModal = (props) => {
-  const {isOpen, setModal, onClose, idcard, province, creditorType, ids } = props;
+  const {isOpen, setModal, onClose, idcard, province, creditorType, ids, debtManagementType = "NPL" } = props;
   const [isMounted, setMounted] = useState(false);
   const [data, setData] = useState([]);
   const [provinces, setProvOp] = useState(null);
@@ -100,7 +100,7 @@ const FullModal = (props) => {
     }
   }
   const fetchData = async() => {
-    const result = await getBorrowerClassify(idcard, province, creditorType);
+    const result = await getBorrowerClassify(idcard, province, creditorType, debtManagementType);
     if (result.isSuccess) {
       setData(result.borrowers);
       var item = result.borrowers.find(x => x.is_active);

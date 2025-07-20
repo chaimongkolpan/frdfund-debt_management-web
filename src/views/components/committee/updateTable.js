@@ -35,15 +35,15 @@ const DataTable = (props) => {
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
             <input className="form-check-input" type="checkbox" 
-              disabled={item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้อนุมัติ' || item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ'} 
+              disabled={item.debt_management_audit_status != 'รอเสนอคณะกรรมการจัดการหนี้'} 
               checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td>{item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้อนุมัติ' ? (
-          <i className="fas fa-check text-success fs-7"></i>
-        ) : (item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ' ? (
-          <i className="fas fa-times text-danger fs-7"></i>
-        ) : '')}</td>
+        <td>
+          {item.debt_management_audit_status == 'รอเสนอคณะกรรมการจัดการหนี้' ? null : 
+          (item.debt_management_audit_status == 'คณะกรรมการจัดการหนี้ไม่อนุมัติ' ? (<i className="fas fa-times text-danger fs-7"></i>) : 
+          (<i className="fas fa-check text-success fs-7"></i>))}
+        </td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
         {coop && (
@@ -189,8 +189,8 @@ const DataTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span class="fas fa-check"></span> อนุมัติ</button>
-            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onReject()}><span class="fas fa-times"></span> ไม่อนุมัติ</button>
+            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span className="fas fa-check"></span> อนุมัติ</button>
+            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onReject()}><span className="fas fa-times"></span> ไม่อนุมัติ</button>
           </div>
         </div>
       </div>

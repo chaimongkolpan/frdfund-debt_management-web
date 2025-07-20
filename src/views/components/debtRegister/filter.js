@@ -91,19 +91,16 @@ const DebtRegisterFilter = (props) => {
       setLoading(true);
       setError('creditorType', null);
       await setCreditorOp(null);
-      console.log('type', val)
-      if (val) {
-        const resultCreditor = await getBigDataCreditors(filter.province, val);
-        if (resultCreditor.isSuccess) {
-          const temp2 = resultCreditor.data.map(item => item.name);
-          await setCreditorOp(temp2);
-          await setError('creditor', null);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...({creditor: temp2[0]})
-          }))
-        } else await setCreditorOp(null);
-      }
+      const resultCreditor = await getBigDataCreditors(filter.province, val);
+      if (resultCreditor.isSuccess) {
+        const temp2 = resultCreditor.data.map(item => item.name);
+        await setCreditorOp(temp2);
+        await setError('creditor', null);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({creditor: temp2[0]})
+        }))
+      } else await setCreditorOp(null);
       setLoading(false);
     }
     setFilter((prevState) => ({
@@ -247,7 +244,7 @@ const DebtRegisterFilter = (props) => {
         <div className="col-12">
           <div className="row g-3 justify-content-center">
             <div className="col-auto">
-              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span class="fas fa-search"></span> ค้นหา</button>
+              <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onSubmit()}><span className="fas fa-search"></span> ค้นหา</button>
             </div>
           </div>
         </div>

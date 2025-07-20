@@ -11,6 +11,7 @@ import DataRejectTable from "@views/components/committee/updateRejectTable";
 import EditDataTable from "@views/components/committee/downloadTable";
 import { 
   searchCommitteeUpdate,
+  approveCommitteeUpdate,
   rejectCommitteeUpdate,
   updateNPLstatus,
   cleanData
@@ -58,13 +59,17 @@ const NPL = () => {
   };
   const onApprove = async () => {
     const result = await updateNPLstatus(selected,status);
-    if (result)
+    if (result) {
+      await approveCommitteeUpdate({ ids: selected });
+      await onSearchTop(filter);
       await setSubmit(false);
+    }
   };
   const onReject = async () => {
     const result = await updateNPLstatus(selected,"คณะกรรมการจัดการหนี้ไม่อนุมัติ");
     if (result) {
       await rejectCommitteeUpdate({ ids: selected, remark });
+      await onSearchTop(filter);
       await setReject(false);
     }
   };
@@ -140,7 +145,7 @@ const NPL = () => {
         okText={"ยืนยัน"}
         closeText={"ยกเลิก"}
         centered
-        children={<p class="text-body-tertiary lh-lg mb-0">ยืนยันอนุมัติ</p>}
+        children={<p className="text-body-tertiary lh-lg mb-0">ยืนยันอนุมัติ</p>}
       />
       <CustomerModal
         isOpen={isReject}

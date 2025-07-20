@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { stringToDateTh, toCurrency } from "@utils";
 const ConfirmTable = (props) => {
-  const { data, setAddPetition } = props;
+  const debt_management_type = 'NPL';
+  const { data, setAddPetition, petition } = props;
   const [coop, setCoop] = useState(true);
-  const [petition, setPetition] = useState(null);
   const [receiverType, setReceiveType] = useState("เจ้าหนี้");
   const [paymentType, setPaymentType] = useState("เบิกจ่ายเต็มจำนวน");
   const [sumTotal, setSumTotal] = useState(0);
@@ -26,14 +26,56 @@ const ConfirmTable = (props) => {
       setCheques(cheques.slice(0, cheques.length - 1))
     }
   }
+  const onSave = () => {
+    const ids = data.map(item => item.id_debt_management.toString());
+    const pet = {
+      id: petition ? petition.id_petition : 0,
+      disbursement: receiverType,
+      petition_amount: sumTotal,
+      debt_payment_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'ชำระหนี้แทนแล้ว' : 'รอชำระหนี้แทน'),
+      contract_status: 'ปกติ',
+    };
+    const map_petitions = data.map(item => {
+      return {
+        id_debt_management: item.id_debt_management.toString(),
+        province: item.province,
+      }
+    })
+    const t_cheque = cheques.map(item => {
+      return {
+        debt_management_type,
+        cheques_no: '',
+        cashier_check_amount: item.total,
+        principle_flag: item.checked[0] ? '1' : '0',
+        interest_flag: item.checked[1] ? '1' : '0',
+        fine_flag: item.checked[2] ? '1' : '0',
+        litigation_expenses_flag: item.checked[3] ? '1' : '0',
+        forfeiture_withdrawal_fee_flag: item.checked[4] ? '1' : '0',
+        insurance_premium_flag: item.checked[5] ? '1' : '0',
+        other_expenses_flag: item.checked[6] ? '1' : '0',
+        NPA_property_sales_price_flag: '0',
+        NPA_NPL_creditors_receive_flag: '0',
+        NPA_litigation_expenses_flag: '0',
+        NPA_insurance_premium_flag: '0',
+      }
+    });
+    const param = {
+      ids,
+      debt_management_audit_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'ชำระหนี้แทนแล้ว' : 'อยู่ระหว่างการชำระหนี้แทน'),
+      petition: pet,
+      cheques: t_cheque,
+      map_petitions,
+    }
+    setAddPetition(param)
+  }
   const SaveOffice = () => {
-    setAddPetition(1)
+    onSave()
   }
   const SaveCheque = () => {
-    setAddPetition(1)
+    onSave()
   }
   const SaveBranch = () => {
-    setAddPetition(1)
+    onSave()
   }
   const ChequeChange = (index, key) => {
     const newSelected = [
@@ -92,19 +134,19 @@ const ConfirmTable = (props) => {
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
-        <td>{toCurrency(item.debt_manage_accrued_interest)}</td>
-        <td>{toCurrency(item.debt_manage_fine)}</td>
-        <td>{toCurrency(item.debt_manage_litigation_expenses)}</td>
-        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal_remain ?? item.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_remain ?? item.debt_manage_accrued_interest)}</td>
+        <td>{toCurrency(item.debt_manage_fine_remain ?? item.debt_manage_fine)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_remain ?? item.debt_manage_litigation_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_remain ?? item.debt_manage_forfeiture_withdrawal_fee)}</td>
         {!coop && (
           <>
-            <td>{toCurrency(item.debt_manage_insurance_premium)}</td>
-            <td>{toCurrency(item.debt_manage_other_expenses)}</td>
+            <td>{toCurrency(item.debt_manage_insurance_premium_remain ?? item.debt_manage_insurance_premium)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_remain ?? item.debt_manage_other_expenses)}</td>
           </>
         )}
-        <td>{toCurrency(item.debt_manage_total_expenses)}</td>
-        <td>{toCurrency(item.debt_manage_total)}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses_remain ?? item.debt_manage_total_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_total_remain ?? item.debt_manage_total)}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
@@ -138,6 +180,7 @@ const ConfirmTable = (props) => {
         return prev; 
       }, [0, 0, 0, 0, 0, 0, 0]);
       setAmountCheck(total);
+      setCheques([])
     }
   },[data])
   return (
@@ -341,8 +384,12 @@ const ConfirmTable = (props) => {
                                   <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[2]} onChange={() => BranchChange(2)}/> &nbsp;ค่าปรับ</div>
                                   <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[3]} onChange={() => BranchChange(3)}/> &nbsp;ค่าใช้จ่ายในการดำเนินคดี</div>
                                   <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[4]} onChange={() => BranchChange(4)}/> &nbsp;ค่าถอนการยึดทรัพย์</div>
-                                  <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[5]} onChange={() => BranchChange(5)}/> &nbsp;ค่าเบี้ยประกัน</div>
-                                  <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[6]} onChange={() => BranchChange(6)}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
+                                  {!coop && (
+                                    <>
+                                      <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[5]} onChange={() => BranchChange(5)}/> &nbsp;ค่าเบี้ยประกัน</div>
+                                      <div className="me-3"><input className="form-check-input" type="checkbox" checked={branchCheck[6]} onChange={() => BranchChange(6)}/> &nbsp;ค่าใช้จ่ายอื่นๆ</div>
+                                    </>
+                                  )}
                                 </div>
                               </div>
                             </div>

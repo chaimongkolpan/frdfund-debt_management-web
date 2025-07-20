@@ -116,31 +116,31 @@ const NPL = () => {
         <td>{item.debt_manage_creditor_name}</td>
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[0]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[0]} 
         onChange={(e) => onCheckChange(index, 0, e.target.checked)} /><br />{item.debt_manage_contract_no}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[1]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[1]} 
         onChange={(e) => onCheckChange(index, 1, e.target.checked)} /><br />{toCurrency(item.debt_manage_outstanding_principal)}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[2]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[2]} 
         onChange={(e) => onCheckChange(index, 2, e.target.checked)} /><br />{toCurrency(item.debt_manage_accrued_interest)}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[3]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[3]} 
         onChange={(e) => onCheckChange(index, 3, e.target.checked)} /><br />{toCurrency(item.debt_manage_fine)}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[4]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[4]} 
         onChange={(e) => onCheckChange(index, 4, e.target.checked)} /><br />{toCurrency(item.debt_manage_litigation_expenses)}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[5]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[5]} 
         onChange={(e) => onCheckChange(index, 5, e.target.checked)} /><br />{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
         {creditorType != "สหกรณ์" && (
           <>
-            <td><input class="form-check-input" type="checkbox" checked={item.incorrect[6]} 
+            <td><input className="form-check-input" type="checkbox" checked={item.incorrect[6]} 
         onChange={(e) => onCheckChange(index, 6, e.target.checked)} /><br />{toCurrency(item.debt_manage_insurance_premium)}</td>
-            <td><input class="form-check-input" type="checkbox" checked={item.incorrect[7]} 
+            <td><input className="form-check-input" type="checkbox" checked={item.incorrect[7]} 
         onChange={(e) => onCheckChange(index, 7, e.target.checked)} /><br />{toCurrency(item.debt_manage_other_expenses)}</td>
           </>
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[8]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[8]} 
         onChange={(e) => onCheckChange(index, 8, e.target.checked)} /><br />{item.debt_manage_status}</td>
-        <td><input class="form-check-input" type="checkbox" checked={item.incorrect[9]} 
+        <td><input className="form-check-input" type="checkbox" checked={item.incorrect[9]} 
         onChange={(e) => onCheckChange(index, 9, e.target.checked)} /><br />{item.debt_manage_objective_details}</td>
         <td>{item.collateral_type}</td>
         {creditorType == "สหกรณ์" ? (
@@ -195,22 +195,22 @@ const NPL = () => {
           onOk={() => onAddBigData(selected)} okText={'ยืนยัน'}
           centered size={'xs'}
         >
-          <p class="text-body-tertiary lh-lg mb-0">{`ยืนยันรวบรวมเตรียมนำเสนอ จำนวน ${cust} ราย ,${cont} สัญญา ,ยอดเงินรวม ${toCurrency(sum)} บาท`}</p>
+          <p className="text-body-tertiary lh-lg mb-0">{`ยืนยันรวบรวมเตรียมนำเสนอ จำนวน ${cust} ราย ,${cont} สัญญา ,ยอดเงินรวม ${toCurrency(sum)} บาท`}</p>
         </AddModal>
       )}
       {isIncorrectAdd && (
         <Modal isOpen={isIncorrectAdd} setModal={setIncorrectAdd} 
-          title={'รวบรวมเตรียมนำเสนอ'} 
+          title={'ข้อมูลไม่ถูกต้องครบถ้วน'} 
           onClose={() => setIncorrectAdd(false)} closeText={'ปิด'} 
           onOk={() => onRemoveMakelist(selected)} okText={'ข้อมูลไม่ถูกต้องครบถ้วน'}
           okColor={"danger"}
         >
-          <div class="row">
+          <div className="row">
             <form>
               <div data-list='{"valueNames":["id","name","province"]}'>
-                <div class="table-responsive mx-n1 px-1">
-                  <table class="table table-sm table-striped table-bordered fs-9 mb-0">
-                    <thead class="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
+                <div className="table-responsive mx-n1 px-1">
+                  <table className="table table-sm table-striped table-bordered fs-9 mb-0">
+                    <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
                       <tr>
                         <th rowSpan="2" style={{ minWidth: 30 }}>#</th>
                         <th rowSpan="2">เลขที่หนังสือ</th>
@@ -267,7 +267,7 @@ const NPL = () => {
                         <th>การตรวจสอบการอายัด</th>
                       </tr>
                     </thead>
-                    <tbody class="list text-center align-middle">
+                    <tbody className="list text-center align-middle">
                       {(selected && selected.length > 0) ? (selected.map((item,index) => RenderData(item, index, []))) : (
                         <tr>
                           <td className="fs-9 text-center align-middle" colSpan={creditorType == "สหกรณ์" ? 34 : 35}>

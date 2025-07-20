@@ -7,6 +7,7 @@ import { AbilityContext } from '@src/utility/context/Can'
 
 // ** Spinner Import
 import Spinner from '../spinner/Loading-spinner'
+const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 
 const PrivateRoute = ({ children, route }) => {
   // ** Hooks & Vars
@@ -24,10 +25,10 @@ const PrivateRoute = ({ children, route }) => {
       restrictedRoute = route.meta.restricted
     }
     if (!user) {
-      return <Navigate to={`${process.env.BASE_URL ?? ''}/login`} />
+      return <Navigate to={`${prefix_url}/login`} />
     }
     if (user && restrictedRoute) {
-      return <Navigate to={`${process.env.BASE_URL ?? ''}/`} />
+      return <Navigate to={`${prefix_url}/`} />
     }
     // if (user && restrictedRoute && user.role === 'client') {
     //   return <Navigate to='/access-control' />

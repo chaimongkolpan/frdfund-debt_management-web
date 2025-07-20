@@ -6,7 +6,7 @@ import range from "lodash/range";
 import "react-datepicker/dist/react-datepicker.css";
 import { stringToDateTh, ToDateEn } from "@utils";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "react-feather";
-const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder }, ref) => {
+const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder, disabled }, ref) => {
   const [val, setValue] = useState(value ?? '');
   useEffect(() => {
     if (value)
@@ -28,7 +28,7 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder }, ref) 
           height: '36px',
           paddingLeft: '36px',
           paddingTop: '32px'
-        }}
+        }} disabled={disabled}
       />
       <label className="ps-6" htmlFor="floatingInputStartDate">{placeholder}</label>
       <div 
@@ -46,7 +46,7 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder }, ref) 
   </div>
 )});
 const DatePickerComponent = (props) => {
-  const { title, handleChange, containerClassname, value, onBlur } = props;
+  const { title, handleChange, containerClassname, value, onBlur, disabled = false } = props;
   const [val, setValue] = useState(value ?? '');
   const [showM, setShowM] = useState(true);
   const [showY, setShowY] = useState(true);
@@ -98,7 +98,7 @@ const DatePickerComponent = (props) => {
   },[value])
   return (
     <div className={`form-floating form-floating-advance-select ${containerClassname ?? ''}`}>
-      <DatePicker
+      <DatePicker disabled={disabled}
         className="date-picker-full-width"
         todayButton="วันนี้"
         locale={th}
@@ -109,7 +109,7 @@ const DatePickerComponent = (props) => {
         placeholderText={title}
         popperClassName="custom-datepicker-popper"
         wrapperClassName="d-flex"
-        customInput={<CustomDatePickerInput />}
+        customInput={<CustomDatePickerInput disabled={disabled} />}
         renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, decreaseYear, increaseYear }) => (
           <div className="react-datepicker__header">
             <button type="button"

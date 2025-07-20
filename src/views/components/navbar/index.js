@@ -51,7 +51,7 @@ const ThemeNavbar = props => {
             <a className="navbar-brand me-1 me-sm-3">
               <div className="d-flex align-items-center">
                 <div className="d-flex align-items-center"><img src={logo} alt="frdfund" width="50" />
-                  <h5 className="logo-text ms-2 d-none d-sm-block">ระบบการ์ดลูกหนี้เกษตรกร</h5>
+                  <h5 className="logo-text ms-2 d-none d-sm-block">ระบบจัดการหนี้</h5>
                 </div>
               </div>
             </a>

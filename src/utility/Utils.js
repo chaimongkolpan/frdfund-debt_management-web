@@ -36,7 +36,8 @@ export const formatDate = (
   return new Intl.DateTimeFormat("en-US", formatting).format(new Date(value));
 };
 export const toCurrency = (value, digit = 0) => {
-  if (!value) return value;
+
+  if (!value) return '0.00';
   if (typeof value == 'number')
     return value.toLocaleString();
   if (!isNaN(parseFloat(value)))
@@ -104,7 +105,28 @@ export const ToDateEn = (value) => {
     }
   } else return value;
 };
+function monthTh(m) {
+  if (m == 1) return 'มกราคม';
+  if (m == 2) return 'กุมภาพันธ์';
+  if (m == 3) return 'มีนาคม';
+  if (m == 4) return 'เมษายน';
+  if (m == 5) return 'พฤษภาคม';
+  if (m == 6) return 'มิถุนายน';
+  if (m == 7) return 'กรกฎาคม';
+  if (m == 8) return 'สิงหาคม';
+  if (m == 9) return 'กันยายน';
+  if (m == 10) return 'ตุลาคม';
+  if (m == 11) return 'พฤศจิกายน';
+  if (m == 12) return 'ธันวาคม';
+}
+export const spDate = (value, format) => {
+  const date = moment(value, format).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = monthTh(date.getMonth() + 1)
+  return `${day} ${month}`;
+};
 export const stringToDateTh = (value, showTime = true, format) => {
+  if (!value) return value;
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -120,6 +142,7 @@ export const stringToDateTh = (value, showTime = true, format) => {
     : `${day}/${month}/${year}`;
 };
 export const ToDateDb = (value, toThai = false, format) => {
+  if (!value) return value;
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -128,6 +151,7 @@ export const ToDateDb = (value, toThai = false, format) => {
   return `${year}-${month}-${day}`;
 };
 export const stringToDateThShort = (value, showTime = true, format) => {
+  if (!value) return value;
   const date = moment(value, format).toDate();
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -144,6 +168,7 @@ export const stringToDateThShort = (value, showTime = true, format) => {
 };
 
 export const formatDateDatatable = (value, showTime = true) => {
+  if (!value) return value;
   const date = new Date(value);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -156,4 +181,14 @@ export const formatDateDatatable = (value, showTime = true) => {
   return showTime
     ? `${day}/${month}/${year} ${time}`
     : `${day}/${month}/${year}`;
+};
+
+export const saveDate = (value) => {
+  if (!value) return value;
+  const date = moment(value).toDate();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  let y = date.getFullYear();
+  const year = (y < 2500 ? y: y - 543) + (toThai ? 543 : 0);
+  return `${year}-${month}-${day}`;
 };

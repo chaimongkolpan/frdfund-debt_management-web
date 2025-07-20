@@ -34,7 +34,7 @@ const SelectedTable = (props) => {
     })
     const selectedData = data.filter((i, index) => newSelected[index]);
     const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
-    const sum = selectedData.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+    const sum = selectedData.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
     await setCount(toCurrency(custs.length));
     await setContracts(toCurrency(selectedData.length));
     await setSumTotal(toCurrency(sum,2));
@@ -44,7 +44,7 @@ const SelectedTable = (props) => {
     await setIsAll(checked)
     if (checked) {
       const custs = result.data.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
-      const sum = result.data.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+      const sum = result.data.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
       await setCount(toCurrency(custs.length));
       await setContracts(toCurrency(result.data.length));
       await setSumTotal(toCurrency(sum,2));
@@ -62,8 +62,8 @@ const SelectedTable = (props) => {
             <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td>{item.branch_proposes_approval_no}</td>
-        <td>{item.branch_proposes_approval_date ? stringToDateTh(item.branch_proposes_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_no}</td>
+        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
@@ -86,10 +86,25 @@ const SelectedTable = (props) => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
-        <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
-        <td>{item.collateral_no}</td>
+        <td>{item.debt_manage_objective_details}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal_cf)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_cf)}</td>
+        <td>{toCurrency(item.debt_manage_fine_cf)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_cf)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_cf)}</td>
+        {!coop && (
+          <>
+            <td>{toCurrency(item.debt_manage_insurance_premium_cf)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_cf)}</td>
+          </>
+        )}
+        <td>{toCurrency(item.debt_manage_total_expenses_cf)}</td>
+        <td>{toCurrency(item.debt_manage_total_cf)}</td>
+        <td>{item.debt_manage_status_cf}</td>
+        <td>{item.status_confirm}</td>
+        <td>{item.results_confirm}</td>
       </tr>
     ))
   }
@@ -133,11 +148,11 @@ const SelectedTable = (props) => {
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan={coop ? "11" : "13"}>สัญญา</th>
-                <th>หลักทรัพย์ค้ำประกัน</th>
+                <th colSpan={coop ? "10" : "12"}>ยืนยันยอด</th>
               </tr>
               <tr>
-                <th>เลขที่หนังสือ</th>
-                <th>วันที่หนังสือ</th>
+                <th>ครั้งที่เสนอคณะกรรมการ</th>
+                <th>วันที่เสนอคณะกรรมการ</th>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
                 <th>ชื่อ-นามสกุล</th>
@@ -160,16 +175,31 @@ const SelectedTable = (props) => {
                 )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
-                <th>วัตถุประสงค์การกู้</th>
                 <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
-                <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
+                <th>วัตถุประสงค์การกู้</th>
+                <th>เงินต้น</th>
+                <th>ดอกเบี้ย</th>
+                <th>ค่าปรับ</th>
+                <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                <th>ค่าถอนการยึดทรัพย์</th>
+                {!coop && (
+                  <>
+                    <th>ค่าเบี้ยประกัน</th>
+                    <th>ค่าใช้จ่ายอื่นๆ</th>
+                  </>
+                )}
+                <th>รวมค่าใช้จ่าย</th>
+                <th>รวมทั้งสิ้น</th>
+                <th>สถานะหนี้</th>
+                <th>สถานะยืนยันยอด</th>
+                <th>ผลการยืนยันยอด</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={coop ? 23 : 25}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 36}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -187,9 +217,9 @@ const SelectedTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button type="button" className="btn btn-success btn-sm ms-2" onClick={() => onSubmit()}>เสนอขออนุมัติรายชื่อ</button>
+            <button type="button" className="btn btn-success btn-sm ms-2" onClick={() => onSubmit()}>ยืนยันยอด</button>
             {' '}
-            <button type="button" className="btn btn-danger btn-sm ms-2" onClick={() => onRemove()}>ไม่เสนอขออนุมัติรายชื่อ</button>
+            <button type="button" className="btn btn-danger btn-sm ms-2" onClick={() => onRemove()}>ไม่ยืนยันยอด</button>
           </div>
         </div>
       </div>

@@ -16,6 +16,9 @@ import {
   upsertCollateralClassify,
   removeCollateralClassify,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const FullModal = (props) => {
   const guarantorRef = useRef(null);
@@ -67,7 +70,14 @@ const FullModal = (props) => {
     }
     const result = await updateDebtManagementDetailClassify(param);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeDebt = async (key, val) => {
@@ -355,6 +365,13 @@ const FullModal = (props) => {
       await fetchData();
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const removeCollateral = async(item) => {
@@ -363,6 +380,13 @@ const FullModal = (props) => {
       await fetchData();
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeCollateral = async (key, val) => {
@@ -370,7 +394,7 @@ const FullModal = (props) => {
       await setCollateralType(val);
       await setCollateralDetail((prevState) => ({
         ...prevState,
-        ...({stock_status: (val == 'หุ้น')})
+        ...({stock_status: (val == 'หุ้น' ? 'Y' : 'N')})
       }))
     }
     await setCollateralDetail((prevState) => ({
@@ -401,6 +425,13 @@ const FullModal = (props) => {
       await fetchData();
       await setOpenGuarantorEdit(false)
       await setGuarantorDetail(null)
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const removeGuarantor = async(item) => {
@@ -409,6 +440,13 @@ const FullModal = (props) => {
       await fetchData();
       await setOpenGuarantorEdit(false)
       await setGuarantorDetail(null)
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeGuarantor = async (key, val) => {
@@ -539,7 +577,7 @@ const FullModal = (props) => {
                             containerClassname={'mb-3'} value={debts?.debt_manage_contract_no}
                           />
                         </div>
-                        <div className="ccol-sm-12 col-md-6 col-lg-4">
+                        <div className="col-sm-12 col-md-6 col-lg-4">
                           {creditor_types && (
                             <div className="form-floating form-floating-advance-select mb-3">
                               <label htmlFor="floaTingLabelSingleSelect">ประเภทเจ้าหนี้</label>
@@ -585,7 +623,7 @@ const FullModal = (props) => {
                           <>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_agreement', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_repayment_type', e.target?.value)}>
                                   <option value="ชำระหนี้แทน">ชำระหนี้แทน</option>
                                   <option value="วางเงินชำระหนี้แทน-บังคับคดี">วางเงินชำระหนี้แทน-บังคับคดี</option>
                                 </select>

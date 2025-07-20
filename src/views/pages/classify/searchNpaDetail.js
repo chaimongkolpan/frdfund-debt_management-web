@@ -3,11 +3,12 @@ import { useParams, useSearchParams } from "react-router"
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "@utils";
 import { 
-  getDebtManagementDetailClassify,
+  getDebtManagementDetailClassifyNpa,
   combineClassify,
   cancelCombineClassify,
   splitClassify,
   cancelSplitClassify,
+  createNplClassify,
 } from "@services/api";
 
 import According from "@views/components/panel/according";
@@ -30,18 +31,19 @@ const SearchClassifyNPADetail = () => {
   const qcreditorType = searchParams.get("creditor-type");
   const [debts, setDebts] = useState(null);
   const [collaterals, setCollaterals] = useState(null);
-  const [guarantors, setGuarantors] = useState(null);
   const [selectedDebt, setShowDebts] = useState(null);
   const [total_collateral, setTotalColl] = useState(null);
   const [isOpenCombine, setOpenCombine] = useState(false);
   const [isOpenBorrow, setOpenBorrow] = useState(false);
   const [isOpenDocument, setOpenDocument] = useState(false);
   const [isOpenSplitNPL, setOpenSplitNPL] = useState(false);
+  const [isOpenCreateNPL, setOpenCreateNPL] = useState(false);
   const [isOpenNPLDetail, setOpenNPLDetail] = useState(false);
   const [isOpenCancelSplit, setOpenCancelSplit] = useState(false);
   const [id_combine, setCombine] = useState(null);
   const [contract_no, setContractNo] = useState(null);
   const [id_split, setSplit] = useState(null);
+  const [id_create, setCreate] = useState(null);
   const [id_cancel_split, setCancelSplit] = useState(null);
   const navigate = useNavigate();
   const handleCombine = async(id) => {
@@ -54,6 +56,21 @@ const SearchClassifyNPADetail = () => {
       await fetchData();
       await setOpenCombine(false);
       await setCombine(null);
+    }
+  }
+  const handleCreateNPL = async(id) => {
+    const debt = debts.find(x => x.id_debt_management == id)
+    await setContractNo(debt?.debt_manage_contract_no)
+    await setCreate(id)
+    await setOpenCreateNPL(true);
+  }
+  const submitCreateNPL = async(id) => {
+    const result = await createNplClassify({ id_debt_management: id });
+    if (result.isSuccess) {
+      await fetchData();
+      await setOpenCreateNPL(false);
+      await setContractNo(null);
+      await setCreate(null);
     }
   }
   const handleSplit = async(id) => {
@@ -117,16 +134,14 @@ const SearchClassifyNPADetail = () => {
     await setOpenDocument(false);
   }
   const fetchData = async() => {
-    const result = await getDebtManagementDetailClassify(params.idcard, qprov, qcreditorType);
+    const result = await getDebtManagementDetailClassifyNpa(params.idcard, qprov, qcreditorType);
     if (result.isSuccess) {
       await setDebts(result.contracts)
       await setCollaterals(result.collaterals)
-      await setGuarantors(result.guarantors)
       await setTotalColl(result.total_collateral)
     } else {
       await setDebts(null)
       await setCollaterals(null)
-      await setGuarantors(null)
       await setTotalColl(null)
     }
   }
@@ -194,6 +209,7 @@ const SearchClassifyNPADetail = () => {
                         handleShowDetail={handleShowDetail} 
                         handleCancelCombine={handleCancelCombine} 
                         handleCancelSplit={handleCancelSplit} 
+                        handleCreateNPL={handleCreateNPL}
                       />
                       <br />
                       {(debts && debts.length > 0) && (
@@ -245,7 +261,7 @@ const SearchClassifyNPADetail = () => {
               {/*start modal ผู้รับสภาพหนี้แทน*/}
               {isOpenBorrow && (
                 <BorrowModal isOpen={isOpenBorrow} setModal={setOpenBorrow} onClose={() => handleBorrowerClose()} 
-                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} 
+                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} debtManagementType={'NPA'}
                 />
               )}
               {/*end modal ผู้รับสภาพหนี้แทน*/}
@@ -263,6 +279,18 @@ const SearchClassifyNPADetail = () => {
                 />
               )}
               {/*end modal รายละเอียดจำแนกมูลหนี้ NPL ตามสัญญา*/}
+
+              {/*start Modal สร้างสัญญา NPL */}
+              {isOpenCreateNPL && (
+                <CustomModal isOpen={isOpenCreateNPL} setModal={setOpenCreateNPL} 
+                  title={'สร้างสัญญา NPL'} 
+                  onClose={() => setOpenCreateNPL(false)} closeText={'ยกเลิก'} 
+                  onOk={() => submitCreateNPL(id_create)} okText={'สร้างสัญญา NPL'}
+                >
+                  <p className="text-body-tertiary lh-lg mb-0">ต้องการสร้างสัญญา NPL (เลขที่สัญญา {contract_no}) </p>
+                </CustomModal>
+              )}
+              {/*end Modal สร้างสัญญา NPL */}
 
               {/*start Modal แยกสัญญา NPL */}
               {isOpenSplitNPL && (
