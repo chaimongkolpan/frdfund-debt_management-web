@@ -833,13 +833,18 @@ const Sidebar = props => {
               <li className="nav-item">
                 <p className="navbar-vertical-label">ปิดสัญญา</p>
                 <div className="nav-item-wrapper">
-                  <a className="nav-link label-1" href="/close">
-                    <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-file-excel"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">ปิดสัญญา</span></div>
-                    {(alert && alert?.closing > 0) && (
-                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.closing)}</span>
-                    )}
+                  <Link className={`nav-link label-1 ${path.includes('/close') ? 'active' : ''}`}
+                    to={`${prefix_url + "/close"}`}>
+                    <div className="d-flex align-items-center">
+                      <span className="nav-link-icon"><i className="fas fa-file-excel"></i></span>
+                      <div className="nav-link-text-wrapper">
+                        <span className="nav-link-text">ปิดสัญญา</span>
+                        {(alert && alert?.closing > 0) && (
+                          <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.closing)}</span>
+                        )}
+                      </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </li>
               {/* หัวข้อ รายงาน*/}

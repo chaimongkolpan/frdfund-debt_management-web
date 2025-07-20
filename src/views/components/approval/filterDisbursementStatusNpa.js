@@ -5,8 +5,8 @@ import {
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
-  getCommitteeNo,
-  getCommitteeDate,
+  getCommitteeNoNpa,
+  getCommitteeDateNpa,
   getPetitionNo,
   getPetitionDate,
 } from "@services/api";
@@ -87,8 +87,8 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultCommitteeNo = await getCommitteeNo("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
-    const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
+    const resultCommitteeNo = await getCommitteeNoNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
+    const resultCommitteeDate = await getCommitteeDateNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
     const resultPetitionNo = await getPetitionNo();
     const resultPetitionDate = await getPetitionDate();
     if (resultProv.isSuccess) {

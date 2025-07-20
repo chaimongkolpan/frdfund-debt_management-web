@@ -2072,14 +2072,8 @@ export const searchAdjustNotValid = async (filter) => {
 //#endregion
 //#region Follow
 export const searchFollow = async (filter) => {
-  const path = '/Follow/search-legal-contract';
+  const path = '/Account/search-follow';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
@@ -2140,14 +2134,8 @@ export const searchDebtAccept = async (filter) => {
 //#endregion
 //#region Invoice
 export const searchInvoice = async (filter) => {
-  const path = '/Invoice/search-legal-contract';
+  const path = '/Account/search-invoice';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
@@ -2158,6 +2146,20 @@ export const searchInvoice = async (filter) => {
     console.error('error: ' + path + ' =>', e);
     return defaultErrorResponse;
   }
+};
+export const printInvoice = async (params) => {
+  // const path = "/Account/print-invoice";
+  const path = "https://debtinfo.frdfund.org/report/Download?id=40";
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
 };
 //#endregion
 //#region Restructure
@@ -2179,14 +2181,8 @@ export const searchRestructuring = async (filter) => {
 //#endregion
 //#region Close
 export const searchClose = async (filter) => {
-  const path = '/Close/search-legal-contract';
+  const path = '/Account/search-close';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;

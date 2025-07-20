@@ -14,9 +14,9 @@ const Filter = (props) => {
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
-        idCard: "",
+        idcard: "",
         name: "",
-        province: "",
+        loan_province: "",
         debtStatus: "",
         ...filter,
         currentPage: 1,
@@ -62,7 +62,7 @@ const Filter = (props) => {
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idcard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
@@ -73,7 +73,7 @@ const Filter = (props) => {
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
-              handleChange={(val) => onChange('province', val)}
+              handleChange={(val) => onChange('loan_province', val)}
               hasAll />
           )}
         </div>
