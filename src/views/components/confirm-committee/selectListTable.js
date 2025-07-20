@@ -151,7 +151,7 @@ const SelectedTable = (props) => {
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan={coop ? "11" : "13"}>สัญญา</th>
-                <th colSpan="10">ยืนยันยอด</th>
+                <th colSpan={coop ? "10" : "12"}>ยืนยันยอด</th>
               </tr>
               <tr>
                 <th>ครั้งที่เสนอคณะกรรมการ</th>
@@ -188,6 +188,12 @@ const SelectedTable = (props) => {
                 <th>ค่าปรับ</th>
                 <th>ค่าใช้จ่ายในการดำเนินคดี</th>
                 <th>ค่าถอนการยึดทรัพย์</th>
+                {!coop && (
+                  <>
+                    <th>ค่าเบี้ยประกัน</th>
+                    <th>ค่าใช้จ่ายอื่นๆ</th>
+                  </>
+                )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
                 <th>สถานะหนี้</th>

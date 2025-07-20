@@ -62,8 +62,8 @@ const SearchTable = (props) => {
         <td>{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
         <td>{item.collateral_no}</td>
-        <td>{0}</td>
-        <td>{''}</td>
+        <td>{item.collateral_count}</td>
+        <td>{item.collateral_status}</td>
       </tr>
     ))
   }

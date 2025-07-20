@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { getUserData } from "@utils";
+import { getUserData, ToDateDb } from "@utils";
 import According from "@views/components/panel/according";
 import AddModal from "@views/components/modal/CustomModal";
 import Modal from "@views/components/modal/FullModal";
@@ -20,6 +20,8 @@ import {
   removeMakePetitionListNpa,
   exportPetitionNpa,
   insertPetitionNpa,
+  savePetitionBook,
+  updateNPAstatus,
 } from "@services/api";
 
 const user = getUserData();
@@ -27,6 +29,8 @@ const NPA = () => {
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [petition, setPetition] = useState(null);
+  const [savePetition, setSavePetition] = useState(null);
+  const [loadPetition, setLoadPetition] = useState(false);
   const [data, setData] = useState(null);
   const [addedData, setAddedData] = useState(null);
   const [makelistSelected, setMakeList] = useState(null);
@@ -52,6 +56,18 @@ const NPA = () => {
     if (result.isSuccess) {
       await fetchData(filterAdded)
     }
+  }
+  const handleSavePetition = async (pet) => {
+    const result = await savePetitionBook({ ...pet,debt_management_type: 'NPA',petition_date_office: ToDateDb(pet.petition_date_office) });
+    if (result.isSuccess) {
+      await setLoadPetition(true);
+    }
+  }
+  
+  const handleOpenAdd = async () => {
+    await setSavePetition(null);
+    await setLoadPetition(true);
+    await setOpenAdd(true);
   }
   const onSaveMakelist = async (pet) => {
     const result = await insertPetitionNpa(pet);
@@ -114,7 +130,7 @@ const NPA = () => {
         <h4 className="mb-3">ขออนุมัติชำระหนี้แทน NPA</h4>
         <div className="d-flex flex-row-reverse">
           <div>
-            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => setOpenAdd(true)}>
+            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
               <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
             </button>
           </div>
@@ -153,10 +169,10 @@ const NPA = () => {
         <AddModal isOpen={isOpenAdd} setModal={setOpenAdd} 
           title={'เพิ่มเลขที่/วันที่หนังสือฎีกา'} 
           onClose={() => setOpenAdd(false)} closeText={'ปิด'} 
-          onOk={() => console.log('submit')} okText={'บันทึก'}
+          onOk={() => handleSavePetition(savePetition)} okText={'บันทึก'}
           size={'xl'}
         >
-          <BookDateTable />
+          <BookDateTable savePetition={savePetition} setSavePetition={setSavePetition} loadPetition={loadPetition} setLoadPetition={setLoadPetition}  />
         </AddModal>
       )}
       <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPA'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>

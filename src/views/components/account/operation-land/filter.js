@@ -62,30 +62,27 @@ const Filter = (props) => {
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
+          <Textbox title={'ดัชนีจัดเก็บหลักประกัน'} handleChange={(val) => onChange('idCard', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          <Textbox title={'เจ้าของหลักประกัน'} handleChange={(val) => onChange('name', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          <Textbox title={'เลขที่หลักประกัน'} handleChange={(val) => onChange('name', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
         </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {provOp && (
+        <div className="col-sm-12 col-md-6 col-lg-6">    
             <Dropdown 
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
               hasAll />
-          )}
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusOp && (
-            <Dropdown 
-              title={'สถานะสัญญา'} 
-              defaultValue={'all'} 
-              options={statusOp}
-              handleChange={(val) => onChange('debtStatus', val)}
-              hasAll />
-          )}
         </div>
         <div className="col-12">
           <div className="row g-3 justify-content-center">

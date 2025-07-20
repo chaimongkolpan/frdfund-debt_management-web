@@ -8,6 +8,8 @@ import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/operation-land/filter";
 import SearchTable from "@views/components/account/operation-land/searchTable";
+import OperationLand from "@views/components/account/operation-land/operationModal";
+import DetailAsset from "@views/components/account/operation-land/DetailAssetModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
@@ -37,11 +39,11 @@ const PageContent = () => {
     }
     setLoadBigData(false);
   }
-  const handleRequestClose = async (item) => {
+  const handleShowDetail = async (item) => {
     await setPolicy(item);
     await setOpenRequestClose(true);
   }
-  const handleShowDetail = async (item) => {
+  const handleOperation = async (item) => {
     await setPolicy(item);
     await setShowCal(false);
     await setOpenDetail(true);
@@ -70,7 +72,7 @@ const PageContent = () => {
                       {data && (
                         <SearchTable result={data} filter={filter} getData={onSearch} 
                           handleShowDetail={handleShowDetail}
-                          handleRequestClose={handleRequestClose}
+                          handleOperation={handleOperation}
                         />
                       )}
                     </>
@@ -82,8 +84,8 @@ const PageContent = () => {
         </div>
       </div>
       {openDetail && (
-        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'คำนวนยอดปิดสัญญา'} closeText={'ปิด'} scrollable fullscreen>
-          <form>
+        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'ดำเนินการในที่ดิน'} closeText={'ปิด'} scrollable fullscreen>
+          {/* <form>
             <br />
             <div className="row">
               <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
@@ -93,11 +95,13 @@ const PageContent = () => {
                 <button className="btn btn-primary ms-2" type="button" onClick={() => cal()}>คำนวณ</button>
               </div>
             </div>
-          </form>
+          </form> */}
+          <OperationLand  /> 
         </Modal>
       )}
       {openRequestClose && (
-        <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'ยื่นคำร้องปิดสัญญา'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
+        <DetailAsset  /> 
         </Modal>
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

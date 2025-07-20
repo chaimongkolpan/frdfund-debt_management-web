@@ -5,8 +5,8 @@ import { Spinner } from 'reactstrap'
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import According from "@views/components/panel/according";
-import Filter from "@views/components/approval/filterDisbursementStatus";
-import SearchTable from "@views/components/approval/searchDisbursementStatusTable";
+import Filter from "@views/components/approval/filterDisbursementStatusNpa";
+import SearchTable from "@views/components/approval/searchDisbursementStatusTableNpa";
 import { 
   cleanData,
   searchDisbursementStatusNpa,
