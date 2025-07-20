@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handleRequestClose
+  const { result, filter, getData, handleShowDetail, handleOperation
   } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -12,15 +12,15 @@ const SearchTable = (props) => {
         <td className="fs-9 align-middle">{index + 1}</td>
         <td>
           <div className='d-flex justify-content-center'>
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleShowDetail(item)}>
-    <i className="fas fa-plus"></i>
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleOperation(item)}>
+    <i className="fas fa-square-plus"></i>
             </button>
            </div>
         </td>
         <td>
           <div className='d-flex justify-content-center'>
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleRequestClose(item)}>
-    <i className="fas fa-list"></i>
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleShowDetail(item)}>
+    <i className="far fa-rectangle-list"></i>
             </button>
            </div>
          </td>

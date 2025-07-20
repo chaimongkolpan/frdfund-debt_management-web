@@ -9,6 +9,7 @@ import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/operation-land/filter";
 import SearchTable from "@views/components/account/operation-land/searchTable";
 import OperationLand from "@views/components/account/operation-land/operationModal";
+import DetailAsset from "@views/components/account/operation-land/DetailAssetModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
@@ -38,11 +39,11 @@ const PageContent = () => {
     }
     setLoadBigData(false);
   }
-  const handleRequestClose = async (item) => {
+  const handleShowDetail = async (item) => {
     await setPolicy(item);
     await setOpenRequestClose(true);
   }
-  const handleShowDetail = async (item) => {
+  const handleOperation = async (item) => {
     await setPolicy(item);
     await setShowCal(false);
     await setOpenDetail(true);
@@ -71,7 +72,7 @@ const PageContent = () => {
                       {data && (
                         <SearchTable result={data} filter={filter} getData={onSearch} 
                           handleShowDetail={handleShowDetail}
-                          handleRequestClose={handleRequestClose}
+                          handleOperation={handleOperation}
                         />
                       )}
                     </>
@@ -99,7 +100,8 @@ const PageContent = () => {
         </Modal>
       )}
       {openRequestClose && (
-        <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'ยื่นคำร้องปิดสัญญา'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
+        <DetailAsset  /> 
         </Modal>
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
