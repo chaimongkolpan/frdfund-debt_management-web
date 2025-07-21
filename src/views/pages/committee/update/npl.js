@@ -16,6 +16,9 @@ import {
   updateNPLstatus,
   cleanData
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPL = () => {
@@ -60,17 +63,31 @@ const NPL = () => {
   const onApprove = async () => {
     const result = await updateNPLstatus(selected,status);
     if (result) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await approveCommitteeUpdate({ ids: selected });
       await onSearchTop(filter);
       await setSubmit(false);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
   const onReject = async () => {
     const result = await updateNPLstatus(selected,"คณะกรรมการจัดการหนี้ไม่อนุมัติ");
     if (result) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await rejectCommitteeUpdate({ ids: selected, remark });
       await onSearchTop(filter);
       await setReject(false);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
   return (

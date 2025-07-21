@@ -20,7 +20,7 @@ root.render(
           <Suspense fallback={<Spinner />}>
              <AbilityContext.Provider value={ability}>
                 <LazyApp />
-                <Toaster position={'top-right'} toastOptions={{ className: "react-hot-toast" }} />
+                <Toaster position={'top-center'} toastOptions={{ className: "react-hot-toast" }} />
              </AbilityContext.Provider>
           </Suspense>
          </Provider>

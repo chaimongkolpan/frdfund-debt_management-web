@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData, ToDateDb, saveDate } from "@utils";
+import { getUserData, ToDateDb, saveDate, getDuration } from "@utils";
 import According from "@views/components/panel/according";
 import DatePicker from "@views/components/input/DatePicker";
 import Dropdown from "@views/components/input/DropdownSearch";
@@ -8,13 +8,18 @@ import Textbox from "@views/components/input/Textbox";
 import { Spinner } from 'reactstrap'
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
+import Modal from "@views/components/modal/CustomModal";
 import { 
   getProvinces,
   getCreditors,
   getCreditorTypes,
   getYears,
-  downloadReport
+  downloadReport,
+  downloadOldReport,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const Report = () => {
@@ -33,6 +38,10 @@ const Report = () => {
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
+  const [openDownload, setOpenDownload] = useState(false);
+  const [startDownload, setStartDownload] = useState(null);
+  const [now, setNow] = useState(null);
+  const [showTime, setShowTime] = useState(null);
   const filenames = [
     "รายงานทะเบียนคุมสัญญา.zip",
     "รายงานทะเบียนคุมทรัพย์สิน.zip",
@@ -46,16 +55,23 @@ const Report = () => {
     "รายงานการชำระหนี้แทนเกษตรกร.zip",
   ];
   const download = async (id) => {
-    // setLoad(true);
-    // const param = {
-    //   reportId: id,
-    //   accountType, 
-    //   committee, 
-    //   startDate: startDate ? ToDateDb(startDate) : null, 
-    //   endDate: endDate ? ToDateDb(endDate) : null, 
-    //   year, 
-    //   province, creditorType, creditor, debtType, debtStatus 
-    // }
+    await setStartDownload(new Date());
+    await setOpenDownload(true);
+    const param = {
+      reportId: id,
+      accountType, 
+      committee, 
+      // startDate: startDate ? ToDateDb(startDate) : null, 
+      // endDate: endDate ? ToDateDb(endDate) : null, 
+      startDate: startDate ? saveDate(startDate) : null, 
+      endDate: endDate ? saveDate(endDate) : null, 
+      year, 
+      province, creditorType, creditor, debtType, debtStatus ,
+      type: 'application/octet-stream', filename: filenames[id - 1]
+    }
+    var myInterval = setInterval(async () => {
+      await setNow(new Date());
+    }, 1000);
 /*
     //var a = document.createElement('a');
     //a.style.display = 'none';
@@ -71,8 +87,21 @@ const Report = () => {
     //   setLoad(false);
     // }
 
+    if (await downloadOldReport(param)) {
+      toast((t) => (
+        <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
+      ));
+      clearInterval(myInterval);
+      await setOpenDownload(false);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'ดาวน์โหลดรายงาน'} message={'ไม่สามารถดาวน์โหลดรายงานได้'} />
+      ));
+      clearInterval(myInterval);
+      await setOpenDownload(false);
+    }
 
-    
+    /*
     let reportId = 0;
     if (id == 1) reportId = 4; if (id == 2) reportId = 5;
     if (id == 3) reportId = 7; if (id == 4) reportId = 38;
@@ -85,7 +114,7 @@ const Report = () => {
     if (start != null && start != undefined && start != '') param += 'start=' + saveDate(start) + '&';
     var stop = endDate;
     if (stop != null && stop != undefined && stop != '') param += 'stop=' + saveDate(stop) + '&';
-    if (year != null && year != undefined && year != '') param += 'year=' + (year == 'all' ? 'ทั้งหมด' : year) + '&';
+    if (year != null && year != undefined && year != '') param += 'year=' + (year == 'all' ? '0' : year) + '&';
     var CreditorType = (creditorType == 'all' ? 'ทั้งหมด' : creditorType);
     if (CreditorType != null && CreditorType != undefined && CreditorType != '') param += 'creditortype=' + CreditorType + '&';
     var Creditor = (creditor == 'all' ? '0' : creditor);
@@ -100,8 +129,8 @@ const Report = () => {
     if (ProvinceId != null && ProvinceId != undefined && ProvinceId != '') param += 'province=' + ProvinceId + '&';
     var AccountStatus = (debtStatus == 'all' ? 'ทั้งหมด' : debtStatus);
     if (AccountStatus != null && AccountStatus != undefined && AccountStatus != '') param += 'account_status=' + AccountStatus + '&'; 
-    console.log('param', param);
-    window.open('https://debtinfo.frdfund.org/report/Download?exportpdf=true&' + param, '_blank').focus();
+    window.open('https://debtinfo.frdfund.org/report-old/report/Download?exportpdf=true&' + param, '_blank').focus();
+    */
   }
   const onChange = async(key, val) => {
     if (key == 'province') {
@@ -164,7 +193,10 @@ const Report = () => {
        await setCreditorOp(null);
     }
   }
-
+  useEffect(() => {
+    setShowTime(getDuration(now, startDownload))
+    return () => console.log('Clear data')
+  }, [now]);
   //** ComponentDidMount
   useEffect(() => {
     fetchData();
@@ -395,6 +427,15 @@ const Report = () => {
           </div>
         </div>
       </div>
+      {openDownload && (
+        <Modal isOpen={openDownload} setModal={setOpenDownload} hideOk onClose={() => setOpenDownload(false)}  title={'ดาวน์โหลดรายงาน'} closeText={'ปิด'} scrollable size={'lg'}>
+          <div className="d-flex flex-column align-items-center justify-content-center">
+            <img className='mb-5' src={logo} alt='logo' width={150} height={150} />
+            <Spinner className='mb-3' style={{ height: '3rem', width: '3rem' }} />
+            <h1>{showTime}</h1>
+          </div>
+        </Modal> 
+      )}
       <Loading isOpen={isLoad} setModal={setLoad} centered scrollable size={'lg'} title={'เรียกข้อมูลรายงาน'} hideFooter>
         <div className="d-flex flex-column align-items-center justify-content-center">
           <img className='mb-5' src={logo} alt='logo' width={150} height={150} />
