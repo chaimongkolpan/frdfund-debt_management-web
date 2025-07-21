@@ -1717,6 +1717,34 @@ export const searchGuaranteePrepare = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const searchOperationLand = async (filter) => {
+  const path = '/operationLand/search-operationland';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const viewOperationDetail = async (id) => {
+  const path = '/operationLand/get-operationland';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const viewLegalDetail = async (id) => {
   const path = '/LegalContract/legal-contract-debt-management';
   try {

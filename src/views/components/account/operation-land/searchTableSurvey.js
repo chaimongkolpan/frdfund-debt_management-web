@@ -4,7 +4,78 @@ import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
   const { result, filter, getData, handleShowDetail, handleOperation
   } = props;
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([
+    {
+      "id_KFKPolicy": 0,
+      "policyNO": "string",
+      "id_debt_management": "string",
+      "k_idcard": "string",
+      "k_name_prefix": "string",
+      "k_firstname": "string",
+      "k_lastname": "string",
+      "loan_province": "string",
+      "indexAssetPolicy": "string",
+      "collateralOwner": "string",
+      "assetType": "string",
+      "parceL_no": "string",
+      "pre_emption_volume_no": "string",
+      "nS3_dealing_file_no": "string",
+      "nS3A_no": "string",
+      "nS3B_no": "string",
+      "alrO_plot_no": "string",
+      "condO_parcel_no": "string",
+      "labT5_parcel_no": "string",
+      "house_no": "string",
+      "chattel_engine_no": "string",
+      "otheR_volume": "string",
+      "parceL_province": "string",
+      "pre_emption_province": "string",
+      "nS3_province": "string",
+      "nS3A_province": "string",
+      "nS3B_province": "string",
+      "alrO_province": "string",
+      "condO_province": "string",
+      "labT5_province": "string",
+      "house_province": "string",
+      "otheR_province": "string",
+      "parceL_district": "string",
+      "pre_emption_district": "string",
+      "nS3_district": "string",
+      "nS3A_district": "string",
+      "nS3B_district": "string",
+      "alrO_district": "string",
+      "condO_district": "string",
+      "labT5_district": "string",
+      "house_district": "string",
+      "otheR_district": "string",
+      "parceL_sub_district": "string",
+      "pre_emption_sub_district": "string",
+      "nS3_sub_district": "string",
+      "nS3A_sub_district": "string",
+      "nS3B_sub_district": "string",
+      "alrO_sub_district": "string",
+      "condO_sub_district": "string",
+      "labT5_sub_district": "string",
+      "house_sub_district": "string",
+      "otheR_sub_district": "string",
+      "contract_area_rai": "string",
+      "contract_area_ngan": "string",
+      "contract_area_sqaure_wa": 0,
+      "borrowdeed_no": "string",
+      "borrowdeed_date": "2025-07-21T19:01:22.578Z",
+      "borrowdeed_reason": "string",
+      "returndeed_no": "string",
+      "returndeed_date": "2025-07-21T19:01:22.578Z",
+      "returndeed_remark": "string",
+      "asset_operations_type": "string",
+      "asset_operations_other": "string",
+      "req_docu": "string",
+      "borrowdeed_docu": "string",
+      "approve_docu": "string",
+      "results_docu": "string",
+      "report_docu": "string"
+    }
+  ]);
   const [paging, setPaging] = useState(null);
   const RenderData = (item, index) => {
     return (item && (
@@ -24,13 +95,13 @@ const SearchTable = (props) => {
             </button>
            </div>
          </td>
+         <td>{item.k_idcard}</td>
+         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
         <td>{item.loan_province}</td>
-        <td>{item.loan_creditor_type}</td>
-        <td>{item.loan_creditor_name}</td>
-        <td>{item.loan_creditor_province}</td>
-        <td>{item.loan_creditor_branch}</td>
         <td>{item.policyNO}</td>
+        <td>{item.indexAssetPolicy}</td>
+        <td>{item.collateralOwner}</td>
         <td>{item.loan_debt_type}</td>
         <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
         <td>{item.numberOfPeriodPayback}</td>
@@ -58,7 +129,77 @@ const SearchTable = (props) => {
   }
   useEffect(() => {
     if(result) {
-      setData(result.data);
+      //setData(result.data);
+      setData([{
+        "id_KFKPolicy": 0,
+        "policyNO": "string",
+        "id_debt_management": "string",
+        "k_idcard": "string",
+        "k_name_prefix": "string",
+        "k_firstname": "string",
+        "k_lastname": "string",
+        "loan_province": "string",
+        "indexAssetPolicy": "string",
+        "collateralOwner": "string",
+        "assetType": "string",
+        "parceL_no": "string",
+        "pre_emption_volume_no": "string",
+        "nS3_dealing_file_no": "string",
+        "nS3A_no": "string",
+        "nS3B_no": "string",
+        "alrO_plot_no": "string",
+        "condO_parcel_no": "string",
+        "labT5_parcel_no": "string",
+        "house_no": "string",
+        "chattel_engine_no": "string",
+        "otheR_volume": "string",
+        "parceL_province": "string",
+        "pre_emption_province": "string",
+        "nS3_province": "string",
+        "nS3A_province": "string",
+        "nS3B_province": "string",
+        "alrO_province": "string",
+        "condO_province": "string",
+        "labT5_province": "string",
+        "house_province": "string",
+        "otheR_province": "string",
+        "parceL_district": "string",
+        "pre_emption_district": "string",
+        "nS3_district": "string",
+        "nS3A_district": "string",
+        "nS3B_district": "string",
+        "alrO_district": "string",
+        "condO_district": "string",
+        "labT5_district": "string",
+        "house_district": "string",
+        "otheR_district": "string",
+        "parceL_sub_district": "string",
+        "pre_emption_sub_district": "string",
+        "nS3_sub_district": "string",
+        "nS3A_sub_district": "string",
+        "nS3B_sub_district": "string",
+        "alrO_sub_district": "string",
+        "condO_sub_district": "string",
+        "labT5_sub_district": "string",
+        "house_sub_district": "string",
+        "otheR_sub_district": "string",
+        "contract_area_rai": "string",
+        "contract_area_ngan": "string",
+        "contract_area_sqaure_wa": 0,
+        "borrowdeed_no": "string",
+        "borrowdeed_date": "2025-07-21T19:01:22.578Z",
+        "borrowdeed_reason": "string",
+        "returndeed_no": "string",
+        "returndeed_date": "2025-07-21T19:01:22.578Z",
+        "returndeed_remark": "string",
+        "asset_operations_type": "string",
+        "asset_operations_other": "string",
+        "req_docu": "string",
+        "borrowdeed_docu": "string",
+        "approve_docu": "string",
+        "results_docu": "string",
+        "report_docu": "string"
+      }]);
       setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage });
     }
     return () => { setData([]) }

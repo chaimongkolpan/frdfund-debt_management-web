@@ -25,7 +25,7 @@ const Textbox = (props) => {
         maximumFractionDigits: 2 
       }));
     } else {
-      setValue(value)
+      setValue(value ?? ''); 
     }
   },[value])
   return (
