@@ -3,7 +3,8 @@ import { ToDateDb } from "@utils";
 import { 
   getProvinces,
   getLegalSpouses,
-  updateLegalGuarantor,
+  saveLegalSpouses,
+  removeLegalSpouses,
 } from "@services/api";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
@@ -14,6 +15,8 @@ const Spouse = (props) => {
   const [isMounted, setMounted] = useState(false);
   const [pSpouse, setPSpouse] = useState(null);
   const [spouses, setSpouses] = useState(null);
+  const [debtor, setDebtor] = useState(null);
+  const [guarantors, setGuarantors] = useState(null);
   const [spouseDetail, setSpouseDetail] = useState(null);
   const [isOpenSpouseAdd, setOpenSpouseAdd] = useState(false);
   const [isOpenSpouseEdit, setOpenSpouseEdit] = useState(false);
@@ -39,11 +42,21 @@ const Spouse = (props) => {
     }
   }
   const saveSpouse = async() => {
-    const result = await updateLegalGuarantor({ 
+    const result = await saveLegalSpouses({ 
       ...spouseDetail, 
       id_KFKPolicy: policy.id_KFKPolicy,
+      policyNO: policy.policyNO,
       spouses_birthday: ToDateDb(spouseDetail?.spouses_birthday)
     });
+    if (result.isSuccess) {
+      await fetchData();
+      await setOpenSpouseAdd(false)
+      await setOpenSpouseEdit(false)
+      await setSpouseDetail(null)
+    }
+  }
+  const removeSpouse = async(item) => {
+    const result = await removeLegalSpouses(item);
     if (result.isSuccess) {
       await fetchData();
       await setOpenSpouseAdd(false)
@@ -60,18 +73,26 @@ const Spouse = (props) => {
   const fetchData = async () => {
     const result = await getLegalSpouses(policy.id_KFKPolicy);
     if (result.isSuccess) {
-      await setSpouses(result.spouses)
+      await setSpouses(result.data)
+      await setDebtor(result.debtor);
+      await setGuarantors(result.guarantors);
     } else {
       await setSpouses(null)
+      await setDebtor([]);
+      await setGuarantors([]);
     }
   }
   const getSpouseName = async () => {
-    const resultProv = await getProvinces();
-    if (resultProv.isSuccess) {
-      const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
-    } else {
-      await setProvOp(null);
+    if (spouseDetail?.p_spouses != 'ผู้กู้' && debtor && debtor?.length > 0) {
+      await setSpouseDetail((prevState) => ({
+        ...prevState,
+      ...({p_spouses_name: debtor[0]})
+      }))
+    } else if(guarantors && guarantors?.length > 0) {
+      await setSpouseDetail((prevState) => ({
+        ...prevState,
+      ...({p_spouses_name: guarantors[0]})
+      }))
     }
   }
   const getProvince = async () => {
@@ -87,6 +108,11 @@ const Spouse = (props) => {
   useEffect(() => {
     if (spouseDetail?.p_spouses != 'เจ้าของหลักประกัน') {
       getSpouseName();
+    } else {
+      setSpouseDetail((prevState) => ({
+        ...prevState,
+        ...({p_spouses_name: ''})
+      }))
     }
   },[spouseDetail?.p_spouses])
   useEffect(() => {},[spouseRef]);
@@ -127,10 +153,12 @@ const Spouse = (props) => {
               {(spouses && spouses.length > 0) ? (spouses.map((item,index) => (
                 <tr key={index}>
                   <td className="align-middle">{index + 1}</td>
-                  <td>{item.spouses_type}</td>
+                  <td>{item.p_spouses}</td>
+                  <td>{item.p_spouses_name}</td>
+                  <td>{item.marital_status}</td>
                   <td>{item.spouses_idcard}</td>
                   <td>{item.spouses_name_prefix}</td>
-                  <td>{item.fullname}</td>
+                  <td>{item.spouses_firstname + ' ' + item.spouses_lastname}</td>
                   {isView ? (
                     <td>
                       <div className='d-flex justify-content-center'>
@@ -150,7 +178,7 @@ const Spouse = (props) => {
                       </td>
                       <td>
                         <div className='d-flex justify-content-center'>
-                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => editSpouse(item)}>
+                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => editSpouse(item)}>
                             <i className="far fa-trash-alt"></i>
                           </button>
                         </div>
@@ -195,9 +223,15 @@ const Spouse = (props) => {
                     ) : (
                       <div className="form-floating needs-validation">
                         <select className="form-select" disabled={isView} value={spouseDetail?.p_spouses_name ?? ''} onChange={(e) => handleChangeSpouse('p_spouses_name', e.target?.value)}>
-                          <option value="ผู้กู้" selected>ผู้กู้</option>
-                          <option value="ผู้ค้ำ">ผู้ค้ำ</option>
-                          <option value="เจ้าของหลักประกัน">เจ้าของหลักประกัน</option>
+                          {spouseDetail?.p_spouses == 'ผู้กู้' ? (
+                            debtor && debtor.map(item => (
+                              <option>{item}</option>
+                            ))
+                          ) : (
+                            guarantors && guarantors.map(item => (
+                              <option>{item}</option>
+                            ))
+                          )}
                         </select>
                         <label htmlFor="floatingSelectTeam">ชื่อ-นามสกุล</label>
                       </div>
@@ -323,7 +357,7 @@ const Spouse = (props) => {
                 {isOpenSpouseAdd ? (
                   <button className="btn btn-secondary" type="button" onClick={() => setOpenSpouseEdit(false)}>ยกเลิก</button>
                 ) : (
-                  <button className="btn btn-danger" type="button" onClick={() => removeGuarantor(guarantorDetail)}>ลบข้อมูลคู่สมรส</button>
+                  <button className="btn btn-danger" type="button" onClick={() => removeSpouse(spouseDetail)}>ลบข้อมูลคู่สมรส</button>
                 )}
               </div>
               <br />

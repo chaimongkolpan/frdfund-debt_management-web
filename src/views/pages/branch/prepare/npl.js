@@ -14,6 +14,9 @@ import {
   submitBranchOfferPrepare,
   updateIncorrect,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPL = () => {
@@ -32,8 +35,15 @@ const NPL = () => {
   const onAddBigData = async (selected) => {
     const result = await submitBranchOfferPrepare(selected);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await setOpenAdd(false);
       await onSearch(filter);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleSubmit = async(selected) => {
@@ -80,7 +90,14 @@ const NPL = () => {
     });
     const result = await updateIncorrect(selectItem);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await onSearch(filter)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const onSearch = async (filter) => {

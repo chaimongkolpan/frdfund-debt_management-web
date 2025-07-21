@@ -14,10 +14,9 @@ const Filter = (props) => {
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
-        idCard: "",
+        k_idCard: "",
         name: "",
-        province: "",
-        debtStatus: "",
+        loan_province: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE,
@@ -62,16 +61,16 @@ const Filter = (props) => {
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'ดัชนีจัดเก็บหลักประกัน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'ดัชนีจัดเก็บหลักประกัน'} handleChange={(val) => onChange('indexAssetPolicy', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เจ้าของหลักประกัน'} handleChange={(val) => onChange('name', val)} />
+          <Textbox title={'เจ้าของหลักประกัน'} handleChange={(val) => onChange('collateralowner', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขที่หลักประกัน'} handleChange={(val) => onChange('name', val)} />
+          <Textbox title={'เลขที่หลักประกัน'} handleChange={(val) => onChange('collateralNumber', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('k_idCard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
@@ -81,7 +80,7 @@ const Filter = (props) => {
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
-              handleChange={(val) => onChange('province', val)}
+              handleChange={(val) => onChange('loan_province', val)}
               hasAll />
         </div>
         <div className="col-12">

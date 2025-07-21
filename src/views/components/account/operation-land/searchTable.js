@@ -13,22 +13,24 @@ const SearchTable = (props) => {
         <td>
           <div className='d-flex justify-content-center'>
             <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleOperation(item)}>
-    <i className="fas fa-square-plus"></i>
+            <i className="fas fa-square-plus"></i>
             </button>
            </div>
         </td>
         <td>
           <div className='d-flex justify-content-center'>
             <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleShowDetail(item)}>
-    <i className="far fa-rectangle-list"></i>
+             <i className="far fa-rectangle-list"></i>
             </button>
            </div>
          </td>
+         <td>{item.k_idcard}</td>
+         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
         <td>{item.loan_province}</td>
-        <td>{item.loan_creditor_type}</td>
-        <td>{item.loan_creditor_name}</td>
-        <td>{item.loan_creditor_province}</td>
+        <td>{item.policyNO}</td>
+        <td>{item.indexAssetPolicy}</td>
+        <td>{item.collateralOwner}</td>
         <td>{item.loan_creditor_branch}</td>
         <td>{item.policyNO}</td>
         <td>{item.loan_debt_type}</td>

@@ -1,3 +1,4 @@
+import { slice } from 'lodash';
 import moment from 'moment';
 // ** Checks if an object is empty (returns boolean)
 export const isObjEmpty = (obj) => Object.keys(obj).length === 0;
@@ -79,7 +80,16 @@ export const getHomeRouteForLoggedInUser = (userRole) => {
   if (userRole === "client") return prefix_url + "/debt";
   return prefix_url + "/login";
 };
-
+export const getDuration = (end, start) => {
+  var now = moment(end ?? new Date()); 
+  var duration = moment.duration(now.diff(start));
+  var secs = duration.asSeconds();
+  if (isNaN(secs)) return '00:00';
+  let s = parseInt(secs);
+  let m = s / 60;
+  s = s % 60;
+  return ('0' + parseInt(m).toString()).slice(-2) + ':' + ('0' + parseInt(s).toString()).slice(-2);
+};
 // ** React Select Theme Colors
 export const selectThemeColors = (theme) => ({
   ...theme,

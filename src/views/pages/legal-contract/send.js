@@ -6,7 +6,7 @@ import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/CustomModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
-import Filter from "@views/components/legal-contract/filterPrepare";
+import Filter from "@views/components/legal-contract/filterSend";
 import SearchTable from "@views/components/legal-contract/searchSendTable";
 import Detail from "@views/components/legal-contract/detail";
 import PlanPay from "@views/components/legal-contract/planPay";

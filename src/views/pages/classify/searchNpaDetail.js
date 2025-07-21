@@ -53,9 +53,16 @@ const SearchClassifyNPADetail = () => {
   const submitCombine = async(param) => {
     const result = await combineClassify(param);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
       await setOpenCombine(false);
       await setCombine(null);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleCreateNPL = async(id) => {
@@ -67,10 +74,17 @@ const SearchClassifyNPADetail = () => {
   const submitCreateNPL = async(id) => {
     const result = await createNplClassify({ id_debt_management: id });
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
       await setOpenCreateNPL(false);
       await setContractNo(null);
       await setCreate(null);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleSplit = async(id) => {
@@ -82,10 +96,17 @@ const SearchClassifyNPADetail = () => {
   const submitSplit = async(id) => {
     const result = await splitClassify({ id_debt_management: id });
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
       await setOpenSplitNPL(false);
       await setContractNo(null);
       await setSplit(null);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleCloseDetail = async () => {
@@ -113,10 +134,17 @@ const SearchClassifyNPADetail = () => {
   const submitCancelSplit = async(id) => {
     const result = await cancelSplitClassify({ id_separate: id });
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
       await setOpenCancelSplit(false);
       await setContractNo(null);
       await setCancelSplit(null);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleBorrow = () => {
@@ -130,6 +158,9 @@ const SearchClassifyNPADetail = () => {
     setOpenDocument(true);
   }
   const handleSubmitDocument = async () => {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
     await fetchData();
     await setOpenDocument(false);
   }

@@ -21,6 +21,9 @@ import {
   updateNPAstatus,
   cleanData
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPA = () => {
@@ -75,16 +78,30 @@ const NPA = () => {
     const selectId = selected.map(item => item.id_debt_management)
     const result = await addCommitteePrepareNpa(selectId);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
   const onRemoveMakelist = async (selected) => {
     const selectId = selected.map(item => item.id_debt_management)
     const result = await removeCommitteePrepareNpa(selectId);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
   const handleSubmit = async(selected) => {
@@ -107,6 +124,9 @@ const NPA = () => {
     if (resultUpdate.isSuccess) {
       const resultUpdate = await updateCommitteePrepareNpa(param);
       if (resultUpdate) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
         const result = await submitCommitteePrepareNpa({
           type: "application/octet-stream",
           filename: "คณะกรรมการจัดการหนี้อนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
@@ -118,7 +138,15 @@ const NPA = () => {
           await setBookDate(null);
           await fetchData(filterAdded);
         }
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        ));
       }
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
   const onSubmitEdit = async () => {
@@ -130,6 +158,9 @@ const NPA = () => {
     }
     const resultUpdate = await updateCommitteePrepareNpa(param);
     if (resultUpdate) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       const result = await submitCommitteePrepareNpa({
         type: "application/octet-stream",
         filename: "คณะกรรมการจัดการหนี้อนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
@@ -140,6 +171,10 @@ const NPA = () => {
         await setBookNoEdit(null);
         await setBookDateEdit(null);
       }
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
   const onCloseMakelist = async () => {
