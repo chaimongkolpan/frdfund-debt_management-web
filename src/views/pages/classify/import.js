@@ -7,6 +7,9 @@ import DataTable from "@views/components/classify/importTable";
 import { 
   importClassify
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const ImportClassify = () => {
@@ -27,16 +30,28 @@ const ImportClassify = () => {
         setFailList(result.fail_list);
         setSuceed(result.succeed);
         if (!result.hasFail) {
+          toast((t) => (
+            <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+          ));
           setData(result.contracts);
           return true
         } else {
+        toast((t) => (
+          <ToastError t={t} title={'บันทีกข้อมูล'} message={'มีข้อมูลไม่ถูกต้อง'} />
+        ));
           return false
         }
       } else {
+        toast((t) => (
+          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        ));
         setData(null)
         return false
       }
     } else {
+      toast((t) => (
+        <ToastError t={t} title={'อัปโหลดไฟล์'} message={'กรุณาอัปโหลดไฟล์'} />
+      ));
       console.error('file not upload.')
     }
   }

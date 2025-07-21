@@ -24,6 +24,9 @@ import {
   uploadBranchOffer,
 } from "@services/api";
 import { stringToDateTh } from "@utils";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const BranchOfferNPL = () => {
   const [showModal, setShowModal] = useState(false);
@@ -55,7 +58,14 @@ const BranchOfferNPL = () => {
 
     const result = await uploadBranchOffer(form)
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       setUploadSuccess(true);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
   const onSearchTop = async (filter) => {
@@ -77,8 +87,15 @@ const BranchOfferNPL = () => {
   const onAddBigData = async (selected) => {
     const result = await addBranchOffer(selected);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
 
@@ -95,8 +112,15 @@ const BranchOfferNPL = () => {
   const onRemoveMakelist = async (selected) => {
     const result = await removeBranchOffer(selected);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
 
@@ -109,6 +133,9 @@ const BranchOfferNPL = () => {
     }
     const resultUpdate = await updateBranchOffer(param)
     if (resultUpdate.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       const result = await submitBranchOffer({
         type: "application/octet-stream",
         filename: "สาขาเสนออนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
@@ -119,6 +146,10 @@ const BranchOfferNPL = () => {
         await setBookDate(null);
         await fetchData(filterAdded);
       }
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   };
 

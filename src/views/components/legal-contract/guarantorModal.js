@@ -27,6 +27,7 @@ const Guarantor = (props) => {
     const result = await updateLegalGuarantor({ 
       ...guarantorDetail, 
       id_KFKPolicy: policy.id_KFKPolicy,
+      policyNO: policy.policyNO,
       guarantor_birthday: ToDateDb(guarantorDetail.guarantor_birthday)
     });
     if (result.isSuccess) {
@@ -47,10 +48,10 @@ const Guarantor = (props) => {
       const len = result.guarantors.length;
       await setGuarantors([
         ...result.guarantors,
-        ...((policy.loan_amount < 100000 && len < 1) ? [{ guarantor_type: 'ทายาทเกษตรกรสมาชิก' }] : []),
-        ...((policy.loan_amount < 100000 && len < 2) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
-        ...((policy.loan_amount >= 100000 && policy.loan_amount < 200000 && len < 3) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
-        ...((policy.loan_amount >= 200000 && policy.loan_amount < 500000 && len < 4) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
+        ...((len < 1) ? [{ guarantor_type: 'ทายาทเกษตรกรสมาชิก' }] : []),
+        ...((len < 2) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
+        ...((policy.loan_amount >= 100000 && len < 3) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
+        ...((policy.loan_amount >= 200000 && len < 4) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
         ...((policy.loan_amount >= 500000 && len < 5) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
       ])
     } else {

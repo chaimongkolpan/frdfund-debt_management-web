@@ -14,6 +14,9 @@ import {
   updateNPAstatus,
   cleanData
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPA = () => {
@@ -38,6 +41,9 @@ const NPA = () => {
     if (result.isSuccess) {
       const ids = requestApproveData.map(item => item.id_debt_management)
       if (await updateNPAstatus(ids, "ยืนยันยอดสำเร็จ")) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
         await onSearchTop({ ...filter, currentPage: 1});
         await fetchData(filterAdded);
       }
@@ -73,6 +79,9 @@ const NPA = () => {
     const ids = selected.map(item => item.id_debt_management)
     const result = await updateNPAstatus(ids, "เตรียมยืนยันยอด");
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     }
@@ -81,6 +90,9 @@ const NPA = () => {
     const ids = selected.map(item => item.id_debt_management)
     const result = await updateNPAstatus(ids, "สาขายืนยันยอด");
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     }

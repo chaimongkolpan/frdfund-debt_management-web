@@ -6,6 +6,7 @@ const url = process.env.API_URL ?? (process.env.ENVIRONMENT == 'develop'
                                         : 'https://debtinfo.frdfund.org/api'
                                     ));
 axios.defaults.baseURL = url;
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://debtinfo.frdfund.org';
 const defaultErrorResponse = { statusCode: 400, isSuccess: false, data: null };
 function SaveAs(blob, filename) {
   const url = window.URL.createObjectURL(blob);
@@ -1815,6 +1816,34 @@ export const getLegalSpouses = async (id) => {
     return defaultErrorResponse;
   }
 };
+export const saveLegalSpouses = async (params) => {
+  const path = '/LegalContract/insert-spouses';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeLegalSpouses = async (params) => {
+  const path = '/LegalContract/delete-spouses';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getPlanPay = async (id,no) => {
   const path = '/LegalContract/get-refund-planpay';
   try {
@@ -2389,5 +2418,46 @@ export const downloadReport = async (filter, filename) => {
     console.error("error: " + path + " =>", e);
   }
   return false;
+};
+
+export const downloadOldReport = async (params) => {
+  const path = "https://debtinfo.frdfund.org/report-old/report/Download?exportpdf=true&";
+  try {
+    let reportId = 0;
+    if (params.reportId == 1) reportId = 4; if (params.reportId == 2) reportId = 5;
+    if (params.reportId == 3) reportId = 7; if (params.reportId == 4) reportId = 38;
+    if (params.reportId == 5) reportId = 9; if (params.reportId == 6) reportId = 20;
+    if (params.reportId == 7) reportId = 13; if (params.reportId == 8) reportId = 11;
+    if (params.reportId == 9) reportId = 14; if (params.reportId == 10) reportId = 39;
+
+    var param = 'id=' + reportId + '&';
+    var start = params.startDate;
+    if (start != null && start != undefined && start != '') param += 'start=' + start + '&';
+    var stop = params.endDate;
+    if (stop != null && stop != undefined && stop != '') param += 'stop=' + stop + '&';
+    if (params.year != null && params.year != undefined && params.year != '') param += 'year=' + (params.year == 'all' ? '0' : params.year) + '&';
+    var CreditorType = (params.creditorType == 'all' ? 'ทั้งหมด' : params.creditorType);
+    if (CreditorType != null && CreditorType != undefined && CreditorType != '') param += 'creditortype=' + CreditorType + '&';
+    var Creditor = (params.creditor == 'all' ? '0' : params.creditor);
+    if (Creditor != null && Creditor != undefined && Creditor != '') param += 'creditor=' + Creditor + '&';
+    var DebtType = (params.debtType == 'all' ? 'ทั้งหมด' : params.debtType);
+    if (DebtType != null && DebtType != undefined && DebtType != '') param += 'debttype=' + DebtType + '&';
+    var LegalNo = (params.accountType == 'all' ? 'ทั้งหมด' : params.accountType);
+    if (LegalNo != null && LegalNo != undefined && LegalNo != '') param += 'legalno=' + LegalNo + '&';
+    var ApproveNo = params.committee;
+    if (ApproveNo != null && ApproveNo != undefined && ApproveNo != '') param += 'approveno=' + ApproveNo + '&';
+    var ProvinceId = 0;
+    if (ProvinceId != null && ProvinceId != undefined && ProvinceId != '') param += 'province=' + ProvinceId + '&';
+    var AccountStatus = (params.debtStatus == 'all' ? 'ทั้งหมด' : params.debtStatus);
+    if (AccountStatus != null && AccountStatus != undefined && AccountStatus != '') param += 'account_status=' + AccountStatus + '&'; 
+    const result = await axios.get(path + param, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
 };
 // #endregion
