@@ -15,7 +15,7 @@ import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
-  searchOperation,
+  searchOperationLand,
 } from "@services/api";
 
 const user = getUserData();
@@ -31,7 +31,7 @@ const PageContent = () => {
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
-    const result = await searchOperation(filter);
+    const result = await searchOperationLand(filter);
     if (result.isSuccess) {
       setData(result)
     } else {
@@ -96,12 +96,12 @@ const PageContent = () => {
               </div>
             </div>
           </form> */}
-          <OperationLand  /> 
+          <OperationLand  policy={policy} /> 
         </Modal>
       )}
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-        <DetailAsset  /> 
+        <DetailAsset policy={policy} /> 
         </Modal>
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

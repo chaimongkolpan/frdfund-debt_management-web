@@ -91,11 +91,12 @@ const DropdownSearch = (props) => {
         data-choices="data-choices" 
         data-options='{"removeItemButton":true,"placeholder":true}'
       >
-        {hasAll ? (
+        {/* {hasAll ? (
           <option value="" selected>ทั้งหมด</option>
         ) : (
           <option value="" selected>กรุณาเลือกข้อมูล...</option>
-        )}
+        )} */}
+         <option value="">{hasAll ? 'ทั้งหมด' : 'กรุณาเลือกข้อมูล...'}</option>
         {options && (
           options.map((option, index) => (
             <option key={index} value={option}>{option}</option>
