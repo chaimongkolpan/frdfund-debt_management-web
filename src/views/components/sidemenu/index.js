@@ -26,6 +26,19 @@ const Sidebar = props => {
   useEffect(() => {
     async function fetchData() {
       try {
+        const result = await getAlertSide();
+        if (result.isSuccess) {
+          setAlert(result.data);
+        }
+      } catch(e) {
+        console.error('error', e);
+      }
+    };
+    fetchData();
+  }, [path])
+  useEffect(() => {
+    async function fetchData() {
+      try {
         if (!alert || moment().diff(moment(alert?.updateDate), 'minutes') > 5) {
           const result = await getAlertSide();
           if (result.isSuccess) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handleRequestClose
+  const { result, filter, getData, handleShowDetail, handleRequestClose, handleRedeemAsset, handleRequestRefund
   } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -26,14 +26,17 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
+        <td>{item.closingStatus}</td>
+        <td>{toCurrency(item.loan_amount)}</td>
+        <td>{toCurrency(item.balance)}</td>
         <td className="align-middle white-space-nowrap text-center pe-0">
           <div className="btn-reveal-trigger position-static">
             <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
             <div className="dropdown-menu dropdown-menu-end py-2">
               <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>คำนวนยอดปิดสัญญา</button>
               <button className="dropdown-item" type="button" onClick={() => handleRequestClose(item)}>ยื่นคำร้องปิดสัญญา</button>
+              <button className="dropdown-item" type="button" onClick={() => handleRedeemAsset(item)}>โอนคืนหลักทรัพย์</button>
+              <button className="dropdown-item" type="button" onClick={() => handleRequestRefund(item)}>ทำเรื่องคืนเงิน</button>
             </div>
           </div>
         </td>
@@ -58,8 +61,7 @@ const SearchTable = (props) => {
                 <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>#</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="8">นิติกรรมสัญญา</th>
-                <th colSpan="2">หลักประกัน</th>
+                <th colSpan="11">นิติกรรมสัญญา</th>
                 <th rowSpan="2">ดำเนินการ</th>
               </tr>
               <tr>
@@ -79,8 +81,9 @@ const SearchTable = (props) => {
                 <th>ยอดเงินตามสัญญา</th>
                 <th>จำนวนเงินที่ชดเชย</th>
                 <th>สถานะนิติกรรมสัญญา</th>
-                <th>หลักทรัพย์ค้ำประกัน</th>
-                <th>บุคคลค้ำประกัน</th>
+                <th>สถานะสัญญา</th>
+                <th>ต้นเงินตามแผน</th>
+                <th>ต้นเงินยกมา</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">

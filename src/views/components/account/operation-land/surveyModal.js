@@ -14,6 +14,7 @@ import {
     printPlanPay,
     saveDocumentPolicy,
     getProvinces,
+    viewOperationDetail
 } from "@services/api";
 
 const PlanPay = (props) => {
@@ -31,6 +32,12 @@ const PlanPay = (props) => {
     const [collateral_type, setCollateralType] = useState('โฉนด');
     const typeSurvey = ["รังวัดชี้แนวเขต", "รังวัดแบ่งเขต", "รังวัดสอบเขต", "รังวัดออกโฉนด", "อื่นๆ"];
     const [addTile, setAddTitle] = useState(false);
+    const [showDetail, setShowDetail] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
+    const [isExternalAgency, setIsExternalAgency] = useState(false);
+    const [useAsset, setUseAsset] = useState(false);
+    const [isAssetChanged, setIsAssetChanged] = useState(false);
+    const [isAssetSplit, setIsAssetSplit] = useState(false);
     const [collateralDetail, setCollateralDetail] = useState({
         id_KFKPolicy: policy?.id_KFKPolicy,
         policyNO: policy?.policyNO,
@@ -134,13 +141,93 @@ const PlanPay = (props) => {
         }
     }
     const fetchData = async () => {
-        const result = await getPlanPay(policy.id_KFKPolicy, policy.policyNO);
+        console.log(policy);
+        const result = await viewOperationDetail(policy.id_KFKPolicy);
         if (result.isSuccess) {
             await setDate(result.data.policyStartDate)
             await setYear(result.data.numberOfYearPayback)
             await setInstallment(result.data.numberOfPeriodPayback)
             await setPlan(result.listData);
+            await setData([
+                {
+                  "id_KFKPolicy": 0,
+                  "policyNO": "string",
+                  "id_debt_management": "string",
+                  "k_idcard": "string",
+                  "k_name_prefix": "string",
+                  "k_firstname": "string",
+                  "k_lastname": "string",
+                  "loan_province": "string",
+                  "indexAssetPolicy": "string",
+                  "collateralOwner": "string",
+                  "assetType": "string",
+                  "parceL_no": "string",
+                  "pre_emption_volume_no": "string",
+                  "nS3_dealing_file_no": "string",
+                  "nS3A_no": "string",
+                  "nS3B_no": "string",
+                  "alrO_plot_no": "string",
+                  "condO_parcel_no": "string",
+                  "labT5_parcel_no": "string",
+                  "house_no": "string",
+                  "chattel_engine_no": "string",
+                  "otheR_volume": "string",
+                  "parceL_province": "string",
+                  "pre_emption_province": "string",
+                  "nS3_province": "string",
+                  "nS3A_province": "string",
+                  "nS3B_province": "string",
+                  "alrO_province": "string",
+                  "condO_province": "string",
+                  "labT5_province": "string",
+                  "house_province": "string",
+                  "otheR_province": "string",
+                  "parceL_district": "string",
+                  "pre_emption_district": "string",
+                  "nS3_district": "string",
+                  "nS3A_district": "string",
+                  "nS3B_district": "string",
+                  "alrO_district": "string",
+                  "condO_district": "string",
+                  "labT5_district": "string",
+                  "house_district": "string",
+                  "otheR_district": "string",
+                  "parceL_sub_district": "string",
+                  "pre_emption_sub_district": "string",
+                  "nS3_sub_district": "string",
+                  "nS3A_sub_district": "string",
+                  "nS3B_sub_district": "string",
+                  "alrO_sub_district": "string",
+                  "condO_sub_district": "string",
+                  "labT5_sub_district": "string",
+                  "house_sub_district": "string",
+                  "otheR_sub_district": "string",
+                  "contract_area_rai": "string",
+                  "contract_area_ngan": "string",
+                  "contract_area_sqaure_wa": 0,
+                  "borrowdeed_no": "string",
+                  "borrowdeed_date": "2025-07-21T19:11:15.317Z",
+                  "borrowdeed_reason": "string",
+                  "returndeed_no": "string",
+                  "returndeed_date": "2025-07-21T19:11:15.317Z",
+                  "returndeed_remark": "string",
+                  "asset_operations_type": "string",
+                  "asset_operations_other": "string",
+                  "req_docu": "string",
+                  "borrowdeed_docu": "string",
+                  "approve_docu": "string",
+                  "results_docu": "string",
+                  "report_docu": "string"
+                }
+              ]);
         }
+    }
+    const handleShowDetail = async () =>{
+        setShowDetail(true);
+    }
+    
+    const handleShowEdit= async () =>{
+        setShowEdit(true);
     }
     const RenderData = (item, index, checked) => {
         return (item && (
@@ -148,10 +235,10 @@ const PlanPay = (props) => {
                 <td></td>
                 <td>
                     <div className='d-flex justify-content-center'>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' >
+                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowDetail}>
                             <i className="far fa-eye"></i>
                         </button>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' >
+                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowEdit}>
                             <i className="far fa-edit"></i>
                         </button>
                     </div>
@@ -206,21 +293,32 @@ const PlanPay = (props) => {
         }
     }, [])
     useEffect(() => {
+        console.log(policy);
         if (isView) {
             fetchData();
         } else {
             setDate(new Date())
         }
     }, [])
+    useEffect(() => {
+        console.log('useEffect fired', { showDetail, showEdit });
+        if (showDetail) {
+          console.log('✅ showDetail ON');
+        }
+        if (showEdit) {
+          console.log('✅ showEdit ON');
+        }
+      }, [showDetail, showEdit]);
     const addData = async () => {
         await setAddTitle(true);
+        await setShowEdit(true);
       }
     return (
         <>
             <form>
                 <br />
                 <div className="row g-3">
-                    <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>
+                    <div className={`d-flex mb-3 flex-row-reverse `}>
                         <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()} ><span className="fas fa-plus fs-8"></span> เพิ่มการรังวัด</button>
                     </div>
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
@@ -265,7 +363,8 @@ const PlanPay = (props) => {
                         </tbody>
                     </table>
                     {/* รายละเอียดดำเนินการในที่ดิน */}
-                    <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                    { showDetail && (
+                        <div className="card shadow-none border my-2" data-component-card="data-component-card">
                         <div className="card-body p-0">
                             <div className="p-3 code-to-copy">
                                 <h3 className="text-center">รายละเอียดการรังวัด</h3><br />
@@ -282,8 +381,9 @@ const PlanPay = (props) => {
                             </div>
                         </div>
                     </div>
+                    )}
                     {/* end รายละเอียดดำเนินการในที่ดิน */}
-
+                    { showEdit && (<>
                     {/* start แก้ไขรายละเอียดดำเนินการในที่ดิน */}
                     <div className="card shadow-none border my-2" data-component-card="data-component-card">
                         <div className="card-body p-0">
@@ -318,27 +418,34 @@ const PlanPay = (props) => {
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>หน่วยงานภายนอก</p>
-                                        <Input type='switch' id='rtl' name='RTL' />
+                                        <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsExternalAgency(e.target.checked)}/>
                                     </div>
                                 </div>
-                                <span className="text-center fw-bold">ใบอนุญาตจากเกษตร</span><br />
-                                <div className="col-12 mt-3 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
+                                {isExternalAgency && (
+                                    <>
+                                        <span className="text-center fw-bold">ใบอนุญาตจากเกษตร</span><br />
+                                        <div className="col-12 mt-3 mb-3">
+                                        <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                        </div>
+                                        <br />
+                                        <div className="row justify-content-center mt-3 mb-3">
+                                        <div className="col-auto">
+                                            <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>
+                                            นำไฟล์เข้าระบบ
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </>
+                                    )}
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>ใช้โฉนด</p>
-                                        <Input type='switch' id='rtl' name='RTL' />
+                                        <Input type='switch' id='rtl' name='RTL' onChange={(e) => setUseAsset(e.target.checked)}/>
                                     </div>
                                 </div>
                                 <br />
-                                <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                                {useAsset && (<>
+                                    <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                     <div className="card-body p-0">
                                         <div className="p-3 code-to-copy">
                                             <span className="fw-bold">เอกสารคำร้องขอยืมโฉนด</span><br />
@@ -390,7 +497,8 @@ const PlanPay = (props) => {
                                     <div className="col-auto">
                                         <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                     </div>
-                                </div>
+                                </div></>)}
+
 
 
                                 <span className='fw-bold'>บันทึกข้อความรายงานผลการดำเนินการ</span>
@@ -408,10 +516,10 @@ const PlanPay = (props) => {
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>เปลี่ยนแปลงหลักทรัพย์</p>
-                                        <Input type='switch' id='rtl' name='RTL' />
+                                        <Input type='switch' id='rtl' name='RTL'  onChange={(e) => setIsAssetChanged(e.target.checked)} checked={isAssetChanged}/>
                                     </div>
                                 </div>
-                                <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                                {isAssetChanged && (<div className="card shadow-none border my-2" data-component-card="data-component-card">
                                     <div className="card-body p-0">
                                         <div className="p-3 code-to-copy">
                                             <div ref={collateralRef} className="row g-3">
@@ -1574,11 +1682,11 @@ const PlanPay = (props) => {
                                                             <div className='form-switch mb-2 d-flex justify-content-center'>
                                                                 <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                                                     <p className='fw-bold mb-0'>แบ่งหลักทรัพย์</p>
-                                                                    <Input type='switch' id='rtl' name='RTL' />
+                                                                    <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsAssetSplit(e.target.checked)} checked={isAssetSplit}/>
                                                                 </div>
                                                             </div>
-
-                                                            <div className="d-flex justify-content-center">
+                                                            {isAssetSplit && (<>
+                                                                <div className="d-flex justify-content-center">
                                                                 <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleAddForm}>
                                                                     <i className="fas fa-square-plus"></i>
                                                                 </button>
@@ -2746,15 +2854,15 @@ const PlanPay = (props) => {
 
                                                                 </div>
                                                             ))}
-
-
+                                                            </>)}
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>)}                           
                             </div>
                         </div>
                         <span className="fw-bold mt-0">คืนโฉนด</span>
@@ -2782,9 +2890,9 @@ const PlanPay = (props) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                     {/* end แก้ไขรายละเอียดดำเนินการในที่ดิน */}
-
+                    </>)}
                 </div>
             </form>
         </>

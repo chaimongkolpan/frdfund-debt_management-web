@@ -24,9 +24,7 @@ const PageContent = () => {
   const [data, setData] = useState(null);
   const [filter, setFilter] = useState(null);
   const handlePrint = async (selected) => {
-    const paramData = selected.map(item => { return { id_KFKPolicy: item.id_KFKPolicy, pno: item.pno } });
-    const ids = selected.map(item => item.id_KFKPolicy);
-    const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: paramData, ids };
+    const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: selected };
     const result = await printInvoice(param);
     if (result.isSuccess) {
       await onSearch(filter)

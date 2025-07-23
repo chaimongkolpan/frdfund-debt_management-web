@@ -13,6 +13,7 @@ import {
     printPlanPay,
     saveDocumentPolicy,
     getProvinces,
+    viewOperationDetail
 } from "@services/api";
 
 const PlanPay = (props) => {
@@ -29,6 +30,11 @@ const PlanPay = (props) => {
     const [isMounted, setMounted] = useState(false);
     const [collateral_type, setCollateralType] = useState('โฉนด');
     const [addTile, setAddTitle] = useState(false);
+    const [showDetail, setShowDetail] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
+    const [useAsset, setUseAsset] = useState(false);
+    const [isAssetChanged, setIsAssetChanged] = useState(false);
+    const [isAssetSplit, setIsAssetSplit] = useState(false);
     const [collateralDetail, setCollateralDetail] = useState({
         id_KFKPolicy: policy?.id_KFKPolicy,
         policyNO: policy?.policyNO,
@@ -60,7 +66,13 @@ const PlanPay = (props) => {
             forms.map(f => f.id === id ? { ...f, assetType: newType } : f)
         );
     };
-
+    const handleShowDetail = async () =>{
+        setShowDetail(true);
+    }
+    
+    const handleShowEdit= async () =>{
+        setShowEdit(true);
+    }
 
     const [provinces, setProvOp] = useState(null);
     const onFileChange = async (files) => {
@@ -132,7 +144,7 @@ const PlanPay = (props) => {
         }
     }
     const fetchData = async () => {
-        const result = await getPlanPay(policy.id_KFKPolicy, policy.policyNO);
+        const result = await viewOperationDetail(policy.id_KFKPolicy);
         if (result.isSuccess) {
             await setDate(result.data.policyStartDate)
             await setYear(result.data.numberOfYearPayback)
@@ -146,10 +158,10 @@ const PlanPay = (props) => {
                 <td></td>
                 <td>
                     <div className='d-flex justify-content-center'>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' >
+                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowDetail}>
                             <i className="far fa-eye"></i>
                         </button>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' >
+                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowEdit}>
                             <i className="far fa-edit"></i>
                         </button>
                     </div>
@@ -210,6 +222,15 @@ const PlanPay = (props) => {
             setDate(new Date())
         }
     }, [])
+    useEffect(() => {
+        console.log('useEffect fired', { showDetail, showEdit });
+        if (showDetail) {
+          console.log('✅ showDetail ON');
+        }
+        if (showEdit) {
+          console.log('✅ showEdit ON');
+        }
+      }, [showDetail, showEdit]);
     const addData = async () => {
         await setAddTitle(true);
       }
@@ -263,6 +284,7 @@ const PlanPay = (props) => {
                         </tbody>
                     </table>
                     {/* รายละเอียดดำเนินการในที่ดิน */}
+                    { showDetail && (
                     <div className="card shadow-none border my-2" data-component-card="data-component-card">
                         <div className="card-body p-0">
                             <div className="p-3 code-to-copy">
@@ -280,9 +302,10 @@ const PlanPay = (props) => {
                             </div>
                         </div>
                     </div>
-                    {/* end รายละเอียดดำเนินการในที่ดิน */}
+                    )}
 
-                    {/* start card แก้ไขรายละเอียดดำเนินการในที่ดิน */}
+                    {/* end รายละเอียดดำเนินการในที่ดิน */}
+                    { showEdit && (<> {/* start card แก้ไขรายละเอียดดำเนินการในที่ดิน */}
                     <div className="card shadow-none border my-2" data-component-card="data-component-card">
                         <div className="card-body p-0">
                             <div className="p-3 code-to-copy">
@@ -309,10 +332,10 @@ const PlanPay = (props) => {
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>ใช้โฉนด</p>
-                                        <Input type='switch' id='rtl' name='RTL' />
+                                        <Input type='switch' id='rtl' name='RTL' onChange={(e) => setUseAsset(e.target.checked)}/>
                                     </div>
                                 </div>
-                                <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                                {useAsset && (<><div className="card shadow-none border my-2" data-component-card="data-component-card">
                                     <div className="card-body p-0">
                                         <div className="p-3 code-to-copy">
                                             <span className="fw-bold">เอกสารคำร้องขอยืมโฉนด</span><br />
@@ -353,18 +376,18 @@ const PlanPay = (props) => {
                                         </div>
                                     </div>
                                 </div>
-
                                 <span className='fw-bold'>แบบรับทราบผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
                                     <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
+                                </div><br />
                                 <div className="row justify-content-center mt-3 mb-3">
                                     <div className="col-auto">
                                         <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                     </div>
                                 </div>
+                                </>)}
+                            
                                 <span className='fw-bold'>บันทึกข้อความรายงานผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
@@ -380,10 +403,10 @@ const PlanPay = (props) => {
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>เปลี่ยนแปลงหลักทรัพย์</p>
-                                        <Input type='switch' id='rtl' name='RTL' />
+                                        <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsAssetChanged(e.target.checked)} checked={isAssetChanged}/>
                                     </div>
                                 </div>
-
+                                {isAssetChanged && (
                                 <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                     <div className="card-body p-0">
                                         <div className="p-3 code-to-copy">
@@ -1519,10 +1542,10 @@ const PlanPay = (props) => {
                                                         <div className='form-switch mb-2 d-flex justify-content-center'>
                                                             <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                                                 <p className='fw-bold mb-0'>แบ่งหลักทรัพย์</p>
-                                                                <Input type='switch' id='rtl' name='RTL' />
+                                                                <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsAssetSplit(e.target.checked)} checked={isAssetSplit}/>
                                                             </div>
                                                         </div>
-
+                                                        {isAssetSplit && (<>
                                                         <div className="d-flex justify-content-center">
                                                             <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleAddForm}>
                                                                 <i className="fas fa-square-plus"></i>
@@ -2690,7 +2713,7 @@ const PlanPay = (props) => {
                                                                 )}
 
                                                             </div>
-                                                        ))}
+                                                        ))} </>)}
                                                     </div>
                                                 </div>
                                             </div>
@@ -2700,7 +2723,7 @@ const PlanPay = (props) => {
 
                                         </div>
                                     </div>
-                                </div>
+                                </div> )}
                             </div>
                         </div>
                         <span className="fw-bold mt-0">คืนโฉนด</span>
@@ -2729,7 +2752,8 @@ const PlanPay = (props) => {
                             </div>
                         </div>
                     </div>
-                    {/* end card แก้ไขรายละเอียดดำเนินการในที่ดิน */}
+                    {/* end card แก้ไขรายละเอียดดำเนินการในที่ดิน */}</>)}
+                   
                 </div>
             </form>
         </>
