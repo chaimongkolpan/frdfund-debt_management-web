@@ -1928,6 +1928,50 @@ export const searchLegalCheck = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getBranchPolicyNo = async () => {
+  const path = "/common/branch-policy-no";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchPolicyDate = async (no) => {
+  const path = "/common/branch-policy-date";
+  try {
+    const result = await axios.get(path, { param: { no }});
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getDebtManagementPolicyNo = async () => {
+  const path = "/common/debt-management-policy-no";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getDebtManagementPolicyDate = async (no) => {
+  const path = "/common/debt-management-policy-date";
+  try {
+    const result = await axios.get(path, { param: { no }});
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
 //#region Guarantee
 
@@ -2177,10 +2221,9 @@ export const searchInvoice = async (filter) => {
   }
 };
 export const printInvoice = async (params) => {
-  // const path = "/Account/print-invoice";
-  const path = "https://debtinfo.frdfund.org/report/Download?id=40";
+  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Receipt';
   try {
-    const result = await axios.post(path, params);
+    const result = await axios.post(path, params.data, { responseType: "blob" });
     if (result.status == 200) {
       const blob = new Blob([result.data], { type: params.type });
       SaveAs(blob, params.filename);
@@ -2211,6 +2254,102 @@ export const searchRestructuring = async (filter) => {
 //#region Close
 export const searchClose = async (filter) => {
   const path = '/Account/search-close';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getCalClose = async (filter) => {
+  const path = '/Account/cal-close';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getPrintClose = async (filter) => {
+  const path = '/Account/print-close';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const printClose = async (params) => {
+  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Close';
+  try {
+    const result = await axios.post(path, params.data, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
+export const exportClose = async (params) => {
+  const path = 'https://debtinfo.frdfund.org/report-old/close/Export?LegalNo=';
+  try {
+    const result = await axios.get(path, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
+export const requestClose = async (filter) => {
+  const path = '/Account/request-close';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const redeemClose = async (filter) => {
+  const path = '/Account/redeem-assset-close';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const refundClose = async (filter) => {
+  const path = '/Account/refund-close';
   try {
     const result = await axios.post(path, filter);
     if (result.status == 200)
