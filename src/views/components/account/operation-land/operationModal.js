@@ -233,6 +233,7 @@ const PlanPay = (props) => {
       }, [showDetail, showEdit]);
     const addData = async () => {
         await setAddTitle(true);
+        await setShowEdit(true);
       }
     return (
         <>
