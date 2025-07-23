@@ -699,7 +699,7 @@ const Sidebar = props => {
                         <span className="fas fa-caret-right dropdown-indicator-icon"></span>
                       </div>
                       <span className="nav-link-icon"><i className="fas fa-landmark-flag"></i></span>
-                      <span className="nav-link-text">การดำเนินการในที่ดิน</span>
+                      <span className="nav-link-text">การดำเนินการ</span>
                       {(alert && alert?.collateral && alert.collateral.borrow > 0) && (
                         <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.borrow)}</span>
                       )}
@@ -715,28 +715,10 @@ const Sidebar = props => {
                         </Link>
                       </li>
                       <li className="nav-item">
-                        <Link className={`nav-link ${path.includes('/account/operation-land/survey') ? 'active' : ''}`}
-                          to={`${prefix_url + "/account/operation-land/survey"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">การรังวัด</span></div>
-                        </Link>
-                      </li>
-                      <li className="nav-item">
-                        <Link className={`nav-link ${path.includes('/account/operation-land/rental') ? 'active' : ''}`}
-                          to={`${prefix_url + "/account/operation-land/rental"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">การเช่า</span></div>
-                        </Link>
-                      </li>
-                      <li className="nav-item">
-                        <Link className={`nav-link ${path.includes('/account/operation-land/expropriated') ? 'active' : ''}`}
-                          to={`${prefix_url + "/account/operation-land/expropriated"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">การเวนคืน</span></div>
-                        </Link>
-                      </li>
-                      <li className="nav-item">
                         <Link className={`nav-link ${path.includes('/account/operation-land/borrow') ? 'active' : ''}`}
                           to={`${prefix_url + "/account/operation-land/borrow"}`}>
                           <div className="d-flex align-items-center">
-                            <span className="nav-link-text">ยืม-คืนโฉนด</span>
+                            <span className="nav-link-text">การยืม-คืนโฉนด</span>
                             {(alert && alert?.collateral && alert.collateral.borrow > 0) && (
                               <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.borrow)}</span>
                             )}
