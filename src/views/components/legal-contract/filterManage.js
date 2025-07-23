@@ -5,8 +5,8 @@ import {
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
-  getCommitteeNo,
-  getCommitteeDate,
+  getDebtManagementPolicyNo,
+  getDebtManagementPolicyDate,
 } from "@services/api";
 
 const Filter = (props) => {
@@ -25,9 +25,9 @@ const Filter = (props) => {
       handleSubmit({
         idCard: "",
         name: "",
-        province: "",
-        creditorType: "",
-        creditor: "",
+        loan_province: "",
+        loan_creditor_type: "",
+        loan_creditor_name: "",
         debtStatus: "",
         ...filter,
         currentPage: 1,
@@ -37,7 +37,7 @@ const Filter = (props) => {
     }
   }
   const onChange = async (key, val) => {
-    if (key == 'province') {
+    if (key == 'loan_province') {
       setLoading(true);
       await setCreditorTypeOp(null);
       const resultCreditorType = await getBigDataCreditorTypes(val);
@@ -46,7 +46,7 @@ const Filter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: 'all'})
+          ...({loan_creditor_type: 'all'})
         }))
         await setCreditorOp(null);
         const resultCreditor = await getBigDataCreditors(val, '');
@@ -55,7 +55,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: 'all'})
+            ...({loan_creditor_name: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -64,16 +64,16 @@ const Filter = (props) => {
       } 
       setLoading(false);
     }
-    if (key == 'creditorType') {
+    if (key == 'loan_creditor_type') {
       setLoading(true);
       await setCreditorOp(null);
-      const resultCreditor = await getBigDataCreditors(filter.province, val);
+      const resultCreditor = await getBigDataCreditors(filter.loan_province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: 'all'})
+          ...({loan_creditor_name: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -85,8 +85,8 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultNo = await getCommitteeNo();
-    const resultDate = await getCommitteeDate();
+    const resultNo = await getDebtManagementPolicyNo();
+    const resultDate = await getDebtManagementPolicyDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -96,7 +96,7 @@ const Filter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: 'all'})
+          ...({loan_creditor_type: 'all'})
         }))
         const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
@@ -104,7 +104,7 @@ const Filter = (props) => {
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: 'all'})
+            ...({loan_creditor_name: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -122,7 +122,7 @@ const Filter = (props) => {
       await setNoOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_no: temp[0]})
+        ...({debt_management_policy_no: 'all'})
       }))
     } else await setNoOp(null);
     if (resultDate.isSuccess) {
@@ -130,7 +130,7 @@ const Filter = (props) => {
       await setDateOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_date: temp[0]})
+        ...({debt_management_policy_date: 'all'})
       }))
     } else await setDateOp(null);
     setIsMounted(true);
@@ -160,9 +160,8 @@ const Filter = (props) => {
           {noOp && (
             <Dropdown 
               title={'เลขที่หนังสือนำส่งจัดการหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={noOp[0]} 
-              options={noOp}
+              defaultValue={'all'} 
+              options={noOp} hasAll
               handleChange={(val) => onChange('debt_management_policy_no', val)}
             />
           )}
@@ -171,15 +170,14 @@ const Filter = (props) => {
           {dateOp && (
             <Dropdown 
               title={'วันที่หนังสือนำส่งสาขาจัดการหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={dateOp[0]} 
-              options={dateOp}
+              defaultValue={'all'} 
+              options={dateOp} hasAll
               handleChange={(val) => onChange('debt_management_policy_date', val)}
             />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idcard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
@@ -190,7 +188,7 @@ const Filter = (props) => {
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
-              handleChange={(val) => onChange('province', val)}
+              handleChange={(val) => onChange('loan_province', val)}
               hasAll />
           )}
         </div>
@@ -199,7 +197,7 @@ const Filter = (props) => {
             title={'ประเภทจัดการหนี้'} 
             defaultValue={'all'} 
             options={typeOp}
-            handleChange={(val) => onChange('loanDebtType', val)}
+            handleChange={(val) => onChange('loan_debt_type', val)}
             hasAll />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
@@ -208,7 +206,7 @@ const Filter = (props) => {
               title={'ประเภทเจ้าหนี้'} 
               defaultValue={'all'} 
               options={creditorTypeOp} hasAll
-              handleChange={(val) => onChange('creditorType', val)}
+              handleChange={(val) => onChange('loan_creditor_type', val)}
             />
           )}
         </div>
@@ -218,7 +216,7 @@ const Filter = (props) => {
               title={'สถาบันเจ้าหนี้'} 
               defaultValue={'all'} 
               options={creditorOp}
-              handleChange={(val) => onChange('creditor', val)} hasAll
+              handleChange={(val) => onChange('loan_creditor_name', val)} hasAll
             />
           )}
         </div>

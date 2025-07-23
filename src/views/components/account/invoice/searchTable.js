@@ -49,8 +49,9 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
+        <td>{item.receiptStatus}</td>
+        <td>{item.printStatus}</td>
+        <td>{item.printDate}</td>
       </tr>
     ))
   }
@@ -92,8 +93,7 @@ const SearchTable = (props) => {
                 </th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="8">นิติกรรมสัญญา</th>
-                <th colSpan="2">หลักประกัน</th>
+                <th colSpan="11">นิติกรรมสัญญา</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -112,8 +112,9 @@ const SearchTable = (props) => {
                 <th>ยอดเงินตามสัญญา</th>
                 <th>จำนวนเงินที่ชดเชย</th>
                 <th>สถานะนิติกรรมสัญญา</th>
-                <th>หลักทรัพย์ค้ำประกัน</th>
-                <th>บุคคลค้ำประกัน</th>
+                <th>สถานะออกใบแจ้งหนี้</th>
+                <th>สถานะการปริ้นใบแจ้งหนี้</th>
+                <th>วันที่ปริ้นใบแจ้งหนี้</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
