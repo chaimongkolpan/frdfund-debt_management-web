@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
+import DatePicker from "@views/components/input/DatePicker";
+import BookNo from "@views/components/input/BookNo";
 import EditDetail from "@views/components/confirm-committee/editDetailNpa";
+import CustomerModal from "@views/components/modal/CustomModal";
+import { 
+  updateConfirmCommitteeCreditor,
+  updateConfirmCommitteeNo,
+} from "@services/api";
+
 const SearchTable = (props) => {
   const { result, handleSubmit, filter, getData } = props;
   const [data, setData] = useState([]);
@@ -11,6 +19,15 @@ const SearchTable = (props) => {
   const [selected, setSelected] = useState([]);
   const [editData, setEditData] = useState(null);
   const [isOpenDetail, setOpenDetail] = useState(false);
+  const [isOpenCreditor, setOpenCreditor] = useState(false);
+  const [isOpenCommittee, setOpenCommittee] = useState(false);
+  const [count, setCount] = useState(0);
+  const [contracts, setContracts] = useState(0);
+  const [sumTotal, setSumTotal] = useState(0);
+  const [creditorNo, setCreditorNo] = useState(null);
+  const [creditorDate, setCreditorDate] = useState(null);
+  const [committeeNo, setCommitteeNo] = useState(null);
+  const [committeeDate, setCommitteeDate] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
@@ -34,6 +51,54 @@ const SearchTable = (props) => {
   const handleCloseDetail = async() => {
     await getData(filter);
     await setOpenDetail(false);
+  }
+  const handleShowCreditor = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + (item.frD_total_payment_cf ?? item.frD_total_payment); }, 0)
+    await setCount(toCurrency(custs.length));
+    await setContracts(toCurrency(selectedData.length));
+    await setSumTotal(toCurrency(sum,2));
+    await setOpenCreditor(true);
+  }
+  const handleCloseCreditor = async() => {
+    await getData(filter);
+    await setOpenCreditor(false);
+  }
+  const handleShowCommittee = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + (item.frD_total_payment_cf ?? item.frD_total_payment); }, 0)
+    await setCount(toCurrency(custs.length));
+    await setContracts(toCurrency(selectedData.length));
+    await setSumTotal(toCurrency(sum,2));
+    await setOpenCommittee(true);
+  }
+  const handleCloseCommittee = async() => {
+    await getData(filter);
+    await setOpenCommittee(false);
+  }
+  const submitCreditor = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const ids = selectedData.map(item => item.id_debt_confirm.toString());
+    const result = await updateConfirmCommitteeCreditor({
+      ids, creditor_confirm_no: 'กฟก.' + creditorNo, creditor_confirm_date: stringToDateTh(creditorDate, false)
+    });
+    if (result.isSuccess) {
+      await getData(filter);
+      await setOpenCreditor(false);
+    }
+  }
+  const submitCommittee = async() => {
+    const selectedData = data.filter((i, index) => selected[index]);
+    const ids = selectedData.map(item => item.id_debt_confirm.toString());
+    const result = await updateConfirmCommitteeNo({
+      ids, debt_manage_type: 'NPA', proposal_committee_no: 'กฟก.' + committeeNo, proposal_committee_date: stringToDateTh(committeeDate, false)
+    });
+    if (result.isSuccess) {
+      await getData(filter);
+      await setOpenCommittee(false);
+    }
   }
   const RenderData = (item, index, checked) => {
     return (item && (
@@ -192,10 +257,62 @@ const SearchTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+            <button className="btn btn-info btn-sm ms-2" type="button" onClick={() => handleShowCreditor()}>เพิ่มหนังสือเจ้าหนี้</button>
+            <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => handleShowCommittee()}>แก้ไขคณะกรรมการจัดการหนี้</button>
+            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญายืนยันยอด</button>
           </div>
         </div>
       </div>
+      <CustomerModal isOpen={isOpenCreditor} setModal={setOpenCreditor} 
+        onOk={() => submitCreditor()} 
+        title={'เพิ่มหนังสือเจ้าหนี้'} 
+        okText={'บันทึก'} size={'xl'}
+        onClose={() => handleCloseCreditor()}
+        closeText={'ปิด'} centered
+      >
+        <form>
+          <br />
+          <div className="row">
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
+            </div>
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <DatePicker title={'วันที่หนังสือเจ้าหนี้ยืนยันยอด'}
+                value={creditorDate} 
+                handleChange={(val) => setCreditorDate(val)} 
+              />
+            </div>
+            <div className="d-flex">
+              <h5><div className="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
+            </div>
+          </div>
+        </form>
+      </CustomerModal>
+      <CustomerModal isOpen={isOpenCommittee} setModal={setOpenCommittee} 
+        onOk={() => submitCommittee()} 
+        title={'แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ'} 
+        okText={'บันทึก'} size={'xl'}
+        onClose={() => handleCloseCommittee()}
+        closeText={'ปิด'} centered
+      >
+        <form>
+          <br />
+          <div className="row">
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
+            </div>
+            <div className="col-sm-12 col-md-12 col-lg-6">
+              <DatePicker title={'วันที่เสนอคณะกรรมการ'}
+                value={committeeDate} 
+                handleChange={(val) => setCommitteeDate(val)} 
+              />
+            </div>
+            <div className="d-flex">
+              <h5><div className="flex-grow-1 ">จำนวน {count} ราย ,{contracts} สัญญา ,ยอดเงินรวม {sumTotal} บาท</div></h5>
+            </div>
+          </div>
+        </form>
+      </CustomerModal>
       {isOpenDetail && (
         <EditDetail isOpen={isOpenDetail} setModal={setOpenDetail} onClose={() => handleCloseDetail()} 
           data={editData}

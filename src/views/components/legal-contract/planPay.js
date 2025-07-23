@@ -150,17 +150,19 @@ const PlanPay = (props) => {
               </div>
             </div>
           </div>
-          <div className="col-12 mt-3">
-            <div className="row g-3 justify-content-center">
-              <div className="col-auto">
-                {isView ? (
-                  <button className="btn btn-primary me-1 mb-1" type="button" onClick={() => print()}>ปริ้นแผนการชำระเงินคืน</button>
-                ) : (
-                  <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึกแผนการชำระเงินคืน</button>
-                )}
+          {plans && (
+            <div className="col-12 mt-3">
+              <div className="row g-3 justify-content-center">
+                <div className="col-auto">
+                  {isView ? (
+                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={() => print()}>ปริ้นแผนการชำระเงินคืน</button>
+                  ) : (
+                    <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึกแผนการชำระเงินคืน</button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </form>
     </>

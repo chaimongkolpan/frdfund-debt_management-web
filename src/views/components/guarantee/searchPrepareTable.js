@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleReturnGuarantee,handleSpouse, handlePrint } = props;
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleReturnGuarantee,handleSpouse, handleSubmit } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
@@ -40,7 +40,7 @@ const SearchTable = (props) => {
         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
         <td>{item.loan_province}</td>
-        <td>{item.loan_creditor_type}</td>
+        <td>{item.policyNO}</td>
         <td>{item.loan_debt_type}</td>
         <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
         <td>{toCurrency(item.loan_amount)}</td>
@@ -48,10 +48,10 @@ const SearchTable = (props) => {
         <td>{item.transferStatus}</td>
         <td>{item.numberOfDay}</td>
         <td>{item.assetType}</td>
-        <td>{item.numberOfYearPayback}</td>
-        <td>{toCurrency(item.loan_amount)}</td>
-        <td>{toCurrency(item.compensation_amount)}</td>
-        <td>{item.policyStatus}</td>
+        <td>{item.collateral_no}</td>
+        <td>{item.collateral_province}</td>
+        <td>{item.collateral_district}</td>
+        <td>{item.collateral_sub_district}</td>
         <td>{`${item.contract_area_rai ? item.contract_area_rai : 0}`}</td>
         <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
         <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>

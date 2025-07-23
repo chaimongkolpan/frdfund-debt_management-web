@@ -10,9 +10,9 @@ const Paging = (props) => {
         {pageSize > 0 && (
           <>
             <span className={`d-sm-inline-block`}>
-              {`${(currentPage - 1) * pageSize + 1} 
-              ถึง ${total > (currentPage * pageSize) ? (currentPage * pageSize) : total} 
-              จาก ${total}`}
+              {`${((currentPage - 1) * pageSize + 1).toLocaleString()} 
+              ถึง ${total > (currentPage * pageSize) ? (currentPage * pageSize).toLocaleString() : total.toLocaleString()} 
+              จาก ${total.toLocaleString()}`}
             </span>
             <ReactPaginate
               breakLabel="..."

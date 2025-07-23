@@ -26,6 +26,19 @@ const Sidebar = props => {
   useEffect(() => {
     async function fetchData() {
       try {
+        const result = await getAlertSide();
+        if (result.isSuccess) {
+          setAlert(result.data);
+        }
+      } catch(e) {
+        console.error('error', e);
+      }
+    };
+    fetchData();
+  }, [path])
+  useEffect(() => {
+    async function fetchData() {
+      try {
         if (!alert || moment().diff(moment(alert?.updateDate), 'minutes') > 5) {
           const result = await getAlertSide();
           if (result.isSuccess) {
@@ -686,7 +699,7 @@ const Sidebar = props => {
                         <span className="fas fa-caret-right dropdown-indicator-icon"></span>
                       </div>
                       <span className="nav-link-icon"><i className="fas fa-landmark-flag"></i></span>
-                      <span className="nav-link-text">การดำเนินการในที่ดิน</span>
+                      <span className="nav-link-text">การดำเนินการ</span>
                       {(alert && alert?.collateral && alert.collateral.borrow > 0) && (
                         <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.borrow)}</span>
                       )}
@@ -702,28 +715,10 @@ const Sidebar = props => {
                         </Link>
                       </li>
                       <li className="nav-item">
-                        <Link className={`nav-link ${path.includes('/account/operation-land/survey') ? 'active' : ''}`}
-                          to={`${prefix_url + "/account/operation-land/survey"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">การรังวัด</span></div>
-                        </Link>
-                      </li>
-                      <li className="nav-item">
-                        <Link className={`nav-link ${path.includes('/account/operation-land/rental') ? 'active' : ''}`}
-                          to={`${prefix_url + "/account/operation-land/rental"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">การเช่า</span></div>
-                        </Link>
-                      </li>
-                      <li className="nav-item">
-                        <Link className={`nav-link ${path.includes('/account/operation-land/expropriated') ? 'active' : ''}`}
-                          to={`${prefix_url + "/account/operation-land/expropriated"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">การเวนคืน</span></div>
-                        </Link>
-                      </li>
-                      <li className="nav-item">
                         <Link className={`nav-link ${path.includes('/account/operation-land/borrow') ? 'active' : ''}`}
                           to={`${prefix_url + "/account/operation-land/borrow"}`}>
                           <div className="d-flex align-items-center">
-                            <span className="nav-link-text">ยืม-คืนโฉนด</span>
+                            <span className="nav-link-text">การยืม-คืนโฉนด</span>
                             {(alert && alert?.collateral && alert.collateral.borrow > 0) && (
                               <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.collateral.borrow)}</span>
                             )}
@@ -833,13 +828,18 @@ const Sidebar = props => {
               <li className="nav-item">
                 <p className="navbar-vertical-label">ปิดสัญญา</p>
                 <div className="nav-item-wrapper">
-                  <a className="nav-link label-1" href="/close">
-                    <div className="d-flex align-items-center"><span className="nav-link-icon"><i className="fas fa-file-excel"></i></span><div className="nav-link-text-wrapper"><span className="nav-link-text">ปิดสัญญา</span></div>
-                    {(alert && alert?.closing > 0) && (
-                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.closing)}</span>
-                    )}
+                  <Link className={`nav-link label-1 ${path.includes('/close') ? 'active' : ''}`}
+                    to={`${prefix_url + "/close"}`}>
+                    <div className="d-flex align-items-center">
+                      <span className="nav-link-icon"><i className="fas fa-file-excel"></i></span>
+                      <div className="nav-link-text-wrapper">
+                        <span className="nav-link-text">ปิดสัญญา</span>
+                        {(alert && alert?.closing > 0) && (
+                          <span className="badge ms-2 badge badge-phoenix badge-phoenix-danger nav-link-badge">{numberWithCommas(alert.closing)}</span>
+                        )}
+                      </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </li>
               {/* หัวข้อ รายงาน*/}

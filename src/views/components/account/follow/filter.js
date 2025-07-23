@@ -14,9 +14,9 @@ const Filter = (props) => {
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
-        idCard: "",
+        idcard: "",
         name: "",
-        province: "",
+        loan_province: "",
         debtStatus: "",
         ...filter,
         currentPage: 1,

@@ -18,6 +18,9 @@ import {
   cleanData,
   searchGuaranteePrepare,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const LegalContractPrepare = () => {
@@ -25,6 +28,7 @@ const LegalContractPrepare = () => {
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
   const [policy, setPolicy] = useState(null);
+  const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
   const [openPlan, setOpenPlan] = useState(false);
@@ -32,7 +36,7 @@ const LegalContractPrepare = () => {
   const [openGuarantor, setOpenGuarantor] = useState(false);
   const [openSpouse, setOpenSpouse] = useState(false);
   const [openReturnGuarantee, setOpenReturnGuarantee] = useState(false);
-  const [openPrint, setOpenPrint] = useState(false);
+  const [openSubmit, setOpenSubmit] = useState(false);
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
@@ -68,13 +72,9 @@ const LegalContractPrepare = () => {
     await setPolicy(item);
     await setOpenSpouse(true);
   }
-  const handlePrint = async (item) => {
-    await setPolicy(item);
-    await setOpenPrint(true);
-  }
-  const onPrint = async () => {
-    // print
-    await setOpenPrint(false);
+  const handleSubmit = async (item) => {
+    await setSelected(item);
+    await setOpenSubmit(true);
   }
   useEffect(() => {
     setLoadBigData(true);
@@ -102,7 +102,7 @@ const LegalContractPrepare = () => {
                         handleGuarantor={handleGuarantor} 
                         handleReturnGuarantee={handleReturnGuarantee}
                         handleSpouse={handleSpouse} 
-                        handlePrint={handlePrint} 
+                        handleSubmit={handleSubmit} 
                       />
                     )}
                   </>
@@ -114,8 +114,7 @@ const LegalContractPrepare = () => {
       </div>
       {openDetail && (
         <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-          {/* <Detail policy={policy} /> */}
-          <Asset policy={policy} /> 
+          <Asset policy={policy} isView /> 
         </Modal>
       )}
       {openPlan && (
@@ -143,9 +142,9 @@ const LegalContractPrepare = () => {
           <ReturnGuarantee policy={policy} /> 
         </Modal> 
       )}
-      {openPrint && (
-        <Modal isOpen={openPrint} setModal={setOpenPrint} onClose={() => setOpenPrint(false)}  
-          title={'ปริ้นนิติกรรมสัญญา'} okText={'ปริ้น'} centered onOk={onPrint}
+      {openSubmit && (
+        <Modal isOpen={openSubmit} setModal={setOpenSubmit} onClose={() => setOpenSubmit(false)}  
+          title={'ปริ้นนิติกรรมสัญญา'} centered fullscreen okText={'ปริ้น'} onOk={onPrint}
           closeText={'ยกเลิก'}>
           <p class="text-body-tertiary lh-lg mb-0">ต้องการปริ้นนิติกรรมสัญญา</p>
         </Modal> 

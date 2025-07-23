@@ -5,8 +5,8 @@ import {
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
-  getDebtManagementPolicyNo,
-  getDebtManagementPolicyDate,
+  getCommitteeNo,
+  getCommitteeDate,
 } from "@services/api";
 
 const Filter = (props) => {
@@ -16,14 +16,12 @@ const Filter = (props) => {
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
-  const [noOp, setNoOp] = useState(null);
-  const [dateOp, setDateOp] = useState(null);
-  const statusOp = ["ตรวจสอบนิติกรรมสัญญา","แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)","นิติกรรมสัญญาสมบูรณ์"];
+  const statusOp = ["รอจัดทำนิติกรรมสัญญา","จัดทำนิติกรรมสัญญาแล้ว","สาขาแก้ไขนิติกรรมสัญญา","ส่งคืนนิติกรรมสัญญา"];
   const typeOp = ["NPA","NPL"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
-        idCard: "",
+        idcard: "",
         name: "",
         loan_province: "",
         loan_creditor_type: "",
@@ -85,8 +83,6 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultNo = await getDebtManagementPolicyNo();
-    const resultDate = await getDebtManagementPolicyDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -116,23 +112,6 @@ const Filter = (props) => {
        await setCreditorTypeOp(null);
        await setCreditorOp(null);
     }
-
-    if (resultNo.isSuccess) {
-      const temp = resultNo.data.map(item => item.name);
-      await setNoOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({debt_management_policy_no: 'all'})
-      }))
-    } else await setNoOp(null);
-    if (resultDate.isSuccess) {
-      const temp = resultDate.data.map(item => item.name);
-      await setDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({debt_management_policy_date: 'all'})
-      }))
-    } else await setDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }
@@ -155,26 +134,6 @@ const Filter = (props) => {
       <form className="row g-3">
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {noOp && (
-            <Dropdown 
-              title={'เลขที่หนังสือนำส่งจัดการหนี้'} 
-              defaultValue={'all'} 
-              options={noOp} hasAll
-              handleChange={(val) => onChange('debt_management_policy_no', val)}
-            />
-          )}
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {dateOp && (
-            <Dropdown 
-              title={'วันที่หนังสือนำส่งสาขาจัดการหนี้'} 
-              defaultValue={'all'} 
-              options={dateOp} hasAll
-              handleChange={(val) => onChange('debt_management_policy_date', val)}
-            />
-          )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idcard', val)} />
