@@ -1714,7 +1714,7 @@ const PlanPay = (props) => {
                                                                                     <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleAddForm(index + 1)}>
                                                                                         <i className="fas fa-square-plus"></i>
                                                                                     </button>
-                                                                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(index)}>
+                                                                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(form.id)}>
                                                                                         <i className="fas fa-square-minus"></i>
                                                                                     </button>
                                                                                 </div>

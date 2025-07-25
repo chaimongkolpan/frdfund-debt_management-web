@@ -134,12 +134,12 @@ const PageContent = () => {
         </Modal>
       )}
       {openLandLease && (
-        <Modal isOpen={openLandLease} setModal={setOpenLandLease} hideOk onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openLandLease} setModal={setOpenLandLease} onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitCommittee()}  scrollable fullscreen>
          <LandLease policy={policy} isView />
         </Modal>
       )}
       {openExpropriation && (
-        <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} hideOk onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitCommittee()} scrollable fullscreen>
          <Expropriation policy={policy} isView />
         </Modal>
       )}
