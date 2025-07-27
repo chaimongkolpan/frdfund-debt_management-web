@@ -80,12 +80,6 @@ const Filter = (props) => {
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-    } else {
-       await setProvOp(null);
-    }
-    if (resultProv.isSuccess) {
-      const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);

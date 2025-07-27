@@ -3,6 +3,8 @@ import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
 import { 
   getBigDataProvinces,
+  getBigDataCreditors,
+  getBigDataCreditorTypes,
 } from "@services/api";
 
 const Filter = (props) => {
@@ -10,7 +12,8 @@ const Filter = (props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
-  const statusOp = ["แจ้งเตือนปิดบัญชี","สัญญาปกติ"];
+  const [creditorTypeOp, setCreditorTypeOp] = useState(null);
+  const [creditorOp, setCreditorOp] = useState(null);
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -35,8 +38,31 @@ const Filter = (props) => {
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
+      const resultCreditorType = await getBigDataCreditorTypes(null);
+      if (resultCreditorType.isSuccess) {
+        const temp1 = resultCreditorType.data.map(item => item.name);
+        await setCreditorTypeOp(temp1);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({loan_creditor_type: 'all'})
+        }))
+        const resultCreditor = await getBigDataCreditors(null, null);
+        if (resultCreditor.isSuccess) {
+          const temp2 = resultCreditor.data.map(item => item.name);
+          await setCreditorOp(temp2);
+          await setFilter((prevState) => ({
+            ...prevState,
+            ...({loan_creditor_name: 'all'})
+          }))
+        } else await setCreditorOp(null);
+      } else {
+        await setCreditorTypeOp(null);
+        await setCreditorOp(null);
+      } 
     } else {
        await setProvOp(null);
+       await setCreditorTypeOp(null);
+       await setCreditorOp(null);
     }
     setIsMounted(true);
     setLoading(false);
@@ -62,7 +88,7 @@ const Filter = (props) => {
           <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idcard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
@@ -73,18 +99,36 @@ const Filter = (props) => {
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
-              handleChange={(val) => onChange('province', val)}
+              handleChange={(val) => onChange('loan_province', val)}
               hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusOp && (
+          <Dropdown 
+            title={'ประเภทจัดการหนี้'} 
+            defaultValue={'all'} 
+            options={['NPL','NPA']}
+            handleChange={(val) => onChange('loan_debt_type', val)}
+            hasAll />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {creditorTypeOp && (
             <Dropdown 
-              title={'สถานะสัญญา'} 
+              title={'ประเภทเจ้าหนี้'} 
               defaultValue={'all'} 
-              options={statusOp}
-              handleChange={(val) => onChange('debtStatus', val)}
-              hasAll />
+              options={creditorTypeOp} hasAll
+              handleChange={(val) => onChange('loan_creditor_type', val)}
+            />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {creditorOp && (
+            <Dropdown 
+              title={'สถาบันเจ้าหนี้'} 
+              defaultValue={'all'} 
+              options={creditorOp} hasAll
+              handleChange={(val) => onChange('loan_creditor_name', val)}
+            />
           )}
         </div>
         <div className="col-12">

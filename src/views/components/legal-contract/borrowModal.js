@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Textbox from "@views/components/input/Textbox";
-import Dropdown from "@views/components/input/DropdownSearch";
 import DatePicker from "@views/components/input/DatePicker";
 import { 
   getProvinces,
@@ -9,7 +8,7 @@ import {
   updateBorrowerClassify,
 } from "@services/api";
 const FullModal = (props) => {
-  const {isOpen, setModal, onClose, idcard, province, creditorType, ids, debtManagementType = "NPL" } = props;
+  const {isOpen, setModal, onClose, policy } = props;
   const [isMounted, setMounted] = useState(false);
   const [data, setData] = useState([]);
   const [provinces, setProvOp] = useState(null);
@@ -34,7 +33,7 @@ const FullModal = (props) => {
     await setSelectedType("ผู้รับสภาพหนี้");
   }
   const addData = async () => {
-    await setEditDetail({ id_card: idcard,province: province,creditor_type: creditorType });
+    await setEditDetail({});
     await setOpenView(false);
     await setOpenEdit(true);
     await setSelectedType("ผู้รับสภาพหนี้");
@@ -64,7 +63,7 @@ const FullModal = (props) => {
     }))
   }
   const submitBorrower = async() => {
-    const result = await updateBorrowerClassify({ ...editDetail, ids: ids });
+    const result = await updateBorrowerClassify({ ...editDetail });
     if (result.isSuccess) {
       await fetchData();
     }
@@ -100,7 +99,7 @@ const FullModal = (props) => {
     }
   }
   const fetchData = async() => {
-    const result = await getBorrowerClassify(idcard, province, creditorType, debtManagementType);
+    const result = await getBorrowerClassify();
     if (result.isSuccess) {
       setData(result.borrowers);
       var item = result.borrowers.find(x => x.is_active);
