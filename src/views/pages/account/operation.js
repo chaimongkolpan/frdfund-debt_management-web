@@ -9,7 +9,10 @@ import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/operation-land/filter";
 import SearchTable from "@views/components/account/operation-land/searchTable";
 import OperationLand from "@views/components/account/operation-land/operationModal";
+import SurveyLand from "@views/components/account/operation-land/surveyModal";
 import DetailAsset from "@views/components/account/operation-land/DetailAssetModal";
+import Expropriation from "@views/components/account/operation-land/expropriationModal";
+import LandLease from "@views/components/account/operation-land/landLeaseModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
@@ -26,7 +29,10 @@ const PageContent = () => {
   const [policy, setPolicy] = useState(null);
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
+  const [openSurvey, setOpenSurvey] = useState(false);
   const [openRequestClose, setOpenRequestClose] = useState(false);
+  const [openLandLease, setOpenLandLease] = useState(false);
+  const [openExpropriation, setOpenExpropriation] = useState(false);
   const [showCal, setShowCal] = useState(false);
   const onSearch = async (filter) => {
     setLoadBigData(true);
@@ -47,6 +53,21 @@ const PageContent = () => {
     await setPolicy(item);
     await setShowCal(false);
     await setOpenDetail(true);
+  }
+  const handleSurvey = async (item) => {
+    await setPolicy(item);
+    await setShowCal(false);
+    await setOpenSurvey(true);
+  }
+  const handleLandLease = async (item) => {
+    await setPolicy(item);
+    await setShowCal(false);
+    await setOpenLandLease(true);
+  }
+  const handleExpropriation = async (item) => {
+    await setPolicy(item);
+    await setShowCal(false);
+    await setOpenExpropriation(true);
   }
   const print = async () => {
     // print
@@ -73,6 +94,9 @@ const PageContent = () => {
                         <SearchTable result={data} filter={filter} getData={onSearch} 
                           handleShowDetail={handleShowDetail}
                           handleOperation={handleOperation}
+                          handleSurvey={handleSurvey}
+                          handleLandLease={handleLandLease}
+                          handleExpropriation={handleExpropriation}
                         />
                       )}
                     </>
@@ -102,6 +126,21 @@ const PageContent = () => {
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
         <DetailAsset policy={policy} /> 
+        </Modal>
+      )}
+      {openSurvey && (
+        <Modal isOpen={openSurvey} setModal={setOpenSurvey} hideOk onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen>
+         <SurveyLand policy={policy} isView />
+        </Modal>
+      )}
+      {openLandLease && (
+        <Modal isOpen={openLandLease} setModal={setOpenLandLease} onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitCommittee()}  scrollable fullscreen>
+         <LandLease policy={policy} isView />
+        </Modal>
+      )}
+      {openExpropriation && (
+        <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitCommittee()} scrollable fullscreen>
+         <Expropriation policy={policy} isView />
         </Modal>
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

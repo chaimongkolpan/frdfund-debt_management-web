@@ -404,9 +404,11 @@ const PlanPay = (props) => {
                                     </div>
                                 </div>
 
+                                <div className="d-flex justify-content-center">
                                 <span className="text-center fw-bold">เอกสารคำร้อง</span>
+                                </div>
                                 <br />
-                                <div className="col-12 mt-3 mb-3">
+                                <div className="col-12 mt-1 mb-3">
                                     <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
                                 </div>
                                 <br />
@@ -448,6 +450,8 @@ const PlanPay = (props) => {
                                     <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                     <div className="card-body p-0">
                                         <div className="p-3 code-to-copy">
+                                        <div className="row g-2">
+                                            <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารคำร้องขอยืมโฉนด</span><br />
                                             <div className="col-12 mt-3 mb-3">
                                                 <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
@@ -458,7 +462,8 @@ const PlanPay = (props) => {
                                                     <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                                 </div>
                                             </div>
-                                            <br />
+                                            </div>
+                                            <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารบันทึกข้อความที่เลขาอนุมัติ</span><br />
                                             <div className="col-12 mt-3 mb-3">
                                                 <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
@@ -469,8 +474,12 @@ const PlanPay = (props) => {
                                                     <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                                 </div>
                                             </div>
+                                            </div>
+                                            </div>
                                             <br />
+                                            <div className="d-flex justify-content-center">
                                             <span className="fw-bold">ยืมโฉนด</span>
+                                            </div>
                                             <br />
                                             <div className="row g-2 mt-2">
                                                 <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
@@ -485,8 +494,10 @@ const PlanPay = (props) => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div></>)}
 
+                                <div className="row g-2">
+                                <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                 <span className='fw-bold'>แบบรับทราบผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
@@ -497,10 +508,9 @@ const PlanPay = (props) => {
                                     <div className="col-auto">
                                         <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                     </div>
-                                </div></>)}
-
-
-
+                                </div>
+                                </div>
+                                <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                 <span className='fw-bold'>บันทึกข้อความรายงานผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
@@ -512,7 +522,8 @@ const PlanPay = (props) => {
                                         <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                     </div>
                                 </div>
-
+                                </div>
+                                </div>
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>เปลี่ยนแปลงหลักทรัพย์</p>
@@ -526,6 +537,7 @@ const PlanPay = (props) => {
                                                 <div className="col-sm-12 col-md-6 col-lg-4">
                                                     <div className="form-floating needs-validation">
                                                         <select className="form-select" value={collateralDetail.assetType} disabled={isView} onChange={(e) => handleChangeCollateral('assetType', e.target?.value)}>
+                                                        <option value="">-- เลือกประเภทหลักทรัพย์ --</option>
                                                             <option value="โฉนด">โฉนด</option>
                                                             <option value="ตราจอง">ตราจอง</option>
                                                             <option value="น.ส.3">น.ส.3</option>
@@ -1702,7 +1714,7 @@ const PlanPay = (props) => {
                                                                                     <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleAddForm(index + 1)}>
                                                                                         <i className="fas fa-square-plus"></i>
                                                                                     </button>
-                                                                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(index)}>
+                                                                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(form.id)}>
                                                                                         <i className="fas fa-square-minus"></i>
                                                                                     </button>
                                                                                 </div>
@@ -1717,6 +1729,7 @@ const PlanPay = (props) => {
                                                                                 value={form.assetType}
                                                                                 onChange={(e) => handleChangeAssetType(form.id, e.target.value)}
                                                                             >
+                                                                                 <option value="">-- เลือกประเภทหลักทรัพย์ --</option>
                                                                                 <option value="โฉนด">โฉนด</option>
                                                                                 <option value="ตราจอง">ตราจอง</option>
                                                                                 <option value="น.ส.3">น.ส.3</option>
@@ -2865,7 +2878,9 @@ const PlanPay = (props) => {
                                 </div>)}                           
                             </div>
                         </div>
+                        <div className="d-flex justify-content-center">
                         <span className="fw-bold mt-0">คืนโฉนด</span>
+                        </div>
                         <div className="row g-2 mt-1">
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                 <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />

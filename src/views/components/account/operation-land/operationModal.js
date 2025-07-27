@@ -312,16 +312,18 @@ const PlanPay = (props) => {
                             <div className="p-3 code-to-copy">
                                 <h3 className="text-center">{addTile ? 'เพิ่มดำเนินการในที่ดิน': 'แก้ไขรายละเอียดดำเนินการในที่ดิน'}</h3><br />
                                 <div className="row g-2">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                         <Textbox title={'ประเภทการดำเนินการในที่ดิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
                                     </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                         <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
                                     </div>
                                 </div>
+                                <div className="d-flex justify-content-center">
+                                <span className="text-center fw-bold">เอกสารคำร้อง</span>
+                                </div>
                                 <br />
-                                <span className="text-center fw-bold">เอกสารคำร้อง</span><br />
-                                <div className="col-12 mt-3 mb-3">
+                                <div className="col-12 mt-1 mb-3">
                                     <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
                                 </div>
                                 <br />
@@ -339,35 +341,41 @@ const PlanPay = (props) => {
                                 {useAsset && (<><div className="card shadow-none border my-2" data-component-card="data-component-card">
                                     <div className="card-body p-0">
                                         <div className="p-3 code-to-copy">
+                                        <div className="row g-2">
+                                            <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารคำร้องขอยืมโฉนด</span><br />
                                             <div className="col-12 mt-3 mb-3">
                                                 <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
                                             </div>
                                             <br />
-                                            <div className="row justify-content-center mt-3 mb-3">
+                                            <div className="row justify-content-center  mt-1 mb-3">
                                                 <div className="col-auto">
                                                     <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                                 </div>
                                             </div>
-                                            <br />
+                                            </div>
+                                            <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารบันทึกข้อความที่เลขาอนุมัติ</span><br />
-                                            <div className="col-12 mt-3 mb-3">
+                                            <div className="col-12  mt-3 mb-3">
                                                 <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
                                             </div>
                                             <br />
-                                            <div className="row justify-content-center mt-3 mb-3">
+                                            <div className="row justify-content-center mt-1 mb-3">
                                                 <div className="col-auto">
                                                     <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                                 </div>
                                             </div>
+                                            </div>
+                                            </div>
                                             <br />
-                                            <span className="fw-bold">ยืมโฉนด</span>
-                                            <br />
-                                            <div className="row g-2 mt-3">
-                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                            <div className="d-flex justify-content-center">
+                                            <span className="fw-bold ">ยืมโฉนด</span>
+                                            </div>
+                                            <div className="row g-2 mt-1">
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                                     <Textbox title={'เลขที่หนังสือยืมโฉนด'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
                                                 </div>
-                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                                     <DatePicker title={'วันที่หนังสือยืมโฉนด'} />
                                                 </div>
                                             </div>
@@ -377,6 +385,9 @@ const PlanPay = (props) => {
                                         </div>
                                     </div>
                                 </div>
+                                </>)}
+                                <div className="row g-2">
+                                <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                 <span className='fw-bold'>แบบรับทราบผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
@@ -387,8 +398,8 @@ const PlanPay = (props) => {
                                         <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                     </div>
                                 </div>
-                                </>)}
-                            
+                                </div>
+                                <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                 <span className='fw-bold'>บันทึกข้อความรายงานผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
@@ -400,7 +411,8 @@ const PlanPay = (props) => {
                                         <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
                                     </div>
                                 </div>
-
+                                </div>
+                                </div>
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>เปลี่ยนแปลงหลักทรัพย์</p>
@@ -415,6 +427,7 @@ const PlanPay = (props) => {
                                                 <div className="col-sm-12 col-md-6 col-lg-4">
                                                     <div className="form-floating needs-validation">
                                                         <select className="form-select" value={collateralDetail.assetType} disabled={isView} onChange={(e) => handleChangeCollateral('assetType', e.target?.value)}>
+                                                        <option value="">-- เลือกประเภทหลักทรัพย์ --</option>
                                                             <option value="โฉนด">โฉนด</option>
                                                             <option value="ตราจอง">ตราจอง</option>
                                                             <option value="น.ส.3">น.ส.3</option>
@@ -549,940 +562,7 @@ const PlanPay = (props) => {
                                                                     </div>
                                                                 </div>
                                                                 {/* end card รายละเอียดโฉนดที่ดิน */}
-
-                                                                {/* start card รายละเอียดตราจอง */}
-                                                                <h3 className="text-center">ตราจอง</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ตราจอง</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'เล่มที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('pre_emption_volume_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เล่ม'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('pre_emption_volume', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'หน้า'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('pre_emption_page', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_page}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ระวาง'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('pre_emption_map_sheet', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_map_sheet}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เลขที่ดิน'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('pre_emption_parcel_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_parcel_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.pre_emption_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('pre_emption_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'อำเภอ'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('pre_emption_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ตำบล'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('pre_emption_sub_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.pre_emption_sub_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียดตราจอง */}
-
-                                                                {/* start card รายละเอียดหนังสือรับรองการทำประโยชน์(น.ส.3) */}
-                                                                <h3 className="text-center">หนังสือรับรองการทำประโยชน์(น.ส.3)</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ที่ดินตั้งอยู่</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.nS3_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'อำเภอ'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ตำบล'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3_sub_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_sub_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ทะเบียน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'เล่ม'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3_emption_volume', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_volume}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'หน้า'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3_emption_page', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_page}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'สารบบเล่ม/เลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3_dealing_file_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_file_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'สารบบหน้า'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3_dealing_page_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_page_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียดหนังสือรับรองการทำประโยชน์(น.ส.3) */}
-
-                                                                {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
-                                                                <h3 className="text-center">หนังสือรับรอการทำประโยชน์(น.ส.3 ก)</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.nS3A_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3A_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'อำเภอ'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ตำบล'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_sub_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_sub_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ระวางรูปถ่ายทางออกชื่อ'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_map_sheet', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_map_sheet}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ทะเบียน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'เลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เล่มที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_volume_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_volume_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'หน้า'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_page', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_page}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'เลขที่ดิน'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_parcel_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_parcel_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'หมายเลข'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_number', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_number}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'แผ่นที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3A_sheet_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3A_sheet_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
-
-                                                                {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
-                                                                <h3 className="text-center">หนังสือรับรอการทำประโยชน์(น.ส.3 ข)</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ที่ดินตั้งอยู่</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.nS3B_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3B_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'อำเภอ'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3B_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ตำบล'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3B_sub_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_sub_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'หมู่ที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3B_village', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_village}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ทะเบียน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'เล่ม'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3B_volume', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_volume}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'หน้า'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3B_page', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_page}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'เลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('nS3B_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.nS3B_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
-
-                                                                {/* start card รายละเอียด ส.ป.ก. */}
-                                                                <h3 className="text-center">ส.ป.ก.</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ที่ดินตั้งอยู่</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.alrO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('alrO_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'อำเภอ'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ตำบล'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_sub_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_sub_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'หมู่ที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_village', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_village}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ทะเบียน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'แปลงเลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_plot_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_plot_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ระวาง ส.ป.ก. ที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_map_sheet', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_map_sheet}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'เลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เล่ม'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_volume', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_volume}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'หน้า'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('alrO_page', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.alrO_page}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียด ส.ป.ก. */}
-
-                                                                {/* start card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
-                                                                <h3 className="text-center">หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'โฉนดที่ดินเลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_parcel_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_parcel_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.condO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('condO_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'อำเภอ'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ตำบล'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_sub_district', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_sub_district}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <AreaTextbox title={'เนื้อที่'} containerClassname={'mb-3'} disabled={isView}
-                                                                                                    handleChangeRai={(val) => handleChangeCollateral('condO_rai', val)}
-                                                                                                    rai={collateralDetail?.condO_rai}
-                                                                                                    handleChangeNgan={(val) => handleChangeCollateral('condO_ngan', val)}
-                                                                                                    ngan={collateralDetail?.condO_ngan}
-                                                                                                    handleChangeWa={(val) => handleChangeCollateral('condO_sqaure_wa', val)}
-                                                                                                    wa={collateralDetail?.condO_sqaure_wa}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-6 col-lg-6">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ที่ตั้งห้องชุด</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ห้องชุดเลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ชั้นที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_floor', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_floor}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'อาคารเลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_building_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_building_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ชื่ออาคารชุด'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_building_name', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_building_name}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ทะเบียนอาคารชุดเลขที่'} disabled={isView}
-                                                                                                    handleChange={(val) => handleChangeCollateral('condO_registration_no', val)}
-                                                                                                    containerClassname={'mb-3'} value={collateralDetail?.condO_registration_no}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('promisor', val)}
-                                                                                                    value={collateralDetail?.promisor} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('contract_recipient', val)}
-                                                                                                    value={collateralDetail?.contract_recipient} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เนื้อที่ประมาณ'} footer={'ตารางเมตร'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('area_square_meter', val)}
-                                                                                                    value={collateralDetail?.area_square_meter} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'สูง'} footer={'เมตร'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('high_meter', val)}
-                                                                                                    value={collateralDetail?.high_meter} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <div className="form-floating form-floating-advance-select ">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
-                                                                                                        <option value="จำนอง">จำนอง</option>
-                                                                                                        <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
-                                                                                                        <option value="สืบทรัพย์">สืบทรัพย์</option>
-                                                                                                        <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
-                                                                                                        <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
-                                                                                                        <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
-                                                                                                        <option value="อื่นๆ">อื่นๆ</option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)}
-                                                                                                    value={collateralDetail?.source_of_wealth_other}
-                                                                                                    disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                    value={collateralDetail?.remark} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
-
-                                                                {/* start card รายละเอียด ภ.ท.บ.5 */}
-                                                                <h3 className="text-center">ภ.ท.บ.5</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ที่ดินตั้งอยู่</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ที่ดินตั้งอยู่เลขที่'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('labT5_parcel_no', val)}
-                                                                                                    value={collateralDetail?.labT5_parcel_no} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.labT5_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('labT5_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('labT5_district', val)}
-                                                                                                    value={collateralDetail?.labT5_district} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ตำบล'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('labT5_sub_district', val)}
-                                                                                                    value={collateralDetail?.labT5_sub_district} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'หมู่ที่'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('labT5_village', val)}
-                                                                                                    value={collateralDetail?.labT5_village} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียด ภ.ท.บ.5 */}
-                                                                {/* start card รายละเอียดสารบัญจดทะเบียน */}
-                                                                <div className="mb-1">
-                                                                    <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                        <div className="card-body p-0">
-                                                                            <div className="p-4 code-to-copy">
-                                                                                <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
-                                                                                <div className="row g-3">
-                                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                        <AreaTextbox title={'เนื้อที่ทั้งหมด'} containerClassname={'mb-3'}
-                                                                                            handleChangeRai={(val) => handleChangeCollateral('total_area_rai', val)}
-                                                                                            rai={collateralDetail?.total_area_rai}
-                                                                                            handleChangeNgan={(val) => handleChangeCollateral('total_area_ngan', val)}
-                                                                                            ngan={collateralDetail?.total_area_ngan}
-                                                                                            handleChangeWa={(val) => handleChangeCollateral('total_area_sqaure_wa', val)}
-                                                                                            wa={collateralDetail?.total_area_sqaure_wa} disabled={isView}
-                                                                                        />
-                                                                                    </div>
-                                                                                    <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                        <div className="form-floating form-floating-advance-select ">
-                                                                                            <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
-                                                                                            <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
-                                                                                                <option value="จำนอง">จำนอง</option>
-                                                                                                <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
-                                                                                                <option value="สืบทรัพย์">สืบทรัพย์</option>
-                                                                                                <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
-                                                                                                <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
-                                                                                                <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
-                                                                                                <option value="อื่นๆ">อื่นๆ</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'}
-                                                                                            handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)}
-                                                                                            value={collateralDetail?.source_of_wealth_other}
-                                                                                            disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
-                                                                                        />
-                                                                                    </div>
-                                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                        <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
-                                                                                            handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                            value={collateralDetail?.remark} disabled={isView}
-                                                                                        />
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียดสารบัญจดทะเบียน */}
-
-
-                                                                {/* start card รายละเอียด บ้าน */}
-                                                                <h3 className="text-center">บ้าน</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'สิ่งปลูกสร้างเลขที่'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('house_no', val)}
-                                                                                                    value={collateralDetail?.house_no} disabled={isView}
-                                                                                                />
-                                                                                                <div className="input-group mb-3">
-                                                                                                    <span className="input-group-text" id="Search_id_card">สิ่งปลูกสร้างเลขที่</span>
-                                                                                                    <input className="form-control" type="text" disabled={isView} aria-label="รายละเอียดน บ้าน" />
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.house_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('house_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('house_district', val)}
-                                                                                                    value={collateralDetail?.house_district} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ตำบล'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('house_sub_district', val)}
-                                                                                                    value={collateralDetail?.house_sub_district} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ตั้งอยู่บนที่ดินเลขที่'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('house_parcel_no', val)}
-                                                                                                    value={collateralDetail?.house_parcel_no} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textbox title={'ลักษณะสิ่งปลูกสร้าง'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('house_type', val)}
-                                                                                                    value={collateralDetail?.house_type} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียด บ้าน */}
-
-
-                                                                {/* start card รายละเอียด สังหาริมทรัพย์ */}
-                                                                <h3 className="text-center">สังหาริมทรัพย์</h3>
-                                                                <div className="row g-3">
-                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">รายการจดทะเบียน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'วันที่จดทะเบียน'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_registration_date', val)}
-                                                                                                    value={collateralDetail?.chattel_registration_date} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ยี่ห้อ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_brand', val)}
-                                                                                                    value={collateralDetail?.chattel_brand} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ประเภท'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_type', val)}
-                                                                                                    value={collateralDetail?.chattel_type} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เลขทะเบียน'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_registration_no', val)}
-                                                                                                    value={collateralDetail?.chattel_registration_no} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ลักษณะ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_style', val)}
-                                                                                                    value={collateralDetail?.chattel_style} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เลขตัวรถ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_vehicle_no', val)}
-                                                                                                    value={collateralDetail?.chattel_vehicle_no} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เลขเครื่องยนต์'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_engine_no', val)}
-                                                                                                    value={collateralDetail?.chattel_engine_no} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'สี'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('chattel_color', val)}
-                                                                                                    value={collateralDetail?.chattel_color} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textarea title={'ชื่อผู้ถือกรรมสิทธิ์'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('name_legal_owner', val)}
-                                                                                                    value={collateralDetail?.name_legal_owner} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textarea title={'ชื่อผู้ครอบครอง'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('name_occupier', val)}
-                                                                                                    value={collateralDetail?.name_occupier} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                    value={collateralDetail?.remark} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียด สังหาริมทรัพย์ */}
-
-                                                                {/* start card รายละเอียด อื่นๆ */}
-                                                                <h3 className="text-center">อื่นๆ</h3>
-                                                                <div className="col-sm-12 col-md-12 col-lg-12 g-3">
-                                                                    <Textbox title={'หลักประกันอื่นๆโปรดระบุ'} containerClassname={'mb-3'}
-                                                                        handleChange={(val) => handleChangeCollateral('assetType_other', val)}
-                                                                        value={collateralDetail?.assetType_other} disabled={isView}
-                                                                    />
-                                                                </div>
-                                                                <div className="row">
-                                                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                        <div className="mb-1">
-                                                                            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                                                                                <div className="card-body p-0">
-                                                                                    <div className="p-4 code-to-copy">
-                                                                                        <h4 className="text-center">เลขที่</h4><br />
-                                                                                        <div className="row g-3">
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'เล่ม'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('otheR_volume', val)}
-                                                                                                    value={collateralDetail?.otheR_volume} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'หน้า'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('otheR_page', val)}
-                                                                                                    value={collateralDetail?.otheR_page} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <div className="form-floating form-floating-advance-select mb-3">
-                                                                                                    <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                    <select className="form-select" disabled={isView} value={collateralDetail?.otheR_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('otheR_province', e.target?.value)}>
-                                                                                                        {provinces && (
-                                                                                                            provinces.map((option, index) => (
-                                                                                                                <option key={index} value={option}>{option}</option>
-                                                                                                            ))
-                                                                                                        )}
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('otheR_district', val)}
-                                                                                                    value={collateralDetail?.otheR_district} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                <Textbox title={'ตำบล'} containerClassname={'mb-3'}
-                                                                                                    handleChange={(val) => handleChangeCollateral('otheR_sub_district', val)}
-                                                                                                    value={collateralDetail?.otheR_sub_district} disabled={isView}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* end card รายละเอียด อื่นๆ */}
-
+                                                                
                                                                 {/* start card รายละเอียดสารบัญจดทะเบียน */}
                                                                 <div className="mb-1">
                                                                     <div className="card shadow-none border my-4" data-component-card="data-component-card">
@@ -1563,7 +643,7 @@ const PlanPay = (props) => {
                                                                                 <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleAddForm(index + 1)}>
                                                                                     <i className="fas fa-square-plus"></i>
                                                                                 </button>
-                                                                                <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(index)}>
+                                                                                <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(form.id)}>
                                                                                     <i className="fas fa-square-minus"></i>
                                                                                 </button>
                                                                             </div>
@@ -1578,6 +658,7 @@ const PlanPay = (props) => {
                                                                             value={form.assetType}
                                                                             onChange={(e) => handleChangeAssetType(form.id, e.target.value)}
                                                                         >
+                                                                             <option value="">-- เลือกประเภทหลักทรัพย์ --</option>
                                                                             <option value="โฉนด">โฉนด</option>
                                                                             <option value="ตราจอง">ตราจอง</option>
                                                                             <option value="น.ส.3">น.ส.3</option>
@@ -2727,7 +1808,9 @@ const PlanPay = (props) => {
                                 </div> )}
                             </div>
                         </div>
+                        <div className="d-flex justify-content-center">
                         <span className="fw-bold mt-0">คืนโฉนด</span>
+                        </div>
                         <div className="row g-2 mt-1">
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                 <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
