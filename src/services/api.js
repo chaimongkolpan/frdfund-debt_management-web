@@ -2002,7 +2002,20 @@ export const getDebtManagementPolicyDate = async (no) => {
 };
 //#endregion
 //#region Guarantee
+export const getPostponeGuarantee = async (id_KFKPolicy) => {
+  const path = '/Guarantee/gettransfersecurities';
+  try {
+    const result = await axios.get(path, { params: { id_KFKPolicy } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
 
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
 //#region Account
 //#region Operation Land
@@ -2109,14 +2122,8 @@ export const searchBorrow = async (filter) => {
 //#endregion
 //#region Reimbursement
 export const searchReimbursement = async (filter) => {
-  const path = '/Reimbursement/search-legal-contract';
+  const path = '/Account/search-reimbursement';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;

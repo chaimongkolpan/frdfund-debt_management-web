@@ -93,7 +93,8 @@ const SearchTable = (props) => {
                 </th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="11">นิติกรรมสัญญา</th>
+                <th colSpan="8">นิติกรรมสัญญา</th>
+                <th colSpan="3">การออกใบแจ้งหนี้</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>

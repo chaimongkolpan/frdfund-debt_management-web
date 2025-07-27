@@ -416,3 +416,47 @@ input, button {
     opacity: 1;
   }
 }
+
+.reimbursement-detail {
+  padding: 20px;
+  .nav-tabs {
+    .nav-item {
+      .nav-link {
+        border-top: 1px solid #dee2e6;
+        border-left: 1px solid #dee2e6;
+        border-radius: 0;
+        color: #000;
+        height: 50px;
+        min-width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &.active {
+          border-bottom: none;
+          color: #fff;
+          background-color: rgba(35, 137, 11, 1) !important;
+        }    
+      }
+    }
+    .nav-item:first-child {
+      .nav-link {
+        border-top-left-radius: 8px;
+      }
+    }
+    .nav-item:last-child {
+      .nav-link {
+        border-right: 1px solid #dee2e6;  
+        border-top-right-radius: 8px;
+      }
+    }
+    .nav-item:hover {
+      cursor: pointer;
+    }
+  }
+  .tab-content {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    min-height: 500px;
+    margin-top: 2px;
+  }
+}
