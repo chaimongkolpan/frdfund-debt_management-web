@@ -2383,6 +2383,34 @@ export const searchInvoice = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getInvoiceByPolicyNo = async (no) => {
+  const path = '/Account/get-invoice-policy';
+  try {
+    const result = await axios.get(path, { params: { policyNo: no } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getInvoice = async (ids) => {
+  const path = '/Account/get-invoice';
+  try {
+    const result = await axios.post(path, { ids });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const printInvoice = async (params) => {
   const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Receipt';
   try {
