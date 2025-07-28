@@ -152,7 +152,7 @@ const survey = forwardRef((props, ref) => {
             await setYear(result.data.numberOfYearPayback)
             await setInstallment(result.data.numberOfPeriodPayback)
             await setPlan(result.listData);
-            await setData(result.listData);
+            await setData(result.data);
         }
     }
     const handleShowDetail = async () =>{
