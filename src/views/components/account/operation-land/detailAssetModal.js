@@ -5,6 +5,7 @@ import {
   getLegalAsset,
   updateLegalAsset,
   deleteLegalAsset,
+  getOperationDetail
 } from "@services/api";
 import Textbox from "@views/components/input/Textbox";
 import AreaTextbox from "@views/components/input/AreaTextbox";
@@ -66,7 +67,7 @@ const Asset = (props) => {
     }))
   }
   const fetchData = async () => {
-    const result = await getLegalAsset(policy.id_KFKPolicy);
+    const result = await getOperationDetail(policy.id_KFKPolicy);
     if (result.isSuccess) {
       await setCollaterals(result.collaterals)
     } else {

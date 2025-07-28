@@ -1718,10 +1718,10 @@ export const searchOperationLand = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getOperationDetail = async (id) => {
+export const getOperationDetail = async (ids) => {
   const path = '/operationLand/get-operationland';
   try {
-    const result = await axios.get(path, { params: {id} });
+    const result = await axios.get(path, { params: {ids} });
     if (result.status == 200)
       return result.data;
     else
