@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, forwardRef } from "react";
+import { useEffect, useState, useRef, forwardRef,useImperativeHandle } from "react";
 import { stringToDateTh, spDate, toCurrency } from "@utils";
 import Textarea from "@views/components/input/Textarea";
 import Textbox from "@views/components/input/Textbox";
@@ -38,6 +38,7 @@ const survey = forwardRef((props, ref) => {
     const [useAsset, setUseAsset] = useState(false);
     const [isAssetChanged, setIsAssetChanged] = useState(false);
     const [isAssetSplit, setIsAssetSplit] = useState(false);
+    const [provinces, setProvOp] = useState(null);
     const [collateralDetail, setCollateralDetail] = useState({
         id_KFKPolicy: policy?.id_KFKPolicy,
         policyNO: policy?.policyNO,
@@ -69,9 +70,6 @@ const survey = forwardRef((props, ref) => {
             forms.map(f => f.id === id ? { ...f, assetType: newType } : f)
         );
     };
-
-
-    const [provinces, setProvOp] = useState(null);
     const onFileChange = async (id, selectedFiles) => {
         if (selectedFiles.length > 0) {
           setFiles((prev) => ({
@@ -230,11 +228,11 @@ const survey = forwardRef((props, ref) => {
     }, [])
     useEffect(() => {
         console.log(policy);
-        if (isView) {
+       // if (showDetail) {
             fetchData();
-        } else {
-            setDate(new Date())
-        }
+       // } else {
+       //     setDate(new Date())
+       // }
     }, [])
     useEffect(() => {
         if (showDetail) {
@@ -248,6 +246,14 @@ const survey = forwardRef((props, ref) => {
         await setAddTitle(true);
         await setShowEdit(true);
       }
+
+      useImperativeHandle(ref, () => ({
+        getData: () => {
+          return {
+            collateralDetail,
+          };
+        },
+      }));
     return (
         <>
             <form>
@@ -305,10 +311,10 @@ const survey = forwardRef((props, ref) => {
                                 <h3 className="text-center">รายละเอียดการรังวัด</h3><br />
                                 <div className="row g-2">
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                        <Textbox title={'ประเภทการรังวัด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                        <Textbox title={'ประเภทการรังวัด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
                                     </div>
                                 </div>
                                 <br />
@@ -331,12 +337,12 @@ const survey = forwardRef((props, ref) => {
                                             title={'ประเภทการรังวัด'}
                                             defaultValue={'รังวัดสอบเขต'}
                                             options={typeSurvey}
-                                            handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  
-                                            value={collateralDetail?.chattel_brand}
+                                            handleChange={(val) => handleChangeCollateral('asset_operations_type', val)}                          
                                         />
+                                       
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={isView} />
+                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={showDetail} />
                                     </div>
                                 </div>
 
@@ -401,14 +407,17 @@ const survey = forwardRef((props, ref) => {
                                             <br />
                                             <div className="row g-2 mt-2">
                                                 <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                                    <Textbox title={'เลขที่หนังสือยืมโฉนด'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={isView} />
+                                                    <Textbox title={'เลขที่หนังสือยืมโฉนด'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('borrowdeed_no', val)}  value={collateralDetail?.borrowdeed_no} disabled={showDetail} />
                                                 </div>
                                                 <div className="col-sm-12 col-md-6 col-lg-6 mb-2">
-                                                    <DatePicker title={'วันที่หนังสือยืมโฉนด'} />
+                                                    <DatePicker title={'วันที่หนังสือยืมโฉนด'} 
+                                                     value={collateralDetail.borrowdeed_date} 
+                                                     handleChange={(val) => handleChangeCollateral('borrowdeed_date', val)} 
+                                                    />
                                                 </div>
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12 mb-4">
-                                                <Textarea title={'เหตุผล'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={isView} />
+                                                <Textarea title={'เหตุผล'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('borrowdeed_reason', val)}  value={collateralDetail?.borrowdeed_reason} disabled={showDetail} />
                                             </div>
                                         </div>
                                     </div>
@@ -446,7 +455,7 @@ const survey = forwardRef((props, ref) => {
                                             <div ref={collateralRef} className="row g-3">
                                                 <div className="col-sm-12 col-md-6 col-lg-4">
                                                     <div className="form-floating needs-validation">
-                                                        <select className="form-select" value={collateralDetail.assetType} disabled={isView} onChange={(e) => handleChangeCollateral('assetType', e.target?.value)}>
+                                                        <select className="form-select" value={collateralDetail.assetType} disabled={showDetail} onChange={(e) => handleChangeCollateral('assetType', e.target?.value)}>
                                                         <option value="">-- เลือกประเภทหลักทรัพย์ --</option>
                                                             <option value="โฉนด">โฉนด</option>
                                                             <option value="ตราจอง">ตราจอง</option>
@@ -467,7 +476,7 @@ const survey = forwardRef((props, ref) => {
                                                 </div>
                                                 <div className="col-sm-12 col-md-6 col-lg-4">
                                                     <div className="form-floating needs-validation">
-                                                        <select className="form-select" disabled={isView} value={collateralDetail?.collateral_status} onChange={(e) => handleChangeCollateral('collateral_status', e.target?.value)}>
+                                                        <select className="form-select" disabled={showDetail} value={collateralDetail?.collateral_status} onChange={(e) => handleChangeCollateral('collateral_status', e.target?.value)}>
                                                             <option value="โอนได้">โอนได้</option>
                                                             <option value="โอนไม่ได้">โอนไม่ได้</option>
                                                         </select>
@@ -476,7 +485,7 @@ const survey = forwardRef((props, ref) => {
                                                 </div>
                                                 <div className="col-sm-12 col-md-6 col-lg-4">
                                                     <div className="form-floating needs-validation">
-                                                        <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} onChange={(e) => handleChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status == 'โอนได้' || isView}>
+                                                        <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} onChange={(e) => handleChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status == 'โอนได้' || showDetail}>
                                                             <option value="ติดอายัติ(เจ้าหนี้อื่น)">โอติดอายัติ(เจ้าหนี้อื่น)</option>
                                                             <option value="เจ้าของหลักประกันเสียชีวิต">เจ้าของหลักประกันเสียชีวิต</option>
                                                             <option value="ติดข้อกฎหมาย">ติดข้อกฎหมาย</option>
@@ -503,19 +512,19 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">โฉนดที่ดิน</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_volume', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_volume}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_page', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_page}
                                                                                             />
@@ -523,7 +532,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <div className="form-floating form-floating-advance-select ">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.parceL_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('parceL_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.parceL_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('parceL_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -533,7 +542,7 @@ const survey = forwardRef((props, ref) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_district}
                                                                                             />
@@ -552,25 +561,25 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'ระวาง'} disabled={isView}
+                                                                                            <Textbox title={'ระวาง'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_map_sheet', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_map_sheet}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'เลขที่ดิน'} disabled={isView}
+                                                                                            <Textbox title={'เลขที่ดิน'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_parcel_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_parcel_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'หน้าสำรวจ'} disabled={isView}
+                                                                                            <Textbox title={'หน้าสำรวจ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_explore_page', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_explore_page}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_sub_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_sub_district}
                                                                                             />
@@ -595,31 +604,31 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ตราจอง</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เล่มที่'} disabled={isView}
+                                                                                            <Textbox title={'เล่มที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_volume_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_volume', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_page', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_page}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'ระวาง'} disabled={isView}
+                                                                                            <Textbox title={'ระวาง'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_map_sheet', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_map_sheet}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'เลขที่ดิน'} disabled={isView}
+                                                                                            <Textbox title={'เลขที่ดิน'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_parcel_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_parcel_no}
                                                                                             />
@@ -640,7 +649,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.pre_emption_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('pre_emption_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.pre_emption_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('pre_emption_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -650,13 +659,13 @@ const survey = forwardRef((props, ref) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_sub_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_sub_district}
                                                                                             />
@@ -685,7 +694,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.nS3_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.nS3_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -695,13 +704,13 @@ const survey = forwardRef((props, ref) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_sub_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_sub_district}
                                                                                             />
@@ -720,25 +729,25 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_emption_volume', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_volume}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_emption_page', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_page}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'สารบบเล่ม/เลขที่'} disabled={isView}
+                                                                                            <Textbox title={'สารบบเล่ม/เลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_dealing_file_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_file_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'สารบบหน้า'} disabled={isView}
+                                                                                            <Textbox title={'สารบบหน้า'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_dealing_page_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_page_no}
                                                                                             />
@@ -767,7 +776,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.nS3A_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3A_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.nS3A_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3A_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -777,19 +786,19 @@ const survey = forwardRef((props, ref) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_sub_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_sub_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ระวางรูปถ่ายทางออกชื่อ'} disabled={isView}
+                                                                                            <Textbox title={'ระวางรูปถ่ายทางออกชื่อ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_map_sheet', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_map_sheet}
                                                                                             />
@@ -808,37 +817,37 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'เล่มที่'} disabled={isView}
+                                                                                            <Textbox title={'เล่มที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_volume_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_volume_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_page', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_page}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เลขที่ดิน'} disabled={isView}
+                                                                                            <Textbox title={'เลขที่ดิน'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_parcel_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_parcel_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'หมายเลข'} disabled={isView}
+                                                                                            <Textbox title={'หมายเลข'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_number', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_number}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'แผ่นที่'} disabled={isView}
+                                                                                            <Textbox title={'แผ่นที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_sheet_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_sheet_no}
                                                                                             />
@@ -867,7 +876,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.nS3B_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3B_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.nS3B_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3B_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -877,19 +886,19 @@ const survey = forwardRef((props, ref) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_sub_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_sub_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'หมู่ที่'} disabled={isView}
+                                                                                            <Textbox title={'หมู่ที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_village', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_village}
                                                                                             />
@@ -908,19 +917,19 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_volume', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_volume}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_page', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_page}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_no}
                                                                                             />
@@ -949,7 +958,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.alrO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('alrO_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.alrO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('alrO_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -959,19 +968,19 @@ const survey = forwardRef((props, ref) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_sub_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_sub_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'หมู่ที่'} disabled={isView}
+                                                                                            <Textbox title={'หมู่ที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_village', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_village}
                                                                                             />
@@ -990,31 +999,31 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'แปลงเลขที่'} disabled={isView}
+                                                                                            <Textbox title={'แปลงเลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_plot_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_plot_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ระวาง ส.ป.ก. ที่'} disabled={isView}
+                                                                                            <Textbox title={'ระวาง ส.ป.ก. ที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_map_sheet', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_map_sheet}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_volume', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_volume}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_page', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_page}
                                                                                             />
@@ -1041,7 +1050,7 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'โฉนดที่ดินเลขที่'} disabled={isView}
+                                                                                            <Textbox title={'โฉนดที่ดินเลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_parcel_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_parcel_no}
                                                                                             />
@@ -1049,7 +1058,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.condO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('condO_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.condO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('condO_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1059,19 +1068,19 @@ const survey = forwardRef((props, ref) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_sub_district', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_sub_district}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <AreaTextbox title={'เนื้อที่'} containerClassname={'mb-3'} disabled={isView}
+                                                                                            <AreaTextbox title={'เนื้อที่'} containerClassname={'mb-3'} disabled={showDetail}
                                                                                                 handleChangeRai={(val) => handleChangeCollateral('condO_rai', val)}
                                                                                                 rai={collateralDetail?.condO_rai}
                                                                                                 handleChangeNgan={(val) => handleChangeCollateral('condO_ngan', val)}
@@ -1094,31 +1103,31 @@ const survey = forwardRef((props, ref) => {
                                                                                     <h4 className="text-center">ที่ตั้งห้องชุด</h4><br />
                                                                                     <div className="row g-3">
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ห้องชุดเลขที่'} disabled={isView}
+                                                                                            <Textbox title={'ห้องชุดเลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ชั้นที่'} disabled={isView}
+                                                                                            <Textbox title={'ชั้นที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_floor', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_floor}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'อาคารเลขที่'} disabled={isView}
+                                                                                            <Textbox title={'อาคารเลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_building_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_building_no}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ชื่ออาคารชุด'} disabled={isView}
+                                                                                            <Textbox title={'ชื่ออาคารชุด'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_building_name', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_building_name}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                            <Textbox title={'ทะเบียนอาคารชุดเลขที่'} disabled={isView}
+                                                                                            <Textbox title={'ทะเบียนอาคารชุดเลขที่'} disabled={showDetail}
                                                                                                 handleChange={(val) => handleChangeCollateral('condO_registration_no', val)}
                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_registration_no}
                                                                                             />
@@ -1139,31 +1148,31 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('promisor', val)}
-                                                                                                value={collateralDetail?.promisor} disabled={isView}
+                                                                                                value={collateralDetail?.promisor} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('contract_recipient', val)}
-                                                                                                value={collateralDetail?.contract_recipient} disabled={isView}
+                                                                                                value={collateralDetail?.contract_recipient} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'เนื้อที่ประมาณ'} footer={'ตารางเมตร'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('area_square_meter', val)}
-                                                                                                value={collateralDetail?.area_square_meter} disabled={isView}
+                                                                                                value={collateralDetail?.area_square_meter} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'สูง'} footer={'เมตร'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('high_meter', val)}
-                                                                                                value={collateralDetail?.high_meter} disabled={isView}
+                                                                                                value={collateralDetail?.high_meter} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <div className="form-floating form-floating-advance-select ">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
                                                                                                     <option value="จำนอง">จำนอง</option>
                                                                                                     <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
                                                                                                     <option value="สืบทรัพย์">สืบทรัพย์</option>
@@ -1178,13 +1187,13 @@ const survey = forwardRef((props, ref) => {
                                                                                             <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)}
                                                                                                 value={collateralDetail?.source_of_wealth_other}
-                                                                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                                                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                value={collateralDetail?.remark} disabled={isView}
+                                                                                                value={collateralDetail?.remark} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                     </div>
@@ -1210,13 +1219,13 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <Textbox title={'ที่ดินตั้งอยู่เลขที่'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_parcel_no', val)}
-                                                                                                value={collateralDetail?.labT5_parcel_no} disabled={isView}
+                                                                                                value={collateralDetail?.labT5_parcel_no} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.labT5_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('labT5_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.labT5_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('labT5_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1228,19 +1237,19 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_district', val)}
-                                                                                                value={collateralDetail?.labT5_district} disabled={isView}
+                                                                                                value={collateralDetail?.labT5_district} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'ตำบล'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_sub_district', val)}
-                                                                                                value={collateralDetail?.labT5_sub_district} disabled={isView}
+                                                                                                value={collateralDetail?.labT5_sub_district} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'หมู่ที่'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_village', val)}
-                                                                                                value={collateralDetail?.labT5_village} disabled={isView}
+                                                                                                value={collateralDetail?.labT5_village} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                     </div>
@@ -1265,13 +1274,13 @@ const survey = forwardRef((props, ref) => {
                                                                                         handleChangeNgan={(val) => handleChangeCollateral('total_area_ngan', val)}
                                                                                         ngan={collateralDetail?.total_area_ngan}
                                                                                         handleChangeWa={(val) => handleChangeCollateral('total_area_sqaure_wa', val)}
-                                                                                        wa={collateralDetail?.total_area_sqaure_wa} disabled={isView}
+                                                                                        wa={collateralDetail?.total_area_sqaure_wa} disabled={showDetail}
                                                                                     />
                                                                                 </div>
                                                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                     <div className="form-floating form-floating-advance-select ">
                                                                                         <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
-                                                                                        <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                                                        <select className="form-select" disabled={showDetail} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
                                                                                             <option value="จำนอง">จำนอง</option>
                                                                                             <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
                                                                                             <option value="สืบทรัพย์">สืบทรัพย์</option>
@@ -1286,13 +1295,13 @@ const survey = forwardRef((props, ref) => {
                                                                                     <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'}
                                                                                         handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)}
                                                                                         value={collateralDetail?.source_of_wealth_other}
-                                                                                        disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                                                                        disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || showDetail}
                                                                                     />
                                                                                 </div>
                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                     <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                         handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                        value={collateralDetail?.remark} disabled={isView}
+                                                                                        value={collateralDetail?.remark} disabled={showDetail}
                                                                                     />
                                                                                 </div>
                                                                             </div>
@@ -1316,17 +1325,17 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <Textbox title={'สิ่งปลูกสร้างเลขที่'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('house_no', val)}
-                                                                                                value={collateralDetail?.house_no} disabled={isView}
+                                                                                                value={collateralDetail?.house_no} disabled={showDetail}
                                                                                             />
                                                                                             <div className="input-group mb-3">
                                                                                                 <span className="input-group-text" id="Search_id_card">สิ่งปลูกสร้างเลขที่</span>
-                                                                                                <input className="form-control" type="text" disabled={isView} aria-label="รายละเอียดน บ้าน" />
+                                                                                                <input className="form-control" type="text" disabled={showDetail} aria-label="รายละเอียดน บ้าน" />
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.house_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('house_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.house_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('house_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1338,25 +1347,25 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('house_district', val)}
-                                                                                                value={collateralDetail?.house_district} disabled={isView}
+                                                                                                value={collateralDetail?.house_district} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'ตำบล'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('house_sub_district', val)}
-                                                                                                value={collateralDetail?.house_sub_district} disabled={isView}
+                                                                                                value={collateralDetail?.house_sub_district} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'ตั้งอยู่บนที่ดินเลขที่'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('house_parcel_no', val)}
-                                                                                                value={collateralDetail?.house_parcel_no} disabled={isView}
+                                                                                                value={collateralDetail?.house_parcel_no} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <Textbox title={'ลักษณะสิ่งปลูกสร้าง'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('house_type', val)}
-                                                                                                value={collateralDetail?.house_type} disabled={isView}
+                                                                                                value={collateralDetail?.house_type} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                     </div>
@@ -1382,49 +1391,49 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'วันที่จดทะเบียน'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_registration_date', val)}
-                                                                                                value={collateralDetail?.chattel_registration_date} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_registration_date} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'ยี่ห้อ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_brand', val)}
-                                                                                                value={collateralDetail?.chattel_brand} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_brand} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'ประเภท'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_type', val)}
-                                                                                                value={collateralDetail?.chattel_type} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_type} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'เลขทะเบียน'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_registration_no', val)}
-                                                                                                value={collateralDetail?.chattel_registration_no} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_registration_no} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'ลักษณะ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_style', val)}
-                                                                                                value={collateralDetail?.chattel_style} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_style} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'เลขตัวรถ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_vehicle_no', val)}
-                                                                                                value={collateralDetail?.chattel_vehicle_no} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_vehicle_no} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'เลขเครื่องยนต์'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_engine_no', val)}
-                                                                                                value={collateralDetail?.chattel_engine_no} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_engine_no} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'สี'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_color', val)}
-                                                                                                value={collateralDetail?.chattel_color} disabled={isView}
+                                                                                                value={collateralDetail?.chattel_color} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                     </div>
@@ -1443,19 +1452,19 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textarea title={'ชื่อผู้ถือกรรมสิทธิ์'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('name_legal_owner', val)}
-                                                                                                value={collateralDetail?.name_legal_owner} disabled={isView}
+                                                                                                value={collateralDetail?.name_legal_owner} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textarea title={'ชื่อผู้ครอบครอง'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('name_occupier', val)}
-                                                                                                value={collateralDetail?.name_occupier} disabled={isView}
+                                                                                                value={collateralDetail?.name_occupier} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                             <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                value={collateralDetail?.remark} disabled={isView}
+                                                                                                value={collateralDetail?.remark} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                     </div>
@@ -1485,7 +1494,7 @@ const survey = forwardRef((props, ref) => {
                                                             <div className="col-sm-12 col-md-12 col-lg-12 g-3">
                                                                 <Textbox title={'หลักประกันอื่นๆโปรดระบุ'} containerClassname={'mb-3'}
                                                                     handleChange={(val) => handleChangeCollateral('assetType_other', val)}
-                                                                    value={collateralDetail?.assetType_other} disabled={isView}
+                                                                    value={collateralDetail?.assetType_other} disabled={showDetail}
                                                                 />
                                                             </div>
                                                             <div className="row">
@@ -1499,19 +1508,19 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'เล่ม'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_volume', val)}
-                                                                                                value={collateralDetail?.otheR_volume} disabled={isView}
+                                                                                                value={collateralDetail?.otheR_volume} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'หน้า'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_page', val)}
-                                                                                                value={collateralDetail?.otheR_page} disabled={isView}
+                                                                                                value={collateralDetail?.otheR_page} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.otheR_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('otheR_province', e.target?.value)}>
+                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.otheR_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('otheR_province', e.target?.value)}>
                                                                                                     {provinces && (
                                                                                                         provinces.map((option, index) => (
                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1523,13 +1532,13 @@ const survey = forwardRef((props, ref) => {
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_district', val)}
-                                                                                                value={collateralDetail?.otheR_district} disabled={isView}
+                                                                                                value={collateralDetail?.otheR_district} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                             <Textbox title={'ตำบล'} containerClassname={'mb-3'}
                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_sub_district', val)}
-                                                                                                value={collateralDetail?.otheR_sub_district} disabled={isView}
+                                                                                                value={collateralDetail?.otheR_sub_district} disabled={showDetail}
                                                                                             />
                                                                                         </div>
                                                                                     </div>
@@ -1551,13 +1560,13 @@ const survey = forwardRef((props, ref) => {
                                                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                     <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}
                                                                                         handleChange={(val) => handleChangeCollateral('promisor', val)}
-                                                                                        value={collateralDetail?.promisor} disabled={isView}
+                                                                                        value={collateralDetail?.promisor} disabled={showDetail}
                                                                                     />
                                                                                 </div>
                                                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                     <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}
                                                                                         handleChange={(val) => handleChangeCollateral('contract_recipient', val)}
-                                                                                        value={collateralDetail?.contract_recipient} disabled={isView}
+                                                                                        value={collateralDetail?.contract_recipient} disabled={showDetail}
                                                                                     />
                                                                                 </div>
                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1567,7 +1576,7 @@ const survey = forwardRef((props, ref) => {
                                                                                         handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)}
                                                                                         ngan={collateralDetail?.contract_area_ngan}
                                                                                         handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)}
-                                                                                        wa={collateralDetail?.contract_area_sqaure_wa} disabled={isView}
+                                                                                        wa={collateralDetail?.contract_area_sqaure_wa} disabled={showDetail}
                                                                                     />
                                                                                 </div>
                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1577,13 +1586,13 @@ const survey = forwardRef((props, ref) => {
                                                                                         handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)}
                                                                                         ngan={collateralDetail?.area_transfer_ngan}
                                                                                         handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)}
-                                                                                        wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
+                                                                                        wa={collateralDetail?.area_transfer_sqaure_wa} disabled={showDetail}
                                                                                     />
                                                                                 </div>
                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                     <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                         handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                        value={collateralDetail?.remark} disabled={isView}
+                                                                                        value={collateralDetail?.remark} disabled={showDetail}
                                                                                     />
                                                                                 </div>
                                                                             </div>
@@ -1594,7 +1603,7 @@ const survey = forwardRef((props, ref) => {
                                                             {/* end card รายละเอียดสารบัญจดทะเบียน */}
 
                                                             <br />
-                                                            {/* <div className={`d-flex justify-content-center ${isView ? 'd-none' : ''}`}>
+                                                            {/* <div className={`d-flex justify-content-center ${showDetail ? 'd-none' : ''}`}>
                                     <button className="btn btn-success me-2" type="button" onClick={() => saveCollateral()}>บันทึก</button>
                                     
                                         <button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
@@ -1674,19 +1683,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">โฉนดที่ดิน</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_volume', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_volume}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_page', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_page}
                                                                                                             />
@@ -1694,7 +1703,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <div className="form-floating form-floating-advance-select ">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.parceL_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('parceL_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.parceL_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('parceL_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1704,7 +1713,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_district}
                                                                                                             />
@@ -1723,25 +1732,25 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'ระวาง'} disabled={isView}
+                                                                                                            <Textbox title={'ระวาง'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_map_sheet', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_map_sheet}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'เลขที่ดิน'} disabled={isView}
+                                                                                                            <Textbox title={'เลขที่ดิน'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_parcel_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_parcel_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'หน้าสำรวจ'} disabled={isView}
+                                                                                                            <Textbox title={'หน้าสำรวจ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_explore_page', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_explore_page}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('parceL_sub_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.parceL_sub_district}
                                                                                                             />
@@ -1769,31 +1778,31 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ตราจอง</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เล่มที่'} disabled={isView}
+                                                                                                            <Textbox title={'เล่มที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_volume_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_volume', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_volume}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_page', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_page}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'ระวาง'} disabled={isView}
+                                                                                                            <Textbox title={'ระวาง'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_map_sheet', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_map_sheet}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'เลขที่ดิน'} disabled={isView}
+                                                                                                            <Textbox title={'เลขที่ดิน'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_parcel_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_parcel_no}
                                                                                                             />
@@ -1814,7 +1823,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.pre_emption_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('pre_emption_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.pre_emption_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('pre_emption_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1824,13 +1833,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('pre_emption_sub_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.pre_emption_sub_district}
                                                                                                             />
@@ -1861,7 +1870,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.nS3_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.nS3_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1871,13 +1880,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_sub_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_sub_district}
                                                                                                             />
@@ -1896,25 +1905,25 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_emption_volume', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_volume}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_emption_page', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_emption_page}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'สารบบเล่ม/เลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'สารบบเล่ม/เลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_dealing_file_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_file_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'สารบบหน้า'} disabled={isView}
+                                                                                                            <Textbox title={'สารบบหน้า'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3_dealing_page_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3_dealing_page_no}
                                                                                                             />
@@ -1946,7 +1955,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.nS3A_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3A_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.nS3A_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3A_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -1956,19 +1965,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_sub_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_sub_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ระวางรูปถ่ายทางออกชื่อ'} disabled={isView}
+                                                                                                            <Textbox title={'ระวางรูปถ่ายทางออกชื่อ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_map_sheet', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_map_sheet}
                                                                                                             />
@@ -1987,37 +1996,37 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'เล่มที่'} disabled={isView}
+                                                                                                            <Textbox title={'เล่มที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_volume_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_volume_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_page', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_page}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เลขที่ดิน'} disabled={isView}
+                                                                                                            <Textbox title={'เลขที่ดิน'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_parcel_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_parcel_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'หมายเลข'} disabled={isView}
+                                                                                                            <Textbox title={'หมายเลข'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_number', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_number}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'แผ่นที่'} disabled={isView}
+                                                                                                            <Textbox title={'แผ่นที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3A_sheet_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3A_sheet_no}
                                                                                                             />
@@ -2048,7 +2057,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.nS3B_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3B_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.nS3B_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('nS3B_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -2058,19 +2067,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_sub_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_sub_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'หมู่ที่'} disabled={isView}
+                                                                                                            <Textbox title={'หมู่ที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_village', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_village}
                                                                                                             />
@@ -2089,19 +2098,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_volume', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_volume}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_page', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_page}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('nS3B_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.nS3B_no}
                                                                                                             />
@@ -2132,7 +2141,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.alrO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('alrO_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.alrO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('alrO_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -2142,19 +2151,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_sub_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_sub_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'หมู่ที่'} disabled={isView}
+                                                                                                            <Textbox title={'หมู่ที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_village', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_village}
                                                                                                             />
@@ -2173,31 +2182,31 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ทะเบียน</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'แปลงเลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'แปลงเลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_plot_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_plot_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ระวาง ส.ป.ก. ที่'} disabled={isView}
+                                                                                                            <Textbox title={'ระวาง ส.ป.ก. ที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_map_sheet', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_map_sheet}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'เลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'เลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'เล่ม'} disabled={isView}
+                                                                                                            <Textbox title={'เล่ม'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_volume', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_volume}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
-                                                                                                            <Textbox title={'หน้า'} disabled={isView}
+                                                                                                            <Textbox title={'หน้า'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('alrO_page', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.alrO_page}
                                                                                                             />
@@ -2226,7 +2235,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ตำแหน่งที่ดิน</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'โฉนดที่ดินเลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'โฉนดที่ดินเลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_parcel_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_parcel_no}
                                                                                                             />
@@ -2234,7 +2243,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.condO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('condO_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.condO_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('condO_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -2244,19 +2253,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'อำเภอ'} disabled={isView}
+                                                                                                            <Textbox title={'อำเภอ'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ตำบล'} disabled={isView}
+                                                                                                            <Textbox title={'ตำบล'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_sub_district', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_sub_district}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <AreaTextbox title={'เนื้อที่'} containerClassname={'mb-3'} disabled={isView}
+                                                                                                            <AreaTextbox title={'เนื้อที่'} containerClassname={'mb-3'} disabled={showDetail}
                                                                                                                 handleChangeRai={(val) => handleChangeCollateral('condO_rai', val)}
                                                                                                                 rai={collateralDetail?.condO_rai}
                                                                                                                 handleChangeNgan={(val) => handleChangeCollateral('condO_ngan', val)}
@@ -2279,31 +2288,31 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <h4 className="text-center">ที่ตั้งห้องชุด</h4><br />
                                                                                                     <div className="row g-3">
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ห้องชุดเลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'ห้องชุดเลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ชั้นที่'} disabled={isView}
+                                                                                                            <Textbox title={'ชั้นที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_floor', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_floor}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'อาคารเลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'อาคารเลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_building_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_building_no}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ชื่ออาคารชุด'} disabled={isView}
+                                                                                                            <Textbox title={'ชื่ออาคารชุด'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_building_name', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_building_name}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
-                                                                                                            <Textbox title={'ทะเบียนอาคารชุดเลขที่'} disabled={isView}
+                                                                                                            <Textbox title={'ทะเบียนอาคารชุดเลขที่'} disabled={showDetail}
                                                                                                                 handleChange={(val) => handleChangeCollateral('condO_registration_no', val)}
                                                                                                                 containerClassname={'mb-3'} value={collateralDetail?.condO_registration_no}
                                                                                                             />
@@ -2324,31 +2333,31 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('promisor', val)}
-                                                                                                                value={collateralDetail?.promisor} disabled={isView}
+                                                                                                                value={collateralDetail?.promisor} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('contract_recipient', val)}
-                                                                                                                value={collateralDetail?.contract_recipient} disabled={isView}
+                                                                                                                value={collateralDetail?.contract_recipient} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'เนื้อที่ประมาณ'} footer={'ตารางเมตร'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('area_square_meter', val)}
-                                                                                                                value={collateralDetail?.area_square_meter} disabled={isView}
+                                                                                                                value={collateralDetail?.area_square_meter} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'สูง'} footer={'เมตร'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('high_meter', val)}
-                                                                                                                value={collateralDetail?.high_meter} disabled={isView}
+                                                                                                                value={collateralDetail?.high_meter} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <div className="form-floating form-floating-advance-select ">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
                                                                                                                     <option value="จำนอง">จำนอง</option>
                                                                                                                     <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
                                                                                                                     <option value="สืบทรัพย์">สืบทรัพย์</option>
@@ -2363,13 +2372,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                             <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)}
                                                                                                                 value={collateralDetail?.source_of_wealth_other}
-                                                                                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                                                                                                disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                                value={collateralDetail?.remark} disabled={isView}
+                                                                                                                value={collateralDetail?.remark} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                     </div>
@@ -2398,13 +2407,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <Textbox title={'ที่ดินตั้งอยู่เลขที่'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_parcel_no', val)}
-                                                                                                                value={collateralDetail?.labT5_parcel_no} disabled={isView}
+                                                                                                                value={collateralDetail?.labT5_parcel_no} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.labT5_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('labT5_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.labT5_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('labT5_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -2416,19 +2425,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_district', val)}
-                                                                                                                value={collateralDetail?.labT5_district} disabled={isView}
+                                                                                                                value={collateralDetail?.labT5_district} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'ตำบล'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_sub_district', val)}
-                                                                                                                value={collateralDetail?.labT5_sub_district} disabled={isView}
+                                                                                                                value={collateralDetail?.labT5_sub_district} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'หมู่ที่'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('labT5_village', val)}
-                                                                                                                value={collateralDetail?.labT5_village} disabled={isView}
+                                                                                                                value={collateralDetail?.labT5_village} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                     </div>
@@ -2453,13 +2462,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                         handleChangeNgan={(val) => handleChangeCollateral('total_area_ngan', val)}
                                                                                                         ngan={collateralDetail?.total_area_ngan}
                                                                                                         handleChangeWa={(val) => handleChangeCollateral('total_area_sqaure_wa', val)}
-                                                                                                        wa={collateralDetail?.total_area_sqaure_wa} disabled={isView}
+                                                                                                        wa={collateralDetail?.total_area_sqaure_wa} disabled={showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                     <div className="form-floating form-floating-advance-select ">
                                                                                                         <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
-                                                                                                        <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                                                                                        <select className="form-select" disabled={showDetail} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
                                                                                                             <option value="จำนอง">จำนอง</option>
                                                                                                             <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
                                                                                                             <option value="สืบทรัพย์">สืบทรัพย์</option>
@@ -2474,13 +2483,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                     <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'}
                                                                                                         handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)}
                                                                                                         value={collateralDetail?.source_of_wealth_other}
-                                                                                                        disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                                                                                        disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                     <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                                         handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                        value={collateralDetail?.remark} disabled={isView}
+                                                                                                        value={collateralDetail?.remark} disabled={showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                             </div>
@@ -2506,17 +2515,17 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <Textbox title={'สิ่งปลูกสร้างเลขที่'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('house_no', val)}
-                                                                                                                value={collateralDetail?.house_no} disabled={isView}
+                                                                                                                value={collateralDetail?.house_no} disabled={showDetail}
                                                                                                             />
                                                                                                             <div className="input-group mb-3">
                                                                                                                 <span className="input-group-text" id="Search_id_card">สิ่งปลูกสร้างเลขที่</span>
-                                                                                                                <input className="form-control" type="text" disabled={isView} aria-label="รายละเอียดน บ้าน" />
+                                                                                                                <input className="form-control" type="text" disabled={showDetail} aria-label="รายละเอียดน บ้าน" />
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.house_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('house_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.house_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('house_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -2528,25 +2537,25 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('house_district', val)}
-                                                                                                                value={collateralDetail?.house_district} disabled={isView}
+                                                                                                                value={collateralDetail?.house_district} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'ตำบล'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('house_sub_district', val)}
-                                                                                                                value={collateralDetail?.house_sub_district} disabled={isView}
+                                                                                                                value={collateralDetail?.house_sub_district} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'ตั้งอยู่บนที่ดินเลขที่'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('house_parcel_no', val)}
-                                                                                                                value={collateralDetail?.house_parcel_no} disabled={isView}
+                                                                                                                value={collateralDetail?.house_parcel_no} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <Textbox title={'ลักษณะสิ่งปลูกสร้าง'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('house_type', val)}
-                                                                                                                value={collateralDetail?.house_type} disabled={isView}
+                                                                                                                value={collateralDetail?.house_type} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                     </div>
@@ -2574,49 +2583,49 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'วันที่จดทะเบียน'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_registration_date', val)}
-                                                                                                                value={collateralDetail?.chattel_registration_date} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_registration_date} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'ยี่ห้อ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_brand', val)}
-                                                                                                                value={collateralDetail?.chattel_brand} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_brand} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'ประเภท'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_type', val)}
-                                                                                                                value={collateralDetail?.chattel_type} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_type} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'เลขทะเบียน'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_registration_no', val)}
-                                                                                                                value={collateralDetail?.chattel_registration_no} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_registration_no} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'ลักษณะ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_style', val)}
-                                                                                                                value={collateralDetail?.chattel_style} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_style} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'เลขตัวรถ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_vehicle_no', val)}
-                                                                                                                value={collateralDetail?.chattel_vehicle_no} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_vehicle_no} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'เลขเครื่องยนต์'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_engine_no', val)}
-                                                                                                                value={collateralDetail?.chattel_engine_no} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_engine_no} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'สี'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('chattel_color', val)}
-                                                                                                                value={collateralDetail?.chattel_color} disabled={isView}
+                                                                                                                value={collateralDetail?.chattel_color} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                     </div>
@@ -2635,19 +2644,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textarea title={'ชื่อผู้ถือกรรมสิทธิ์'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('name_legal_owner', val)}
-                                                                                                                value={collateralDetail?.name_legal_owner} disabled={isView}
+                                                                                                                value={collateralDetail?.name_legal_owner} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textarea title={'ชื่อผู้ครอบครอง'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('name_occupier', val)}
-                                                                                                                value={collateralDetail?.name_occupier} disabled={isView}
+                                                                                                                value={collateralDetail?.name_occupier} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                             <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                                value={collateralDetail?.remark} disabled={isView}
+                                                                                                                value={collateralDetail?.remark} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                     </div>
@@ -2667,7 +2676,7 @@ const survey = forwardRef((props, ref) => {
                                                                             <div className="col-sm-12 col-md-12 col-lg-12 g-3">
                                                                                 <Textbox title={'หลักประกันอื่นๆโปรดระบุ'} containerClassname={'mb-3'}
                                                                                     handleChange={(val) => handleChangeCollateral('assetType_other', val)}
-                                                                                    value={collateralDetail?.assetType_other} disabled={isView}
+                                                                                    value={collateralDetail?.assetType_other} disabled={showDetail}
                                                                                 />
                                                                             </div>
                                                                             <div className="row">
@@ -2681,19 +2690,19 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'เล่ม'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_volume', val)}
-                                                                                                                value={collateralDetail?.otheR_volume} disabled={isView}
+                                                                                                                value={collateralDetail?.otheR_volume} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'หน้า'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_page', val)}
-                                                                                                                value={collateralDetail?.otheR_page} disabled={isView}
+                                                                                                                value={collateralDetail?.otheR_page} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <div className="form-floating form-floating-advance-select mb-3">
                                                                                                                 <label htmlFor="floaTingLabelSingleSelect">จังหวัด</label>
-                                                                                                                <select className="form-select" disabled={isView} value={collateralDetail?.otheR_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('otheR_province', e.target?.value)}>
+                                                                                                                <select className="form-select" disabled={showDetail} value={collateralDetail?.otheR_province ?? provinces[0]} onChange={(e) => handleChangeCollateral('otheR_province', e.target?.value)}>
                                                                                                                     {provinces && (
                                                                                                                         provinces.map((option, index) => (
                                                                                                                             <option key={index} value={option}>{option}</option>
@@ -2705,13 +2714,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'อำเภอ'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_district', val)}
-                                                                                                                value={collateralDetail?.otheR_district} disabled={isView}
+                                                                                                                value={collateralDetail?.otheR_district} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                         <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                             <Textbox title={'ตำบล'} containerClassname={'mb-3'}
                                                                                                                 handleChange={(val) => handleChangeCollateral('otheR_sub_district', val)}
-                                                                                                                value={collateralDetail?.otheR_sub_district} disabled={isView}
+                                                                                                                value={collateralDetail?.otheR_sub_district} disabled={showDetail}
                                                                                                             />
                                                                                                         </div>
                                                                                                     </div>
@@ -2732,13 +2741,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                     <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}
                                                                                                         handleChange={(val) => handleChangeCollateral('promisor', val)}
-                                                                                                        value={collateralDetail?.promisor} disabled={isView}
+                                                                                                        value={collateralDetail?.promisor} disabled={showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                                 <div className="col-sm-12 col-md-12 col-lg-6">
                                                                                                     <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}
                                                                                                         handleChange={(val) => handleChangeCollateral('contract_recipient', val)}
-                                                                                                        value={collateralDetail?.contract_recipient} disabled={isView}
+                                                                                                        value={collateralDetail?.contract_recipient} disabled={showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
@@ -2748,7 +2757,7 @@ const survey = forwardRef((props, ref) => {
                                                                                                         handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)}
                                                                                                         ngan={collateralDetail?.contract_area_ngan}
                                                                                                         handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)}
-                                                                                                        wa={collateralDetail?.contract_area_sqaure_wa} disabled={isView}
+                                                                                                        wa={collateralDetail?.contract_area_sqaure_wa} disabled={showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
@@ -2758,13 +2767,13 @@ const survey = forwardRef((props, ref) => {
                                                                                                         handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)}
                                                                                                         ngan={collateralDetail?.area_transfer_ngan}
                                                                                                         handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)}
-                                                                                                        wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
+                                                                                                        wa={collateralDetail?.area_transfer_sqaure_wa} disabled={showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                                 <div className="col-sm-12 col-md-12 col-lg-12">
                                                                                                     <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}
                                                                                                         handleChange={(val) => handleChangeCollateral('remark', val)}
-                                                                                                        value={collateralDetail?.remark} disabled={isView}
+                                                                                                        value={collateralDetail?.remark} disabled={showDetail}
                                                                                                     />
                                                                                                 </div>
                                                                                             </div>
@@ -2789,33 +2798,28 @@ const survey = forwardRef((props, ref) => {
                                 </div>)}                           
                             </div>
                         </div>
+                        {useAsset && (<>
                         <div className="d-flex justify-content-center">
                         <span className="fw-bold mt-0">คืนโฉนด</span>
                         </div>
                         <div className="row g-2 mt-1">
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)} value={collateralDetail?.chattel_brand} disabled={isView} />
+                                <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('returndeed_no', val)} value={collateralDetail?.returndeed_no} disabled={showDetail} />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                <DatePicker title={'วันที่หนังสือคืนโฉนด'} />
+                                <DatePicker title={'วันที่หนังสือคืนโฉนด'} 
+                                 value={collateralDetail.returndeed_date} 
+                                 handleChange={(val) => handleChangeCollateral('returndeed_date', val)} 
+                                />
                             </div>
                         </div>
                         <div className="col-sm-12 col-md-12 col-lg-12">
                             <Textarea title={'หมายเหตุ'} containerClassname={'mb-4'}
-                                handleChange={(val) => handleChangeCollateral('remark', val)}
-                                value={collateralDetail?.remark} disabled={isView}
+                                handleChange={(val) => handleChangeCollateral('returndeed_remark', val)}
+                                value={collateralDetail?.returndeed_remark} disabled={showDetail}
                             />
                         </div>
-                        <div className="col-12 mt-3">
-                            <div className="row g-3 justify-content-center">
-                                <div className="col-auto">
-
-                                    <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึก</button>
-                                    {/* <button className="btn btn-danger me-1 mb-1" type="button" onClick={() => save()}>ลบข้อมูล</button> */}
-
-                                </div>
-                            </div>
-                        </div>
+                        </> )}
                     </div> 
                     {/* end แก้ไขรายละเอียดดำเนินการในที่ดิน */}
                     </>)}
