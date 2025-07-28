@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit, handleUpload, handleEdit, handleReturn
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleBorrower, handleSpouse, handleSubmit, handleUpload, handleEdit, handleReturn
     , handleViewEdit, handleViewEditAsset, handleViewReturn
   } = props;
   const [data, setData] = useState([]);
@@ -90,6 +90,7 @@ const SearchTable = (props) => {
               <button className="dropdown-item" type="button" onClick={() => handlePlan(item)}>แผนการชำระเงินคืน</button>
               <button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>หลักทรัพย์ค้ำประกัน</button>
               <button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>บุคคลค้ำประกัน</button>
+              <button className="dropdown-item" type="button" onClick={() => handleBorrower(item)}>ผู้รับสภาพหนี้แทน</button>
               <button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลคู่สมรส</button>
               <button className="dropdown-item" type="button" onClick={() => handleViewEdit(item)}>ข้อมูลแก้ไขนิติกรรมสัญญา</button>
               <button className="dropdown-item" type="button" onClick={() => handleViewEditAsset(item)}>ข้อมูลแก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)</button>

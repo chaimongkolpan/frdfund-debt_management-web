@@ -9,6 +9,14 @@ const SearchTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">{index + 1}</td>
+        <td className="align-middle white-space-nowrap text-center pe-0">
+          <div className="btn-reveal-trigger position-static">
+            <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+            <div className="dropdown-menu dropdown-menu-end py-2">
+              <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>รายละเอียดการติดตาม</button>
+            </div>
+          </div>
+        </td>
         <td>{item.k_idcard}</td>
         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
@@ -25,16 +33,11 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
-        <td className="align-middle white-space-nowrap text-center pe-0">
-          <div className="btn-reveal-trigger position-static">
-            <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
-            <div className="dropdown-menu dropdown-menu-end py-2">
-              <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>รายละเอียดการติดตาม</button>
-            </div>
-          </div>
-        </td>
+        <td>{item.payStatus}</td>
+        <td>{item.invStatus}</td>
+        <td>{item.printInvStatus == 0 ? 'ยังไม่ได้ปริ้น' : 'ปริ้นแล้ว'}</td>
+        <td>{stringToDateTh(item.printInvDate, false)}</td>
+        <td>{item.followStatus}</td>
       </tr>
     ))
   }
@@ -54,11 +57,11 @@ const SearchTable = (props) => {
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>#</th>
+                <th rowSpan="2">ดำเนินการ</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan="8">นิติกรรมสัญญา</th>
-                <th colSpan="2">หลักประกัน</th>
-                <th rowSpan="2">ดำเนินการ</th>
+                <th colSpan="5">การติดตาม</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -77,8 +80,11 @@ const SearchTable = (props) => {
                 <th>ยอดเงินตามสัญญา</th>
                 <th>จำนวนเงินที่ชดเชย</th>
                 <th>สถานะนิติกรรมสัญญา</th>
-                <th>หลักทรัพย์ค้ำประกัน</th>
-                <th>บุคคลค้ำประกัน</th>
+                <th>สถานะการชำระเงินคืน</th>
+                <th>สถานะออกใบแจ้งหนี้</th>
+                <th>สถานะการปริ้นใบแจ้งหนี้</th>
+                <th>วันที่ปริ้นใบแจ้งหนี้</th>
+                <th>ผลการติดตาม</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">

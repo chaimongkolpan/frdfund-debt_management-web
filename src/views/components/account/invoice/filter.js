@@ -21,7 +21,7 @@ const Filter = (props) => {
         idcard: "",
         name: "",
         loan_province: "",
-        debtStatus: "",
+        printStatus: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE,
@@ -77,12 +77,6 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    if (resultProv.isSuccess) {
-      const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
-    } else {
-       await setProvOp(null);
-    }
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
@@ -185,7 +179,7 @@ const Filter = (props) => {
               title={'สถานะออกใบแจ้งหนี้'} 
               defaultValue={'all'} 
               options={statusOp}
-              handleChange={(val) => onChange('debtStatus', val)}
+              handleChange={(val) => onChange('printStatus', val)}
               hasAll />
           )}
         </div>
