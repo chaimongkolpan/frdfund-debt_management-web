@@ -38,50 +38,37 @@ const SearchTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map((item) => (checked && item.document_name)));
+    await setSelected(result.data.map((item) => (checked && item.transferStatus != 'จัดเก็บหลักทรัพย์')));
   }
   const RenderData = (item, index, checked) => {
     return (item && (
-      <tr key={index}>
+      <tr key={index} style={{ backgroundColor: `${item.transferStatus == "แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)" ? "#feebc9" : "#ffffff"}` }}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" disabled={!item.document_name} type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            <input className="form-check-input" disabled={item.transferStatus == 'จัดเก็บหลักทรัพย์'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
-        <td style={{ paddingBlock: 10 }}>
-          {item.document_name ? (
-            <>
-              <div class="d-flex justify-content-center"> 
-                <button class="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleUpload(item)}><i class="far fa-file"></i></button>
-              </div>
-              {item.document_name}
-            </>
-          ) : (
-            <div class="d-flex justify-content-center"> 
-              <button class="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" onClick={() => handleUpload(item)}><i class="far fa-file"></i></button>
-            </div>
-          )}
-        </td>
-        <td>{item.debt_management_policy_no}</td>
-        <td>{item.debt_management_policy_date ? stringToDateTh(item.debt_management_policy_date, false) : '-'}</td>
+        <td>{item.debt_management_asset_no}</td>
+        <td>{item.debt_management_asset_date ? stringToDateTh(item.debt_management_asset_date, false) : '-'}</td>
         <td>{item.k_idcard}</td>
         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
         <td>{item.loan_province}</td>
-        <td>{item.loan_creditor_type}</td>
-        <td>{item.loan_creditor_name}</td>
-        <td>{item.loan_creditor_province}</td>
-        <td>{item.loan_creditor_branch}</td>
         <td>{item.policyNO}</td>
         <td>{item.loan_debt_type}</td>
         <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
-        <td>{item.numberOfPeriodPayback}</td>
-        <td>{item.numberOfYearPayback}</td>
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
-        <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
+        <td>{item.transferStatus}</td>
+        <td>{item.numberOfDay}</td>
+        <td>{item.assetType}</td>
+        <td>{item.collateral_no}</td>
+        <td>{item.collateral_province}</td>
+        <td>{item.collateral_district}</td>
+        <td>{item.collateral_sub_district}</td>
+        <td>{`${item.contract_area_rai ? item.contract_area_rai : 0}`}</td>
+        <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
+        <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>
         <td class="align-middle white-space-nowrap text-center pe-0">
           <div class="btn-reveal-trigger position-static">
             <button class="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
@@ -152,7 +139,7 @@ const SearchTable = (props) => {
                 <th>วันที่ทำสัญญา</th>
                 <th>ยอดเงินตามสัญญา</th>
                 <th>จำนวนเงินที่ชดเชย</th>
-                <th>สถานะการโอนหลักทรัพท์</th>
+                <th>สถานะการโอนหลักทรัพย์</th>
                 <th>จำนวนวัน</th>
                 <th>ประเภทหลักทรัพย์</th>
                 <th>หลักทรัพย์เลขที่</th>

@@ -9,7 +9,7 @@ const SearchTable = (props) => {
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map((item) => (checked && item.document_name)));
+    await setSelected(result.data.map((item) => (checked )));
   }
   const onSubmit = () => {
     if (handleSubmit) {
@@ -20,7 +20,7 @@ const SearchTable = (props) => {
   }
   const RenderData = (item, index) => {
     return (item && (
-      <tr key={index}>
+      <tr key={index} style={{ backgroundColor: `${item.transferStatus == "แก้ไขโอนหลักทรัพย์" ? "#feebc9" : item.transferStatus == "ส่งคืนโอนหลักทรัพย์" ? "#fdeae7" : "#ffffff"}` }}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
             <input
