@@ -1704,20 +1704,6 @@ export const searchLegalPrepare = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const searchGuaranteePrepare = async (filter) => {
-  const path = '/Guarantee/search-guarantee';
-  try {
-    const result = await axios.post(path, filter);
-    if (result.status == 200)
-      return result.data;
-    else
-      return defaultErrorResponse;
-
-  } catch (e) {
-    console.error('error: ' + path + ' =>', e);
-    return defaultErrorResponse;
-  }
-};
 export const searchOperationLand = async (filter) => {
   const path = '/operationLand/search-operationland';
   try {
@@ -2002,10 +1988,152 @@ export const getDebtManagementPolicyDate = async (no) => {
 };
 //#endregion
 //#region Guarantee
+export const searchGuaranteePrepare = async (filter) => {
+  const path = '/Guarantee/search-guarantee';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchGuaranteeCheck = async (filter) => {
+  const path = '/Guarantee/search-check-guarantee';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchGuaranteeManage = async (filter) => {
+  const path = '/Guarantee/search-manage-guarantee';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getPostponeGuarantee = async (id_KFKPolicy) => {
   const path = '/Guarantee/gettransfersecurities';
   try {
     const result = await axios.get(path, { params: { id_KFKPolicy } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const savePostponeGuarantee = async (params) => {
+  const path = '/Guarantee/postpone-assetpolicy';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const sendGuarantee = async (params) => {
+  const path = '/Guarantee/insert-sendassetpolicy';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getSendAssetPolicyNo = async (status) => {
+  const path = "/common/send-asset-policy-no";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getSendAssetPolicyDate = async (status, no) => {
+  const path = "/common/send-asset-policy-date";
+  try {
+    const result = await axios.get(path, { param: { status, no }});
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getSendAssetDebtManagePolicyNo = async (status) => {
+  const path = "/common/send-asset-debt-management-policy-no";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getSendAssetDebtManagePolicyDate = async (status, no) => {
+  const path = "/common/send-asset-debt-management-policy-date";
+  try {
+    const result = await axios.get(path, { param: { status, no }});
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const saveAssetGuarantee = async (params) => {
+  const path = '/Guarantee/update-assetpolicy';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const saveSendAssetGuarantee = async (params) => {
+  const path = '/Guarantee/update-sendassetpolicy';
+  try {
+    const result = await axios.post(path, params);
     if (result.status == 200)
       return result.data;
     else
