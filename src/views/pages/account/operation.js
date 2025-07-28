@@ -75,6 +75,10 @@ const PageContent = () => {
     const data = operationLandRef.current?.getData(); 
     console.log('Operation data:', data);
   }
+  const submitSurvey = async() => {
+    const data = surveyRef.current?.getData(); 
+    console.log('Operation data:', data);
+  }
   const print = async () => {
     // print
   }
@@ -124,7 +128,7 @@ const PageContent = () => {
         </Modal>
       )}
       {openSurvey && (
-        <Modal isOpen={openSurvey} setModal={setOpenSurvey} hideOk onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen okText={'บันทึก'} onOk={() => submitOperation()} >
+        <Modal isOpen={openSurvey} setModal={setOpenSurvey} onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen okText={'บันทึก'} onOk={() => submitSurvey()} >
          <SurveyLand ref={surveyRef} policy={policy} isView />
         </Modal>
       )}

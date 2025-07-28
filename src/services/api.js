@@ -1718,10 +1718,10 @@ export const searchOperationLand = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getOperationDetail = async (id) => {
+export const getOperationDetail = async (ids) => {
   const path = '/operationLand/get-operationland';
   try {
-    const result = await axios.get(path, { params: {id} });
+    const result = await axios.get(path, { params: {ids} });
     if (result.status == 200)
       return result.data;
     else
@@ -2373,6 +2373,34 @@ export const searchInvoice = async (filter) => {
   const path = '/Account/search-invoice';
   try {
     const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getInvoiceByPolicyNo = async (no) => {
+  const path = '/Account/get-invoice-policy';
+  try {
+    const result = await axios.get(path, { params: { policyNo: no } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getInvoice = async (ids) => {
+  const path = '/Account/get-invoice';
+  try {
+    const result = await axios.post(path, { ids });
     if (result.status == 200)
       return result.data;
     else

@@ -90,147 +90,7 @@ const operationLand = forwardRef((props, ref) => {
             await setDate(result.data.policyStartDate)
             await setYear(result.data.numberOfYearPayback)
             await setInstallment(result.data.numberOfPeriodPayback)
-            await setData([{
-                "id_KFKPolicy": 34747,
-                "policyNO": "442566000021",
-                "id_debt_management": null,
-                "k_idcard": "3440601133405",
-                "k_name_prefix": "นาง",
-                "k_firstname": " ปภาวรินทร์  ",
-                "k_lastname": "ปัดทุม",
-                "loan_province": "มหาสารคาม",
-                "indexAssetPolicy": null,
-                "collateralOwner": null,
-                "assetType": "โฉนดที่ดิน",
-                "parceL_no": "65307",
-                "pre_emption_volume_no": "65307",
-                "nS3_dealing_file_no": "65307",
-                "nS3A_no": "65307",
-                "nS3B_no": "65307",
-                "alrO_plot_no": "65307",
-                "condO_parcel_no": "65307",
-                "labT5_parcel_no": "65307",
-                "house_no": "65307",
-                "chattel_engine_no": "65307",
-                "otheR_volume": "65307",
-                "parceL_province": "มหาสารคาม",
-                "pre_emption_province": null,
-                "nS3_province": null,
-                "nS3A_province": null,
-                "nS3B_province": null,
-                "alrO_province": null,
-                "condO_province": null,
-                "labT5_province": null,
-                "house_province": null,
-                "otheR_province": null,
-                "parceL_district": "บรบือ",
-                "pre_emption_district": null,
-                "nS3_district": null,
-                "nS3A_district": null,
-                "nS3B_district": null,
-                "alrO_district": null,
-                "condO_district": null,
-                "labT5_district": null,
-                "house_district": null,
-                "otheR_district": null,
-                "parceL_sub_district": "หนองจิก",
-                "pre_emption_sub_district": null,
-                "nS3_sub_district": null,
-                "nS3A_sub_district": null,
-                "nS3B_sub_district": null,
-                "alrO_sub_district": null,
-                "condO_sub_district": null,
-                "labT5_sub_district": null,
-                "house_sub_district": null,
-                "otheR_sub_district": null,
-                "contract_area_rai": null,
-                "contract_area_ngan": null,
-                "contract_area_sqaure_wa": null,
-                "borrowdeed_no": null,
-                "borrowdeed_date": null,
-                "borrowdeed_reason": null,
-                "returndeed_no": null,
-                "returndeed_date": null,
-                "returndeed_remark": null,
-                "asset_operations_type": null,
-                "asset_operations_other": null,
-                "req_docu": null,
-                "borrowdeed_docu": null,
-                "approve_docu": null,
-                "results_docu": null,
-                "report_docu": null,
-                "deedBorrowReturn_status":'ปกติ'
-            },{
-                "id_KFKPolicy": 34747,
-                "policyNO": "442566000021",
-                "id_debt_management": null,
-                "k_idcard": "3440601133405",
-                "k_name_prefix": "นาง",
-                "k_firstname": " ปภาวรินทร์  ",
-                "k_lastname": "ปัดทุม",
-                "loan_province": "มหาสารคาม",
-                "indexAssetPolicy": null,
-                "collateralOwner": null,
-                "assetType": "โฉนดที่ดิน",
-                "parceL_no": "65307",
-                "pre_emption_volume_no": "65307",
-                "nS3_dealing_file_no": "65307",
-                "nS3A_no": "65307",
-                "nS3B_no": "65307",
-                "alrO_plot_no": "65307",
-                "condO_parcel_no": "65307",
-                "labT5_parcel_no": "65307",
-                "house_no": "65307",
-                "chattel_engine_no": "65307",
-                "otheR_volume": "65307",
-                "parceL_province": "มหาสารคาม",
-                "pre_emption_province": null,
-                "nS3_province": null,
-                "nS3A_province": null,
-                "nS3B_province": null,
-                "alrO_province": null,
-                "condO_province": null,
-                "labT5_province": null,
-                "house_province": null,
-                "otheR_province": null,
-                "parceL_district": "บรบือ",
-                "pre_emption_district": null,
-                "nS3_district": null,
-                "nS3A_district": null,
-                "nS3B_district": null,
-                "alrO_district": null,
-                "condO_district": null,
-                "labT5_district": null,
-                "house_district": null,
-                "otheR_district": null,
-                "parceL_sub_district": "หนองจิก",
-                "pre_emption_sub_district": null,
-                "nS3_sub_district": null,
-                "nS3A_sub_district": null,
-                "nS3B_sub_district": null,
-                "alrO_sub_district": null,
-                "condO_sub_district": null,
-                "labT5_sub_district": null,
-                "house_sub_district": null,
-                "otheR_sub_district": null,
-                "contract_area_rai": null,
-                "contract_area_ngan": null,
-                "contract_area_sqaure_wa": null,
-                "borrowdeed_no": null,
-                "borrowdeed_date": null,
-                "borrowdeed_reason": null,
-                "returndeed_no": null,
-                "returndeed_date": null,
-                "returndeed_remark": null,
-                "asset_operations_type": null,
-                "asset_operations_other": null,
-                "req_docu": null,
-                "borrowdeed_docu": null,
-                "approve_docu": null,
-                "results_docu": null,
-                "report_docu": null,
-                "deedBorrowReturn_status":null
-            },]);
+            await setData(result.data);
         }
     }
     const RenderData = (item, index, checked) => {
@@ -248,7 +108,7 @@ const operationLand = forwardRef((props, ref) => {
                         )} 
                     </div>
                 </td>
-                <td>{item.deedBorrowReturn_status}</td>
+                <td>{item.assetType}</td>
                 <td>{item.policyNO}</td>
                 <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>
@@ -403,10 +263,10 @@ const operationLand = forwardRef((props, ref) => {
                                 <h3 className="text-center">{addTile ? 'เพิ่มดำเนินการในที่ดิน': showDetail? 'รายละเอียดดำเนินการในที่ดิน' : 'แก้ไขรายละเอียดดำเนินการในที่ดิน'}</h3><br />
                                 <div className="row g-2">
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                        <Textbox title={'ประเภทการดำเนินการในที่ดิน'} containerClassname={'mb-3'}  handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={showDetail} />
+                                        <Textbox title={'ประเภทการดำเนินการในที่ดิน'} containerClassname={'mb-3'}  handleChange={(val) => handleChangeCollateral('asset_operations_type', val)}  value={collateralDetail?.chattel_brand} disabled={showDetail} />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={showDetail} />
+                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('asset_operations_other', val)}  value={collateralDetail?.chattel_brand} disabled={showDetail} />
                                     </div>
                                 </div>
                                 <div className="d-flex justify-content-center">
@@ -414,7 +274,7 @@ const operationLand = forwardRef((props, ref) => {
                                 </div>
                                 <br />
                                 <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={(f) => onFileChange('เอกสารคำร้อง', f)} clearFile={clearFile['เอกสารคำร้อง']} accept={'*'} disabled={showDetail}/>
+                                    <DropZone onChange={(f) => onFileChange('req_docu', f)} clearFile={clearFile['req_docu']} accept={'*'} disabled={showDetail}/>
                                 </div>
                                 <br />
                                
@@ -431,7 +291,7 @@ const operationLand = forwardRef((props, ref) => {
                                             <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารคำร้องขอยืมโฉนด</span><br />
                                             <div className="col-12 mt-3 mb-3">
-                                                <DropZone onChange={(f) => onFileChange('เอกสารคำร้องขอยืมโฉนด', f)} clearFile={clearFile['เอกสารคำร้องขอยืมโฉนด']} accept={'*'} disabled={showDetail}/>
+                                                <DropZone onChange={(f) => onFileChange('borrowdeed_docu', f)} clearFile={clearFile['borrowdeed_docu']} accept={'*'} disabled={showDetail}/>
                                             </div>
                                             <br />
                                            
@@ -439,7 +299,7 @@ const operationLand = forwardRef((props, ref) => {
                                             <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารบันทึกข้อความที่เลขาอนุมัติ</span><br />
                                             <div className="col-12  mt-3 mb-3">
-                                                <DropZone onChange={(f) => onFileChange('เอกสารบันทึกข้อความที่เลขาอนุมัติ', f)} clearFile={clearFile['เอกสารบันทึกข้อความที่เลขาอนุมัติ']} accept={'*'} disabled={showDetail}/>
+                                                <DropZone onChange={(f) => onFileChange('approve_docu', f)} clearFile={clearFile['approve_docu']} accept={'*'} disabled={showDetail}/>
                                             </div>
                                             <br />
                                             
@@ -454,11 +314,14 @@ const operationLand = forwardRef((props, ref) => {
                                                     <Textbox title={'เลขที่หนังสือยืมโฉนด'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={showDetail} />
                                                 </div>
                                                 <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                                    <DatePicker title={'วันที่หนังสือยืมโฉนด'} disabled={showDetail}/>
+                                                    <DatePicker title={'วันที่หนังสือยืมโฉนด'} 
+                                                     value={collateralDetail.borrowdeed_date} 
+                                                     handleChange={(val) => handleChangeCollateral('borrowdeed_date', val)} 
+                                                    disabled={showDetail}/>
                                                 </div>
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12 mb-4">
-                                                <Textarea title={'เหตุผล'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={showDetail} />
+                                                <Textarea title={'เหตุผล'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('borrowdeed_reason', val)}  value={collateralDetail?.borrowdeed_reason} disabled={showDetail} />
                                             </div>
                                         </div>
                                     </div>
@@ -469,7 +332,7 @@ const operationLand = forwardRef((props, ref) => {
                                 <span className='fw-bold'>แบบรับทราบผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
-                                    <DropZone onChange={(f) => onFileChange('แบบรับทราบผลการดำเนินการ', f)} clearFile={clearFile['แบบรับทราบผลการดำเนินการ']} accept={'*'} disabled={showDetail}/>
+                                    <DropZone onChange={(f) => onFileChange('results_docu', f)} clearFile={clearFile['results_docu']} accept={'*'} disabled={showDetail}/>
                                 </div><br />
                                 
                                 </div>
@@ -477,7 +340,7 @@ const operationLand = forwardRef((props, ref) => {
                                 <span className='fw-bold'>บันทึกข้อความรายงานผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
-                                    <DropZone onChange={(f) => onFileChange('เอกสาบันทึกข้อความรายงานผลการดำเนินการรคำร้อง', f)} clearFile={clearFile['บันทึกข้อความรายงานผลการดำเนินการ']} accept={'*'} disabled={showDetail}/>
+                                    <DropZone onChange={(f) => onFileChange('report_docu', f)} clearFile={clearFile['report_docu']} accept={'*'} disabled={showDetail}/>
                                 </div>
                                 <br />
                                
@@ -1880,7 +1743,8 @@ const operationLand = forwardRef((props, ref) => {
                                 </div> )}
                             </div>
                         </div>
-                        <div className="d-flex justify-content-center">
+                        {useAsset && (<>
+                            <div className="d-flex justify-content-center">
                         <span className="fw-bold mt-0">คืนโฉนด</span>
                         </div>
                         <div className="row g-2 mt-1">
@@ -1888,15 +1752,18 @@ const operationLand = forwardRef((props, ref) => {
                                 <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                <DatePicker title={'วันที่หนังสือคืนโฉนด'} />
+                                <DatePicker title={'วันที่หนังสือคืนโฉนด'}
+                                 value={collateralDetail.returndeed_date} 
+                                 handleChange={(val) => handleChangeCollateral('returndeed_date', val)}  />
                             </div>
                         </div>
                         <div className="col-sm-12 col-md-12 col-lg-12">
                             <Textarea title={'หมายเหตุ'} containerClassname={'mb-4'}
-                                handleChange={(val) => handleChangeCollateral('remark', val)}
-                                value={collateralDetail?.remark} disabled={showDetail}
+                                handleChange={(val) => handleChangeCollateral('returndeed_remark', val)}
+                                value={collateralDetail?.returndeed_remark} disabled={showDetail}
                             />
                         </div>
+                        </>)}
                         {/* <div className="col-12 mt-3">
                             <div className="row g-3 justify-content-center">
                                 <div className="col-auto">
