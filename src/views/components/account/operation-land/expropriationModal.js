@@ -167,6 +167,7 @@ const PlanPay = (props) => {
             await setYear(result.data.numberOfYearPayback)
             await setInstallment(result.data.numberOfPeriodPayback)
             await setPlan(result.listData);
+            await setData(result.data);
         }
     }
     const RenderData = (item, index, checked) => {
@@ -184,7 +185,7 @@ const PlanPay = (props) => {
                         )} 
                     </div>
                 </td>
-                <td>{item.deedBorrowReturn_status}</td>
+                <td>{item.assetType}</td>
                 <td>{item.policyNO}</td>
                 <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>

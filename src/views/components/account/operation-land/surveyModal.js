@@ -177,7 +177,7 @@ const survey = forwardRef((props, ref) => {
                         )} 
                     </div>
                 </td>
-                <td>{item.deedBorrowReturn_status}</td>
+                <td>{item.assetType}</td>
                 <td>{item.policyNO}</td>
                 <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>

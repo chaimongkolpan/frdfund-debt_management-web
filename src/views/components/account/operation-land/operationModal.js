@@ -108,7 +108,7 @@ const operationLand = forwardRef((props, ref) => {
                         )} 
                     </div>
                 </td>
-                <td>{item.deedBorrowReturn_status}</td>
+                <td>{item.assetType}</td>
                 <td>{item.policyNO}</td>
                 <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>
@@ -1740,7 +1740,8 @@ const operationLand = forwardRef((props, ref) => {
                                 </div> )}
                             </div>
                         </div>
-                        <div className="d-flex justify-content-center">
+                        {useAsset && (<>
+                            <div className="d-flex justify-content-center">
                         <span className="fw-bold mt-0">คืนโฉนด</span>
                         </div>
                         <div className="row g-2 mt-1">
@@ -1757,6 +1758,7 @@ const operationLand = forwardRef((props, ref) => {
                                 value={collateralDetail?.remark} disabled={showDetail}
                             />
                         </div>
+                        </>)}
                         {/* <div className="col-12 mt-3">
                             <div className="row g-3 justify-content-center">
                                 <div className="col-auto">
