@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, forwardRef } from "react";
 import { stringToDateTh, spDate, toCurrency } from "@utils";
 import Textarea from "@views/components/input/Textarea";
 import Textbox from "@views/components/input/Textbox";
@@ -14,10 +14,10 @@ import {
     printPlanPay,
     saveDocumentPolicy,
     getProvinces,
-    viewOperationDetail
+    getOperationDetail
 } from "@services/api";
 
-const PlanPay = (props) => {
+const survey = forwardRef((props, ref) => {
     const { policy, isView } = props;
     const [date, setDate] = useState(null);
     const [data, setData] = useState([]);
@@ -25,8 +25,8 @@ const PlanPay = (props) => {
     const [installment, setInstallment] = useState(null);
     const [year, setYear] = useState(null);
     const [plans, setPlan] = useState(null);
-    const [clearFile, setClear] = useState(false);
-    const [files, setFiles] = useState(null);
+    const [clearFile, setClear] = useState({});
+    const [files, setFiles] = useState({});
     const collateralRef = useRef(null);
     const [isMounted, setMounted] = useState(false);
     const [collateral_type, setCollateralType] = useState('โฉนด');
@@ -72,12 +72,18 @@ const PlanPay = (props) => {
 
 
     const [provinces, setProvOp] = useState(null);
-    const onFileChange = async (files) => {
-        if (files.length > 0) {
-            await setFiles(files);
-            await setClear(false);
+    const onFileChange = async (id, selectedFiles) => {
+        if (selectedFiles.length > 0) {
+          setFiles((prev) => ({
+            ...prev,
+            [id]: selectedFiles
+          }));
+          setClear((prev) => ({
+            ...prev,
+            [id]: false
+          }));
         }
-    }
+      };
     const onSubmitFile = async () => {
         if (files && files.length > 0) {
             const form = new FormData();
@@ -142,84 +148,13 @@ const PlanPay = (props) => {
     }
     const fetchData = async () => {
         console.log(policy);
-        const result = await viewOperationDetail(policy.id_KFKPolicy);
+        const result = await getOperationDetail(policy.id_KFKPolicy);
         if (result.isSuccess) {
             await setDate(result.data.policyStartDate)
             await setYear(result.data.numberOfYearPayback)
             await setInstallment(result.data.numberOfPeriodPayback)
             await setPlan(result.listData);
-            await setData([
-                {
-                  "id_KFKPolicy": 0,
-                  "policyNO": "string",
-                  "id_debt_management": "string",
-                  "k_idcard": "string",
-                  "k_name_prefix": "string",
-                  "k_firstname": "string",
-                  "k_lastname": "string",
-                  "loan_province": "string",
-                  "indexAssetPolicy": "string",
-                  "collateralOwner": "string",
-                  "assetType": "string",
-                  "parceL_no": "string",
-                  "pre_emption_volume_no": "string",
-                  "nS3_dealing_file_no": "string",
-                  "nS3A_no": "string",
-                  "nS3B_no": "string",
-                  "alrO_plot_no": "string",
-                  "condO_parcel_no": "string",
-                  "labT5_parcel_no": "string",
-                  "house_no": "string",
-                  "chattel_engine_no": "string",
-                  "otheR_volume": "string",
-                  "parceL_province": "string",
-                  "pre_emption_province": "string",
-                  "nS3_province": "string",
-                  "nS3A_province": "string",
-                  "nS3B_province": "string",
-                  "alrO_province": "string",
-                  "condO_province": "string",
-                  "labT5_province": "string",
-                  "house_province": "string",
-                  "otheR_province": "string",
-                  "parceL_district": "string",
-                  "pre_emption_district": "string",
-                  "nS3_district": "string",
-                  "nS3A_district": "string",
-                  "nS3B_district": "string",
-                  "alrO_district": "string",
-                  "condO_district": "string",
-                  "labT5_district": "string",
-                  "house_district": "string",
-                  "otheR_district": "string",
-                  "parceL_sub_district": "string",
-                  "pre_emption_sub_district": "string",
-                  "nS3_sub_district": "string",
-                  "nS3A_sub_district": "string",
-                  "nS3B_sub_district": "string",
-                  "alrO_sub_district": "string",
-                  "condO_sub_district": "string",
-                  "labT5_sub_district": "string",
-                  "house_sub_district": "string",
-                  "otheR_sub_district": "string",
-                  "contract_area_rai": "string",
-                  "contract_area_ngan": "string",
-                  "contract_area_sqaure_wa": 0,
-                  "borrowdeed_no": "string",
-                  "borrowdeed_date": "2025-07-21T19:11:15.317Z",
-                  "borrowdeed_reason": "string",
-                  "returndeed_no": "string",
-                  "returndeed_date": "2025-07-21T19:11:15.317Z",
-                  "returndeed_remark": "string",
-                  "asset_operations_type": "string",
-                  "asset_operations_other": "string",
-                  "req_docu": "string",
-                  "borrowdeed_docu": "string",
-                  "approve_docu": "string",
-                  "results_docu": "string",
-                  "report_docu": "string"
-                }
-              ]);
+            await setData(result.listData);
         }
     }
     const handleShowDetail = async () =>{
@@ -235,31 +170,32 @@ const PlanPay = (props) => {
                 <td></td>
                 <td>
                     <div className='d-flex justify-content-center'>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowDetail}>
+                    {!item.deedBorrowReturn_status || item.deedBorrowReturn_status == 'ยืมโฉนด' ? 
+                        (<button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowEdit}>
+                            <i className="far fa-edit"></i>
+                        </button>) : (<button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowDetail}>
                             <i className="far fa-eye"></i>
                         </button>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowEdit}>
-                            <i className="far fa-edit"></i>
-                        </button>
+                        )} 
                     </div>
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{item.deedBorrowReturn_status}</td>
+                <td>{item.policyNO}</td>
+                <td>{item.indexAssetPolicy}</td>
+                <td>{item.assetType}</td>
+                <td>{item.collateral_no}</td>
+                <td>{item.collateral_province}</td>
+                <td>{item.collateral_district}</td>
+                <td>{item.collateral_sub_district}</td>
+                <td>{item.contract_area_rai}</td>
+                <td>{item.contract_area_ngan}</td>
+                <td>{item.contract_area_sqaure_wa}</td>
+                <td>{item.borrowdeed_no}</td>
+                <td>{item.borrowdeed_date}</td>
+                <td>{item.borrowdeed_reason}</td>
+                <td>{item.returndeed_no}</td>
+                <td>{item.returndeed_date}</td>
+                <td>{item.returndeed_remark}</td>
             </tr>
         ))
     }
@@ -301,7 +237,6 @@ const PlanPay = (props) => {
         }
     }, [])
     useEffect(() => {
-        console.log('useEffect fired', { showDetail, showEdit });
         if (showDetail) {
           console.log('✅ showDetail ON');
         }
@@ -331,8 +266,8 @@ const PlanPay = (props) => {
                                 <th colSpan="3">คืนโฉนด</th>
                             </tr>
                             <tr>
-                                <th>ประเภทดำเนินการรังวัด</th>
                                 <th>รายละเอียด</th>
+                                <th>ประเภทดำเนินการรังวัด</th>
                                 <th>เลขที่นิติกรรมสัญญา</th>
                                 <th>ดัชนีจัดเก็บหลักประกัน</th>
                                 <th>ประเภทหลักประกัน</th>
@@ -363,7 +298,7 @@ const PlanPay = (props) => {
                         </tbody>
                     </table>
                     {/* รายละเอียดดำเนินการในที่ดิน */}
-                    { showDetail && (
+                    {/* { showDetail && (
                         <div className="card shadow-none border my-2" data-component-card="data-component-card">
                         <div className="card-body p-0">
                             <div className="p-3 code-to-copy">
@@ -381,14 +316,14 @@ const PlanPay = (props) => {
                             </div>
                         </div>
                     </div>
-                    )}
+                    )} */}
                     {/* end รายละเอียดดำเนินการในที่ดิน */}
-                    { showEdit && (<>
+                    { (showEdit || showDetail ) && (<>
                     {/* start แก้ไขรายละเอียดดำเนินการในที่ดิน */}
                     <div className="card shadow-none border my-2" data-component-card="data-component-card">
                         <div className="card-body p-0">
                             <div className="p-3 code-to-copy">
-                                <h3 className="text-center">{addTile ? 'เพิ่มดำเนินการรังวัด': 'แก้ไขรายละเอียดดการรังวัด'}</h3><br />
+                                <h3 className="text-center">{addTile ? 'เพิ่มดำเนินการรังวัด': showDetail? 'รายละเอียดการรังวัด' :'แก้ไขรายละเอียดดการรังวัด'}</h3><br />
                                 <div className="row g-2">
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                         {/* <Textbox title={'ประเภทการรังวัด'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} /> */}
@@ -396,11 +331,12 @@ const PlanPay = (props) => {
                                             title={'ประเภทการรังวัด'}
                                             defaultValue={'รังวัดสอบเขต'}
                                             options={typeSurvey}
-                                        // handleChange={(val) => onChange('debtStatus', val)}
+                                            handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  
+                                            value={collateralDetail?.chattel_brand}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={isView} />
                                     </div>
                                 </div>
 
@@ -409,14 +345,10 @@ const PlanPay = (props) => {
                                 </div>
                                 <br />
                                 <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                    <DropZone onChange={(f) => onFileChange('เอกสารคำร้อง', f)} clearFile={clearFile['เอกสารคำร้อง']} accept={'*'} />
                                 </div>
                                 <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
+                                
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>หน่วยงานภายนอก</p>
@@ -427,16 +359,10 @@ const PlanPay = (props) => {
                                     <>
                                         <span className="text-center fw-bold">ใบอนุญาตจากเกษตร</span><br />
                                         <div className="col-12 mt-3 mb-3">
-                                        <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                        <DropZone onChange={(f) => onFileChange('ใบอนุญาตจากเกษตร', f)} clearFile={clearFile['ใบอนุญาตจากเกษตร']} accept={'*'} />
                                         </div>
                                         <br />
-                                        <div className="row justify-content-center mt-3 mb-3">
-                                        <div className="col-auto">
-                                            <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>
-                                            นำไฟล์เข้าระบบ
-                                            </button>
-                                        </div>
-                                        </div>
+                                        
                                     </>
                                     )}
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
@@ -454,26 +380,18 @@ const PlanPay = (props) => {
                                             <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารคำร้องขอยืมโฉนด</span><br />
                                             <div className="col-12 mt-3 mb-3">
-                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                                <DropZone onChange={(f) => onFileChange('เอกสารคำร้องขอยืมโฉนด', f)} clearFile={clearFile['เอกสารคำร้องขอยืมโฉนด']} accept={'*'} />
                                             </div>
                                             <br />
-                                            <div className="row justify-content-center mt-3 mb-3">
-                                                <div className="col-auto">
-                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                                </div>
-                                            </div>
+                                           
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                             <span className="fw-bold">เอกสารบันทึกข้อความที่เลขาอนุมัติ</span><br />
                                             <div className="col-12 mt-3 mb-3">
-                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                                <DropZone onChange={(f) => onFileChange('เอกสารบันทึกข้อความที่เลขาอนุมัติ', f)} clearFile={clearFile['เอกสารบันทึกข้อความที่เลขาอนุมัติ']} accept={'*'} />
                                             </div>
                                             <br />
-                                            <div className="row justify-content-center mt-3 mb-1">
-                                                <div className="col-auto">
-                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                                </div>
-                                            </div>
+                                           
                                             </div>
                                             </div>
                                             <br />
@@ -483,14 +401,14 @@ const PlanPay = (props) => {
                                             <br />
                                             <div className="row g-2 mt-2">
                                                 <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                                    <Textbox title={'เลขที่หนังสือยืมโฉนด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                    <Textbox title={'เลขที่หนังสือยืมโฉนด'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={isView} />
                                                 </div>
                                                 <div className="col-sm-12 col-md-6 col-lg-6 mb-2">
                                                     <DatePicker title={'วันที่หนังสือยืมโฉนด'} />
                                                 </div>
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12 mb-4">
-                                                <Textarea title={'เหตุผล'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                <Textarea title={'เหตุผล'} containerClassname={'mb-3'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)}  value={collateralDetail?.chattel_brand} disabled={isView} />
                                             </div>
                                         </div>
                                     </div>
@@ -501,35 +419,27 @@ const PlanPay = (props) => {
                                 <span className='fw-bold'>แบบรับทราบผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                    <DropZone onChange={(f) => onFileChange('แบบรับทราบผลการดำเนินการ', f)} clearFile={clearFile['แบบรับทราบผลการดำเนินการ']} accept={'*'} />
                                 </div>
                                 <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
+                               
                                 </div>
                                 <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
                                 <span className='fw-bold'>บันทึกข้อความรายงานผลการดำเนินการ</span>
                                 <br />
                                 <div className="col-12 mt-3 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                    <DropZone onChange={(f) => onFileChange('บันทึกข้อความรายงานผลการดำเนินการ', f)} clearFile={clearFile['บันทึกข้อความรายงานผลการดำเนินการ']} accept={'*'} />
                                 </div>
                                 <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
                                 </div>
                                 </div>
-                                </div>
+                                {useAsset && (
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>เปลี่ยนแปลงหลักทรัพย์</p>
                                         <Input type='switch' id='rtl' name='RTL'  onChange={(e) => setIsAssetChanged(e.target.checked)} checked={isAssetChanged}/>
                                     </div>
-                                </div>
+                                </div> )}
                                 {isAssetChanged && (<div className="card shadow-none border my-2" data-component-card="data-component-card">
                                     <div className="card-body p-0">
                                         <div className="p-3 code-to-copy">
@@ -1697,7 +1607,7 @@ const PlanPay = (props) => {
                                                                     <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsAssetSplit(e.target.checked)} checked={isAssetSplit}/>
                                                                 </div>
                                                             </div>
-                                                            {isAssetSplit && (<>
+                                                            {isAssetSplit && !showDetail &&  (<>
                                                                 <div className="d-flex justify-content-center">
                                                                 <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleAddForm}>
                                                                     <i className="fas fa-square-plus"></i>
@@ -1707,6 +1617,7 @@ const PlanPay = (props) => {
                                                             {collateralForms.map((form, index) => (
                                                                 <div key={form.id} className="mb-1 rounded p-3 position-relative">
                                                                     {/* ปุ่มบวก-ลบ */}
+                                                                    {!showDetail &&(
                                                                     <div className="d-flex gap-2 mt-2 mb-3 justify-content-center">
                                                                         {index !== 0 && (
                                                                             <>
@@ -1720,7 +1631,7 @@ const PlanPay = (props) => {
                                                                                 </div>
                                                                             </>
                                                                         )}
-                                                                    </div>
+                                                                    </div>)}
                                                                     {/* Dropdown ประเภทหลักทรัพย์ */}
                                                                     <div className="w-100 d-flex justify-content-center mb-3 ">
                                                                         <div className="form-floating needs-validation col-sm-12 col-md-4 col-lg-4" >
@@ -2883,7 +2794,7 @@ const PlanPay = (props) => {
                         </div>
                         <div className="row g-2 mt-1">
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('chattel_brand', val)} value={collateralDetail?.chattel_brand} disabled={isView} />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                 <DatePicker title={'วันที่หนังสือคืนโฉนด'} />
@@ -2912,5 +2823,5 @@ const PlanPay = (props) => {
             </form>
         </>
     );
-};
-export default PlanPay;
+});
+export default survey;

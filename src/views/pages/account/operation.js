@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState,useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
 import { stringToDateTh, toCurrency, getUserData } from "@utils";
@@ -24,6 +24,8 @@ import {
 const user = getUserData();
 const PageContent = () => {
   const navigate = useNavigate();
+  const operationLandRef = useRef();
+  const surveyRef =useRef();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
   const [policy, setPolicy] = useState(null);
@@ -69,6 +71,10 @@ const PageContent = () => {
     await setShowCal(false);
     await setOpenExpropriation(true);
   }
+  const submitOperation = async() => {
+    const data = operationLandRef.current?.getData(); 
+    console.log('Operation data:', data);
+  }
   const print = async () => {
     // print
   }
@@ -108,38 +114,27 @@ const PageContent = () => {
         </div>
       </div>
       {openDetail && (
-        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'ดำเนินการในที่ดิน'} closeText={'ปิด'} scrollable fullscreen>
-          {/* <form>
-            <br />
-            <div className="row">
-              <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                <Textbox title={'วันที่ปิดสัญญา'} disabled containerClassname={'mb-3'} value={stringToDateTh(new Date(), false)} />
-              </div>
-              <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                <button className="btn btn-primary ms-2" type="button" onClick={() => cal()}>คำนวณ</button>
-              </div>
-            </div>
-          </form> */}
-          <OperationLand  policy={policy} /> 
+        <Modal isOpen={openDetail} setModal={setOpenDetail} onClose={() => setOpenDetail(false)}  okText={'บันทึก'} onOk={submitOperation} title={'ดำเนินการในที่ดิน'} closeText={'ปิด'} scrollable fullscreen>
+          <OperationLand ref={operationLandRef}  policy={policy} /> 
         </Modal>
       )}
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-        <DetailAsset policy={policy} /> 
+        <DetailAsset  policy={policy} /> 
         </Modal>
       )}
       {openSurvey && (
-        <Modal isOpen={openSurvey} setModal={setOpenSurvey} hideOk onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen>
-         <SurveyLand policy={policy} isView />
+        <Modal isOpen={openSurvey} setModal={setOpenSurvey} hideOk onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen okText={'บันทึก'} onOk={() => submitOperation()} >
+         <SurveyLand ref={surveyRef} policy={policy} isView />
         </Modal>
       )}
       {openLandLease && (
-        <Modal isOpen={openLandLease} setModal={setOpenLandLease} onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitCommittee()}  scrollable fullscreen>
+        <Modal isOpen={openLandLease} setModal={setOpenLandLease} onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()}  scrollable fullscreen>
          <LandLease policy={policy} isView />
         </Modal>
       )}
       {openExpropriation && (
-        <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitCommittee()} scrollable fullscreen>
+        <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()} scrollable fullscreen>
          <Expropriation policy={policy} isView />
         </Modal>
       )}

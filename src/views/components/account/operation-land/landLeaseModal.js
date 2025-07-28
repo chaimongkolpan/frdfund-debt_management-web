@@ -13,7 +13,7 @@ import {
     printPlanPay,
     saveDocumentPolicy,
     getProvinces,
-    viewOperationDetail
+    getOperationDetail
 } from "@services/api";
 
 const PlanPay = (props) => {
@@ -143,7 +143,7 @@ const PlanPay = (props) => {
         }
     }
     const fetchData = async () => {
-        const result = await viewOperationDetail(policy.id_KFKPolicy);
+        const result = await getOperationDetail(policy.id_KFKPolicy);
         if (result.isSuccess) {
             await setDate(result.data.policyStartDate)
             await setYear(result.data.numberOfYearPayback)

@@ -42,21 +42,16 @@ const SearchTable = (props) => {
         <td>{item.loan_province}</td>
         <td>{item.policyNO}</td>
         <td>{item.indexAssetPolicy}</td>
-        <td>{item.collateralOwner}</td>
+        <td>{item.assetType}</td>
         <td>{item.loan_creditor_branch}</td>
         <td>{item.policyNO}</td>
         <td>{item.loan_debt_type}</td>
         <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
-        <td>{item.numberOfPeriodPayback}</td>
-        <td>{item.numberOfYearPayback}</td>
-        <td>{toCurrency(item.loan_amount)}</td>
-        <td>{toCurrency(item.compensation_amount)}</td>
-        <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0}`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0}`}</td>
-        <td>{toCurrency(item.compensation_amount)}</td>
-        <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0}`}</td>
+        <td>{item.contract_area_rai}</td>
+        <td>{item.contract_area_ngan}</td>
+        <td>{item.contract_area_sqaure_wa}</td>
+        <td>{item.deedBorrowReturn_status}</td>
+        <td></td>
         {/* <td className="align-middle white-space-nowrap text-center pe-0">
           <div className="btn-reveal-trigger position-static">
             <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
@@ -88,8 +83,7 @@ const SearchTable = (props) => {
                 <th rowSpan="2">ดำเนินการ</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="11">หลักประกัน</th>
-                <th colSpan="3">ยืมโฉนด</th>
-                <th colSpan="3">คืนโฉนด</th>
+                <th rowSpan="2">สถานะยืม-คืนโฉนด</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -107,12 +101,7 @@ const SearchTable = (props) => {
                 <th>ไร่</th>
                 <th>งาน</th>
                 <th>ตารางวา</th>
-                <th>เลขที่หนังสือ</th>
-                <th>วันที่หนังสือ</th>
-                <th>เหตุผล</th>
-                <th>เลขที่หนังสือ</th>
-                <th>วันที่หนังสือ</th>
-                <th>หมายเหตุ</th>
+                
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
