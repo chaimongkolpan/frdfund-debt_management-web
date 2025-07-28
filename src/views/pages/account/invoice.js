@@ -30,6 +30,8 @@ const PageContent = () => {
       await onSearch(filter)
     }
   }
+  const handleShowDetail = async (item) => {
+  }
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
@@ -57,7 +59,7 @@ const PageContent = () => {
                       <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                       <br />
                       {data && (
-                        <SearchTable result={data} filter={filter} getData={onSearch} handlePrint={handlePrint} />
+                        <SearchTable result={data} filter={filter} getData={onSearch} handlePrint={handlePrint} handleShowDetail={handleShowDetail} />
                       )}
                     </>
                   )}

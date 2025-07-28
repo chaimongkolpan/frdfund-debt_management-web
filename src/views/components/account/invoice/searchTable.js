@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handlePrint
+  const { result, filter, getData, handlePrint, handleShowDetail
   } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -23,14 +23,14 @@ const SearchTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map(() => checked));
+    await setSelected(result.data.map((item) => (checked && item.invStatus != 'ปกติ')));
   }
   const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            <input className="form-check-input" disabled={item.invStatus == 'ปกติ'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
         <td>{item.k_idcard}</td>
@@ -49,9 +49,17 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.policyStatus}</td>
-        <td>{item.receiptStatus}</td>
-        <td>{item.printStatus}</td>
-        <td>{item.printDate}</td>
+        <td>{item.invStatus}</td>
+        <td>{item.printInvStatus == 0 ? 'ยังไม่ได้ปริ้น' : 'ปริ้นแล้ว'}</td>
+        <td>{stringToDateTh(item.printInvDate, false)}</td>
+        <td className="align-middle white-space-nowrap text-center pe-0">
+          <div className="btn-reveal-trigger position-static">
+            <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+            <div className="dropdown-menu dropdown-menu-end py-2">
+              <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>ประวัติใบแจ้งหนี้</button>
+            </div>
+          </div>
+        </td>
       </tr>
     ))
   }
@@ -95,6 +103,7 @@ const SearchTable = (props) => {
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan="8">นิติกรรมสัญญา</th>
                 <th colSpan="3">การออกใบแจ้งหนี้</th>
+                <th rowSpan="2">ดำเนินการ</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
