@@ -1718,7 +1718,7 @@ export const searchOperationLand = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const viewOperationDetail = async (id) => {
+export const getOperationDetail = async (id) => {
   const path = '/operationLand/get-operationland';
   try {
     const result = await axios.get(path, { params: {id} });

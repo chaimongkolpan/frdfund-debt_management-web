@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handleOperation
+  const { result, filter, getData, handleShowDetail, handleOperation,handleSurvey,handleLandLease,handleExpropriation
   } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -10,7 +10,7 @@ const SearchTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">{index + 1}</td>
-        <td>
+        {/* <td>
           <div className='d-flex justify-content-center'>
             <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleOperation(item)}>
             <i className="fas fa-square-plus"></i>
@@ -23,29 +23,35 @@ const SearchTable = (props) => {
              <i className="far fa-rectangle-list"></i>
             </button>
            </div>
-         </td>
+         </td> */}
+          <td class="align-middle white-space-nowrap text-center pe-0">
+          <div class="btn-reveal-trigger position-static">
+            <button class="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
+            <div class="dropdown-menu dropdown-menu-end py-2">
+              <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>รายละเอียดหลักทรัพย์</button>
+              <button className="dropdown-item" type="button" onClick={() => handleOperation(item)}>การดำเนินการในที่ดิน</button>
+              <button className="dropdown-item" type="button" onClick={() => handleSurvey(item)}>การรังวัด</button>
+              <button className="dropdown-item" type="button" onClick={() => handleLandLease(item)}>การเช่า</button>
+              <button className="dropdown-item" type="button" onClick={() => handleExpropriation(item)}>การเวนคืน</button>
+            </div>
+          </div>
+        </td>
          <td>{item.k_idcard}</td>
          <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
         <td>{item.loan_province}</td>
         <td>{item.policyNO}</td>
         <td>{item.indexAssetPolicy}</td>
-        <td>{item.collateralOwner}</td>
+        <td>{item.assetType}</td>
         <td>{item.loan_creditor_branch}</td>
         <td>{item.policyNO}</td>
         <td>{item.loan_debt_type}</td>
         <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
-        <td>{item.numberOfPeriodPayback}</td>
-        <td>{item.numberOfYearPayback}</td>
-        <td>{toCurrency(item.loan_amount)}</td>
-        <td>{toCurrency(item.compensation_amount)}</td>
-        <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
-        <td>{toCurrency(item.compensation_amount)}</td>
-        <td>{item.policyStatus}</td>
-        <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-        <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
+        <td>{item.contract_area_rai}</td>
+        <td>{item.contract_area_ngan}</td>
+        <td>{item.contract_area_sqaure_wa}</td>
+        <td>{item.deedBorrowReturn_status}</td>
+        <td></td>
         {/* <td className="align-middle white-space-nowrap text-center pe-0">
           <div className="btn-reveal-trigger position-static">
             <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
@@ -75,11 +81,9 @@ const SearchTable = (props) => {
               <tr>
                 <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>#</th>
                 <th rowSpan="2">ดำเนินการ</th>
-                <th rowSpan="2">รายละเอียดหลักทรัพย์</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="11">หลักประกัน</th>
-                <th colSpan="3">ยืมโฉนด</th>
-                <th colSpan="3">คืนโฉนด</th>
+                <th rowSpan="2">สถานะยืม-คืนโฉนด</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -88,6 +92,7 @@ const SearchTable = (props) => {
                 <th>จังหวัด</th>
                 <th>เลขที่นิติกรรมสัญญา</th>
                 <th>ดัชนีจัดเก็บหลักประกัน</th>
+                <th>ประเภทหลักประกัน</th>
                 <th>เจ้าของหลักประกัน</th>
                 <th>เลขที่หลักประกัน</th>
                 <th>จังหวัด</th>
@@ -96,12 +101,7 @@ const SearchTable = (props) => {
                 <th>ไร่</th>
                 <th>งาน</th>
                 <th>ตารางวา</th>
-                <th>เลขที่หนังสือ</th>
-                <th>วันที่หนังสือ</th>
-                <th>เหตุผล</th>
-                <th>เลขที่หนังสือ</th>
-                <th>วันที่หนังสือ</th>
-                <th>หมายเหตุ</th>
+                
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
