@@ -97,7 +97,7 @@ const PageContent = () => {
                         <Textbox title={'วันเริ่มสัญญา'} disabled value={stringToDateTh(policy?.policyStartDate, false)} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                        <Textbox title={'วันครบสัญญา'} disabled value={stringToDateTh(new Date(), false)} />
+                        <Textbox title={'วันครบสัญญา'} disabled value={stringToDateTh(policy?.policyEndDate, false)} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
                         <Textbox title={'เลขที่สัญญา'} disabled value={policy?.policyNO} />
@@ -106,10 +106,10 @@ const PageContent = () => {
                         <Textbox title={'ยอดเงินตามสัญญา'} disabled value={toCurrency(policy?.loan_amount ?? 0, 2)} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                        <Textbox title={'วันครบกำหนดชำระ'} disabled value={stringToDateTh(new Date(), false)} />
+                        <Textbox title={'วันครบกำหนดชำระ'} disabled value={policy?.spDate} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                        <Textbox title={'อัตราดอกเบี้ย'} disabled value={toCurrency(policy?.loan_amount ?? 0, 2)} />
+                        <Textbox title={'อัตราดอกเบี้ย'} disabled value={toCurrency(policy?.interesRate ?? 0, 2) + '%'} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
                         <Textbox title={'จำนวนปี'} disabled value={policy?.numberOfYearPayback} />
@@ -121,7 +121,7 @@ const PageContent = () => {
                         <Textbox title={'จำนวนงวดต่อปี (งวด)'} disabled value={policy?.numberOfPeriodPayback / policy?.numberOfYearPayback} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                        <Textbox title={'ค่างวดตามแผน(บาท)'} disabled value={toCurrency(policy?.ppp ?? 0, 2)} />
+                        <Textbox title={'ค่างวดตามแผน(บาท)'} disabled value={toCurrency(policy?.installment ?? 0, 2)} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3" style={{ backgroundColor: 'honeydew', color: 'grey', height: 60 }}>
                         <div className="d-flex justify-content-evenly align-items-center h-100">

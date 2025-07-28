@@ -37,6 +37,7 @@ const PageContent = () => {
   }
   const handleShowDetail = async (item) => {
     await setPolicy(item);
+    // get following
     await setOpenDetail(true);
   }
   return (

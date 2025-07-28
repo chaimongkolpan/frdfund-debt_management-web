@@ -150,7 +150,7 @@ const Filter = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Dropdown 
-            title={'สถานะการโอนหลักทรัพท์'} 
+            title={'สถานะการโอนหลักทรัพย์'} 
             defaultValue={'all'} 
             options={statusOp}
             handleChange={(val) => onChange('transferStatus', val)}
