@@ -3,67 +3,32 @@ import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
 import { 
   getBigDataProvinces,
-  getBigDataCreditors,
-  getBigDataCreditorTypes,
-  getCommitteeNo,
-  getCommitteeDate,
+  getSendAssetPolicyNo,
+  getSendAssetPolicyDate,
 } from "@services/api";
+import { stringToDateTh } from "@utils";
 
 const Filter = (props) => {
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
-  const [creditorTypeOp, setCreditorTypeOp] = useState(null);
-  const [creditorOp, setCreditorOp] = useState(null);
   const [noOp, setNoOp] = useState(null);
   const [dateOp, setDateOp] = useState(null);
   const statusOp = ["โอนแล้ว","ยังไม่โอน"];
-  const typeOp = ["NPA","NPL"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
         k_idCard: "",
         name: "",
         loan_province: "",
-        // creditorType: "",
-        // creditor: "",
-        // debtStatus: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE,
-        // transferStatus: ((filter?.transferStatus == 'all' || !filter?.transferStatus) ? statusOp : [filter?.transferStatus])
       });
     }
   }
   const onChange = async (key, val) => {
-    // if (key == 'loan_province') {
-    //   setLoading(true);
-    //   await setCreditorTypeOp(null);
-    //   const resultCreditorType = await getBigDataCreditorTypes(val);
-    //   if (resultCreditorType.isSuccess) {
-    //     const temp1 = resultCreditorType.data.map(item => item.name);
-    //     await setCreditorTypeOp(temp1);
-    //     await setFilter((prevState) => ({
-    //       ...prevState,
-    //       ...({creditorType: 'all'})
-    //     }))
-    //     await setCreditorOp(null);
-    //     const resultCreditor = await getBigDataCreditors(val, '');
-    //     if (resultCreditor.isSuccess) {
-    //       const temp2 = resultCreditor.data.map(item => item.name);
-    //       await setCreditorOp(temp2);
-    //       await setFilter((prevState) => ({
-    //         ...prevState,
-    //         ...({creditor: 'all'})
-    //       }))
-    //     } else await setCreditorOp(null);
-    //   } else {
-    //     await setCreditorTypeOp(null);
-    //     await setCreditorOp(null);
-    //   } 
-    //   setLoading(false);
-    // }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -71,52 +36,28 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultNo = await getCommitteeNo();
-    const resultDate = await getCommitteeDate();
+    const resultNo = await getSendAssetPolicyNo();
+    const resultDate = await getSendAssetPolicyDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-      const resultCreditorType = await getBigDataCreditorTypes(null);
-      if (resultCreditorType.isSuccess) {
-        const temp1 = resultCreditorType.data.map(item => item.name);
-        await setCreditorTypeOp(temp1);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...({creditorType: 'all'})
-        }))
-        const resultCreditor = await getBigDataCreditors(null, '');
-        if (resultCreditor.isSuccess) {
-          const temp2 = resultCreditor.data.map(item => item.name);
-          await setCreditorOp(temp2);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...({creditor: 'all'})
-          }))
-        } else await setCreditorOp(null);
-      } else {
-        await setCreditorTypeOp(null);
-        await setCreditorOp(null);
-      } 
     } else {
        await setProvOp(null);
-       await setCreditorTypeOp(null);
-       await setCreditorOp(null);
     }
-    
     if (resultNo.isSuccess) {
       const temp = resultNo.data.map(item => item.name);
       await setNoOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_no: temp[0]})
+        ...({branch_asset_no: 'all'})
       }))
     } else await setNoOp(null);
     if (resultDate.isSuccess) {
-      const temp = resultDate.data.map(item => item.name);
+      const temp = resultDate.data.map(item => stringToDateTh(item.name, false));
       await setDateOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({proposal_committee_date: temp[0]})
+        ...({branch_asset_date: 'all'})
       }))
     } else await setDateOp(null);
     setIsMounted(true);
@@ -152,9 +93,8 @@ const Filter = (props) => {
           {noOp && (
             <Dropdown 
               title={'เลขที่หนังสือนำส่งสาขา'} 
-              containerClassname={'mb-3'} 
-              defaultValue={noOp[0]} 
-              options={noOp}
+              defaultValue={'all'} 
+              options={noOp} hasAll
               handleChange={(val) => onChange('branch_asset_no', val)}
             />
           )}
@@ -163,9 +103,8 @@ const Filter = (props) => {
           {dateOp && (
             <Dropdown 
               title={'วันที่หนังสือนำส่งสาขา'} 
-              containerClassname={'mb-3'} 
-              defaultValue={dateOp[0]} 
-              options={dateOp}
+              defaultValue={'all'} 
+              options={dateOp} hasAll
               handleChange={(val) => onChange('branch_asset_date', val)}
             />
           )}

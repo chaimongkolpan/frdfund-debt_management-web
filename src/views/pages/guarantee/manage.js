@@ -9,7 +9,7 @@ import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/guarantee/filterManage";
 import SearchTable from "@views/components/guarantee/searchManageTable";
 import Detail from "@views/components/guarantee/detail";
-import PlanPay from "@views/components/guarantee/planPay";
+import PostPone from "@views/components/guarantee/postpone";
 import Asset from "@views/components/guarantee/assetModal";
 import Guarantor from "@views/components/guarantee/editGuaranteeModal";
 import ReturnGuarantee from "@views/components/guarantee/returnGuaranteeModal";
@@ -18,11 +18,13 @@ import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
 import { 
   cleanData,
-  searchLegalCheck,
-  saveDocumentPolicy,
-  submitSendLegal,
-  searchGuaranteePrepare
+  saveAssetGuarantee,
+  saveSendAssetGuarantee,
+  searchGuaranteeManage
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const LegalContractSend = () => {
@@ -46,6 +48,7 @@ const LegalContractSend = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [bookNo, setBookNo] = useState(null);
   const [bookDate, setBookDate] = useState(null);
+  const [remark, setRemark] = useState(null);
   const [oldfiles, setOldFiles] = useState(null);
   const handleViewEdit = async (item) => {
     await setBookNo(item.edit_contract_reason);
@@ -85,7 +88,7 @@ const LegalContractSend = () => {
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
-    const result = await searchGuaranteePrepare(filter);
+    const result = await searchGuaranteeManage(filter);
     if (result.isSuccess) {
       setData(result)
     } else {
@@ -107,17 +110,62 @@ const LegalContractSend = () => {
   const onSubmit = async () => {
     const param = selectedData.map(item => {
       return {
-        id_KFKPolicy: item.id_KFKPolicy,
-        policyNO: item.policyNO,
-        policyStatus: "จัดส่งนิติกรรมสัญญา",
-        sendStatus: "จัดส่งนิติกรรมสัญญา",
-        branch_policy_no: bookNo,
-        branch_policy_date: ToDateDb(bookDate),
+        id_AssetPolicy: item.id_AssetPolicy,
+        TransferStatus: 'โอนแล้ว',
       }
     });
-    const result = await submitSendLegal(param);
+    const result = await saveAssetGuarantee(param);
     if (result.isSuccess) {
-    } 
+      const form = new FormData();
+      selectedData.forEach((item) => form.append("ids[]", item.id_AssetPolicy));
+      form.append('TransferStatus', 'จัดเก็บหลักทรัพย์');
+      const resultSend = await saveSendAssetGuarantee(form);
+      if (resultSend.isSuccess) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
+        await setRemark(null);
+        await onSearch(filter);
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        ));
+      }
+    }  else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+  }
+  const onEditSubmit = async () => {
+    const param = selectedData.map(item => {
+      return {
+        id_AssetPolicy: item.id_AssetPolicy,
+        edit_asset_manage_reason: remark,
+      }
+    });
+    const result = await saveAssetGuarantee(param);
+    if (result.isSuccess) {
+      const form = new FormData();
+      selectedData.forEach((item) => form.append("ids[]", item.id_AssetPolicy));
+      form.append('TransferStatus', 'แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)');
+      const resultSend = await saveSendAssetGuarantee(form);
+      if (resultSend.isSuccess) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
+        await setRemark(null);
+        await onSearch(filter);
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        ));
+      }
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
   }
   const handleSubmit = async (selected) => {
     await setBookNo(null);
@@ -198,7 +246,7 @@ const LegalContractSend = () => {
       )}
       {openPlan && (
         <Modal isOpen={openPlan} setModal={setOpenPlan} hideOk onClose={() => setOpenPlan(false)}  title={'เลื่อนโอนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-          <PlanPay policy={policy} isView />
+          <PostPone policy={policy} isView />
         </Modal>
       )}
       {openAsset && (
@@ -319,7 +367,7 @@ const LegalContractSend = () => {
       )}
       {openEdit && (
         <Modal isOpen={openEdit} setModal={setOpenEdit} onClose={() => setOpenEdit(false)}  
-          title={'แก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable fullscreen okText={'แก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)'} onOk={onSubmit} okColor={"warning"}
+          title={'แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable fullscreen okText={'แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)'} onOk={onEditSubmit} okColor={"warning"}
         >
           <form>
             <br />
@@ -331,29 +379,29 @@ const LegalContractSend = () => {
                       <tr>
                         <th rowSpan="2" style={{ minWidth: 30 }}>#</th>
                         <th colSpan="4">เกษตรกร</th>
-                        <th colSpan="4">เจ้าหนี้</th>
-                        <th colSpan="8">นิติกรรมสัญญา</th>
-                        <th colSpan="2">หลักประกัน</th>
+                        <th colSpan="5">นิติกรรมสัญญา</th>
+                        <th colSpan="10">หลักประกัน</th>
                       </tr>
                       <tr>
                         <th>เลขบัตรประชาชน</th>
                         <th>คำนำหน้า</th>
                         <th>ชื่อ-นามสกุล</th>
                         <th>จังหวัด</th>
-                        <th>ประเภทเจ้าหนี้</th>
-                        <th>สถาบันเจ้าหนี้</th>
-                        <th>จังหวัดเจ้าหนี้</th>
-                        <th>สาขาเจ้าหนี้</th>
                         <th>เลขที่นิติกรรมสัญญา</th>
                         <th>ประเภทจัดการหนี้</th>
                         <th>วันที่ทำสัญญา</th>
-                        <th>จำนวนงวด</th>
-                        <th>จำนวนปี</th>
                         <th>ยอดเงินตามสัญญา</th>
                         <th>จำนวนเงินที่ชดเชย</th>
-                        <th>สถานะนิติกรรมสัญญา</th>
-                        <th>หลักทรัพย์ค้ำประกัน</th>
-                        <th>บุคคลค้ำประกัน</th>
+                        <th>สถานะการโอนหลักทรัพย์</th>
+                        <th>จำนวนวัน</th>
+                        <th>ประเภทหลักทรัพย์</th>
+                        <th>หลักทรัพย์เลขที่</th>
+                        <th>จังหวัด</th>
+                        <th>อำเภอ</th>
+                        <th>ตำบล</th>
+                        <th>ไร่</th>
+                        <th>งาน</th>
+                        <th>ตารางวา</th>
                       </tr>
                     </thead>
                     <tbody className="list text-center align-middle" id="bulk-select-body">
@@ -364,20 +412,21 @@ const LegalContractSend = () => {
                           <td>{item.k_name_prefix}</td>
                           <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
                           <td>{item.loan_province}</td>
-                          <td>{item.loan_creditor_type}</td>
-                          <td>{item.loan_creditor_name}</td>
-                          <td>{item.loan_creditor_province}</td>
-                          <td>{item.loan_creditor_branch}</td>
                           <td>{item.policyNO}</td>
                           <td>{item.loan_debt_type}</td>
                           <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
-                          <td>{item.numberOfPeriodPayback}</td>
-                          <td>{item.numberOfYearPayback}</td>
                           <td>{toCurrency(item.loan_amount)}</td>
                           <td>{toCurrency(item.compensation_amount)}</td>
-                          <td>{item.policyStatus}</td>
-                          <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-                          <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
+                          <td>{item.transferStatus}</td>
+                          <td>{item.numberOfDay}</td>
+                          <td>{item.assetType}</td>
+                          <td>{item.collateral_no}</td>
+                          <td>{item.collateral_province}</td>
+                          <td>{item.collateral_district}</td>
+                          <td>{item.collateral_sub_district}</td>
+                          <td>{`${item.contract_area_rai ? item.contract_area_rai : 0}`}</td>
+                          <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
+                          <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>
                         </tr>
                       ))) : (
                         <tr>
@@ -391,7 +440,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
-                <Textbox title={'หมายเหตุ'} handleChange={(val) => setBookNo(val)} containerClassname={'mb-3'} value={bookNo} />
+                <Textbox title={'หมายเหตุ'} handleChange={(val) => setRemark(val)} containerClassname={'mb-3'} value={remark} />
               </div>
             </div>
           </form>
@@ -399,7 +448,7 @@ const LegalContractSend = () => {
       )}
       {openSubmit && (
         <Modal isOpen={openSubmit} setModal={setOpenSubmit} onClose={() => setOpenSubmit(false)}  
-          title={'จัดเก็บนิติกรรมสัญญา'} closeText={'ปิด'} scrollable fullscreen okText={'จัดเก็บนิติกรรมสัญญา'} onOk={onSubmit}
+          title={'จัดเก็บหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen okText={'จัดเก็บหลักทรัพย์'} onOk={onSubmit}
         >
           <form>
             <br />
@@ -411,29 +460,29 @@ const LegalContractSend = () => {
                       <tr>
                         <th rowSpan="2" style={{ minWidth: 30 }}>#</th>
                         <th colSpan="4">เกษตรกร</th>
-                        <th colSpan="4">เจ้าหนี้</th>
-                        <th colSpan="8">นิติกรรมสัญญา</th>
-                        <th colSpan="2">หลักประกัน</th>
+                        <th colSpan="5">นิติกรรมสัญญา</th>
+                        <th colSpan="10">หลักประกัน</th>
                       </tr>
                       <tr>
                         <th>เลขบัตรประชาชน</th>
                         <th>คำนำหน้า</th>
                         <th>ชื่อ-นามสกุล</th>
                         <th>จังหวัด</th>
-                        <th>ประเภทเจ้าหนี้</th>
-                        <th>สถาบันเจ้าหนี้</th>
-                        <th>จังหวัดเจ้าหนี้</th>
-                        <th>สาขาเจ้าหนี้</th>
                         <th>เลขที่นิติกรรมสัญญา</th>
                         <th>ประเภทจัดการหนี้</th>
                         <th>วันที่ทำสัญญา</th>
-                        <th>จำนวนงวด</th>
-                        <th>จำนวนปี</th>
                         <th>ยอดเงินตามสัญญา</th>
                         <th>จำนวนเงินที่ชดเชย</th>
-                        <th>สถานะนิติกรรมสัญญา</th>
-                        <th>หลักทรัพย์ค้ำประกัน</th>
-                        <th>บุคคลค้ำประกัน</th>
+                        <th>สถานะการโอนหลักทรัพย์</th>
+                        <th>จำนวนวัน</th>
+                        <th>ประเภทหลักทรัพย์</th>
+                        <th>หลักทรัพย์เลขที่</th>
+                        <th>จังหวัด</th>
+                        <th>อำเภอ</th>
+                        <th>ตำบล</th>
+                        <th>ไร่</th>
+                        <th>งาน</th>
+                        <th>ตารางวา</th>
                       </tr>
                     </thead>
                     <tbody className="list text-center align-middle" id="bulk-select-body">
@@ -444,20 +493,21 @@ const LegalContractSend = () => {
                           <td>{item.k_name_prefix}</td>
                           <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
                           <td>{item.loan_province}</td>
-                          <td>{item.loan_creditor_type}</td>
-                          <td>{item.loan_creditor_name}</td>
-                          <td>{item.loan_creditor_province}</td>
-                          <td>{item.loan_creditor_branch}</td>
                           <td>{item.policyNO}</td>
                           <td>{item.loan_debt_type}</td>
                           <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
-                          <td>{item.numberOfPeriodPayback}</td>
-                          <td>{item.numberOfYearPayback}</td>
                           <td>{toCurrency(item.loan_amount)}</td>
                           <td>{toCurrency(item.compensation_amount)}</td>
-                          <td>{item.policyStatus}</td>
-                          <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
-                          <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
+                          <td>{item.transferStatus}</td>
+                          <td>{item.numberOfDay}</td>
+                          <td>{item.assetType}</td>
+                          <td>{item.collateral_no}</td>
+                          <td>{item.collateral_province}</td>
+                          <td>{item.collateral_district}</td>
+                          <td>{item.collateral_sub_district}</td>
+                          <td>{`${item.contract_area_rai ? item.contract_area_rai : 0}`}</td>
+                          <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
+                          <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>
                         </tr>
                       ))) : (
                         <tr>

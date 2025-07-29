@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
-import { stringToDateTh, spDate, toCurrency } from "@utils";
+import { stringToDateTh, spDate, toCurrency, ToDateDb } from "@utils";
 import Textarea from "@views/components/input/Textarea";
 import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   getPostponeGuarantee,
-  // savePostponeGuarantee
+  savePostponeGuarantee
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
-const PlanPay = (props) => {
+const PostPone = (props) => {
   const { policy, isView } = props;
   const [data, setData] = useState([]);
-  const [installment, setInstallment] = useState(null);
   const [clearFile, setClear] = useState(false);
   const [files, setFiles] = useState(null);
   const [detail, setDetail] = useState(null);
-  const [remmark, setRemark] = useState(null);
+  const [id, setId] = useState(null);
+  const [remark, setRemark] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [edit, setEdit] = useState(false);
   const onFileChange = async (files) => {
@@ -24,52 +27,88 @@ const PlanPay = (props) => {
       await setClear(false);
     }
   }
-  const onSubmitFile = async () => {
+  const save = async () => {
     if (files && files.length > 0) {
       const form = new FormData();
-      form.append('ids[]', policy.id_KFKPolicy);
-      form.append('document_type', 'เอกสารส่งคืนนิติกรรมสัญญา');
-      files.forEach((item) => form.append("files", item));
-      const result = await saveDocumentPolicy(form);
-      if (result.isSuccess) {
-        await setUploadStatus("success");
+      form.append('id_AssetPolicy', policy.id_AssetPolicy);
+      if (id == 0) {
+        form.append('date_pp1', ToDateDb(new Date()));
+        form.append('remark_pp1', remark);  
       } else {
-        await setUploadStatus("fail");
+        form.append('date_pp1', detail.date_pp1);
+        form.append('remark_pp1', detail.remark_pp1);
+        form.append('date_pp2', ToDateDb(new Date()));
+        form.append('remark_pp2', remark);
+      }
+      files.forEach((item) => form.append("files", item));
+      const result = await savePostponeGuarantee(form);
+      if (result.isSuccess) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
+        await fetchData();
+      } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
       }
     } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'ยังไม่ได้เลือกไฟล์'} />
+      ));
       console.error('no file upload');
     }
   }
-  const save = async () => {
-    const result = await savePlanPay(plans);
-    if (result.isSuccess) {
-      await fetchData();
-    } 
-  }
   const remove = async () => {
-    const result = await savePlanPay(plans);
-    if (result.isSuccess) {
-      await fetchData();
+    const form = new FormData();
+    form.append('id_AssetPolicy', policy.id_AssetPolicy);
+    if (id == 1) {
+      form.append('date_pp1', detail.date_pp1);
+      form.append('remark_pp1', detail.remark_pp1);  
     } 
+    const result = await savePostponeGuarantee(form);
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await fetchData();
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
   }
+
   const handleAdd = async() => {
-    await setDetail(null);
+    if (data && data?.length > 0) await setDetail(data[0]);
+    else await setDetail(null);
+    await setId(data?.length ?? 0);
+    await setRemark(null);
     await setEdit(true);
     await setOpenEdit(true);
   }
   const handleView = async(item) => {
+    await setDetail(null);
+    await setRemark(null);
+    await setOpenEdit(false);
     await setDetail(item);
     await setRemark(item.remark);
     await setEdit(false);
     await setOpenEdit(true);
   }
-  const handleEdit = async(item) => {
+  const handleEdit = async(item, index) => {
     await setDetail(item);
     await setRemark(item.remark);
+    await setId(index);
     await setEdit(true);
     await setOpenEdit(true);
   }
   const fetchData = async () => {
+    await setData(null)
+    await setDetail(null);
+    await setId(null);
+    await setEdit(false);
+    await setOpenEdit(false);
     const result = await getPostponeGuarantee(policy.id_AssetPolicy);
     if (result.isSuccess) {
       await setData(result.data)
@@ -89,7 +128,7 @@ const PlanPay = (props) => {
         <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
         <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>
         <td>{item.transferStatus}</td>
-        <td>{item.date}</td>
+        <td>{stringToDateTh(item.date, false)}</td>
         <td>{item.remark}</td>
         <td>
           <div className='d-flex justify-content-center'>
@@ -98,20 +137,28 @@ const PlanPay = (props) => {
             </button>
           </div>
         </td>
-        <td>
-          <div className='d-flex justify-content-center'>
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleEdit(item)} >
-              <i className="far fa-edit"></i>
-            </button>
-          </div>
-        </td>
-        <td>
-          <div className='d-flex justify-content-center'>
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleEdit(item)} >
-              <i className="far fa-trash"></i>
-            </button>
-          </div>
-        </td>
+        {((data?.length ?? 0) - 1 == index) ? (
+          <>
+            <td>
+              <div className='d-flex justify-content-center'>
+                <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleEdit(item, index)} >
+                  <i className="far fa-edit"></i>
+                </button>
+              </div>
+            </td>
+            <td>
+              <div className='d-flex justify-content-center'>
+                <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleEdit(item, index)} >
+                  <i className="far fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </>
+        ) : (
+          <>
+            <td></td><td></td>
+          </>
+        )}
       </tr>
     ))
   }
@@ -123,10 +170,12 @@ const PlanPay = (props) => {
       <form>
         <br />
         <div className="row g-3">
-        <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>
-        <button type="button" className="btn btn-warning btn-sm ms-2" onClick={() => handleAdd()}><span className="fas fa-plus fs-8"></span> เลื่อนโอนหลักทรัพย์</button>
-      </div>
-        <table className="table table-sm table-striped table-bordered fs-9 mb-0">
+          {(!data || data?.length < 2) && (
+            <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>
+              <button type="button" className="btn btn-warning btn-sm ms-2" onClick={() => handleAdd()}><span className="fas fa-plus fs-8"></span> เลื่อนโอนหลักทรัพย์</button>
+            </div>
+          )}
+          <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
               <th rowSpan="2">#</th>
@@ -144,7 +193,7 @@ const PlanPay = (props) => {
                 <th>ไร่</th>
                 <th>งาน</th>
                 <th>ตารางวา</th>
-                <th>สถานะการโอนหลักทรัพท์</th>
+                <th>สถานะการโอนหลักทรัพย์</th>
                 <th>วันที่</th>
                 <th>หมายเหตุ</th>
                 <th>ดูข้อมูล</th>
@@ -191,7 +240,7 @@ const PlanPay = (props) => {
                 <div className="row g-3 justify-content-center">
                   <div className="col-auto">
                     <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึก</button>
-                    {edit && (
+                    {(edit && detail) && (
                       <button className="btn btn-danger me-1 mb-1" type="button" onClick={() => remove()}>ลบข้อมูล</button>
                     )}
                   </div>
@@ -204,4 +253,4 @@ const PlanPay = (props) => {
     </>
   );
 };
-export default PlanPay;
+export default PostPone;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { getUserData, stringToDateTh, toCurrency } from "@utils";
+import { getUserData, stringToDateTh, toCurrency, ToDateDb } from "@utils";
 import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/CustomModal";
 import Loading from "@views/components/modal/loading";
@@ -18,6 +18,7 @@ import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchGuaranteePrepare,
+  sendGuarantee,
 } from "@services/api";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
@@ -40,12 +41,43 @@ const LegalContractPrepare = () => {
   const [openSubmit, setOpenSubmit] = useState(false);
   const [bookNo, setBookNo] = useState(null);
   const [bookDate, setBookDate] = useState(null);
+  const [transferDate, setTransferDate] = useState(null);
+  const [transferType, setTransferType] = useState(null);
   const [clearFile, setClear] = useState(false);
   const [files, setFiles] = useState(null);
   const onFileChange = async (files) => {
     if (files.length > 0) {
       await setFiles(files);
       await setClear(false);
+    }
+  }
+  const onSubmit = async () => {
+    if (files && files.length > 0) {
+      const form = new FormData();
+      selected.forEach((item) => form.append("ids[]", item.id_AssetPolicy));
+      form.append('branch_asset_no', bookNo);
+      form.append('branch_asset_date', ToDateDb(bookDate));
+      form.append('transfer_date', ToDateDb(transferDate));
+      form.append('transfer_type', transferType);
+      form.append('TransferStatus', 'สาขาโอนหลักทรัพย์');
+      form.append('document_type', 'หนังสือโอนหลักทรัพย์');
+      files.forEach((item) => form.append("files", item));
+      const result = await sendGuarantee(form);
+      if (result.isSuccess) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
+        await onSearch(filter);
+      } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+      }
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'ยังไม่ได้เลือกไฟล์'} />
+      ));
+      console.error('no file upload');
     }
   }
   const onSearch = async (filter) => {
@@ -84,6 +116,7 @@ const LegalContractPrepare = () => {
     await setOpenSpouse(true);
   }
   const handleSubmit = async (item) => {
+    await setTransferType('โอนตามมาตรา 37/9 วรรค 2');
     await setSelected(item);
     await setOpenSubmit(true);
   }
@@ -155,7 +188,7 @@ const LegalContractPrepare = () => {
       )}
       {openSubmit && (
         <Modal isOpen={openSubmit} setModal={setOpenSubmit} onClose={() => setOpenSubmit(false)}  
-          title={'โอนหลักทรัพย์'} centered fullscreen okText={'โอนหลักทรัพย์'} onOk={() => console.log('transfer')}
+          title={'โอนหลักทรัพย์'} centered fullscreen okText={'โอนหลักทรัพย์'} onOk={onSubmit}
           closeText={'ปิด'}>
           <form>
             <br />
@@ -232,11 +265,11 @@ const LegalContractPrepare = () => {
                 <DatePicker title={'วันที่หนังสือนำส่งสาขา'} value={bookDate} handleChange={(val) => setBookDate(val)} />
               </div>
               <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                <DatePicker title={'วันที่โอนหลักประกัน'} value={bookDate} handleChange={(val) => setBookDate(val)} />
+                <DatePicker title={'วันที่โอนหลักประกัน'} value={transferDate} handleChange={(val) => setTransferDate(val)} />
               </div>
               <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
                 <div className="form-floating needs-validation">
-                  <select className="form-select" value={collateralDetail.assetType} disabled={isView} onChange={(e) => handleChangeCollateral('assetType', e.target?.value)}>
+                  <select className="form-select" value={transferType} onChange={(e) => setTransferType(e.target?.value)}>
                     <option value="โอนตามมาตรา 37/9 วรรค 2">โอนตามมาตรา 37/9 วรรค 2</option>
                     <option value="ขาย">ขาย</option>
                   </select>

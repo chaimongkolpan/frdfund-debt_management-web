@@ -9,7 +9,7 @@ const SearchTable = (props) => {
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index}>
-        <td className="fs-9 align-middle">{index + 1}</td>
+        <td className="fs-9 align-middle">{((filter?.currentPage - 1) * filter?.pageSize) + index + 1}</td>
         {/* <td>
           <div className='d-flex justify-content-center'>
             <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleOperation(item)}>
@@ -43,24 +43,15 @@ const SearchTable = (props) => {
         <td>{item.policyNO}</td>
         <td>{item.indexAssetPolicy}</td>
         <td>{item.assetType}</td>
-        <td>{item.loan_creditor_branch}</td>
-        <td>{item.policyNO}</td>
-        <td>{item.loan_debt_type}</td>
-        <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
+        <td>{item.collateralOwner}</td>
+        <td>{item.collateral_no}</td>
+        <td>{item.collateral_province}</td>
+        <td>{item.collateral_district}</td>
+        <td>{item.collateral_sub_district}</td>
         <td>{item.contract_area_rai}</td>
         <td>{item.contract_area_ngan}</td>
         <td>{item.contract_area_sqaure_wa}</td>
         <td>{item.deedBorrowReturn_status}</td>
-        <td></td>
-        {/* <td className="align-middle white-space-nowrap text-center pe-0">
-          <div className="btn-reveal-trigger position-static">
-            <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
-            <div className="dropdown-menu dropdown-menu-end py-2">
-              <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>คำนวนยอดปิดสัญญา</button>
-              <button className="dropdown-item" type="button" onClick={() => handleRequestClose(item)}>ยื่นคำร้องปิดสัญญา</button>
-            </div>
-          </div>
-        </td> */}
       </tr>
     ))
   }

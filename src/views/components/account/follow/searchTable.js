@@ -33,6 +33,11 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.policyStatus}</td>
+        <td>{item.payStatus}</td>
+        <td>{item.invStatus}</td>
+        <td>{item.printInvStatus == 0 ? 'ยังไม่ได้ปริ้น' : 'ปริ้นแล้ว'}</td>
+        <td>{stringToDateTh(item.printInvDate, false)}</td>
+        <td>{item.followStatus}</td>
       </tr>
     ))
   }
