@@ -8,6 +8,7 @@ import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/follow/filter";
 import SearchTable from "@views/components/account/follow/searchTable";
+import Textarea from "@views/components/input/Textarea";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
@@ -24,6 +25,42 @@ const PageContent = () => {
   const [policy, setPolicy] = useState(null);
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
+  const [isView, setIsView] = useState(false);
+  const [bookNo, setBookNo] = useState(null);
+  const [bookDate, setBookDate] = useState(null);
+  const [remark, setRemark] = useState(null);
+  const [clearFile, setClear] = useState(false);
+  const [files, setFiles] = useState(null);
+  const onFileChange = async (files) => {
+    if (files.length > 0) {
+      await setFiles(files);
+      await setClear(false);
+    }
+  }
+  const onSubmit = async () => {
+    if (files && files.length > 0) {
+      const form = new FormData();
+      form.append('id_KFKPolicy', policy.id_KFKPolicy);
+      form.append('BookNo', bookNo);
+      form.append('BookDate', ToDateDb(bookDate));
+      files.forEach((item) => form.append("files", item));
+      const result = await requestClose(form);
+      if (result.isSuccess) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        ));
+      }
+    } else {
+      console.error('no file upload');
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+  }
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
@@ -35,10 +72,14 @@ const PageContent = () => {
     }
     setLoadBigData(false);
   }
-  const handleShowDetail = async (item) => {
+  const handleShowDetail = async (item, iv) => {
+    await setIsView(iv)
     await setPolicy(item);
     // get following
     await setOpenDetail(true);
+  }
+  const exportFollow = async () => {
+
   }
   return (
     <>
@@ -60,6 +101,13 @@ const PageContent = () => {
                           handleShowDetail={handleShowDetail}
                         />
                       )}
+                      {data && (
+                        <div class="d-flex align-items-center justify-content-center my-3">
+                          <div class="d-flex">
+                            <button class="btn btn-outline-success btn-sm ms-2" type="button" onClick={() => exportFollow()}>Export</button>
+                          </div>
+                        </div>
+                      )}
                     </>
                   )}
                 />
@@ -69,10 +117,31 @@ const PageContent = () => {
         </div>
       </div>
       {openDetail && (
-        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk onClose={() => setOpenDetail(false)}  title={'รายละเอียดการติดตาม'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openDetail} setModal={setOpenDetail} hideOk={isView} onOk={onSubmit} okText={'บันทึก'} onClose={() => setOpenDetail(false)}  title={isView ? 'เปลี่ยนสถานะหนี้ สงสัยจะสูญ' : 'รายละเอียดสถานะหนี้ สงสัยจะสูญ'} closeText={'ปิด'} scrollable fullscreen>
           <form>
             <br />
-            <div className="row">
+            <div className="mb-1">
+              <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                <div className="card-body p-0">
+                  <div className="p-4 code-to-copy">
+                    <div className="row">
+                      <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
+                        <Textbox title={'เลขที่หนังสือ'} value={bookNo} handleChange={(val) => setBookNo(val)}  />
+                      </div>
+                      <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
+                        <DatePicker title={'วันที่หนังสือ'} value={bookDate} handleChange={(val) => setBookDate(val)} />
+                      </div>
+                      <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
+                        <Textarea title={'หมายเหตุ'} value={remark} handleChange={(val) => setRemark(val)}  />
+                      </div>
+                      <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
+                        <h5 className="text-center align-middle">เอกสารประกอบ</h5>
+                        <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </form>
         </Modal>
