@@ -69,6 +69,7 @@ const VerticalLayout = props => {
     if (isMounted) {
       $('<script src="./assets/js/config.js"></script>').appendTo('body');
       $('<script src="./assets/js/phoenix.js"></script>').appendTo('body');
+      if (!localStorage.getItem('phoenixIsNavbarVerticalCollapsed')) localStorage.setItem('phoenixIsNavbarVerticalCollapsed', false);
     }
     return () => {}
   }, [isMounted])
