@@ -2321,6 +2321,34 @@ export const searchFollow = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const saveIsLoss = async (params) => {
+  const path = '/Account/add-is-loss';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getIsLoss = async (id) => {
+  const path = '/Account/get-is-loss';
+  try {
+    const result = await axios.get(path, { params: { id } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 //#endregion
 //#region Debt Acknowledge
 export const searchDebtAcknowledge = async (filter) => {
