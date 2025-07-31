@@ -1732,6 +1732,62 @@ export const getOperationDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
+export const getOperationChangeCollateral = async (id) => {
+  const path = '/operationLand/view-operationland-changecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getOperationSeparateCollateral = async (id) => {
+  const path = '/operationLand/view-operationland-separatecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getOperationSeparateUsedeed = async (params) => {
+  const path = '/operationLand/view-operationland-usedeed';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateOperationLand = async (params) => {
+  const path = '/operationLand/update-operationland';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const viewLegalDetail = async (id) => {
   const path = '/LegalContract/legal-contract-debt-management';
   try {

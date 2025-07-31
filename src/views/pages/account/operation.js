@@ -19,6 +19,7 @@ import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchOperationLand,
+  updateOperationLand
 } from "@services/api";
 
 const user = getUserData();
@@ -74,10 +75,16 @@ const PageContent = () => {
   const submitOperation = async() => {
     const data = operationLandRef.current?.getData(); 
     console.log('Operation data:', data);
+    const result = await updateOperationLand(data.collateralDetail);
+    if (result.isSuccess) {
+       console.log("save operation done");
+    }
+
   }
+
   const submitSurvey = async() => {
     const data = surveyRef.current?.getData(); 
-    console.log('Operation data:', data);
+    console.log('survey data:', data);
   }
   const print = async () => {
     // print
