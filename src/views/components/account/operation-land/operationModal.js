@@ -59,6 +59,11 @@ const operationLand = forwardRef((props, ref) => {
             assetType: 'โฉนด',
         },
         separateCollateral: [],
+        req_docu:[],
+        borrowdeed_docu:[],
+        approve_docu:[],
+        results_docu:[],
+        report_docu:[],
     });
 
     const handleAddForm = () => {
@@ -96,18 +101,20 @@ const operationLand = forwardRef((props, ref) => {
         await getSeparateCollateral(item.id_KFKPolicy);
         await getUseDeed(item);
     }
-    const onFileChange = async (id, selectedFiles) => {
+    const onFileChange = (key, selectedFiles) => {
         if (selectedFiles.length > 0) {
-            setFiles((prev) => ({
-                ...prev,
-                [id]: selectedFiles
-            }));
-            setClear((prev) => ({
-                ...prev,
-                [id]: false
-            }));
+          setCollateralDetail((prev) => ({
+            ...prev,
+            [key]: selectedFiles, // เซ็ตเข้า key เช่น 'borrowdeed_docu'
+          }));
+      
+          // ถ้าอยากใช้ clearFile ต่อด้วยก็เซ็ตไว้เหมือนเดิม
+          setClear((prev) => ({
+            ...prev,
+            [key]: false,
+          }));
         }
-    };
+      };
     const fetchData = async () => {
         const result = await getOperationDetail(policy.id_KFKPolicy);
         if (result.isSuccess) {
@@ -366,10 +373,10 @@ const operationLand = forwardRef((props, ref) => {
                                     <div className='form-switch mb-2 d-flex justify-content-center'>
                                         <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                             <p className='fw-bold mb-0'>ใช้โฉนด</p>
-                                            <Input type='switch' id='rtl' name='RTL' onChange={(e) => setUseAsset(e.target.checked)} disabled={showDetail} />
+                                            <Input type='switch' id='flag1' name='flag1' onChange={(e) => handleChangeCollateral('flag1',e.target.checked)} disabled={showDetail} checked={collateralDetail?.flag1} />
                                         </div>
                                     </div>
-                                    {useAsset && (<><div className="card shadow-none border my-2" data-component-card="data-component-card">
+                                    {collateralDetail?.flag1 && (<><div className="card shadow-none border my-2" data-component-card="data-component-card">
                                         <div className="card-body p-0">
                                             <div className="p-3 code-to-copy">
                                                 <div className="row g-2">
@@ -431,14 +438,14 @@ const operationLand = forwardRef((props, ref) => {
 
                                         </div>
                                     </div>
-                                    {useAsset && (
+                                    {collateralDetail?.flag1 && (
                                         <div className='form-switch mb-2 d-flex justify-content-center'>
                                             <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                                 <p className='fw-bold mb-0'>เปลี่ยนแปลงหลักทรัพย์</p>
-                                                <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsAssetChanged(e.target.checked)} checked={isAssetChanged} disabled={showDetail} />
+                                                <Input type='switch' id='flag2' name='flag2' onChange={(e) => handleChangeCollateral('flag2',e.target.checked)} disabled={showDetail} checked={collateralDetail?.flag2}/>
                                             </div>
                                         </div>)}
-                                    {isAssetChanged && (
+                                    {(collateralDetail?.flag2 || collateralDetail?.change_asset === 1 )  && (
                                         <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                             <div className="card-body p-0">
                                                 <div className="p-3 code-to-copy">
@@ -1614,10 +1621,10 @@ const operationLand = forwardRef((props, ref) => {
                                                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                                                         <p className='fw-bold mb-0'>แบ่งหลักทรัพย์</p>
-                                                                        <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsAssetSplit(e.target.checked)} checked={isAssetSplit} />
+                                                                        <Input type='switch' id='flag3' name='flag3' onChange={(e) => handleChangeCollateral('flag3',e.target.checked)} checked={collateralDetail?.flag3}/>
                                                                     </div>
                                                                 </div>
-                                                                {isAssetSplit && !showDetail && (<>
+                                                                {(collateralDetail?.flag3 || collateralDetail?.separate_asset === 1)  && !showDetail && (<>
                                                                     <div className="d-flex justify-content-center">
                                                                         <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleAddForm}>
                                                                             <i className="fas fa-square-plus"></i>
@@ -2800,7 +2807,7 @@ const operationLand = forwardRef((props, ref) => {
                                         </div>)}
                                 </div>
                             </div>
-                            {useAsset && (<>
+                            {collateralDetail?.flag1 && (<>
                                 <div className="d-flex justify-content-center">
                                     <span className="fw-bold mt-0">คืนโฉนด</span>
                                 </div>
