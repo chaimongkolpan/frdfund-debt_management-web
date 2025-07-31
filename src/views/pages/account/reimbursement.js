@@ -14,6 +14,10 @@ import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchReimbursement,
+  getReimbursementPlan,
+  getReimbursementCard,
+  printPlanRe,
+  printCardRe,
 } from "@services/api";
 
 const user = getUserData();
@@ -21,6 +25,10 @@ const PageContent = () => {
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
+  const [plan, setPlan] = useState(null);
+  const [planPrint, setPlanPrint] = useState(null);
+  const [card, setCard] = useState(null);
+  const [cardPrint, setCardPrint] = useState(null);
   const [policy, setPolicy] = useState(null);
   const [filter, setFilter] = useState(null);
   const [openPlan, setOpenPlan] = useState(false);
@@ -39,17 +47,58 @@ const PageContent = () => {
   }
   const handleShowCard = async (item) => {
     await setPolicy(item);
-    // get card
+    const param = {
+      params: { id: item.id_KFKPolicy }
+    };
+    const result = await getReimbursementCard(param);
+    if (result.isSuccess) {
+      const kfkcard = result?.data?.kfkCards[0];
+      await setCard(kfkcard?.transactions)
+      await setCardPrint(result)
+    } else {
+      await setCard(null)
+      await setCardPrint(null)
+    }
     await setTab("1");
     await setOpenCard(true);
   }
   const handleShowPlan = async (item) => {
     await setPolicy(item);
-    // get plan
+    const param = {
+      params: { id: item.id_KFKPolicy }
+    };
+    const result = await getReimbursementPlan(param);
+    if (result.isSuccess) {
+      const kfkcard = result?.data?.kfkCards[0];
+      await setPlan(kfkcard?.transactions)
+      await setPlanPrint(result)
+    } else {
+      await setPlan(null)
+      await setPlanPrint(null)
+    }
     await setOpenPlan(true);
   }
-  // print plan
-  // print card
+  const printCard = async () => {
+    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.zip', data: cardPrint };
+    const result = await printCardRe(param);
+    if (result.isSuccess) {
+      await onSearch(filter)
+    }
+  }
+  const printPlan = async () => {
+    const param = { type: 'application/octet-stream', filename: 'ชำระหนี้คืน_' + (new Date().getTime()) + '.xlsx', data: planPrint };
+    const result = await printPlanRe(param);
+    if (result.isSuccess) {
+      await onSearch(filter)
+    }
+  }
+  const convertTrc = (trc) => {
+    if (trc == 'PAYOUT') return 'จ่าย';
+    else if (trc == 'PAYIN') return 'รับ';
+    else if (trc == 'RTN') return 'รับ';
+    else if (trc == 'SPN') return 'จ่าย';
+    else return '';
+  }
   return (
     <>
       <div className="content">
@@ -126,7 +175,7 @@ const PageContent = () => {
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3" style={{ backgroundColor: 'honeydew', color: 'grey', height: 60 }}>
                         <div className="d-flex justify-content-evenly align-items-center h-100">
                           <span>{'เงินต้น : '}<b>{toCurrency(policy?.loan_amount ?? 0, 2)}</b></span>
-                          <span>{'ดอกเบี้ย : '}<b>{toCurrency(policy?.loan_amount ?? 0, 2)}</b></span>
+                          <span>{'ดอกเบี้ย : '}<b>{toCurrency(policy?.interest ?? 0, 2)}</b></span>
                           <span>{'ยอดที่ต้องชำระ : '}<b>{toCurrency(policy?.loan_amount ?? 0, 2)}</b></span>
                         </div>
                       </div>
@@ -148,14 +197,14 @@ const PageContent = () => {
                               </tr>
                             </thead>
                             <tbody className="list text-center align-middle" id="bulk-select-body">
-                              {(data && data.length > 0) ? (data.map((item,index) => (
+                              {(plan && plan.length > 0) ? (plan.map((item,index) => (
                                 <tr key={index}>
                                   <td>{index + 1}</td>
-                                  <td>{stringToDateTh(item.pDate, false)}</td>
-                                  <td>{item.docNo}</td>
-                                  <td>{stringToDateTh(item.docAccDate, false)}</td>
-                                  <td>{item.docAccNo}</td>
-                                  <td>{toCurrency(item.ppp, 2)}</td>
+                                  <td>{item.transactionDate}</td>
+                                  <td>{item.documentNo}</td>
+                                  <td>{item.receiptDate}</td>
+                                  <td>{item.receiptNo}</td>
+                                  <td>{toCurrency(item.amountPaid, 2)}</td>
                                   <td>{item.remark}</td>
                                 </tr>
                               ))) : (
@@ -167,6 +216,11 @@ const PageContent = () => {
                               )}
                             </tbody>
                           </table>
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-center my-3">
+                        <div className="d-flex">
+                          <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => printPlan()}><i className="fa fa-print"></i> ปริ้นตารางผ่อนชำระหนี้คืน</button>
                         </div>
                       </div>
                     </div>
@@ -221,15 +275,23 @@ const PageContent = () => {
                         </tr>
                       </thead>
                       <tbody className="list text-center align-middle" id="bulk-select-body">
-                        {(data && data.length > 0) ? (data.map((item,index) => (
+                        {(card && card.length > 0) ? (card.map((item,index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{stringToDateTh(item.pDate, false)}</td>
-                            <td>{item.docNo}</td>
-                            <td>{stringToDateTh(item.docAccDate, false)}</td>
-                            <td>{item.docAccNo}</td>
-                            <td>{toCurrency(item.ppp, 2)}</td>
-                            <td>{item.remark}</td>
+                            <td>{convertTrc(item.trc)}</td>
+                            <td>{item.transactionDate}</td>
+                            <td>{item.documentNo}</td>
+                            <td>{item.duration}</td>
+                            <td>{item.chequeNo}</td>
+                            <td>{item.cashierChequeNo}</td>
+                            <td>{item.receiptDate}</td>
+                            <td>{item.receiptNo}</td>
+                            <td>{toCurrency(item.amountPaid, 2)}</td>
+                            <td>{toCurrency(item.planDeduc, 2)}</td>
+                            <td>{toCurrency(item.intdeduc, 2)}</td>
+                            <td>{toCurrency(item.deduc, 2)}</td>
+                            <td>{toCurrency(item.balance, 2)}</td>
+                            <td>{toCurrency(item.balance, 2)}</td>
                           </tr>
                         ))) : (
                           <tr>
@@ -240,6 +302,11 @@ const PageContent = () => {
                         )}
                       </tbody>
                     </table>
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center my-3">
+                    <div className="d-flex">
+                      <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => printCard()}><i className="fa fa-print"></i> ปริ้นการ์ดลูกหนี้</button>
+                    </div>
                   </div>
                 </TabPane>
                 <TabPane tabId="2">
