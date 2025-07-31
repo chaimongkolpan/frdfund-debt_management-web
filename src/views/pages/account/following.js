@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { stringToDateTh, toCurrency, getUserData } from "@utils";
+import { stringToDateTh, toCurrency, ToDateDb, getUserData } from "@utils";
 import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/CustomModal";
 import Loading from "@views/components/modal/loading";
@@ -15,7 +15,13 @@ import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchFollow,
+  saveIsLoss,
+  getIsLoss,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
+
 
 const user = getUserData();
 const PageContent = () => {
@@ -24,6 +30,7 @@ const PageContent = () => {
   const [data, setData] = useState(null);
   const [policy, setPolicy] = useState(null);
   const [filter, setFilter] = useState(null);
+  const [detail, setSetDetail] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
   const [isView, setIsView] = useState(false);
   const [bookNo, setBookNo] = useState(null);
@@ -31,6 +38,14 @@ const PageContent = () => {
   const [remark, setRemark] = useState(null);
   const [clearFile, setClear] = useState(false);
   const [files, setFiles] = useState(null);
+  const [oldfiles, setOldFiles] = useState(null);
+  const download = (file) => {
+    console.log('download', file)
+  }
+  const RemoveFile = (index) => {
+    oldfiles.splice(index, 1);
+    setOldFiles(oldfiles);
+  }
   const onFileChange = async (files) => {
     if (files.length > 0) {
       await setFiles(files);
@@ -41,10 +56,12 @@ const PageContent = () => {
     if (files && files.length > 0) {
       const form = new FormData();
       form.append('id_KFKPolicy', policy.id_KFKPolicy);
-      form.append('BookNo', bookNo);
-      form.append('BookDate', ToDateDb(bookDate));
+      form.append('PolicyNO', policy.policyNO);
+      form.append('isLoss_no', bookNo);
+      form.append('isLoss_date', ToDateDb(bookDate));
+      form.append('reason', remark);
       files.forEach((item) => form.append("files", item));
-      const result = await requestClose(form);
+      const result = await saveIsLoss(form);
       if (result.isSuccess) {
         toast((t) => (
           <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
@@ -75,7 +92,22 @@ const PageContent = () => {
   const handleShowDetail = async (item, iv) => {
     await setIsView(iv)
     await setPolicy(item);
-    // get following
+    const result = await getIsLoss(item.id_KFKPolicy);
+    if (result.isSuccess) {
+      await setSetDetail(result.data);
+      await setBookNo(result.data?.isLoss_no)
+      await setBookDate(result.data?.isLoss_date)
+      await setRemark(result.data?.reason)
+      await setFiles(null)
+      await setOldFiles(result.data?.isLoss_docu.split(','))
+    } else {
+      await setSetDetail(null)
+      await setBookNo(null)
+      await setBookDate(null)
+      await setRemark(null)
+      await setFiles(null)
+      await setOldFiles(null)
+    }
     await setOpenDetail(true);
   }
   const exportFollow = async () => {
@@ -126,17 +158,44 @@ const PageContent = () => {
                   <div className="p-4 code-to-copy">
                     <div className="row">
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                        <Textbox title={'เลขที่หนังสือ'} value={bookNo} handleChange={(val) => setBookNo(val)}  />
+                        <Textbox title={'เลขที่หนังสือ'} value={bookNo} handleChange={(val) => setBookNo(val)} disabled={isView} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                        <DatePicker title={'วันที่หนังสือ'} value={bookDate} handleChange={(val) => setBookDate(val)} />
+                        <DatePicker title={'วันที่หนังสือ'} value={bookDate} handleChange={(val) => setBookDate(val)} disabled={isView} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
-                        <Textarea title={'หมายเหตุ'} value={remark} handleChange={(val) => setRemark(val)}  />
+                        <Textarea title={'หมายเหตุ'} value={remark} handleChange={(val) => setRemark(val)} disabled={isView} />
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
-                        <h5 className="text-center align-middle">เอกสารประกอบ</h5>
-                        <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                        <h5 className="text-center align-middle mb-3">เอกสารประกอบ</h5>
+                        {oldfiles && (
+                          <div className="col-12">
+                            {oldfiles.map((file, index) => (
+                              <div key={index} className="d-flex pb-3 border-bottom border-translucent media px-2">
+                                <div className="border p-2 rounded-2 me-2">
+                                  <img className="rounded-2" width={25} src="/assets/img/icons/file.png" alt="..." data-dz-thumbnail="data-dz-thumbnail" />
+                                </div>
+                                <div className="flex-1 d-flex flex-between-center">
+                                  <div>
+                                    <h6 data-dz-name="data-dz-name">{file}</h6>
+                                  </div>
+                                  <div className="dropdown">
+                                    <button className="btn btn-link text-body-quaternary btn-sm dropdown-toggle btn-reveal dropdown-caret-none" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <span className="fas fa-ellipsis-h"></span>
+                                    </button>
+                                    <div className="dropdown-menu dropdown-menu-end border border-translucent py-2">
+                                      <button className="dropdown-item" type="button" onClick={() => download(file)}>Download File</button>
+                                      <button className="dropdown-item" type="button" onClick={() => RemoveFile(index)}>Remove File</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {!isView && (
+                          <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                        )}
                       </div>
                     </div>
                   </div>
