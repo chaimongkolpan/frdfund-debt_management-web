@@ -5,7 +5,6 @@ import {
   getLegalAsset,
   updateLegalAsset,
   deleteLegalAsset,
-  getOperationDetail
 } from "@services/api";
 import Textbox from "@views/components/input/Textbox";
 import AreaTextbox from "@views/components/input/AreaTextbox";
@@ -16,27 +15,29 @@ const Asset = (props) => {
   const collateralRef = useRef(null);
   const [isMounted, setMounted] = useState(false);
   const [collaterals, setCollaterals] = useState(null);
-  const [collateral_type, setCollateralType] = useState('โฉนด');
-  const [collateralDetail, setCollateralDetail] = useState({ 
-    id_KFKPolicy: policy?.id_KFKPolicy, 
-    policyNO: policy?.policyNO, 
-    assetType: 'โฉนด', 
-    collateral_status: 'โอนได้',
-    parceL_province:'',
-    pre_emption_province:'',
-    nS3_province:'',
-    nS3A_province:'',
-    nS3B_province:'',
-    alrO_province:'', 
-    condO_province:'',
-    labT5_province:'',
-    house_province:'',
-    otheR_province:'',
-});
-  const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(true);
-  const [isOpenCollateralEdit, setOpenCollateralEdit] = useState(true);
+  const [collateral_type, setCollateralType] = useState(null);
+  const [collateralDetail, setCollateralDetail] = useState(null);
+  const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(false);
+  const [isOpenCollateralEdit, setOpenCollateralEdit] = useState(false);
   const [provinces, setProvOp] = useState(null);
-  const [data, setData] = useState([]);
+  const addCollateral = async() => {
+    await setCollateralDetail({ id_KFKPolicy: policy.id_KFKPolicy, policyNO: policy.policyNO, assetType: 'โฉนด', collateral_status: 'โอนได้' });
+    await setCollateralType('โฉนด')
+    await setOpenCollateralAdd(true)
+    await setOpenCollateralEdit(true)
+    if (collateralRef.current) {
+      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+  const editCollateral = async(item) => {
+    await setCollateralDetail(item)
+    await setCollateralType(item.assetType)
+    await setOpenCollateralAdd(false)
+    await setOpenCollateralEdit(true)
+    if (collateralRef.current) {
+      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
   const saveCollateral = async() => {
     const result = await updateLegalAsset(collateralDetail);
     if (result.isSuccess) {
@@ -68,10 +69,19 @@ const Asset = (props) => {
     }))
   }
   const fetchData = async () => {
-    const result = await getOperationDetail(policy.id_KFKPolicy);
+    const result = await getLegalAsset(policy.id_KFKPolicy);
     if (result.isSuccess) {
       await setCollaterals(result.collaterals)
-      await setCollateralDetail(result.data);
+      const item = result.collaterals.find(x => x.id_AssetPolicy == policy?.id_AssetPolicy)
+      if (policy?.id_AssetPolicy && item) {
+        await setCollateralDetail(item)
+        await setCollateralType(item.assetType)
+        await setOpenCollateralAdd(false)
+        await setOpenCollateralEdit(true)
+        if (collateralRef.current) {
+          collateralRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
     } else {
       await setCollaterals(null)
     }
@@ -88,25 +98,85 @@ const Asset = (props) => {
   }
   useEffect(() => {},[collateralRef]);
   useEffect(() => {
-   
     if (!isMounted) {
-     
       fetchData();
       getProvince();
     }
   },[])
-  useEffect(() => {
-    // if (isView) {
-    fetchData();
-    // } else {
-    // setDate(new Date())
-    // }
-}, [])
   return (
     <>
-      <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>
-        {/* <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addCollateral()}><span className="fas fa-plus fs-8"></span> เพิ่มหลักประกัน</button> */}
+      {/* <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>
+        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addCollateral()}><span className="fas fa-plus fs-8"></span> เพิ่มหลักประกัน</button>
       </div>
+      <div id="tableExample" data-list='{"valueNames":["id","name","province"],"page":10,"pagination":true}'>
+        <div className="table-responsive mx-n1 px-1">
+          <table className="table table-sm table-bordered fs-9 mb-0">
+            <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}>
+              <tr>
+              <th>#</th>
+              <th>เลขที่นิติกรรมสัญญา</th>
+              <th>ประเภทหลักทรัพย์</th>
+              <th>เลขที่ทะเบียน/โฉนด</th>
+              <th>เนื้อที่ (ไร่-งาน-ตรว.)</th>
+              {isView ? (
+                <th>ดูข้อมูล</th>
+              ) : (
+                <>
+                  <th>แก้ไขข้อมูล</th>
+                  <th>ลบข้อมูล</th>
+                </>
+              )}
+              </tr>
+            </thead>
+            <tbody className="list text-center align-middle">
+              {(collaterals && collaterals.length > 0) ? (collaterals.map((item,index) => (
+                <tr key={index}>
+                  <td className="align-middle">{index + 1}</td>
+                  <td>{item.policyNo}</td>
+                  <td>{item.collateral_type}</td>
+                  <td>{item.collateral_no}</td>
+                  <td>{item.collateral_area}</td>
+                  {isView ? (
+                    <td>
+                      <div className='d-flex justify-content-center'>
+                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => editCollateral(item)}>
+                          <i className="far fa-eye"></i>
+                        </button>
+                      </div>
+                    </td>
+                  ) : (
+                    <>
+                      <td>
+                        <div className='d-flex justify-content-center'>
+                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => editCollateral(item)}>
+                            <i className="far fa-edit"></i>
+                          </button>
+                        </div>
+                      </td>
+                      <td>
+                        <div className='d-flex justify-content-center'>
+                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger px-0" type='button' onClick={() => editCollateral(item)}>
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))) : (
+                <tr>
+                  <td className="fs-9 text-center align-middle" colSpan={7}>
+                    <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div> */}
+      <br />
+      {isOpenCollateralEdit && (
+      <>
         <div ref={collateralRef} className="row g-3">
           <div className="col-sm-12 col-md-6 col-lg-4">
             <div className="form-floating needs-validation">
@@ -125,7 +195,7 @@ const Asset = (props) => {
                 <option value="หุ้น">หุ้น</option>
                 <option value="อื่นๆ">อื่นๆ</option>
               </select>
-              <label htmlFor="floatingSelectTeam">หลักทรัพย์</label>
+              <label htmlFor="floatingSelectTeam">เอกสารสิทธิ์</label>
             </div>
           </div>
           <div className="col-sm-12 col-md-6 col-lg-4">
@@ -154,7 +224,8 @@ const Asset = (props) => {
           <div className="card shadow-none border my-4" data-component-card="data-component-card">
             <div className="card-body p-0">
               <div className="p-4 code-to-copy">
-
+                {collateral_type.includes('โฉนด') && (
+                  <>
                     {/* start card รายละเอียดโฉนดที่ดิน */}
                     <h3 className="text-center">โฉนดที่ดิน</h3>
                     <div className="row g-3">
@@ -245,8 +316,83 @@ const Asset = (props) => {
                         </div>
                       </div>
                     </div>
-                    {/* end card รายละเอียดโฉนดที่ดิน */}      
-
+                    {/* end card รายละเอียดโฉนดที่ดิน */}
+                    {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                    <div className="mb-1">
+                      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                        <div className="card-body p-0">
+                          <div className="p-4 code-to-copy">
+                            <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                            <div className="row g-3">
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้ให้สัญญา'} disabled={isView} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                  value={collateralDetail?.promisor}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                  value={collateralDetail?.contract_recipient}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'} disabled={isView}
+                                  handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                  rai={collateralDetail?.contract_area_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                  ngan={collateralDetail?.contract_area_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                  wa={collateralDetail?.contract_area_sqaure_wa}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'} disabled={isView}
+                                  handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                  rai={collateralDetail?.area_transfer_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                  ngan={collateralDetail?.area_transfer_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                  wa={collateralDetail?.area_transfer_sqaure_wa}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <div className="form-floating form-floating-advance-select ">
+                                  <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                  <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                    <option value="จำนอง">จำนอง</option>
+                                    <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                    <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                    <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                    <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                    <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                  value={collateralDetail?.source_of_wealth_other}
+                                  disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                  value={collateralDetail?.remark}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                  </>
+                )}
+                {collateral_type == 'ตราจอง' && (
+                  <>
                     {/* start card รายละเอียดตราจอง */}
                     <h3 className="text-center">ตราจอง</h3>
                     <div className="row g-3">
@@ -332,9 +478,82 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียดตราจอง */}
-
-
-
+                    {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                    <div className="mb-1">
+                      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                        <div className="card-body p-0">
+                          <div className="p-4 code-to-copy">
+                            <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                            <div className="row g-3">
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                  value={collateralDetail?.promisor} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                  value={collateralDetail?.contract_recipient}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                  handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                  rai={collateralDetail?.contract_area_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                  ngan={collateralDetail?.contract_area_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                  wa={collateralDetail?.contract_area_sqaure_wa} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                  handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                  rai={collateralDetail?.area_transfer_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                  ngan={collateralDetail?.area_transfer_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                  wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <div className="form-floating form-floating-advance-select ">
+                                  <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                  <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                    <option value="จำนอง">จำนอง</option>
+                                    <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                    <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                    <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                    <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                    <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                  value={collateralDetail?.source_of_wealth_other}
+                                  disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                  value={collateralDetail?.remark} disabled={isView}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                  </>
+                )}
+                {collateral_type == 'น.ส.3' && (
+                  <>
                     {/* start card รายละเอียดหนังสือรับรองการทำประโยชน์(น.ส.3) */}
                     <h3 className="text-center">หนังสือรับรองการทำประโยชน์(น.ส.3)</h3>
                     <div className="row g-3">
@@ -414,9 +633,82 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียดหนังสือรับรองการทำประโยชน์(น.ส.3) */}
-       
-
-
+                    {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                    <div className="mb-1">
+                      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                        <div className="card-body p-0">
+                          <div className="p-4 code-to-copy">
+                            <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                            <div className="row g-3">
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                  value={collateralDetail?.promisor}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                  value={collateralDetail?.contract_recipient}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'} disabled={isView}
+                                  handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                  rai={collateralDetail?.contract_area_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                  ngan={collateralDetail?.contract_area_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                  wa={collateralDetail?.contract_area_sqaure_wa}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                  handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                  rai={collateralDetail?.area_transfer_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                  ngan={collateralDetail?.area_transfer_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                  wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <div className="form-floating form-floating-advance-select ">
+                                  <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                  <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                    <option value="จำนอง">จำนอง</option>
+                                    <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                    <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                    <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                    <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                    <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                  value={collateralDetail?.source_of_wealth_other}
+                                  disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                  value={collateralDetail?.remark}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                  </>
+                )}
+                {collateral_type == 'น.ส.3 ก' && (
+                  <>
                     {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
                     <h3 className="text-center">หนังสือรับรอการทำประโยชน์(น.ส.3 ก)</h3>
                     <div className="row g-3">
@@ -514,9 +806,82 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
-
-
-
+                    {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                    <div className="mb-1">
+                      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                        <div className="card-body p-0">
+                          <div className="p-4 code-to-copy">
+                            <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                            <div className="row g-3">
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                  value={collateralDetail?.promisor} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                  value={collateralDetail?.contract_recipient} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'} disabled={isView}
+                                  handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                  rai={collateralDetail?.contract_area_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                  ngan={collateralDetail?.contract_area_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                  wa={collateralDetail?.contract_area_sqaure_wa}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'} disabled={isView}
+                                  handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                  rai={collateralDetail?.area_transfer_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                  ngan={collateralDetail?.area_transfer_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                  wa={collateralDetail?.area_transfer_sqaure_wa}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <div className="form-floating form-floating-advance-select ">
+                                  <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                  <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                    <option value="จำนอง">จำนอง</option>
+                                    <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                    <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                    <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                    <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                    <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                  value={collateralDetail?.source_of_wealth_other}
+                                  disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                  value={collateralDetail?.remark} disabled={isView}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                  </>
+                )}
+                {collateral_type == 'น.ส.3 ข' && (
+                  <>
                     {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
                     <h3 className="text-center">หนังสือรับรอการทำประโยชน์(น.ส.3 ข)</h3>
                     <div className="row g-3">
@@ -596,9 +961,82 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
-
-
-
+                    {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                    <div className="mb-1">
+                      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                        <div className="card-body p-0">
+                          <div className="p-4 code-to-copy">
+                            <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                            <div className="row g-3">
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                  value={collateralDetail?.promisor}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                  value={collateralDetail?.contract_recipient}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'} disabled={isView}
+                                  handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                  rai={collateralDetail?.contract_area_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                  ngan={collateralDetail?.contract_area_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                  wa={collateralDetail?.contract_area_sqaure_wa}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                  handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                  rai={collateralDetail?.area_transfer_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                  ngan={collateralDetail?.area_transfer_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                  wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <div className="form-floating form-floating-advance-select ">
+                                  <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                  <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                    <option value="จำนอง">จำนอง</option>
+                                    <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                    <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                    <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                    <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                    <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                  value={collateralDetail?.source_of_wealth_other}
+                                  disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                  value={collateralDetail?.remark} disabled={isView}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                  </>
+                )}
+                {collateral_type == 'ส.ป.ก.' && (
+                  <>
                     {/* start card รายละเอียด ส.ป.ก. */}
                     <h3 className="text-center">ส.ป.ก.</h3>
                     <div className="row g-3">
@@ -690,9 +1128,82 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียด ส.ป.ก. */}
-
-  
- 
+                    {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                    <div className="mb-1">
+                      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                        <div className="card-body p-0">
+                          <div className="p-4 code-to-copy">
+                            <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                            <div className="row g-3">
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                  value={collateralDetail?.promisor}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled={isView}
+                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                  value={collateralDetail?.contract_recipient}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'} disabled={isView}
+                                  handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                  rai={collateralDetail?.contract_area_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                  ngan={collateralDetail?.contract_area_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                  wa={collateralDetail?.contract_area_sqaure_wa}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                  handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                  rai={collateralDetail?.area_transfer_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                  ngan={collateralDetail?.area_transfer_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                  wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <div className="form-floating form-floating-advance-select ">
+                                  <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                  <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                    <option value="จำนอง">จำนอง</option>
+                                    <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                    <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                    <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                    <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                    <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                  value={collateralDetail?.source_of_wealth_other}
+                                  disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                  value={collateralDetail?.remark} disabled={isView}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                  </>
+                )}
+                {collateral_type == 'หนังสือแสดงกรรมสิทธิ์ห้องชุด' && (
+                  <>
                     {/* start card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
                     <h3 className="text-center">หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2)</h3>
                     <div className="row g-3">
@@ -858,8 +1369,10 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
-  
-
+                  </>
+                )}
+                {collateral_type == 'ภ.ท.บ.5' && (
+                  <>
                     {/* start card รายละเอียด ภ.ท.บ.5 */}
                     <h3 className="text-center">ภ.ท.บ.5</h3>
                     <div className="row g-3">
@@ -964,8 +1477,10 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียดสารบัญจดทะเบียน */}
-  
-
+                  </>
+                )}
+                {collateral_type == 'บ้าน' && (
+                  <>
                     {/* start card รายละเอียด บ้าน */}
                     <h3 className="text-center">บ้าน</h3>
                     <div className="row g-3">
@@ -1030,8 +1545,82 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียด บ้าน */}
-
-
+                    {/* start card รายละเอียดสารบัญจดทะเบียน */}                      
+                    <div className="mb-1">
+                      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                        <div className="card-body p-0">
+                          <div className="p-4 code-to-copy">
+                            <h4 className="text-center">สารบัญจดทะเบียน</h4><br />
+                            <div className="row g-3">
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้ให้สัญญา'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('promisor', val)} 
+                                  value={collateralDetail?.promisor} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
+                                  value={collateralDetail?.contract_recipient} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
+                                  handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
+                                  rai={collateralDetail?.contract_area_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
+                                  ngan={collateralDetail?.contract_area_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
+                                  wa={collateralDetail?.contract_area_sqaure_wa} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
+                                  handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
+                                  rai={collateralDetail?.area_transfer_rai}
+                                  handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
+                                  ngan={collateralDetail?.area_transfer_ngan}
+                                  handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
+                                  wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <div className="form-floating form-floating-advance-select ">
+                                  <label htmlFor="floaTingLabelSingleSelect">ที่มาของทรัพย์</label>
+                                  <select className="form-select" disabled={isView} value={collateralDetail?.source_of_wealth} onChange={(e) => handleChangeCollateral('source_of_wealth', e.target?.value)}>
+                                    <option value="จำนอง">จำนอง</option>
+                                    <option value="จำนองเฉพาะส่วน ขึ้นเนื้อที่">จำนองเฉพาะส่วน ขึ้นเนื้อที่</option>
+                                    <option value="สืบทรัพย์">สืบทรัพย์</option>
+                                    <option value="โอนตามมาตรา">โอนตามมาตรา 76</option>
+                                    <option value="ตีโอนชำระหนี้">ตีโอนชำระหนี้</option>
+                                    <option value="NPA ที่มีหลักประกันจำนองคงเหลือ">NPA ที่มีหลักประกันจำนองคงเหลือ</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-6">
+                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('source_of_wealth_other', val)} 
+                                  value={collateralDetail?.source_of_wealth_other}
+                                  disabled={collateralDetail?.source_of_wealth != 'อื่นๆ' || isView}
+                                />
+                              </div>
+                              <div className="col-sm-12 col-md-12 col-lg-12">
+                                <Textarea title={'หมายเหตุ'} containerClassname={'mb-3'} 
+                                  handleChange={(val) => handleChangeCollateral('remark', val)} 
+                                  value={collateralDetail?.remark} disabled={isView}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* end card รายละเอียดสารบัญจดทะเบียน */}
+                  </>
+                )}
+                {collateral_type == 'สังหาริมทรัพย์' && (
+                  <>
                     {/* start card รายละเอียด สังหาริมทรัพย์ */}
                     <h3 className="text-center">สังหาริมทรัพย์</h3>
                     <div className="row g-3">
@@ -1129,20 +1718,23 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียด สังหาริมทรัพย์ */}
-
-
+                  </>
+                )}
+                {collateral_type == 'หุ้น' && (
+                  <>
                     {/* start card รายละเอียด หุ้น */}
-                    {/* <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                    <div className="card shadow-none border my-2" data-component-card="data-component-card">
                       <div className="card-body p-0">
                         <div className="p-3 code-to-copy">
                           <h3 className="text-center">หุ้น</h3><br />
                         </div>
                       </div>
-                    </div> */}
+                    </div>
                     {/* end card รายละเอียด หุ้น */}
-        
-              
-
+                  </>
+                )}
+                {collateral_type == 'อื่นๆ' && (
+                  <>
                     {/* start card รายละเอียด อื่นๆ */}
                     <h3 className="text-center">อื่นๆ</h3>
                     <div className="col-sm-12 col-md-12 col-lg-12 g-3">
@@ -1254,15 +1846,16 @@ const Asset = (props) => {
                       </div>
                     </div>
                     {/* end card รายละเอียดสารบัญจดทะเบียน */}
-
+                  </>
+                )}
                 <br />
                 <div className={`d-flex justify-content-center ${isView ? 'd-none' : ''}`}>
                   <button className="btn btn-success me-2" type="button" onClick={() => saveCollateral()}>บันทึก</button>
-                  {/* {isOpenCollateralAdd ? (
+                  {isOpenCollateralAdd ? (
                     <button className="btn btn-secondary" type="button" onClick={() => setOpenCollateralEdit(false)}>ยกเลิก</button>
-                  ) : ( */}
+                  ) : (
                     <button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
-                  {/* )} */}
+                  )}
                 </div>
               </div>
             </div>
@@ -1270,6 +1863,8 @@ const Asset = (props) => {
         </div>
         {/* end card รายละเอียดหลักทรัพย์ */}
       </>
+      )}
+    </>
   );
 };
 export default Asset;

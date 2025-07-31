@@ -144,7 +144,7 @@ const PageContent = () => {
       )}
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-        <DetailAsset  policy={policy} /> 
+        <DetailAsset  policy={policy} isView /> 
         </Modal>
       )}
       {openSurvey && (
