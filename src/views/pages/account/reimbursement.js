@@ -71,7 +71,7 @@ const PageContent = () => {
     if (result.isSuccess) {
       const kfkcard = result?.data?.kfkCards[0];
       await setPlan(kfkcard?.transactions)
-      await setPlanPrint(result)
+      await setPlanPrint(result?.data)
     } else {
       await setPlan(null)
       await setPlanPrint(null)
