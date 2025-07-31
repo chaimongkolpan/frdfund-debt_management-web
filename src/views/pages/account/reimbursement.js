@@ -79,7 +79,7 @@ const PageContent = () => {
     await setOpenPlan(true);
   }
   const printCard = async () => {
-    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.zip', data: cardPrint };
+    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', data: cardPrint };
     const result = await printCardRe(param);
     if (result.isSuccess) {
       await onSearch(filter)
