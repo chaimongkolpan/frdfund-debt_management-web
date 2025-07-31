@@ -2319,6 +2319,60 @@ export const searchReimbursement = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getReimbursementPlan = async (filter) => {
+  const path = '/Account/get-reimbursement-plan';
+  try {
+    const result = await axios.get(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const printPlanRe = async (params) => {
+  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-PayLog';
+  try {
+    const result = await axios.post(path, params.data, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
+export const getReimbursementCard = async (filter) => {
+  const path = '/Account/get-reimbursement-card';
+  try {
+    const result = await axios.get(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const printCardRe = async (params) => {
+  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Card';
+  try {
+    const result = await axios.post(path, params.data, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
 //#endregion
 //#region Adjust
 export const searchAdjust = async (filter) => {
