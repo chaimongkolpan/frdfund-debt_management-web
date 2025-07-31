@@ -31,7 +31,8 @@ const PageContent = () => {
   const handlePrint = async (selected) => {
     const ids = selected.map(item => item.id_PlanPay)
     const selectedData = await getInvoice(ids);
-    const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: selectedData };
+    const receipts = selectedData.data;
+    const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
     if (result.isSuccess) {
       await onSearch(filter)
@@ -40,7 +41,8 @@ const PageContent = () => {
   const printReceipt = async (item) => {
     const ids = [item.id_PlanPay]
     const selectedData = await getInvoice(ids);
-    const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: selectedData };
+    const receipts = selectedData.data;
+    const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
     if (result.isSuccess) {
       await onSearch(filter)
