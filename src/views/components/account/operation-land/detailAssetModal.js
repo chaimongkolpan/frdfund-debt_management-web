@@ -36,6 +36,7 @@ const Asset = (props) => {
   const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(true);
   const [isOpenCollateralEdit, setOpenCollateralEdit] = useState(true);
   const [provinces, setProvOp] = useState(null);
+  const [data, setData] = useState([]);
   const saveCollateral = async() => {
     const result = await updateLegalAsset(collateralDetail);
     if (result.isSuccess) {
@@ -70,6 +71,7 @@ const Asset = (props) => {
     const result = await getOperationDetail(policy.id_KFKPolicy);
     if (result.isSuccess) {
       await setCollaterals(result.collaterals)
+      await setCollateralDetail(result.data);
     } else {
       await setCollaterals(null)
     }
@@ -86,11 +88,20 @@ const Asset = (props) => {
   }
   useEffect(() => {},[collateralRef]);
   useEffect(() => {
+   
     if (!isMounted) {
+     
       fetchData();
       getProvince();
     }
   },[])
+  useEffect(() => {
+    // if (isView) {
+    fetchData();
+    // } else {
+    // setDate(new Date())
+    // }
+}, [])
   return (
     <>
       <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>

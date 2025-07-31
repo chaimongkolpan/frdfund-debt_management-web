@@ -58,7 +58,9 @@ const operationLand = forwardRef((props, ref) => {
         changeCollateral: {
             assetType: 'โฉนด',
         },
-        separateCollateral: [],
+        separateCollateral: [{
+            assetType: 'โฉนด',
+        },],
         req_docu:[],
         borrowdeed_docu:[],
         approve_docu:[],
@@ -91,24 +93,23 @@ const operationLand = forwardRef((props, ref) => {
     };
     const handleShowDetail = async (item) => {
         setShowDetail(true);
-        await getChangeCollateral(item.id_KFKPolicy);
-        await getSeparateCollateral(item.id_KFKPolicy);
+        await getChangeCollateral(item.id_AssetPolicy);
+        await getSeparateCollateral(item.id_AssetPolicy);
         await getUseDeed(item);
     }
     const handleShowEdit = async (item) => {
         setShowEdit(true);
-        await getChangeCollateral(item.id_KFKPolicy);
-        await getSeparateCollateral(item.id_KFKPolicy);
+        await getChangeCollateral(item.id_AssetPolicy);
+        await getSeparateCollateral(item.id_AssetPolicy);
         await getUseDeed(item);
     }
     const onFileChange = (key, selectedFiles) => {
         if (selectedFiles.length > 0) {
           setCollateralDetail((prev) => ({
             ...prev,
-            [key]: selectedFiles, // เซ็ตเข้า key เช่น 'borrowdeed_docu'
+            [key]: selectedFiles, 
           }));
-      
-          // ถ้าอยากใช้ clearFile ต่อด้วยก็เซ็ตไว้เหมือนเดิม
+
           setClear((prev) => ({
             ...prev,
             [key]: false,
@@ -130,7 +131,7 @@ const operationLand = forwardRef((props, ref) => {
         if (result.isSuccess) {
             setCollateralDetail(prev => ({
                 ...prev,
-                separateCollateral: result.data
+                assetType: result.data?.assetType ?? prev.separateCollateral?.assetType, 
             }));
         }
     }
@@ -139,8 +140,9 @@ const operationLand = forwardRef((props, ref) => {
         const result = await getOperationChangeCollateral(id);
         if (result.isSuccess) {
             setCollateralDetail(prev => ({
-                ...prev,
-                changeCollateral: result.data
+                ...prev, 
+                ...result.data, 
+                assetType: result.data?.assetType ?? prev.changeCollateral?.assetType, 
             }));
         }
     }
@@ -188,7 +190,7 @@ const operationLand = forwardRef((props, ref) => {
     const RenderData = (item, index, checked) => {
         return (item && (
             <tr key={index}>
-                <td></td>
+                <td>{index+1}</td>
                 <td>
                     <div className='d-flex justify-content-center'>
                         {!item.deedBorrowReturn_status || item.deedBorrowReturn_status == 'ยืมโฉนด' ?
@@ -204,6 +206,7 @@ const operationLand = forwardRef((props, ref) => {
                 <td>{item.policyNO}</td>
                 <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>
+                <td>{item.collateralOwner}</td>
                 <td>{item.collateral_no}</td>
                 <td>{item.collateral_province}</td>
                 <td>{item.collateral_district}</td>
@@ -250,6 +253,7 @@ const operationLand = forwardRef((props, ref) => {
         }
     }, [])
     useEffect(() => {
+        console.log("test");
         // if (isView) {
         fetchData();
         // } else {
@@ -268,6 +272,33 @@ const operationLand = forwardRef((props, ref) => {
     const addData = async () => {
         await setAddTitle(true);
         await setShowEdit(true);
+        await setCollateralDetail({
+            id_KFKPolicy: policy?.id_KFKPolicy,
+            policyNO: policy?.policyNO,
+            assetType: 'โฉนด',
+            collateral_status: 'โอนได้',
+            parceL_province: '',
+            pre_emption_province: '',
+            nS3_province: '',
+            nS3A_province: '',
+            nS3B_province: '',
+            alrO_province: '',
+            condO_province: '',
+            labT5_province: '',
+            house_province: '',
+            otheR_province: '',
+            changeCollateral: {
+                assetType: 'โฉนด',
+            },
+            separateCollateral: [{
+                assetType: 'โฉนด',
+            },],
+            req_docu:[],
+            borrowdeed_docu:[],
+            approve_docu:[],
+            results_docu:[],
+            report_docu:[],
+        });
     }
 
     useImperativeHandle(ref, () => ({
@@ -482,7 +513,7 @@ const operationLand = forwardRef((props, ref) => {
                                                         </div>
                                                         <div className="col-sm-12 col-md-6 col-lg-4">
                                                             <div className="form-floating needs-validation">
-                                                                <select className="form-select" value={collateralDetail.changeCollateral?.conditions_cannot_transferred} onChange={(e) => handleChangeChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status == 'โอนได้' || showDetail}>
+                                                                <select className="form-select" value={collateralDetail.changeCollateral?.conditions_cannot_transferred} onChange={(e) => handleChangeChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={showDetail}>
                                                                     <option value="ติดอายัติ(เจ้าหนี้อื่น)">โอติดอายัติ(เจ้าหนี้อื่น)</option>
                                                                     <option value="เจ้าของหลักประกันเสียชีวิต">เจ้าของหลักประกันเสียชีวิต</option>
                                                                     <option value="ติดข้อกฎหมาย">ติดข้อกฎหมาย</option>
@@ -2813,7 +2844,7 @@ const operationLand = forwardRef((props, ref) => {
                                 </div>
                                 <div className="row g-2 mt-1">
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                        <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
+                                        <Textbox title={'เลขที่หนังสือยืมคืนโฉนด'} containerClassname={'mb-1'} handleChange={(val) => handleChangeCollateral('returndeed_no',val)} value={collateralDetail?.returndeed_no} disabled={showDetail} />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                         <DatePicker title={'วันที่หนังสือคืนโฉนด'}
