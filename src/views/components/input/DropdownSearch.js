@@ -9,7 +9,6 @@ const DropdownSearch = (props) => {
       handleChange(newval?.target.value);
   }
   useEffect(() => {
-    console.log(options)
     const choicesInit = () => {
       const { getData } = window.phoenix.utils;
   
