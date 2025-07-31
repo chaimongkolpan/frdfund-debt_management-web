@@ -3,8 +3,7 @@ import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
 import { 
   getBigDataProvinces,
-  getBigDataCreditors,
-  getBigDataCreditorTypes,
+  getYears,
 } from "@services/api";
 
 const Filter = (props) => {
@@ -12,6 +11,7 @@ const Filter = (props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
+  const [yearOp, setYearOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
   const onSubmit = () => {
@@ -20,7 +20,10 @@ const Filter = (props) => {
         idcard: "",
         name: "",
         loan_province: "",
-        debtStatus: "",
+        region: "",
+        year: "",
+        month: "",
+        debtStatusType: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE,
@@ -38,31 +41,14 @@ const Filter = (props) => {
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-      const resultCreditorType = await getBigDataCreditorTypes(null);
-      if (resultCreditorType.isSuccess) {
-        const temp1 = resultCreditorType.data.map(item => item.name);
-        await setCreditorTypeOp(temp1);
-        await setFilter((prevState) => ({
-          ...prevState,
-          ...({loan_creditor_type: 'all'})
-        }))
-        const resultCreditor = await getBigDataCreditors(null, null);
-        if (resultCreditor.isSuccess) {
-          const temp2 = resultCreditor.data.map(item => item.name);
-          await setCreditorOp(temp2);
-          await setFilter((prevState) => ({
-            ...prevState,
-            ...({loan_creditor_name: 'all'})
-          }))
-        } else await setCreditorOp(null);
-      } else {
-        await setCreditorTypeOp(null);
-        await setCreditorOp(null);
-      } 
     } else {
        await setProvOp(null);
-       await setCreditorTypeOp(null);
-       await setCreditorOp(null);
+    }
+    const resultYear = await getYears();
+    if (resultYear.isSuccess) {
+      await setYearOp(resultYear.data);
+    } else {
+       await setYearOp(null);
     }
     setIsMounted(true);
     setLoading(false);
@@ -94,6 +80,14 @@ const Filter = (props) => {
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
+          <Dropdown 
+            title={'ภาค'} 
+            defaultValue={'all'} 
+            options={['กลาง','ตะวันออกเฉียงเหนือ','ใต้','เหนือ']}
+            handleChange={(val) => onChange('region', val)}
+            hasAll />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
@@ -104,32 +98,30 @@ const Filter = (props) => {
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
+          {yearOp && (
+            <Dropdown 
+              title={'ปีงบประมาณ'} 
+              defaultValue={'all'} 
+              options={yearOp}
+              handleChange={(val) => onChange('year', val)}
+              hasAll />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
           <Dropdown 
-            title={'ประเภทจัดการหนี้'} 
+            title={'เดือน'} 
             defaultValue={'all'} 
-            options={['NPL','NPA']}
-            handleChange={(val) => onChange('loan_debt_type', val)}
+            options={['1-มกราคม','2-กุมภาพันธ์','3-มีนาคม','4-เมษายน','5-พฤษภาคม','6-มิถุนายน','7-กรกฎาคม','8-สิงหาคม','9-กันยายน','10-ตุลาคม','11-พฤศจิกายน','12-ธันวาคม']}
+            handleChange={(val) => onChange('month', val)}
             hasAll />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {creditorTypeOp && (
-            <Dropdown 
-              title={'ประเภทเจ้าหนี้'} 
-              defaultValue={'all'} 
-              options={creditorTypeOp} hasAll
-              handleChange={(val) => onChange('loan_creditor_type', val)}
-            />
-          )}
-        </div>
-        <div className="col-sm-12 col-md-6 col-lg-6">
-          {creditorOp && (
-            <Dropdown 
-              title={'สถาบันเจ้าหนี้'} 
-              defaultValue={'all'} 
-              options={creditorOp} hasAll
-              handleChange={(val) => onChange('loan_creditor_name', val)}
-            />
-          )}
+          <Dropdown 
+            title={'ประเภทสถานะบัญชีลูกหนี้'} 
+            defaultValue={'all'} 
+            options={['หนี้ปกติ','หนี้ผิดนัด (งวดที่ 1,2)','หนี้ผิดนัด (2 งวดติดต่อกัน)','หนี้ผิดนัด (งวดที่ 3 ขึ้นไป)','หนี้ผิดนัด (3 งวดติดต่อกัน)','ลูกหนี้สิ้นสุดอายุสัญญา','สงสัยจะสูญ']}
+            handleChange={(val) => onChange('debtStatusType', val)}
+            hasAll />
         </div>
         <div className="col-12">
           <div className="row g-3 justify-content-center">

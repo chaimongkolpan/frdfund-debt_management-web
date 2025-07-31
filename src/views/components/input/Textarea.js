@@ -9,7 +9,7 @@ const Textarea = (props) => {
       handleChange(newval?.target.value);
   }
   return (
-    <div className={`input-group ${containerClassname ?? ''}`}>
+    <div className={`input-group h-100 ${containerClassname ?? ''}`}>
       <Label className={`input-group-text`}>{title}</Label>
       <Input className={`${classname ?? ''}`} type={'textarea'} placeholder={placeholder} onChange={(newval) => onChange(newval)} value={val} disabled={disabled} />
     </div>
