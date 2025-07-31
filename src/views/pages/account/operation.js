@@ -75,10 +75,10 @@ const PageContent = () => {
   const submitOperation = async() => {
     const data = operationLandRef.current?.getData(); 
     console.log('Operation data:', data);
-    const result = await updateOperationLand(data.collateralDetail);
-    if (result.isSuccess) {
-       console.log("save operation done");
-    }
+    //const result = await updateOperationLand(data.collateralDetail);
+    // if (result.isSuccess) {
+    //    console.log("save operation done");
+    // }
 
   }
 
