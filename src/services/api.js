@@ -2451,15 +2451,23 @@ export const searchExpropriated = async (filter) => {
   }
 };
 export const searchBorrow = async (filter) => {
-  const path = '/Operation/search-legal-contract';
+  const path = '/Account/search-deed-borrow';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getBorrowHistory = async (id) => {
+  const path = '/Account/get-deed-borrow-history';
+  try {
+    const result = await axios.get(path, { params: { id } });
     if (result.status == 200)
       return result.data;
     else
