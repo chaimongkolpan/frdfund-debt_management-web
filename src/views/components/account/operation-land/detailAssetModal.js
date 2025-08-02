@@ -33,7 +33,6 @@ const Asset = (props) => {
   const fetchData = async () => {
     const result = await getLegalAsset(policy.id_KFKPolicy);
     if (result.isSuccess) {
-      await setCollaterals(result.collaterals)
       const item = result.collaterals.find(x => x.id_AssetPolicy == policy?.id_AssetPolicy)
       if (policy?.id_AssetPolicy && item) {
         await setCollateralDetail(item)
@@ -44,8 +43,6 @@ const Asset = (props) => {
           collateralRef.current.scrollIntoView({ behavior: 'smooth' });
         }
       }
-    } else {
-      await setCollaterals(null)
     }
   }
   const getProvince = async () => {

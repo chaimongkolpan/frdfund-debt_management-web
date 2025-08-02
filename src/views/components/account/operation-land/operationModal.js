@@ -379,8 +379,6 @@ const operationLand = forwardRef((props, ref) => {
                                 </div>
                             </div>
                             )} */}
-                        </div>
-                    </div>
                     {/* end รายละเอียดดำเนินการในที่ดิน */}
                     {(showEdit || showDetail) && (<> {/* start card แก้ไขรายละเอียดดำเนินการในที่ดิน */}
                         <div className="card shadow-none border my-2" data-component-card="data-component-card">
