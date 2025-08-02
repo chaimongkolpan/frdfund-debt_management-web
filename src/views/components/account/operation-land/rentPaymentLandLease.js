@@ -7,159 +7,209 @@ import AreaTextbox from "@views/components/input/AreaTextbox";
 import DropZone from "@views/components/input/DropZone";
 import { Input, Label } from 'reactstrap'
 import DatePicker from "@views/components/input/DatePicker";
+import {
+    getReceiveRent,
+    saveRecieveRent,
+    updateRecieveRent
+} from "@services/api";
+
 const editLandLeaseModal = (props) => {
-    const { isOpen,onOk, policy,setModal } = props;
-    const [date, setDate] = useState(null);
+    const { isOpen, onOk, policy, setModal, propData } = props; // เพิ่ม propData
     const [data, setData] = useState([]);
-    const interest = 0.0;
-    const [installment, setInstallment] = useState(null);
-    const [year, setYear] = useState(null);
-    const [plans, setPlan] = useState(null);
-    const [clearFile, setClear] = useState(false);
-    const [files, setFiles] = useState(null);
-    const collateralRef = useRef(null);
-    const [isMounted, setMounted] = useState(false);
-    const [collateral_type, setCollateralType] = useState('โฉนด');
-    const [addTile, setAddTitle] = useState(false);
-    const [showDetail, setShowDetail] = useState(false);
-    const [showEdit, setShowEdit] = useState(false);
-    const [provinces, setProvOp] = useState(null);
-    const [useAsset, setUseAsset] = useState(false);
-    const [isAssetChanged, setIsAssetChanged] = useState(false);
-    const [collateralDetail, setCollateralDetail] = useState({
-        id_KFKPolicy: policy?.id_KFKPolicy,
-        policyNO: policy?.policyNO,
-        assetType: 'โฉนด',
-        collateral_status: 'โอนได้',
-        parceL_province: '',
-        pre_emption_province: '',
-        nS3_province: '',
-        nS3A_province: '',
-        nS3B_province: '',
-        alrO_province: '',
-        condO_province: '',
-        labT5_province: '',
-        house_province: '',
-        otheR_province: '',
-    });
-   
-    const [collateralForms, setCollateralForms] = useState([
-        // { id: Date.now(), assetType: '' }, // ชุดแรก default
-    ]);
+    const [clearFile, setClear] = useState({});
+    const [files, setFiles] = useState({});
+    
+    // เปลี่ยนเป็น array ของ objects สำหรับจัดการหลายฟอร์ม
+    const [formData, setFormData] = useState([]);
+    
+    // ฟังก์ชันเพิ่มฟอร์มใหม่
     const handleAddForm = () => {
-        setCollateralForms([...collateralForms, { id: Date.now(), assetType: '' }]);
+        const newForm = {
+            id: Date.now(),
+            id_AssetRentalLog: 0,
+            id_AssetRental: 0,
+            rtNo: formData.length,
+            payment_docu: '',
+            rent_no: '',
+            rent_date: null,
+            pay_docuno: '',
+            pay_date: null,
+            cheques_no: '',
+            cheques_date: null,
+            cashier_check_no: '',
+            cashier_check_date: null,
+            transfer_rent_date: null,
+            cashier_check_amount: 0,
+            rf: 0,
+            rfNo: 0,
+            refund_farmers_docu: '',
+            refund_amount: 0,
+            debt_deduc_amount: 0,
+            transfer_req_docu: '',
+            transfer_no: '',
+            transfer_date: null,
+            payment_no: '',
+            refund_date: null,
+            amount: 0,
+            interest: 0,
+            total_amount: 0
+        };
+        setFormData([...formData, newForm]);
     };
 
-    const handleRemoveForm = (idToRemove) => {
-        setCollateralForms(collateralForms.filter(({ id }) => id !== idToRemove));
+    // ฟังก์ชันลบฟอร์ม
+    const handleRemoveForm = (formId) => {
+        setFormData(formData.filter(form => form.id !== formId));
     };
-    const handleChangeAssetType = (id, newType) => {
-        setCollateralForms(forms =>
-            forms.map(f => f.id === id ? { ...f, assetType: newType } : f)
+
+    // ฟังก์ชันจัดการการเปลี่ยนแปลงข้อมูลในฟอร์ม
+    const handleChange = (formId, fieldName, value) => {
+        setFormData(prevData => 
+            prevData.map(form => 
+                form.id === formId 
+                    ? { ...form, [fieldName]: value }
+                    : form
+            )
         );
     };
-    const handleShowRent = async () => {
-        setShowDetail(true);
-    }
 
-    const handleShowEdit = async () => {
-        setShowEdit(true);
-    }
-    const onFileChange = async (files) => {
+    // ฟังก์ชันจัดการไฟล์
+    const onFileChange = async (formId, fieldName, files) => {
         if (files.length > 0) {
-            await setFiles(files);
-            await setClear(false);
+            setFiles(prev => ({
+                ...prev,
+                [`${formId}_${fieldName}`]: files
+            }));
+            setClear(prev => ({
+                ...prev,
+                [`${formId}_${fieldName}`]: false
+            }));
         }
-    }
-    const onSubmitFile = async () => {
-        if (files && files.length > 0) {
-            const form = new FormData();
-            form.append('ids[]', policy.id_KFKPolicy);
-            form.append('document_type', 'เอกสารส่งคืนนิติกรรมสัญญา');
-            files.forEach((item) => form.append("files", item));
-            const result = await saveDocumentPolicy(form);
-            if (result.isSuccess) {
-                await setUploadStatus("success");
-            } else {
-                await setUploadStatus("fail");
-            }
-        } else {
-            console.error('no file upload');
-        }
-    }
-    const cal = async () => {
-        if (installment && year) {
-            let pl = [];
-            let total = policy?.loan_amount;
-            const ins = Math.round((policy?.loan_amount / installment) * 100.0) / 100.0;
-            const monthPerInstall = 12 * year / installment;
-            const now = new Date();
-            let y = now.getFullYear();
-            let m = now.getMonth() + 1;
-            let d = now.getDate();
-            for (let i = 0; i < installment; i++) {
-                m += monthPerInstall;
-                if (m / 12 > 1) y += 1;
-                m %= 12;
-                if (i == installment - 1) {
-                    let inte = (total * interest / 100.0);
-                    let deduc = ins - inte;
-                    pl.push({
-                        pno: i + 1, pDate: new Date(y, m - 1, d), ppp: total, yokma: total, interes: inte, dd: total, bl: 0,
-                        policyNo: policy.policyNO, intrate: interest, plubrate: 0, isKfk: 0
-                    });
-                    total -= deduc;
-                } else {
-                    let inte = (total * interest / 100.0);
-                    let deduc = ins - inte;
-                    pl.push({
-                        pno: i + 1, pDate: new Date(y, m - 1, d), ppp: ins, yokma: total, interes: inte, dd: deduc, bl: total - deduc,
-                        policyNo: policy.policyNO, intrate: interest, plubrate: 0, isKfk: 0
-                    });
-                    total -= deduc;
-                }
-            }
-            await setPlan(pl);
-        }
-    }
+    };
+
     const save = async () => {
-        const result = await savePlanPay(plans);
-        if (result.isSuccess) {
-            await fetchData();
+        const promises = formData.map(async (form) => {
+            const dataToSave = {
+                ...form,
+                id_KFKPolicy: policy?.id_KFKPolicy,
+                policyNO: policy?.policyNO,
+                id_AssetPolicy: policy?.id_AssetPolicy,
+                id_AssetRental: policy?.id_AssetRental,
+                indexAssetPolicy: policy?.indexAssetPolicy,
+            };
+            
+            console.log("Data before submit:", dataToSave);
+            
+            if (form.id_AssetRentalLog && form.id_AssetRentalLog > 0) {
+                return await updateRecieveRent(dataToSave);
+            } else {
+                return await saveRecieveRent(dataToSave);
+            }
+        });
+
+        try {
+            const results = await Promise.all(promises);
+            const allSuccess = results.every(result => result?.isSuccess);
+            
+            if (allSuccess) {
+                setModal(false);
+                // อาจจะต้อง refresh data
+                fetchData();
+            }
+        } catch (error) {
+            console.error('Error saving data:', error);
         }
-    }
-    const print = async () => {
-        const result = await printPlanPay({ type: 'application/octet-stream', filename: 'แผนการชำระเงินคืน_' + (new Date().getTime()) + '.zip', data: { id_KFKPolicy: policy.id_KFKPolicy, policyNo: policy.policyNO } });
-        if (result.isSuccess) {
-        }
-    }
+    };
+
     const fetchData = async () => {
-        const result = await getOperationDetail(policy.id_KFKPolicy);
+        const result = await getReceiveRent(policy.id_KFKPolicy);
         if (result.isSuccess) {
-            await setDate(result.data.policyStartDate)
-            await setYear(result.data.numberOfYearPayback)
-            await setInstallment(result.data.numberOfPeriodPayback)
-            await setData(result.data);
+           // setData(result.data || []);
+            const mockData = [
+                {
+                  "id_AssetRentalLog": 0,
+                  "id_AssetRental": 0,
+                  "rtNo": 0,
+                  "payment_docu": "string",
+                  "rent_no": "string",
+                  "rent_date": "2025-08-02T13:28:53.211Z",
+                  "pay_docuno": "string",
+                  "pay_date": "2025-08-02T13:28:53.211Z",
+                  "cheques_no": "string",
+                  "cheques_date": "2025-08-02T13:28:53.211Z",
+                  "cashier_check_no": "string",
+                  "cashier_check_date": "2025-08-02T13:28:53.211Z",
+                  "transfer_rent_date": "2025-08-02T13:28:53.211Z",
+                  "cashier_check_amount": 0,
+                  "rf": 0,
+                  "rfNo": 0,
+                  "refund_farmers_docu": "string",
+                  "refund_amount": 0,
+                  "debt_deduc_amount": 0,
+                  "transfer_req_docu": "string",
+                  "transfer_no": "string",
+                  "transfer_date": "2025-08-02T13:28:53.211Z",
+                  "payment_no": "string",
+                  "refund_date": "2025-08-02T13:28:53.211Z",
+                  "amount": 0,
+                  "interest": 0,
+                  "total_amount": 0
+                }
+              ];
+              setData(mockData);
+            // ถ้ามีข้อมูลจาก API ให้ใส่ใน formData สำหรับแก้ไข
+            if (result.data && result.data.length > 0) {
+                const formsFromAPI = result.data.map((item, index) => ({
+                    ...item,
+                    id: item.id_AssetRentalLog || Date.now() + index
+                }));
+                setFormData(formsFromAPI);
+            }
         }
-    }
- const toggle = () => setModal(!isOpen);
- const RenderData = (item, index, checked) => {
-    return (item && (
-        <tr key={index}>
-            <td>{index + 1}</td>
-            <td>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenEditLandRental" onClick={() => setOpenEditLandLeaseModal(true)}><span class="fas fa-list"></span></button>
-                </div>
-            </td>
-            <td>{item.assetType}</td>
-            <td>{item.assetType}</td>
-            <td>{item.assetType}</td>
-            <td>{item.assetType}</td>
-            <td>{item.assetType}</td>
-        </tr>
-    ))
-}
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const handleOpenReceiveRentDetail = (item) => {
+        // เปิดฟอร์มแก้ไขสำหรับ item นี้
+        const existingFormIndex = formData.findIndex(form => 
+            form.id_AssetRentalLog === item.id_AssetRentalLog
+        );
+        
+        if (existingFormIndex === -1) {
+            // ถ้ายังไม่มีในฟอร์ม ให้เพิ่มเข้าไป
+            setFormData(prev => [...prev, { ...item, id: item.id_AssetRentalLog || Date.now() }]);
+        }
+    };
+
+    const toggle = () => setModal(!isOpen);
+
+    const RenderData = (item, index) => {
+        return (item && (
+            <tr key={index}>
+                <td>{index + 1}</td>
+                <td>
+                    <div className="d-flex justify-content-center">
+                        <button 
+                            type="button" 
+                            className="btn btn-outline-success btn-sm ms-2" 
+                            onClick={() => handleOpenReceiveRentDetail(item)}
+                        >
+                            <span className="fas fa-list"></span>
+                        </button>
+                    </div>
+                </td>
+                <td>{item.rtNo}</td>
+                <td>{item.pay_date}</td>
+                <td>{item.cashier_check_amount}</td>
+                <td>{item.refund_amount}</td>
+                <td>{item.debt_deduc_amount}</td>
+            </tr>
+        ))
+    };
+
     return (
         <Modal
             isOpen={isOpen}
@@ -171,16 +221,22 @@ const editLandLeaseModal = (props) => {
             hideFooter={true}
             setModal={setModal}
         >
-            <div className="card my-2 border-0" data-component-card="data-component-card"  >
+            <div className="card my-2 border-0" data-component-card="data-component-card">
                 <div className="p-3 code-to-copy">
                     <div className="col-12 mt-3 mb-3">
                         <div className="row g-3 justify-content-end">
                             <div className="col-auto">
-                                <button className="btn btn-primary me-1 mb-1 " type="button" onClick={handleAddForm}><span className="fas fa-plus fs-8"></span> เพิ่มรับเงินค่าเช่า</button>
-
+                                <button 
+                                    className="btn btn-primary me-1 mb-1" 
+                                    type="button" 
+                                    onClick={handleAddForm}
+                                >
+                                    <span className="fas fa-plus fs-8"></span> เพิ่มรับเงินค่าเช่า
+                                </button>
                             </div>
                         </div>
                     </div>
+                    
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                         <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
                             <tr>
@@ -197,93 +253,175 @@ const editLandLeaseModal = (props) => {
                             </tr>
                         </thead>
                         <tbody className="list text-center align-middle" id="bulk-select-body">
-                            {(data && data.length > 0) ? (data.map((item, index) => RenderData(item, index))) : (
+                            {(data && data.length > 0) ? (
+                                data.map((item, index) => RenderData(item, index))
+                            ) : (
                                 <tr>
-                                    <td className="fs-9 text-center align-middle" colSpan={20}>
+                                    <td className="fs-9 text-center align-middle" colSpan={7}>
                                         <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
-                    {collateralForms.map((form, index) => (
-                        < div key={form.id} className="mb-1 rounded p-3 position-relative">
+
+                    {/* Render ฟอร์มทั้งหมด */}
+                    {formData.map((form, index) => (
+                        <div key={form.id} className="mb-1 rounded p-3 position-relative">
                             <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                 <div className="card-body p-0">
                                     <div className="p-3 code-to-copy">
-                                        <div className="d-flex justify-content-center mb-1">
-                                            <span className="text-center fw-bold">รับเงินค่าเช่าครั้งที่ {index + 1}</span>
-                                        </div>
+                                    <div className="d-flex justify-content-center mb-3">
+                                        <span className="text-center fw-bold">รับเงินค่าเช่าครั้งที่ {form.rtNo + 1}</span>
+                                    </div>
+                                        
                                         <div className="d-flex justify-content-center mt-1">
                                             <span className="text-center fw-bold">เอกสารประกอบการโอนเงิน</span>
                                         </div>
                                         <br />
+                                        
                                         <div className="col-12 mt-1 mb-3">
-                                            <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                            <DropZone 
+                                                onChange={(f) => onFileChange(form.id, 'payment_docu', f)} 
+                                                clearFile={clearFile[`${form.id}_payment_docu`]} 
+                                                accept={'*'} 
+                                            />
                                         </div>
                                         <br />
 
-
                                         <div className="row g-2 mb-1">
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'เลขที่หนังสือ'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'rent_no', val)}  
+                                                    value={form?.rent_no || ''} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <DatePicker title={'วันที่หนังสือ'} />
+                                                <DatePicker 
+                                                    title={'วันที่หนังสือ'}
+                                                    value={form.rent_date} 
+                                                    handleChange={(val) => handleChange(form.id, 'rent_date', val)}  
+                                                /> 
                                             </div>
 
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'เลขที่ใบสำคัญรับ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'เลขที่ใบสำคัญรับ'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'pay_docuno', val)}  
+                                                    value={form?.pay_docuno || ''} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <DatePicker title={'วันที่ได้รับเงิน'} />
+                                                <DatePicker 
+                                                    title={'วันที่ได้รับเงิน'} 
+                                                    value={form.pay_date} 
+                                                    handleChange={(val) => handleChange(form.id, 'pay_date', val)}  
+                                                /> 
                                             </div>
 
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'เลขที่แคชเชียร์เช็ค'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'เลขที่เช็ค'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'cheques_no', val)}  
+                                                    value={form?.cheques_no || ''} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <DatePicker title={'วันที่แคชเชียร์เช็ค'} />
+                                                <DatePicker 
+                                                    title={'วันที่เช็ค'} 
+                                                    value={form.cheques_date} 
+                                                    handleChange={(val) => handleChange(form.id, 'cheques_date', val)}  
+                                                /> 
+                                            </div>
+
+                                            <div className="col-sm-12 col-md-6 col-lg-6 ">
+                                                <Textbox 
+                                                    title={'เลขที่แคชเชียร์เช็ค'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'cashier_check_no', val)}  
+                                                    value={form?.cashier_check_no || ''} 
+                                                />
+                                            </div>
+                                            <div className="col-sm-12 col-md-6 col-lg-6 ">
+                                                <DatePicker 
+                                                    title={'วันที่แคชเชียร์เช็ค'} 
+                                                    value={form.cashier_check_date} 
+                                                    handleChange={(val) => handleChange(form.id, 'cashier_check_date', val)}  
+                                                /> 
                                             </div>
 
                                             <div className="col-sm-12 col-md-6 col-lg-6">
-                                                <DatePicker title={'วันที่การโอน'} />
+                                                <DatePicker 
+                                                    title={'วันที่การโอน'} 
+                                                    value={form.transfer_rent_date} 
+                                                    handleChange={(val) => handleChange(form.id, 'transfer_rent_date', val)}  
+                                                /> 
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'จำนวนเงิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'จำนวนเงิน'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'cashier_check_amount', val)}  
+                                                    value={form?.cashier_check_amount || 0} 
+                                                />
                                             </div>
                                         </div>
-
-                                    </div></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div className='form-switch mb-2 d-flex justify-content-center'>
                                 <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                     <p className='fw-bold mb-0'>คืนเงิน/หักหนี้</p>
-                                    <Input type='switch' id='flag1' name='flag1' onChange={(e) => handleChangeCollateral('flag1', e.target.checked)} checked={collateralDetail?.flag1} />
+                                    <Input 
+                                        type='switch' 
+                                        id={`rf_${form.id}`} 
+                                        name='rf' 
+                                        onChange={(e) => handleChange(form.id, 'rf', e.target.checked ? 1 : 0)} 
+                                        checked={form?.rf == 1} 
+                                    />
                                 </div>
                             </div>
-                            <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                            {form?.rf == 1 && ( <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                 <div className="card-body p-0">
                                     <div className="p-3 code-to-copy">
                                         <div className="d-flex justify-content-center mb-1">
-                                            <span className="text-center fw-bold">คืนเงิน/หักหนี้ ครั้งที่ {index + 1}</span>
+                                            <span className="text-center fw-bold">คืนเงิน/หักหนี้ ครั้งที่ {form.rfNo + 1}</span>
                                         </div>
                                         <div className="d-flex justify-content-center mt-1">
                                             <span className="text-center fw-bold">เอกสารเกษตรกรรับแจ้งรับเงินคืนหรือหักหนี้</span>
                                         </div>
                                         <br />
+                                        
                                         <div className="col-12 mt-1 mb-3">
-                                            <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                            <DropZone 
+                                                onChange={(f) => onFileChange(form.id, 'refund_farmers_docu', f)} 
+                                                clearFile={clearFile[`${form.id}_refund_farmers_docu`]} 
+                                                accept={'*'} 
+                                            />
                                         </div>
-                                        <br />
-
                                         <br />
 
                                         <div className="row g-2">
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'คืนเงินจำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'คืนเงินจำนวน'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'refund_amount', val)}  
+                                                    value={form?.refund_amount || 0} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'หักหนี้จำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'หักหนี้จำนวน'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'debt_deduc_amount', val)}  
+                                                    value={form?.debt_deduc_amount || 0} 
+                                                />
                                             </div>
                                         </div>
 
@@ -291,48 +429,90 @@ const editLandLeaseModal = (props) => {
                                             <span className="text-center fw-bold">ทำเรื่องให้บัญชีโอนเงิน</span>
                                         </div>
                                         <br />
+                                        
                                         <div className="col-12 mt-1 mb-3">
-                                            <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                            <DropZone 
+                                                onChange={(f) => onFileChange(form.id, 'transfer_req_docu', f)} 
+                                                clearFile={clearFile[`${form.id}_transfer_req_docu`]} 
+                                                accept={'*'} 
+                                            />
                                         </div>
                                         <br />
 
                                         <div className="row g-2">
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'เลขที่หนังสือ'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'transfer_no', val)}  
+                                                    value={form?.transfer_no || ''} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <DatePicker title={'วันที่หนังสือ'} />
+                                                <DatePicker 
+                                                    title={'วันที่หนังสือ'} 
+                                                    value={form.transfer_date} 
+                                                    handleChange={(val) => handleChange(form.id, 'transfer_date', val)}  
+                                                /> 
                                             </div>
 
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <Textbox title={'เลขที่ใบสำคัญการจ่าย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'เลขที่ใบสำคัญการจ่าย'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'payment_no', val)}  
+                                                    value={form?.payment_no || ''} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
-                                                <DatePicker title={'วันที่โอนเงิน'} />
+                                                <DatePicker 
+                                                    title={'วันที่โอนเงิน'} 
+                                                    value={form.refund_date} 
+                                                    handleChange={(val) => handleChange(form.id, 'refund_date', val)}  
+                                                /> 
                                             </div>
 
                                             <div className="col-sm-12 col-md-6 col-lg-6">
-                                                <Textbox title={'จำนวนเงินค่าเช่า'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'จำนวนเงินค่าเช่า'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'amount', val)}  
+                                                    value={form?.amount || 0} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6">
-                                                <Textbox title={'ดอกเบี้ย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'ดอกเบี้ย'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'interest', val)}  
+                                                    value={form?.interest || 0} 
+                                                />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6">
-                                                <Textbox title={'รวมจำนวนเงินทั้งสิ้น'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} />
+                                                <Textbox 
+                                                    title={'รวมจำนวนเงินทั้งสิ้น'} 
+                                                    containerClassname={'mb-3'} 
+                                                    handleChange={(val) => handleChange(form.id, 'total_amount', val)}  
+                                                    value={form?.total_amount || 0} 
+                                                />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>)}
 
-                        </ div>))}
+                        </div>
+                    ))}
                 </div>
-                <div className={`d-flex justify-content-center`}>
-                    <button className="btn btn-success me-2" type="button" onClick={() => saveCollateral()}>บันทึก</button>
-
+                
+                <div className="d-flex justify-content-center">
+                    <button className="btn btn-success me-2" type="button" onClick={() => save()}>
+                        บันทึก
+                    </button>
                 </div>
             </div>
         </Modal>
     );
-}
+};
+
 export default editLandLeaseModal;

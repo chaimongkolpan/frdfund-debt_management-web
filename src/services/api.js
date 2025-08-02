@@ -1732,6 +1732,48 @@ export const getOperationDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
+export const getSurveyDetail = async (ids) => {
+  const path = '/operationLand/get-surveying';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getRentalDetail = async (ids) => {
+  const path = '/operationLand/get-rental';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getReceiveRent = async (ids) => {
+  const path = '/operationLand/get-receiverent';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getOperationChangeCollateral = async (id) => {
   const path = '/operationLand/view-operationland-changecollateral';
   try {
@@ -1774,8 +1816,64 @@ export const getOperationSeparateUsedeed = async (params) => {
     return defaultErrorResponse;
   }
 };
+export const getSurveyChangeCollateral = async (id) => {
+  const path = '/operationLand/view-surveying-changecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getSurveySeparateCollateral = async (id) => {
+  const path = '/operationLand/view-surveying-separatecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getSurveySeparateUsedeed = async (params) => {
+  const path = '/operationLand/view-surveying-usedeed';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const updateOperationLand = async (params) => {
   const path = '/operationLand/update-operationland';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateSurvey = async (params) => {
+  const path = '/operationLand/update-surveying';
   try {
     const result = await axios.post(path, params);
     if (result.status == 200)
@@ -1930,6 +2028,62 @@ export const getPlanPay = async (id,no) => {
 };
 export const savePlanPay = async (params) => {
   const path = '/LegalContract/save-refund-planpay';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const saveAssetRental = async (params) => {
+  const path = '/OperationLand/insert-assetrental';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateAssetRental = async (params) => {
+  const path = '/OperationLand/update-assetrental';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const saveRecieveRent = async (params) => {
+  const path = '/OperationLand/insert-assetrentallog';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateRecieveRent = async (params) => {
+  const path = '/OperationLand/update-assetrentallog';
   try {
     const result = await axios.post(path, params);
     if (result.status == 200)
