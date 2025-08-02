@@ -19,7 +19,8 @@ import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchOperationLand,
-  updateOperationLand
+  updateOperationLand,
+  updateSurvey
 } from "@services/api";
 
 const user = getUserData();
@@ -72,19 +73,81 @@ const PageContent = () => {
     await setShowCal(false);
     await setOpenExpropriation(true);
   }
-  const submitOperation = async() => {
-    const data = operationLandRef.current?.getData(); 
-    console.log('Operation data:', data);
-    //const result = await updateOperationLand(data.collateralDetail);
-    // if (result.isSuccess) {
-    //    console.log("save operation done");
-    // }
 
+  const convertToFormData = (data) => {
+    const formData = new FormData();
+  
+    Object.entries(data).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          if (item instanceof File) {
+            formData.append(`${key}[${index}]`, item);
+          } else {
+            formData.append(`${key}[${index}]`, JSON.stringify(item));
+          }
+        });
+      } else if (value instanceof File) {
+        formData.append(key, value);
+      } else if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (typeof value === 'object' && value !== null) {
+        formData.append(key, JSON.stringify(value));
+      } else if (value !== null && value !== undefined) {
+        formData.append(key, value);
+      }
+    });
+  
+    return formData;
+  };
+  
+  
+const submitOperation = async () => {
+  const data = operationLandRef.current?.getData(); 
+  console.log('Operation data:', data);
+
+  const detail = data?.collateralDetail;
+
+  if (typeof detail?.flag1 === 'boolean') {
+    detail.flag1 = detail.flag1 ? 'Y' : 'N';
   }
+
+  if (typeof detail?.flag2 === 'boolean') {
+    detail.flag2 = detail.flag2 ? 'Y' : 'N';
+  }
+
+  if (typeof detail?.flag3 === 'boolean') {
+    detail.flag3 = detail.flag3 ? 'Y' : 'N';
+  }
+
+  const formData = convertToFormData(detail);
+
+  const result = await updateOperationLand(detail);
+  if (result.isSuccess) {
+    console.log("save operation done");
+  }
+};
 
   const submitSurvey = async() => {
     const data = surveyRef.current?.getData(); 
     console.log('survey data:', data);
+
+    const detail = data?.collateralDetail;
+    if (typeof detail?.flag1 === 'boolean') {
+      detail.flag1 = detail.flag1 ? 'Y' : 'N';
+    }
+  
+    if (typeof detail?.flag2 === 'boolean') {
+      detail.flag2 = detail.flag2 ? 'Y' : 'N';
+    }
+  
+    if (typeof detail?.flag3 === 'boolean') {
+      detail.flag3 = detail.flag3 ? 'Y' : 'N';
+    }
+    const formData = convertToFormData(detail);
+    const result = await updateSurvey(detail);
+    if (result.isSuccess) {
+      console.log("save survey done");
+    }
   }
   const print = async () => {
     // print
@@ -131,22 +194,22 @@ const PageContent = () => {
       )}
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-        <DetailAsset  policy={policy} /> 
+          <DetailAsset  policy={policy} isView /> 
         </Modal>
       )}
       {openSurvey && (
         <Modal isOpen={openSurvey} setModal={setOpenSurvey} onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen okText={'บันทึก'} onOk={() => submitSurvey()} >
-         <SurveyLand ref={surveyRef} policy={policy} isView />
+          <SurveyLand ref={surveyRef} policy={policy} isView />
         </Modal>
       )}
       {openLandLease && (
         <Modal isOpen={openLandLease} setModal={setOpenLandLease} onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()}  scrollable fullscreen>
-         <LandLease policy={policy} isView />
+          <LandLease policy={policy} isView />
         </Modal>
       )}
       {openExpropriation && (
         <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()} scrollable fullscreen>
-         <Expropriation policy={policy} isView />
+          <Expropriation policy={policy} isView />
         </Modal>
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

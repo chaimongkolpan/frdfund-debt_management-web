@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from "react";
+import EditLandLease from './editLandLease';
+import EditRentPayment from './rentPaymentLandLease';
 import { stringToDateTh, spDate, toCurrency } from "@utils";
 import Textarea from "@views/components/input/Textarea";
 import Textbox from "@views/components/input/Textbox";
@@ -13,10 +15,10 @@ import {
     printPlanPay,
     saveDocumentPolicy,
     getProvinces,
-    getOperationDetail
+    getRentalDetail
 } from "@services/api";
 
-const PlanPay = (props) => {
+const landLease = (props) => {
     const { policy, isView } = props;
     const [date, setDate] = useState(null);
     const [data, setData] = useState([]);
@@ -32,11 +34,13 @@ const PlanPay = (props) => {
     const [addTile, setAddTitle] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [provinces, setProvOp] = useState(null);
     const [useAsset, setUseAsset] = useState(false);
     const [isAssetChanged, setIsAssetChanged] = useState(false);
-    const [collateralDetail, setCollateralDetail] = useState({
-        id_KFKPolicy: policy?.id_KFKPolicy,
-        policyNO: policy?.policyNO,
+    const [isEditLandLease,setIsEditLandLease] = useState(false);
+    const initialCollateralDetail = {
+        id_KFKPolicy: '',
+        policyNO: '',
         assetType: 'โฉนด',
         collateral_status: 'โอนได้',
         parceL_province: '',
@@ -49,134 +53,213 @@ const PlanPay = (props) => {
         labT5_province: '',
         house_province: '',
         otheR_province: '',
-    });
+        changeCollateral: {
+          assetType: 'โฉนด',
+        },
+        separateCollateral: [{
+          assetType: 'โฉนด',
+        }],
+        req_docu: [],
+        borrowdeed_docu: [],
+        approve_docu: [],
+        results_docu: [],
+        report_docu: [],
+      };
+    const [collateralDetail, setCollateralDetail] = useState(initialCollateralDetail);
     const [collateralForms, setCollateralForms] = useState([
-       // { id: Date.now(), assetType: '' }, // ชุดแรก default
+        // { id: Date.now(), assetType: '' }, // ชุดแรก default
     ]);
-    const handleAddForm = () => {
-        setCollateralForms([...collateralForms, { id: Date.now(), assetType: '' }]);
-    };
+    const [openEditRentPaymentModal, setOpenEditRentPaymentModal] = useState(false);
+    const [openEditLandLeaseModal, setOpenEditLandLeaseModal] = useState(false);
+    const [titleEditLandLease, setTitleEditLandLease] = useState(null);
+    const [itemLandLease, setItemLandLease] = useState(null);
 
-    const handleRemoveForm = (idToRemove) => {
-        setCollateralForms(collateralForms.filter(({ id }) => id !== idToRemove));
-    };
-    const handleChangeAssetType = (id, newType) => {
-        setCollateralForms(forms =>
-            forms.map(f => f.id === id ? { ...f, assetType: newType } : f)
-        );
-    };
-    const handleShowDetail = async () => {
-        setShowDetail(true);
-    }
-
-    const handleShowEdit = async () => {
-        setShowEdit(true);
-    }
-
-    const [provinces, setProvOp] = useState(null);
-    const onFileChange = async (files) => {
-        if (files.length > 0) {
-            await setFiles(files);
-            await setClear(false);
-        }
-    }
-    const onSubmitFile = async () => {
-        if (files && files.length > 0) {
-            const form = new FormData();
-            form.append('ids[]', policy.id_KFKPolicy);
-            form.append('document_type', 'เอกสารส่งคืนนิติกรรมสัญญา');
-            files.forEach((item) => form.append("files", item));
-            const result = await saveDocumentPolicy(form);
-            if (result.isSuccess) {
-                await setUploadStatus("success");
-            } else {
-                await setUploadStatus("fail");
-            }
-        } else {
-            console.error('no file upload');
-        }
-    }
-    const cal = async () => {
-        if (installment && year) {
-            let pl = [];
-            let total = policy?.loan_amount;
-            const ins = Math.round((policy?.loan_amount / installment) * 100.0) / 100.0;
-            const monthPerInstall = 12 * year / installment;
-            const now = new Date();
-            let y = now.getFullYear();
-            let m = now.getMonth() + 1;
-            let d = now.getDate();
-            for (let i = 0; i < installment; i++) {
-                m += monthPerInstall;
-                if (m / 12 > 1) y += 1;
-                m %= 12;
-                if (i == installment - 1) {
-                    let inte = (total * interest / 100.0);
-                    let deduc = ins - inte;
-                    pl.push({
-                        pno: i + 1, pDate: new Date(y, m - 1, d), ppp: total, yokma: total, interes: inte, dd: total, bl: 0,
-                        policyNo: policy.policyNO, intrate: interest, plubrate: 0, isKfk: 0
-                    });
-                    total -= deduc;
-                } else {
-                    let inte = (total * interest / 100.0);
-                    let deduc = ins - inte;
-                    pl.push({
-                        pno: i + 1, pDate: new Date(y, m - 1, d), ppp: ins, yokma: total, interes: inte, dd: deduc, bl: total - deduc,
-                        policyNo: policy.policyNO, intrate: interest, plubrate: 0, isKfk: 0
-                    });
-                    total -= deduc;
-                }
-            }
-            await setPlan(pl);
-        }
-    }
-    const save = async () => {
-        const result = await savePlanPay(plans);
+    const getSeparateCollateral = async (id) => {
+        console.log(id);
+        const result = await getSurveyChangeCollateral(id);
         if (result.isSuccess) {
-            await fetchData();
+            setCollateralDetail(prev => ({
+                ...prev,
+                assetType: result.data?.assetType ?? prev.separateCollateral?.assetType, 
+            }));
         }
     }
-    const print = async () => {
-        const result = await printPlanPay({ type: 'application/octet-stream', filename: 'แผนการชำระเงินคืน_' + (new Date().getTime()) + '.zip', data: { id_KFKPolicy: policy.id_KFKPolicy, policyNo: policy.policyNO } });
+    const getChangeCollateral = async (id) => {
+        console.log(id);
+        const result = await getSurveySeparateCollateral(id);
         if (result.isSuccess) {
+            setCollateralDetail(prev => ({
+                ...prev, 
+                ...result.data, 
+                assetType: result.data?.assetType ?? prev.changeCollateral?.assetType, 
+            }));
+        }
+    }
+    const getUseDeed = async (item) => {
+        const params ={
+            id_KFKPolicy: item.id_KFKPolicy,
+            policyNO: item.policyNO,
+            id_AssetPolicy: item.id_AssetPolicy,
+            indexAssetPolicy: item.indexAssetPolicy,
+            operations_type: item.operations_type,
+            id_operations_type: item.id_operations_type
+          }
+        const result = await getSurveySeparateUsedeed(params);
+        if (result.isSuccess) {
+            if(result.data.length > 0){
+                setCollateralDetail(prev => ({
+                    ...prev,
+                    changeCollateral: {
+                        ...result.changeCollateral,
+                        assetType: result.changeCollateral?.assetType ?? prev.changeCollateral?.assetType,
+                    },
+                    ...result.data
+                }));
+            }
         }
     }
     const fetchData = async () => {
-        const result = await getOperationDetail(policy.id_KFKPolicy);
+        const result = await getRentalDetail(policy.id_KFKPolicy);
         if (result.isSuccess) {
             await setDate(result.data.policyStartDate)
             await setYear(result.data.numberOfYearPayback)
             await setInstallment(result.data.numberOfPeriodPayback)
-            await setData(result.data);
+            //await setData(result.data);
+            await setData([{
+                "id_KFKPolicy": 0,
+                "policyNO": "string",
+                "id_AssetPolicy": 0,
+                "id_debt_management": "string",
+                "k_idcard": "string",
+                "k_name_prefix": "string",
+                "k_firstname": "string",
+                "k_lastname": "string",
+                "loan_province": "string",
+                "indexAssetPolicy": "string",
+                "collateralOwner": "string",
+                "assetType": "string",
+                "collateral_no": "string",
+                "collateral_sub_district": "string",
+                "collateral_district": "string",
+                "collateral_province": "string",
+                "parceL_no": "string",
+                "pre_emption_volume_no": "string",
+                "nS3_dealing_file_no": "string",
+                "nS3A_no": "string",
+                "nS3B_no": "string",
+                "alrO_plot_no": "string",
+                "condO_parcel_no": "string",
+                "labT5_parcel_no": "string",
+                "house_no": "string",
+                "chattel_engine_no": "string",
+                "otheR_volume": "string",
+                "parceL_province": "string",
+                "pre_emption_province": "string",
+                "nS3_province": "string",
+                "nS3A_province": "string",
+                "nS3B_province": "string",
+                "alrO_province": "string",
+                "condO_province": "string",
+                "labT5_province": "string",
+                "house_province": "string",
+                "otheR_province": "string",
+                "parceL_district": "string",
+                "pre_emption_district": "string",
+                "nS3_district": "string",
+                "nS3A_district": "string",
+                "nS3B_district": "string",
+                "alrO_district": "string",
+                "condO_district": "string",
+                "labT5_district": "string",
+                "house_district": "string",
+                "otheR_district": "string",
+                "parceL_sub_district": "string",
+                "pre_emption_sub_district": "string",
+                "nS3_sub_district": "string",
+                "nS3A_sub_district": "string",
+                "nS3B_sub_district": "string",
+                "alrO_sub_district": "string",
+                "condO_sub_district": "string",
+                "labT5_sub_district": "string",
+                "house_sub_district": "string",
+                "otheR_sub_district": "string",
+                "contract_area_rai": "string",
+                "contract_area_ngan": "string",
+                "contract_area_sqaure_wa": 0,
+                "borrowdeed_no": "string",
+                "borrowdeed_date": "2025-08-02T13:15:22.725Z",
+                "borrowdeed_reason": "string",
+                "returndeed_no": "string",
+                "returndeed_date": "2025-08-02T13:15:22.725Z",
+                "returndeed_remark": "string",
+                "asset_operations_type": "string",
+                "asset_operations_other": "string",
+                "req_docu": "string",
+                "borrowdeed_docu": "string",
+                "approve_docu": "string",
+                "results_docu": "string",
+                "report_docu": "string",
+                "deedBorrowReturn_status": "string",
+                "color": "string",
+                "assetOperations_type": "string",
+                "change_asset": 0,
+                "operations_type": "string",
+                "id_AssetOperations": 0,
+                "separate_asset": 0,
+                "id_operations_type": 0,
+                "external": 0,
+                "license_farmers_docu": "string",
+                "id_AssetSurveying": 0,
+                "id_AssetRental": 0,
+                "asset_operations_name": "string",
+                "consent_docu": "string",
+                "rental_contract_docu": "string",
+                "ack_farmers_docu": "string",
+                "contract_rental_date": "string",
+                "rental_agency": "string",
+                "rental_area_rai": "string",
+                "rental_area_ngan": "string",
+                "rental_area_sqaure_wa": 0,
+                "rental_years_period": "string",
+                "rental_start": "string",
+                "rental_end": "string",
+                "rental_remark": "string"
+              }]);
         }
+    }
+    const handleOpenEditLandLease = (item) => {
+        setOpenEditLandLeaseModal(true);
+        setItemLandLease(item);
+        setTitleEditLandLease('เพิ่มการเช่า');
+
     }
     const RenderData = (item, index, checked) => {
         return (item && (
             <tr key={index}>
-                <td></td>
+                <td>{index + 1}</td>
                 <td>
-                    <div className='d-flex justify-content-center'>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowDetail}>
-                            <i className="far fa-eye"></i>
-                        </button>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowEdit}>
-                            <i className="far fa-edit"></i>
-                        </button>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenEditLandRental" onClick={() => handleOpenEditLandLease(item)}><span class="fas fa-list"></span></button>
                     </div>
                 </td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenLandRentalNO" onClick={() => setOpenEditRentPaymentModal(true)}><span class="fas fa-money-check-alt"></span></button>
+                    </div>
+                </td>
+                <td>{item.asset_operations_type}</td>
+                <td>{item.asset_operations_name}</td>
+                <td>{item.policyNO}</td>
+                <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{item.name_legal_owner}</td>
+                <td>{item.collateral_no}</td>
+                <td>{item.collateral_province}</td>
+                <td>{item.collateral_district}</td>
+                <td>{item.collateral_sub_district}</td>
+                <td>{item.contract_area_rai}</td>
+                <td>{item.contract_area_ngan}</td>
+                <td>{item.contract_area_sqaure_wa}</td>
 
             </tr>
         ))
@@ -204,6 +287,58 @@ const PlanPay = (props) => {
             ...({ [key]: val })
         }))
     }
+    const handleShowDetail = async (item) => {
+        setShowDetail(true);
+        await getChangeCollateral(item.id_AssetPolicy);
+        await getSeparateCollateral(item.id_AssetPolicy);
+        await getUseDeed(item);
+        setCollateralDetail(prev => ({
+            ...prev,
+            ...item, 
+            changeCollateral: { assetType: item.assetType || 'โฉนด' },
+            separateCollateral: [{ assetType: item.assetType || 'โฉนด' }],
+            req_docu: [],
+            borrowdeed_docu: [],
+            approve_docu: [],
+            results_docu: [],
+            report_docu: [],
+          }));
+    }
+    const handleShowEdit = async (item) => {
+        setShowEdit(true);
+        await setCollateralDetail(item);
+        await getChangeCollateral(item.id_AssetPolicy);
+        await getSeparateCollateral(item.id_AssetPolicy);
+        await getUseDeed(item);
+        setCollateralDetail(prev => ({
+            ...prev,
+            ...item, 
+            changeCollateral: { assetType: item.assetType || 'โฉนด' },
+            separateCollateral: [{ assetType: item.assetType || 'โฉนด' }],
+            req_docu: [],
+            borrowdeed_docu: [],
+            approve_docu: [],
+            results_docu: [],
+            report_docu: [],
+          }));
+    }
+    const handleChangeSeparateCollateral = (id, key, value) => {
+        setCollateralDetail(prev => ({
+            ...prev,
+            separateCollateral: prev.separateCollateral.map(item =>
+                item.id === id ? { ...item, [key]: value } : item
+            )
+        }));
+    };
+    const handleChangeChangeCollateral = (field, value) => {
+        setCollateralDetail(prev => ({
+            ...prev,
+            changeCollateral: {
+                ...prev.changeCollateral,
+                [field]: value
+            }
+        }));
+    };
     useEffect(() => { }, [collateralRef]);
     useEffect(() => {
         if (!isMounted) {
@@ -230,23 +365,29 @@ const PlanPay = (props) => {
         await setAddTitle(true);
         await setShowEdit(true);
     }
+    const addLandLeaseModal = () => {
+        setOpenEditLandLeaseModal(true);
+        setTitleEditLandLease('เพิ่มการเช่า');
+    }
     return (
         <>
             <form>
                 <br />
                 <div className="row g-3">
                     <div className={`d-flex mb-3 flex-row-reverse `}>
-                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}><span className="fas fa-plus fs-8"></span> เพิ่มดำเนินการในที่ดิน</button>
+                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={addLandLeaseModal}><span className="fas fa-plus fs-8"></span> เพิ่มการเช่า</button>
                     </div>
+                    <div className="table-responsive mx-n1 px-1">
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                         <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
                             <tr>
                                 <th rowSpan="2">#</th>
-                                <th colSpan="3">ดำเนินการในที่ดิน</th>
+                                <th colSpan="4">ดำเนินการในที่ดิน</th>
                                 <th colSpan="11">หลักประกัน</th>
                             </tr>
                             <tr>
                                 <th>รายละเอียด</th>
+                                <th>รับเงินค่าเช่า</th>
                                 <th>ประเภทหน่วยงาน</th>
                                 <th>ชื่อหน่วยงาน</th>
                                 <th>เลขที่นิติกรรมสัญญา</th>
@@ -272,338 +413,29 @@ const PlanPay = (props) => {
                             )}
                         </tbody>
                     </table>
-                    {/* รายละเอียดดำเนินการในที่ดิน */}
-                    {showDetail && (
-                        <div className="card shadow-none border my-2" data-component-card="data-component-card">
-                            <div className="card-body p-0">
-                                <div className="p-3 code-to-copy">
-                                    <h3 className="text-center">รายละเอียดดำเนินการในที่ดิน</h3><br />
-                                    <div className="row g-2">
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                            <Textbox title={'ประเภทการดำเนินการในที่ดิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                        </div>
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                            <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <span className="text-center">เอกสารคำร้อง</span><br />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* end รายละเอียดดำเนินการในที่ดิน */}
-
-                    {showEdit && (<> {/* start card แก้ไขรายละเอียดดำเนินการในที่ดิน */}
-                        <div className="card shadow-none border my-2" data-component-card="data-component-card">
-                            <div className="card-body p-0">
-                                <div className="p-3 code-to-copy">
-                                    <h3 className="text-center">{addTile ? 'เพิ่มการเช่า' : 'แก้ไขรายละเอียดการเช่า'}</h3><br />
-                                    <div className="row g-2">
-                                        <div className="col-sm-12 col-md-6 col-lg-6">
-                                            <div className="form-floating form-floating-advance-select mb-3">
-                                                <label htmlFor="floaTingLabelSingleSelect">ประเภทหน่วยงาน</label>
-                                                <select className={`form-select`} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
-                                                    <option value="หน่วยงานภายนอก">หน่วยงานภายนอก</option>
-                                                    <option value="หน่วยงานรัฐ" >หน่วยงานรัฐ</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                            <Textbox title={'ชื่อหน่วยงาน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                        </div>
-
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                            <div className="d-flex justify-content-center">
-                                                <span className="text-center fw-bold">เอกสารคำร้อง</span>
-                                            </div>
-                                            <br />
-                                            <div className="col-12 mt-1 mb-3">
-                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                            </div>
-                                            <br />
-                                            <div className="row justify-content-center mt-3 mb-3">
-                                                <div className="col-auto">
-                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                            <div className="d-flex justify-content-center">
-                                                <span className="text-center fw-bold">ใบอนุญาตจากเกษตร</span>
-                                            </div>
-                                            <br />
-                                            <div className="col-12 mt-1 mb-3">
-                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                            </div>
-                                            <br />
-                                            <div className="row justify-content-center mt-3 mb-3">
-                                                <div className="col-auto">
-                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>
-                                                        นำไฟล์เข้าระบบ
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                        <div className="d-flex justify-content-center">
-                                            <span className='fw-bold'>บันทึกข้อความแจ้งยินยอม</span>
-                                            </div>
-                                            <br />
-                                            <div className="col-12 mt-3 mb-3">
-                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                            </div><br />
-                                            <div className="row justify-content-center mt-3 mb-3">
-                                                <div className="col-auto">
-                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                        <div className="d-flex justify-content-center">
-                                            <span className='fw-bold'>เอกสารประกอบและสัญญาเช่า</span>
-                                            </div>
-                                            <br />
-                                            <div className="col-12 mt-3 mb-3">
-                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                            </div>
-                                            <br />
-                                            <div className="row justify-content-center mt-3 mb-3">
-                                                <div className="col-auto">
-                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                        <div className="d-flex justify-content-center">
-                                            <span className='fw-bold'>เอกสารเกษตรรับทราบ</span>
-                                            </div>
-                                            <br />
-                                            <div className="col-12 mt-3 mb-3">
-                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                            </div>
-                                            <br />
-                                            <div className="row justify-content-center mt-3 mb-3">
-                                                <div className="col-auto">
-                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="row g-2">
-
-                                        <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
-                                            <DatePicker title={'วันที่ทำสัญญา'} />
-                                        </div>
-
-                                        <div className="col-sm-12 col-md-6 col-lg-6">
-                                            <div className="form-floating form-floating-advance-select mb-3">
-                                                <label htmlFor="floaTingLabelSingleSelect">หน่วยงานที่เช่า</label>
-                                                <select className={`form-select`} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
-                                                    <option value="หน่วยงานภายนอก">หน่วยงานภายนอก</option>
-                                                    <option value="หน่วยงานรัฐ" >หน่วยงานรัฐ</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                        <AreaTextbox title={'พื้นที่ประมาณให้เช่า'} containerClassname={'mb-3'}
-                                            handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)}
-                                            rai={collateralDetail?.area_transfer_rai}
-                                            handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)}
-                                            ngan={collateralDetail?.area_transfer_ngan}
-                                            handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)}
-                                            wa={collateralDetail?.area_transfer_sqaure_wa} disabled={isView}
-                                        />
-                                    </div>
-
-                                    <div className="row g-2">
-
-                                        <div className="col-sm-12 col-md-4 col-lg-4 mb-1">
-                                            <DatePicker title={'ระยะเวลาการเช่า(ปี)'} />
-                                        </div>
-                                        <div className="col-sm-12 col-md-8 col-lg-8">
-                                            <div className="input-group mb-3">
-                                                <span className="input-group-text" id="Search_id_card">ระยะเวลาเริ่มต้น-สิ้นสุด</span>
-                                                <input className="form-control" type="text" disabled={isView} aria-label="รายละเอียดน บ้าน" />
-                                                <span className="input-group-text" id="Search_id_card">-</span>
-                                                <input className="form-control" type="text" disabled={isView} aria-label="รายละเอียดน บ้าน" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-12 col-md-12 col-lg-12">
-                                        <Textarea title={'หมายเหตุ'} containerClassname={'mb-4'}
-                                            handleChange={(val) => handleChangeCollateral('remark', val)}
-                                            value={collateralDetail?.remark} disabled={isView}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* end card แก้ไขรายละเอียดดำเนินการในที่ดิน */}</>)}
-                        {showEdit && (<>
-                    {/* start card รับเงินค่าเช่า */}
-                    <div className="col-12 mt-3">
-                        <div className="row g-3 justify-content-center">
-                            <div className="col-auto">
-                                <button className="btn btn-outline-success me-1 mb-1 " type="button" onClick={handleAddForm}><span className="fas fa-plus fs-8"></span> เพิ่มรับเงินค่าเช่า</button>
-                               
-                            </div>
-                        </div>
                     </div>
-                  
-                    {collateralForms.map((form, index) => (
-                        < div key={form.id} className="mb-1 rounded p-3 position-relative">
-                    <div className="card shadow-none border my-2" data-component-card="data-component-card">
-                        <div className="card-body p-0">
-                            <div className="p-3 code-to-copy">
-                            <div className="d-flex justify-content-center mb-1">
-                                <span className="text-center fw-bold">รับเงินค่าเช่าครั้งที่ {index+1}</span>
-                            </div>
-                                <div className="d-flex justify-content-center mt-1">
-                                    <span className="text-center fw-bold">เอกสารประกอบการโอนเงิน</span>
-                                </div>
-                                <br />
-                                <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
-
-                                <div className="row g-2 mb-1">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่หนังสือ'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่ใบสำคัญรับ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่ได้รับเงิน'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่แคชเชียร์เช็ค'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่แคชเชียร์เช็ค'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่การโอน'} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'จำนวนเงิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                </div>
-
-                                <div className="d-flex justify-content-center mb-1">
-                                <span className="text-center fw-bold">คืนเงิน/หักหนี้ ครั้งที่ {index+1}</span>
-                                </div>      
-                                <div className="d-flex justify-content-center mt-1">
-                                    <span className="text-center fw-bold">เอกสารเกษตรกรรับแจ้งรับเงินคืนหรือหักหนี้</span>
-                                </div>
-                                <br />
-                                <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
-                                <br />
-
-                                <div className="row g-2">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'คืนเงินจำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'หักหนี้จำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                </div>
-
-                                <div className="d-flex justify-content-center">
-                                    <span className="text-center fw-bold">ทำเรื่องให้บัญชีโอนเงิน</span>
-                                </div>
-                                <br />
-                                <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
-
-
-                                <div className="row g-2">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่หนังสือ'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่ใบสำคัญการจ่าย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่โอนเงิน'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'จำนวนเงินค่าเช่า'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'ดอกเบี้ย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'รวมจำนวนเงินทั้งสิ้น'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="d-flex justify-content-center mt-2 mb-2">
-                            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleAddForm(index + 1)}>
-                                <i className="fas fa-square-plus"></i>
-                            </button>
-                            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(form.id)}>
-                                <i className="fas fa-square-minus"></i>
-                            </button>
-                        </div>
-                        </ div>))}
-                        </>)}
-                    {/* end card รับเงินค่าเช่า */}
-
-
-                    {/* <div className="col-12 mt-3 ">
-                        <div className="row g-3 justify-content-center">
-                            <div className="col-auto">
-                                <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึก</button>
-                               
-
-                            </div>
-                        </div>
-                    </div> */}
-
                 </div>
             </form>
+            <EditLandLease
+                isOpen={openEditLandLeaseModal}
+                title={titleEditLandLease}
+                policy={policy}
+                data={itemLandLease}
+                setModal={() => setOpenEditLandLeaseModal(false)}
+                onOk={() => {
+                    setOpenEditLandLeaseModal(false);
+                }}
+            />
+            <EditRentPayment
+                isOpen={openEditRentPaymentModal}
+                policy={policy}
+                onClose={() => setOpenEditRentPaymentModal(false)}
+                onOk={() => {
+                    setOpenEditRentPaymentModal(false);
+                }}
+                setModal={() =>setOpenEditRentPaymentModal(false)}
+            />
         </>
     );
 };
-export default PlanPay;
+export default landLease;
