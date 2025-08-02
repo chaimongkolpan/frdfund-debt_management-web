@@ -230,6 +230,7 @@ const landLease = (props) => {
     const handleOpenEditLandLease = (item) => {
         setOpenEditLandLeaseModal(true);
         setItemLandLease(item);
+        setTitleEditLandLease('เพิ่มการเช่า');
 
     }
     const RenderData = (item, index, checked) => {
@@ -246,19 +247,19 @@ const landLease = (props) => {
                         <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenLandRentalNO" onClick={() => setOpenEditRentPaymentModal(true)}><span class="fas fa-money-check-alt"></span></button>
                     </div>
                 </td>
+                <td>{item.asset_operations_type}</td>
+                <td>{item.asset_operations_name}</td>
+                <td>{item.policyNO}</td>
+                <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
-                <td>{item.assetType}</td>
+                <td>{item.name_legal_owner}</td>
+                <td>{item.collateral_no}</td>
+                <td>{item.collateral_province}</td>
+                <td>{item.collateral_district}</td>
+                <td>{item.collateral_sub_district}</td>
+                <td>{item.contract_area_rai}</td>
+                <td>{item.contract_area_ngan}</td>
+                <td>{item.contract_area_sqaure_wa}</td>
 
             </tr>
         ))
