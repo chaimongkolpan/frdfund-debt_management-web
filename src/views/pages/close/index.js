@@ -32,6 +32,7 @@ const Close = () => {
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
   const [policy, setPolicy] = useState(null);
+  const [closeDate, setCloseDate] = useState(null);
   const [closeDetail, setCloseDetail] = useState(null);
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
@@ -182,11 +183,12 @@ const Close = () => {
   }
   const handleShowDetail = async (item) => {
     await setPolicy(item);
+    await setCloseDate(new Date());
     await setShowCal(false);
     await setOpenDetail(true);
   }
   const print = async () => {
-    const result = await getPrintClose({ id_KFKPolicy: policy.id_KFKPolicy, calDate: ToDateDb(new Date(), false)});
+    const result = await getPrintClose({ id_KFKPolicy: policy.id_KFKPolicy, calDate: ToDateDb(closeDate, false)});
     if (result.isSuccess) {
       await printClose({ data: result.data, type: 'application/octet-stream', filename: 'ใบแจ้งการชำระเงิน.xlsx' });
     } else {
@@ -254,7 +256,7 @@ const Close = () => {
             <br />
             <div className="row">
               <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
-                <Textbox title={'วันที่ปิดสัญญา'} disabled containerClassname={'mb-3'} value={stringToDateTh(new Date(), false)} />
+                <DatePicker title={'วันที่ปิดสัญญา'} containerClassname={'mb-3'} handleChange={(val) => setCloseDate(val)} value={closeDate} />
               </div>
               <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
                 <button className="btn btn-primary ms-2" type="button" onClick={() => cal()}>คำนวณ</button>

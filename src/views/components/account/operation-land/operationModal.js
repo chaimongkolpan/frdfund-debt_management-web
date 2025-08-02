@@ -377,13 +377,8 @@ const operationLand = forwardRef((props, ref) => {
                                         <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
                                     </div>
                                 </div>
-                                <br />
-                                <span className="text-center">เอกสารคำร้อง</span><br />
                             </div>
-                        </div>
-                    </div>
-                    )} */}
-
+                            )} */}
                     {/* end รายละเอียดดำเนินการในที่ดิน */}
                     {(showEdit || showDetail) && (<> {/* start card แก้ไขรายละเอียดดำเนินการในที่ดิน */}
                         <div className="card shadow-none border my-2" data-component-card="data-component-card">
@@ -541,7 +536,6 @@ const operationLand = forwardRef((props, ref) => {
                                                             <div className="card shadow-none border my-4" data-component-card="data-component-card">
                                                                 <div className="card-body p-0">
                                                                     <div className="p-4 code-to-copy">
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'โฉนด' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดโฉนดที่ดิน */}
@@ -636,7 +630,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 </div>
                                                                                 {/* end card รายละเอียดโฉนดที่ดิน */} </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'ตราจอง' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดตราจอง */}
@@ -726,7 +719,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดตราจอง */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'น.ส.3' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดหนังสือรับรองการทำประโยชน์(น.ส.3) */}
@@ -811,7 +803,6 @@ const operationLand = forwardRef((props, ref) => {
 
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'น.ส.3 ก' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
@@ -913,7 +904,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'น.ส.3 ข' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
@@ -997,7 +987,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'ส.ป.ก.' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียด ส.ป.ก. */}
@@ -1093,7 +1082,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียด ส.ป.ก. */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'หนังสือแสดงกรรมสิทธิ์ห้องชุด' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
@@ -1263,7 +1251,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'ภ.ท.บ.5' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียด ภ.ท.บ.5 */}
@@ -1659,10 +1646,7 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                                                             </div>
                                                                         )}
-
-
                                                                         <br />
-
                                                                     </div>
                                                                 </div>
 

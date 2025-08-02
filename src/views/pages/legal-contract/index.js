@@ -16,6 +16,7 @@ import Spouse from "@views/components/legal-contract/spouseModal";
 import { 
   cleanData,
   searchLegalPrepare,
+  printLegalContract,
 } from "@services/api";
 
 const user = getUserData();
@@ -67,8 +68,12 @@ const LegalContractPrepare = () => {
     await setOpenPrint(true);
   }
   const onPrint = async () => {
-    // print
-    await setOpenPrint(false);
+    const id = policy.id_KFKPolicy
+    const param = { type: 'application/octet-stream', filename: 'เอกสารนิติกรรมสัญญา_' + (new Date().getTime()) + '.zip', data: { id } };
+    const result = await printLegalContract(param);
+    if (result.isSuccess) {
+      await setOpenPrint(false);
+    }
   }
   useEffect(() => {
     setLoadBigData(true);

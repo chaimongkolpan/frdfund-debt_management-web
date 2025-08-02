@@ -10,13 +10,12 @@ const Filter = (props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
-  const statusOp = ["แจ้งเตือนปิดบัญชี","สัญญาปกติ"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
-        idCard: "",
+        k_idcard: "",
         name: "",
-        province: "",
+        loan_province: "",
         debtStatus: "",
         ...filter,
         currentPage: 1,
@@ -59,10 +58,19 @@ const Filter = (props) => {
     <>
       <form className="row g-3">
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNo', val)} />
+          <Textbox title={'เลขที่นิติกรรมสัญญา'} handleChange={(val) => onChange('policyNO', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('idCard', val)} />
+          <Textbox title={'ดัชนีจัดเก็บหลักประกัน'} handleChange={(val) => onChange('indexAssetPolicy', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          <Textbox title={'เจ้าของหลักประกัน'} handleChange={(val) => onChange('collateralowner', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          <Textbox title={'เลขที่หลักประกัน'} handleChange={(val) => onChange('collateralNumber', val)} />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          <Textbox title={'เลขบัตรประชาชน'} handleChange={(val) => onChange('k_idcard', val)} />
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           <Textbox title={'ชื่อ-นามสกุล'} handleChange={(val) => onChange('name', val)} />
@@ -73,19 +81,17 @@ const Filter = (props) => {
               title={'จังหวัด'} 
               defaultValue={'all'} 
               options={provOp}
-              handleChange={(val) => onChange('province', val)}
+              handleChange={(val) => onChange('loan_province', val)}
               hasAll />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
-          {statusOp && (
-            <Dropdown 
-              title={'สถานะสัญญา'} 
-              defaultValue={'all'} 
-              options={statusOp}
-              handleChange={(val) => onChange('debtStatus', val)}
-              hasAll />
-          )}
+          <Dropdown 
+            title={'สถานะการยืม-คืนโฉนด'} 
+            defaultValue={'all'} 
+            options={['ปกติ','ยืมโฉนด','แจ้งเตือน']}
+            handleChange={(val) => onChange('borrowStatus', val)}
+            hasAll />
         </div>
         <div className="col-12">
           <div className="row g-3 justify-content-center">

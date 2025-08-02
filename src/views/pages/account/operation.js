@@ -194,22 +194,22 @@ const submitOperation = async () => {
       )}
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-        <DetailAsset  policy={policy} isView /> 
+          <DetailAsset  policy={policy} isView /> 
         </Modal>
       )}
       {openSurvey && (
         <Modal isOpen={openSurvey} setModal={setOpenSurvey} onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen okText={'บันทึก'} onOk={() => submitSurvey()} >
-         <SurveyLand ref={surveyRef} policy={policy} isView />
+          <SurveyLand ref={surveyRef} policy={policy} isView />
         </Modal>
       )}
       {openLandLease && (
         <Modal isOpen={openLandLease} setModal={setOpenLandLease} onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()}  scrollable fullscreen>
-         <LandLease policy={policy} isView />
+          <LandLease policy={policy} isView />
         </Modal>
       )}
       {openExpropriation && (
         <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()} scrollable fullscreen>
-         <Expropriation policy={policy} isView />
+          <Expropriation policy={policy} isView />
         </Modal>
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
