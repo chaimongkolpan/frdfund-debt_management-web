@@ -72,15 +72,28 @@ const PageContent = () => {
     await setShowCal(false);
     await setOpenExpropriation(true);
   }
-  const submitOperation = async() => {
+  const submitOperation = async () => {
     const data = operationLandRef.current?.getData(); 
     console.log('Operation data:', data);
-    //const result = await updateOperationLand(data.collateralDetail);
-    // if (result.isSuccess) {
-    //    console.log("save operation done");
-    // }
-
-  }
+  
+    if (typeof data?.collateralDetail?.flag1 === 'boolean') {
+      data.collateralDetail.flag1 = data.collateralDetail.flag1 ? 'Y' : 'N';
+    }
+  
+    if (typeof data?.collateralDetail?.flag2 === 'boolean') {
+      data.collateralDetail.flag2 = data.collateralDetail.flag2 ? 'Y' : 'N';
+    }
+  
+    if (typeof data?.collateralDetail?.flag3 === 'boolean') {
+      data.collateralDetail.flag3 = data.collateralDetail.flag3 ? 'Y' : 'N';
+    }
+  
+    const result = await updateOperationLand(data.collateralDetail);
+    if (result.isSuccess) {
+      console.log("save operation done");
+    }
+  };
+  
 
   const submitSurvey = async() => {
     const data = surveyRef.current?.getData(); 
@@ -131,7 +144,7 @@ const PageContent = () => {
       )}
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} hideOk onClose={() => setOpenRequestClose(false)}  title={'รายละเอียดหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-        <DetailAsset  policy={policy} /> 
+        <DetailAsset  policy={policy} isView /> 
         </Modal>
       )}
       {openSurvey && (

@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from "react";
+import EditLandLease from './editLandLease';
+import EditRentPayment from './rentPaymentLandLease';
 import { stringToDateTh, spDate, toCurrency } from "@utils";
 import Textarea from "@views/components/input/Textarea";
 import Textbox from "@views/components/input/Textbox";
@@ -16,7 +18,7 @@ import {
     getOperationDetail
 } from "@services/api";
 
-const PlanPay = (props) => {
+const landLease = (props) => {
     const { policy, isView } = props;
     const [date, setDate] = useState(null);
     const [data, setData] = useState([]);
@@ -32,6 +34,7 @@ const PlanPay = (props) => {
     const [addTile, setAddTitle] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [provinces, setProvOp] = useState(null);
     const [useAsset, setUseAsset] = useState(false);
     const [isAssetChanged, setIsAssetChanged] = useState(false);
     const [collateralDetail, setCollateralDetail] = useState({
@@ -51,7 +54,7 @@ const PlanPay = (props) => {
         otheR_province: '',
     });
     const [collateralForms, setCollateralForms] = useState([
-       // { id: Date.now(), assetType: '' }, // ชุดแรก default
+        // { id: Date.now(), assetType: '' }, // ชุดแรก default
     ]);
     const handleAddForm = () => {
         setCollateralForms([...collateralForms, { id: Date.now(), assetType: '' }]);
@@ -65,15 +68,13 @@ const PlanPay = (props) => {
             forms.map(f => f.id === id ? { ...f, assetType: newType } : f)
         );
     };
-    const handleShowDetail = async () => {
+    const handleShowRent = async () => {
         setShowDetail(true);
     }
 
     const handleShowEdit = async () => {
         setShowEdit(true);
     }
-
-    const [provinces, setProvOp] = useState(null);
     const onFileChange = async (files) => {
         if (files.length > 0) {
             await setFiles(files);
@@ -151,32 +152,35 @@ const PlanPay = (props) => {
             await setData(result.data);
         }
     }
+    const [openEditRentPaymentModal, setOpenEditRentPaymentModal] = useState(false);
+    const [openEditLandLeaseModal, setOpenEditLandLeaseModal] = useState(false);
     const RenderData = (item, index, checked) => {
         return (item && (
             <tr key={index}>
-                <td></td>
+                <td>{index + 1}</td>
                 <td>
-                    <div className='d-flex justify-content-center'>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowDetail}>
-                            <i className="far fa-eye"></i>
-                        </button>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowEdit}>
-                            <i className="far fa-edit"></i>
-                        </button>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenEditLandRental" onClick={() => setOpenEditLandLeaseModal(true)}><span class="fas fa-list"></span></button>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenLandRentalNO" onClick={() => setOpenEditRentPaymentModal(true)}><span class="fas fa-money-check-alt"></span></button>
                     </div>
                 </td>
                 <td>{item.assetType}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
+                <td>{item.assetType}</td>
 
             </tr>
         ))
@@ -236,17 +240,18 @@ const PlanPay = (props) => {
                 <br />
                 <div className="row g-3">
                     <div className={`d-flex mb-3 flex-row-reverse `}>
-                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}><span className="fas fa-plus fs-8"></span> เพิ่มดำเนินการในที่ดิน</button>
+                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}><span className="fas fa-plus fs-8"></span> เพิ่มการเช่า</button>
                     </div>
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                         <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
                             <tr>
                                 <th rowSpan="2">#</th>
-                                <th colSpan="3">ดำเนินการในที่ดิน</th>
+                                <th colSpan="4">ดำเนินการในที่ดิน</th>
                                 <th colSpan="11">หลักประกัน</th>
                             </tr>
                             <tr>
                                 <th>รายละเอียด</th>
+                                <th>รับเงินค่าเช่า</th>
                                 <th>ประเภทหน่วยงาน</th>
                                 <th>ชื่อหน่วยงาน</th>
                                 <th>เลขที่นิติกรรมสัญญา</th>
@@ -348,8 +353,8 @@ const PlanPay = (props) => {
                                         </div>
 
                                         <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                        <div className="d-flex justify-content-center">
-                                            <span className='fw-bold'>บันทึกข้อความแจ้งยินยอม</span>
+                                            <div className="d-flex justify-content-center">
+                                                <span className='fw-bold'>บันทึกข้อความแจ้งยินยอม</span>
                                             </div>
                                             <br />
                                             <div className="col-12 mt-3 mb-3">
@@ -362,8 +367,8 @@ const PlanPay = (props) => {
                                             </div>
                                         </div>
                                         <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                        <div className="d-flex justify-content-center">
-                                            <span className='fw-bold'>เอกสารประกอบและสัญญาเช่า</span>
+                                            <div className="d-flex justify-content-center">
+                                                <span className='fw-bold'>เอกสารประกอบและสัญญาเช่า</span>
                                             </div>
                                             <br />
                                             <div className="col-12 mt-3 mb-3">
@@ -377,8 +382,8 @@ const PlanPay = (props) => {
                                             </div>
                                         </div>
                                         <div className="col-sm-12 col-md-6 col-lg-6 mt-3 mb-1">
-                                        <div className="d-flex justify-content-center">
-                                            <span className='fw-bold'>เอกสารเกษตรรับทราบ</span>
+                                            <div className="d-flex justify-content-center">
+                                                <span className='fw-bold'>เอกสารเกษตรรับทราบ</span>
                                             </div>
                                             <br />
                                             <div className="col-12 mt-3 mb-3">
@@ -444,150 +449,150 @@ const PlanPay = (props) => {
                             </div>
                         </div>
                         {/* end card แก้ไขรายละเอียดดำเนินการในที่ดิน */}</>)}
-                        {showEdit && (<>
-                    {/* start card รับเงินค่าเช่า */}
-                    <div className="col-12 mt-3">
-                        <div className="row g-3 justify-content-center">
-                            <div className="col-auto">
-                                <button className="btn btn-outline-success me-1 mb-1 " type="button" onClick={handleAddForm}><span className="fas fa-plus fs-8"></span> เพิ่มรับเงินค่าเช่า</button>
-                               
-                            </div>
-                        </div>
-                    </div>
-                  
-                    {collateralForms.map((form, index) => (
-                        < div key={form.id} className="mb-1 rounded p-3 position-relative">
-                    <div className="card shadow-none border my-2" data-component-card="data-component-card">
-                        <div className="card-body p-0">
-                            <div className="p-3 code-to-copy">
-                            <div className="d-flex justify-content-center mb-1">
-                                <span className="text-center fw-bold">รับเงินค่าเช่าครั้งที่ {index+1}</span>
-                            </div>
-                                <div className="d-flex justify-content-center mt-1">
-                                    <span className="text-center fw-bold">เอกสารประกอบการโอนเงิน</span>
-                                </div>
-                                <br />
-                                <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
+                    {showEdit && (<>
+                        {/* start card รับเงินค่าเช่า */}
+                        <div className="col-12 mt-3">
+                            <div className="row g-3 justify-content-center">
+                                <div className="col-auto">
+                                    <button className="btn btn-outline-success me-1 mb-1 " type="button" onClick={handleAddForm}><span className="fas fa-plus fs-8"></span> เพิ่มรับเงินค่าเช่า</button>
 
-                                <div className="row g-2 mb-1">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่หนังสือ'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่ใบสำคัญรับ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่ได้รับเงิน'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่แคชเชียร์เช็ค'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่แคชเชียร์เช็ค'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่การโอน'} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'จำนวนเงิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                </div>
-
-                                <div className="d-flex justify-content-center mb-1">
-                                <span className="text-center fw-bold">คืนเงิน/หักหนี้ ครั้งที่ {index+1}</span>
-                                </div>      
-                                <div className="d-flex justify-content-center mt-1">
-                                    <span className="text-center fw-bold">เอกสารเกษตรกรรับแจ้งรับเงินคืนหรือหักหนี้</span>
-                                </div>
-                                <br />
-                                <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
-                                <br />
-
-                                <div className="row g-2">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'คืนเงินจำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'หักหนี้จำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                </div>
-
-                                <div className="d-flex justify-content-center">
-                                    <span className="text-center fw-bold">ทำเรื่องให้บัญชีโอนเงิน</span>
-                                </div>
-                                <br />
-                                <div className="col-12 mt-1 mb-3">
-                                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-                                </div>
-                                <br />
-                                <div className="row justify-content-center mt-3 mb-3">
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                                    </div>
-                                </div>
-
-
-                                <div className="row g-2">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่หนังสือ'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'เลขที่ใบสำคัญการจ่าย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <DatePicker title={'วันที่โอนเงิน'} />
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'จำนวนเงินค่าเช่า'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'ดอกเบี้ย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'รวมจำนวนเงินทั้งสิ้น'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div className="d-flex justify-content-center mt-2 mb-2">
-                            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleAddForm(index + 1)}>
-                                <i className="fas fa-square-plus"></i>
-                            </button>
-                            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(form.id)}>
-                                <i className="fas fa-square-minus"></i>
-                            </button>
-                        </div>
-                        </ div>))}
-                        </>)}
+
+                        {collateralForms.map((form, index) => (
+                            < div key={form.id} className="mb-1 rounded p-3 position-relative">
+                                <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                                    <div className="card-body p-0">
+                                        <div className="p-3 code-to-copy">
+                                            <div className="d-flex justify-content-center mb-1">
+                                                <span className="text-center fw-bold">รับเงินค่าเช่าครั้งที่ {index + 1}</span>
+                                            </div>
+                                            <div className="d-flex justify-content-center mt-1">
+                                                <span className="text-center fw-bold">เอกสารประกอบการโอนเงิน</span>
+                                            </div>
+                                            <br />
+                                            <div className="col-12 mt-1 mb-3">
+                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                            </div>
+                                            <br />
+                                            <div className="row justify-content-center mt-3 mb-3">
+                                                <div className="col-auto">
+                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
+                                                </div>
+                                            </div>
+
+                                            <div className="row g-2 mb-1">
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <DatePicker title={'วันที่หนังสือ'} />
+                                                </div>
+
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'เลขที่ใบสำคัญรับ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <DatePicker title={'วันที่ได้รับเงิน'} />
+                                                </div>
+
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'เลขที่แคชเชียร์เช็ค'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <DatePicker title={'วันที่แคชเชียร์เช็ค'} />
+                                                </div>
+
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <DatePicker title={'วันที่การโอน'} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'จำนวนเงิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                            </div>
+
+                                            <div className="d-flex justify-content-center mb-1">
+                                                <span className="text-center fw-bold">คืนเงิน/หักหนี้ ครั้งที่ {index + 1}</span>
+                                            </div>
+                                            <div className="d-flex justify-content-center mt-1">
+                                                <span className="text-center fw-bold">เอกสารเกษตรกรรับแจ้งรับเงินคืนหรือหักหนี้</span>
+                                            </div>
+                                            <br />
+                                            <div className="col-12 mt-1 mb-3">
+                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                            </div>
+                                            <br />
+                                            <div className="row justify-content-center mt-3 mb-3">
+                                                <div className="col-auto">
+                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
+                                                </div>
+                                            </div>
+                                            <br />
+
+                                            <div className="row g-2">
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'คืนเงินจำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'หักหนี้จำนวน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                            </div>
+
+                                            <div className="d-flex justify-content-center">
+                                                <span className="text-center fw-bold">ทำเรื่องให้บัญชีโอนเงิน</span>
+                                            </div>
+                                            <br />
+                                            <div className="col-12 mt-1 mb-3">
+                                                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                                            </div>
+                                            <br />
+                                            <div className="row justify-content-center mt-3 mb-3">
+                                                <div className="col-auto">
+                                                    <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
+                                                </div>
+                                            </div>
+
+
+                                            <div className="row g-2">
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'เลขที่หนังสือ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <DatePicker title={'วันที่หนังสือ'} />
+                                                </div>
+
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'เลขที่ใบสำคัญการจ่าย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <DatePicker title={'วันที่โอนเงิน'} />
+                                                </div>
+
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'จำนวนเงินค่าเช่า'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'ดอกเบี้ย'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                                <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                    <Textbox title={'รวมจำนวนเงินทั้งสิ้น'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={isView} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="d-flex justify-content-center mt-2 mb-2">
+                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleAddForm(index + 1)}>
+                                        <i className="fas fa-square-plus"></i>
+                                    </button>
+                                    <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" type='button' onClick={() => handleRemoveForm(form.id)}>
+                                        <i className="fas fa-square-minus"></i>
+                                    </button>
+                                </div>
+                            </ div>))}
+                    </>)}
                     {/* end card รับเงินค่าเช่า */}
 
 
@@ -603,7 +608,26 @@ const PlanPay = (props) => {
 
                 </div>
             </form>
+            <EditLandLease
+        isOpen={openEditLandLeaseModal}
+        policy={policy}
+        setModal={() => setOpenEditLandLeaseModal(false)}
+        onOk={() => {
+          // ทำสิ่งที่ต้องทำก่อนปิด
+          setOpenEditLandLeaseModal(false);
+        }}
+      />
+      <EditRentPayment
+        isOpen={openEditRentPaymentModal}
+        policy={policy}
+        onClose={() => setOpenEditRentPaymentModal(false)}
+        onOk={() => {
+          // ทำสิ่งที่ต้องทำก่อนปิด
+          setOpenEditRentPaymentModal(false);
+        }}
+        setModal={() =>setOpenEditRentPaymentModal(false)}
+      />
         </>
     );
 };
-export default PlanPay;
+export default landLease;
