@@ -1931,7 +1931,7 @@ export const getPlanPay = async (id,no) => {
 export const savePlanPay = async (params) => {
   const path = '/LegalContract/save-refund-planpay';
   try {
-    const result = await axios.post(path, params);
+    const result = await axios.post(path, { data: params });
     if (result.status == 200)
       return result.data;
     else
@@ -2041,6 +2041,19 @@ export const getDebtManagementPolicyDate = async (no) => {
     console.error("error: " + path + " =>", e);
     return defaultErrorResponse;
   }
+};
+export const printLegalContract = async (params) => {
+  const path = '/LegalContract/print-legal-contract';
+  try {
+    const result = await axios.post(path, params.data, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
 };
 //#endregion
 //#region Guarantee
