@@ -316,68 +316,71 @@ const operationLand = forwardRef((props, ref) => {
                     <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>
                         <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}><span className="fas fa-plus fs-8"></span> เพิ่มดำเนินการในที่ดิน</button>
                     </div>
-                    <table className="table table-sm table-striped table-bordered fs-9 mb-0">
-                        <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
-                            <tr>
-                                <th rowSpan="2">#</th>
-                                <th colSpan="2">ดำเนินการในที่ดิน</th>
-                                <th colSpan="11">หลักประกัน</th>
-                                <th colSpan="3">ยืมโฉนด</th>
-                                <th colSpan="3">คืนโฉนด</th>
-                            </tr>
-                            <tr>
-                                <th>รายละเอียด</th>
-                                <th>ประเภทดำเนินการในที่ดิน</th>
-                                <th>เลขที่นิติกรรมสัญญา</th>
-                                <th>ดัชนีจัดเก็บหลักประกัน</th>
-                                <th>ประเภทหลักประกัน</th>
-                                <th>เจ้าของหลักประกัน</th>
-                                <th>เลขที่หลักประกัน</th>
-                                <th>จังหวัด</th>
-                                <th>อำเภอ</th>
-                                <th>ตำบล</th>
-                                <th>ไร่</th>
-                                <th>งาน</th>
-                                <th>ตารางวา</th>
-                                <th>เลขที่หนังสือ</th>
-                                <th>วันที่หนังสือ</th>
-                                <th>เหตุผล</th>
-                                <th>เลขที่หนังสือ</th>
-                                <th>วันที่หนังสือ</th>
-                                <th>หมายเหตุ</th>
-                            </tr>
-                        </thead>
-                        <tbody className="list text-center align-middle" id="bulk-select-body">
-                            {(data && data.length > 0) ? (data.map((item, index) => RenderData(item, index))) : (
-                                <tr>
-                                    <td className="fs-9 text-center align-middle" colSpan={20}>
-                                        <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    {/* รายละเอียดดำเนินการในที่ดิน */}
-                    {/* { showDetail && (
-                    <div className="card shadow-none border my-2" data-component-card="data-component-card">
-                        <div className="card-body p-0">
-                            <div className="p-3 code-to-copy">
-                                <h3 className="text-center">รายละเอียดดำเนินการในที่ดิน</h3><br />
-                                <div className="row g-2">
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'ประเภทการดำเนินการในที่ดิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
-                                    </div>
-                                    <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
-                                        <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
+                    <div className="mb-3">
+                        <div className="table-responsive mx-n1 px-1">
+                            <table className="table table-sm table-striped table-bordered fs-9 mb-0">
+                                <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
+                                    <tr>
+                                        <th rowSpan="2">#</th>
+                                        <th colSpan="2">ดำเนินการในที่ดิน</th>
+                                        <th colSpan="11">หลักประกัน</th>
+                                        <th colSpan="3">ยืมโฉนด</th>
+                                        <th colSpan="3">คืนโฉนด</th>
+                                    </tr>
+                                    <tr>
+                                        <th>รายละเอียด</th>
+                                        <th>ประเภทดำเนินการในที่ดิน</th>
+                                        <th>เลขที่นิติกรรมสัญญา</th>
+                                        <th>ดัชนีจัดเก็บหลักประกัน</th>
+                                        <th>ประเภทหลักประกัน</th>
+                                        <th>เจ้าของหลักประกัน</th>
+                                        <th>เลขที่หลักประกัน</th>
+                                        <th>จังหวัด</th>
+                                        <th>อำเภอ</th>
+                                        <th>ตำบล</th>
+                                        <th>ไร่</th>
+                                        <th>งาน</th>
+                                        <th>ตารางวา</th>
+                                        <th>เลขที่หนังสือ</th>
+                                        <th>วันที่หนังสือ</th>
+                                        <th>เหตุผล</th>
+                                        <th>เลขที่หนังสือ</th>
+                                        <th>วันที่หนังสือ</th>
+                                        <th>หมายเหตุ</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="list text-center align-middle" id="bulk-select-body">
+                                    {(data && data.length > 0) ? (data.map((item, index) => RenderData(item, index))) : (
+                                        <tr>
+                                            <td className="fs-9 text-center align-middle" colSpan={20}>
+                                                <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                            {/* รายละเอียดดำเนินการในที่ดิน */}
+                            {/* { showDetail && (
+                            <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                                <div className="card-body p-0">
+                                    <div className="p-3 code-to-copy">
+                                        <h3 className="text-center">รายละเอียดดำเนินการในที่ดิน</h3><br />
+                                        <div className="row g-2">
+                                            <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                <Textbox title={'ประเภทการดำเนินการในที่ดิน'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
+                                            </div>
+                                            <div className="col-sm-12 col-md-6 col-lg-6 mb-4">
+                                                <Textbox title={'อื่นๆโปรดระบุ'} containerClassname={'mb-3'} handleChange={(val) => setInstallment(val)} value={installment} disabled={showDetail} />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <span className="text-center">เอกสารคำร้อง</span><br />
                                     </div>
                                 </div>
-                                <br />
-                                <span className="text-center">เอกสารคำร้อง</span><br />
                             </div>
+                            )} */}
                         </div>
                     </div>
-                    )} */}
-
                     {/* end รายละเอียดดำเนินการในที่ดิน */}
                     {(showEdit || showDetail) && (<> {/* start card แก้ไขรายละเอียดดำเนินการในที่ดิน */}
                         <div className="card shadow-none border my-2" data-component-card="data-component-card">
@@ -527,7 +530,6 @@ const operationLand = forwardRef((props, ref) => {
                                                             <div className="card shadow-none border my-4" data-component-card="data-component-card">
                                                                 <div className="card-body p-0">
                                                                     <div className="p-4 code-to-copy">
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'โฉนด' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดโฉนดที่ดิน */}
@@ -622,7 +624,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 </div>
                                                                                 {/* end card รายละเอียดโฉนดที่ดิน */} </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'ตราจอง' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดตราจอง */}
@@ -712,7 +713,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดตราจอง */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'น.ส.3' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดหนังสือรับรองการทำประโยชน์(น.ส.3) */}
@@ -797,7 +797,6 @@ const operationLand = forwardRef((props, ref) => {
 
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'น.ส.3 ก' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
@@ -899,7 +898,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ก) */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'น.ส.3 ข' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
@@ -983,7 +981,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดหนังสือรับรอการทำประโยชน์(น.ส.3 ข) */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'ส.ป.ก.' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียด ส.ป.ก. */}
@@ -1079,7 +1076,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียด ส.ป.ก. */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'หนังสือแสดงกรรมสิทธิ์ห้องชุด' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
@@ -1249,7 +1245,6 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียด หนังสือกรรมสิทธิ์ห้องชุด (อ.ช.2) */}
                                                                             </div>
                                                                         )}
-
                                                                         {collateralDetail.changeCollateral?.assetType === 'ภ.ท.บ.5' && (
                                                                             <div className="mt-3">
                                                                                 {/* start card รายละเอียด ภ.ท.บ.5 */}
@@ -1642,10 +1637,7 @@ const operationLand = forwardRef((props, ref) => {
                                                                                 {/* end card รายละเอียดสารบัญจดทะเบียน */}
                                                                             </div>
                                                                         )}
-
-
                                                                         <br />
-
                                                                     </div>
                                                                 </div>
 

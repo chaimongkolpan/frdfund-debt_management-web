@@ -242,41 +242,46 @@ const landLease = (props) => {
                     <div className={`d-flex mb-3 flex-row-reverse `}>
                         <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}><span className="fas fa-plus fs-8"></span> เพิ่มการเช่า</button>
                     </div>
-                    <table className="table table-sm table-striped table-bordered fs-9 mb-0">
-                        <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
-                            <tr>
-                                <th rowSpan="2">#</th>
-                                <th colSpan="4">ดำเนินการในที่ดิน</th>
-                                <th colSpan="11">หลักประกัน</th>
-                            </tr>
-                            <tr>
-                                <th>รายละเอียด</th>
-                                <th>รับเงินค่าเช่า</th>
-                                <th>ประเภทหน่วยงาน</th>
-                                <th>ชื่อหน่วยงาน</th>
-                                <th>เลขที่นิติกรรมสัญญา</th>
-                                <th>ดัชนีจัดเก็บหลักประกัน</th>
-                                <th>ประเภทหลักประกัน</th>
-                                <th>เจ้าของหลักประกัน</th>
-                                <th>เลขที่หลักประกัน</th>
-                                <th>จังหวัด</th>
-                                <th>อำเภอ</th>
-                                <th>ตำบล</th>
-                                <th>ไร่</th>
-                                <th>งาน</th>
-                                <th>ตารางวา</th>
-                            </tr>
-                        </thead>
-                        <tbody className="list text-center align-middle" id="bulk-select-body">
-                            {(data && data.length > 0) ? (data.map((item, index) => RenderData(item, index))) : (
-                                <tr>
-                                    <td className="fs-9 text-center align-middle" colSpan={20}>
-                                        <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    
+                    <div className="mb-3">
+                        <div className="table-responsive mx-n1 px-1">
+                            <table className="table table-sm table-striped table-bordered fs-9 mb-0">
+                                <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
+                                    <tr>
+                                        <th rowSpan="2">#</th>
+                                        <th colSpan="4">ดำเนินการในที่ดิน</th>
+                                        <th colSpan="11">หลักประกัน</th>
+                                    </tr>
+                                    <tr>
+                                        <th>รายละเอียด</th>
+                                        <th>รับเงินค่าเช่า</th>
+                                        <th>ประเภทหน่วยงาน</th>
+                                        <th>ชื่อหน่วยงาน</th>
+                                        <th>เลขที่นิติกรรมสัญญา</th>
+                                        <th>ดัชนีจัดเก็บหลักประกัน</th>
+                                        <th>ประเภทหลักประกัน</th>
+                                        <th>เจ้าของหลักประกัน</th>
+                                        <th>เลขที่หลักประกัน</th>
+                                        <th>จังหวัด</th>
+                                        <th>อำเภอ</th>
+                                        <th>ตำบล</th>
+                                        <th>ไร่</th>
+                                        <th>งาน</th>
+                                        <th>ตารางวา</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="list text-center align-middle" id="bulk-select-body">
+                                    {(data && data.length > 0) ? (data.map((item, index) => RenderData(item, index))) : (
+                                        <tr>
+                                            <td className="fs-9 text-center align-middle" colSpan={20}>
+                                                <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     {/* รายละเอียดดำเนินการในที่ดิน */}
                     {showDetail && (
                         <div className="card shadow-none border my-2" data-component-card="data-component-card">

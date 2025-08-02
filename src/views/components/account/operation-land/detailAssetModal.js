@@ -14,47 +14,9 @@ const Asset = (props) => {
   const { policy, isView } = props;
   const collateralRef = useRef(null);
   const [isMounted, setMounted] = useState(false);
-  const [collaterals, setCollaterals] = useState(null);
   const [collateral_type, setCollateralType] = useState(null);
   const [collateralDetail, setCollateralDetail] = useState(null);
-  const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(false);
-  const [isOpenCollateralEdit, setOpenCollateralEdit] = useState(false);
   const [provinces, setProvOp] = useState(null);
-  const addCollateral = async() => {
-    await setCollateralDetail({ id_KFKPolicy: policy.id_KFKPolicy, policyNO: policy.policyNO, assetType: 'โฉนด', collateral_status: 'โอนได้' });
-    await setCollateralType('โฉนด')
-    await setOpenCollateralAdd(true)
-    await setOpenCollateralEdit(true)
-    if (collateralRef.current) {
-      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-  const editCollateral = async(item) => {
-    await setCollateralDetail(item)
-    await setCollateralType(item.assetType)
-    await setOpenCollateralAdd(false)
-    await setOpenCollateralEdit(true)
-    if (collateralRef.current) {
-      collateralRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-  const saveCollateral = async() => {
-    const result = await updateLegalAsset(collateralDetail);
-    if (result.isSuccess) {
-      await fetchData();
-      await setOpenCollateralAdd(false)
-      await setOpenCollateralEdit(false)
-      await setCollateralDetail(null)
-    }
-  }
-  const removeCollateral = async(item) => {
-    const result = await deleteLegalAsset(item);
-    if (result.isSuccess) {
-      await fetchData();
-      await setOpenCollateralEdit(false)
-      await setCollateralDetail(null)
-    }
-  }
   const handleChangeCollateral = async (key, val) => {
     if (key == 'assetType') {
       await setCollateralType(val);
@@ -104,83 +66,14 @@ const Asset = (props) => {
     }
   },[])
   return (
-    <>
-      {/* <div className={`d-flex mb-3 flex-row-reverse ${isView ? 'd-none' : ''}`}>
-        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addCollateral()}><span className="fas fa-plus fs-8"></span> เพิ่มหลักประกัน</button>
-      </div>
-      <div id="tableExample" data-list='{"valueNames":["id","name","province"],"page":10,"pagination":true}'>
-        <div className="table-responsive mx-n1 px-1">
-          <table className="table table-sm table-bordered fs-9 mb-0">
-            <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}>
-              <tr>
-              <th>#</th>
-              <th>เลขที่นิติกรรมสัญญา</th>
-              <th>ประเภทหลักทรัพย์</th>
-              <th>เลขที่ทะเบียน/โฉนด</th>
-              <th>เนื้อที่ (ไร่-งาน-ตรว.)</th>
-              {isView ? (
-                <th>ดูข้อมูล</th>
-              ) : (
-                <>
-                  <th>แก้ไขข้อมูล</th>
-                  <th>ลบข้อมูล</th>
-                </>
-              )}
-              </tr>
-            </thead>
-            <tbody className="list text-center align-middle">
-              {(collaterals && collaterals.length > 0) ? (collaterals.map((item,index) => (
-                <tr key={index}>
-                  <td className="align-middle">{index + 1}</td>
-                  <td>{item.policyNo}</td>
-                  <td>{item.collateral_type}</td>
-                  <td>{item.collateral_no}</td>
-                  <td>{item.collateral_area}</td>
-                  {isView ? (
-                    <td>
-                      <div className='d-flex justify-content-center'>
-                        <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => editCollateral(item)}>
-                          <i className="far fa-eye"></i>
-                        </button>
-                      </div>
-                    </td>
-                  ) : (
-                    <>
-                      <td>
-                        <div className='d-flex justify-content-center'>
-                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => editCollateral(item)}>
-                            <i className="far fa-edit"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td>
-                        <div className='d-flex justify-content-center'>
-                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger px-0" type='button' onClick={() => editCollateral(item)}>
-                            <i className="fas fa-trash-alt"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </>
-                  )}
-                </tr>
-              ))) : (
-                <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={7}>
-                    <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div> */}
+    <> 
       <br />
-      {isOpenCollateralEdit && (
+      {collateralDetail && (
       <>
         <div ref={collateralRef} className="row g-3">
           <div className="col-sm-12 col-md-6 col-lg-4">
             <div className="form-floating needs-validation">
-              <select className="form-select" value={collateralDetail.assetType} disabled={isView} onChange={(e) => handleChangeCollateral('assetType', e.target?.value)}>
+              <select className="form-select" value={collateralDetail.assetType} disabled={isView}>
                 <option value="โฉนด">โฉนด</option>
                 <option value="ตราจอง">ตราจอง</option>
                 <option value="น.ส.3">น.ส.3</option>
@@ -200,7 +93,7 @@ const Asset = (props) => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-4">
             <div className="form-floating needs-validation">
-              <select className="form-select" disabled={isView} value={collateralDetail?.collateral_status} onChange={(e) => handleChangeCollateral('collateral_status', e.target?.value)}>
+              <select className="form-select" disabled={isView} value={collateralDetail?.collateral_status}>
                 <option value="โอนได้">โอนได้</option>
                 <option value="โอนไม่ได้">โอนไม่ได้</option>
               </select>
@@ -209,7 +102,7 @@ const Asset = (props) => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-4">
             <div className="form-floating needs-validation">
-              <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} onChange={(e) => handleChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status == 'โอนได้' ||  isView}>
+              <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} disabled={isView}>
                 <option value="ติดอายัติ(เจ้าหนี้อื่น)">โอติดอายัติ(เจ้าหนี้อื่น)</option>
                 <option value="เจ้าของหลักประกันเสียชีวิต">เจ้าของหลักประกันเสียชีวิต</option>
                 <option value="ติดข้อกฎหมาย">ติดข้อกฎหมาย</option>
@@ -1848,15 +1741,6 @@ const Asset = (props) => {
                     {/* end card รายละเอียดสารบัญจดทะเบียน */}
                   </>
                 )}
-                <br />
-                <div className={`d-flex justify-content-center ${isView ? 'd-none' : ''}`}>
-                  <button className="btn btn-success me-2" type="button" onClick={() => saveCollateral()}>บันทึก</button>
-                  {isOpenCollateralAdd ? (
-                    <button className="btn btn-secondary" type="button" onClick={() => setOpenCollateralEdit(false)}>ยกเลิก</button>
-                  ) : (
-                    <button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
-                  )}
-                </div>
               </div>
             </div>
           </div>
