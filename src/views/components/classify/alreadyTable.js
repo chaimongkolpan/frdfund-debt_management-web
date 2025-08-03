@@ -6,6 +6,9 @@ import {
 const ClassifyAlreadyTable = (props) => {
   const { idcard, province, creditorType } = props;
   const [data, setData] = useState(null);
+  const [sum_npl, setNpl] = useState(null);
+  const [sum_npa, setNpa] = useState(null);
+  const [total, setTotal] = useState(null);
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index}>
@@ -13,10 +16,10 @@ const ClassifyAlreadyTable = (props) => {
         <td>{item.checking_management_status}</td>
         <td>{item.contract_number}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal,2)}</td>
         <td>{item.creditor_type}</td>
         <td>{item.creditor_name}</td>
-        <td>{toCurrency(item.frD_paymen_amount)}</td>
+        <td>{toCurrency(item.frD_paymen_amount,2)}</td>
         <td>{item.debt_management_type}</td>
         <td>{item.dept_status}</td>
       </tr>
@@ -25,9 +28,15 @@ const ClassifyAlreadyTable = (props) => {
   const fetchData = async() => {
     const result = await getDebtManagementAlreadyClassify(idcard, province, creditorType);
     if (result.isSuccess) {
-      setData(result.contracts)
+      await setData(result.contracts)
+      await setNpl(result.sum_npl)
+      await setNpa(result.sum_npa)
+      await setTotal(result.total)
     } else {
-      setData(null)
+      await setData(null)
+      await setNpl(0.00)
+      await setNpa(0.00)
+      await setTotal(0.00)
     }
   }
   useEffect(() => {
@@ -68,9 +77,9 @@ const ClassifyAlreadyTable = (props) => {
       {(data && data.length > 0) &&(
         <h6>
           <div className="d-flex flex-column align-items-end gap-2">
-            <div>ซื้อหนี้ไปแล้วทั้งหมด : 30,000.00 บาท</div>
-            <div>ซื้อทรัพย์ไปแล้วทั้งหมด : 60,000.00 บาท</div>
-            <div>ยอดคงเหลือที่สามารถซื้อได้ : 410,000.00 บาท</div>
+            <div>ซื้อหนี้ไปแล้วทั้งหมด : {toCurrency(sum_npl,2)} บาท</div>
+            <div>ซื้อทรัพย์ไปแล้วทั้งหมด : {toCurrency(sum_npa,2)} บาท</div>
+            <div>ยอดคงเหลือที่สามารถซื้อได้ : {toCurrency(total,2)} บาท</div>
           </div>
         </h6>
       )}

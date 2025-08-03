@@ -80,7 +80,7 @@ const ClassifyDebtManageTable = (props) => {
             <tbody className="list text-center align-middle">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={14}>
+                  <td className="fs-9 text-center align-middle" colSpan={15}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
