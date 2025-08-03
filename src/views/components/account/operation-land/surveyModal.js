@@ -476,10 +476,10 @@ const survey = forwardRef((props, ref) => {
                                 <div className='form-switch mb-2 d-flex justify-content-center'>
                                     <div className='d-flex flex-row-reverse align-items-center gap-2'>
                                         <p className='fw-bold mb-0'>หน่วยงานภายนอก</p>
-                                        <Input type='switch' id='rtl' name='RTL' onChange={(e) => setIsExternalAgency(e.target.checked)} checked={collateralDetail?.external}/>
+                                        <Input type='switch' id='rtl' name='RTL' oonChange={(e) => handleChangeCollateral('external',e.target.checked)} checked={collateralDetail?.external}/>
                                     </div>
                                 </div>
-                                {isExternalAgency && (
+                                {collateralDetail?.external && (
                                     <>
                                     <div className="col-sm-12 col-md-12 col-lg-12 mt-3 mb-1">
                                     <div className="d-flex justify-content-center">
@@ -2935,7 +2935,7 @@ const survey = forwardRef((props, ref) => {
                                 </div>)}                           
                             </div>
                         </div>
-                        {useAsset && (<>
+                        {collateralDetail?.flag1 && (<>
                         <div className="d-flex justify-content-center">
                         <span className="fw-bold mt-0">คืนโฉนด</span>
                         </div>
