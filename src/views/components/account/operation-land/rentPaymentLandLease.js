@@ -88,7 +88,7 @@ const editLandLeaseModal = (props) => {
     };
 
     const save = async () => {
-        const promises = formData.map(async (form) => {
+        try {
             const dataToSave = {
                 ...form,
                 id_KFKPolicy: policy?.id_KFKPolicy,
@@ -97,23 +97,20 @@ const editLandLeaseModal = (props) => {
                 id_AssetRental: policy?.id_AssetRental,
                 indexAssetPolicy: policy?.indexAssetPolicy,
             };
-            
+    
             console.log("Data before submit:", dataToSave);
             
+            let result;
             if (form.id_AssetRentalLog && form.id_AssetRentalLog > 0) {
-                return await updateRecieveRent(dataToSave);
+                result = await updateRecieveRent(dataToSave); // เอา return ออก
             } else {
-                return await saveRecieveRent(dataToSave);
+                result = await saveRecieveRent(dataToSave); // เอา return ออก
             }
-        });
-
-        try {
-            const results = await Promise.all(promises);
-            const allSuccess = results.every(result => result?.isSuccess);
-            
-            if (allSuccess) {
+    
+            console.log("API Result:", result);
+    
+            if (result?.isSuccess) {
                 setModal(false);
-                // อาจจะต้อง refresh data
                 fetchData();
             }
         } catch (error) {

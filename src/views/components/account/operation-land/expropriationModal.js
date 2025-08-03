@@ -15,7 +15,10 @@ import {
     printPlanPay,
     saveDocumentPolicy,
     getProvinces,
-    getOperationDetail
+    getExpropriationDetail,
+    getExpropriationSeparateUsedeed,
+    getExpropriationChange,
+    getExpropriationSeparate,
 } from "@services/api";
 
 const PlanPay = (props) => {
@@ -62,6 +65,33 @@ const PlanPay = (props) => {
     const [openExpropriationPaymentModal, setOpenExpropriationPaymentModal] = useState(false);
     const [openEditExpropriationModal, setOpenEditExpropriationModal] = useState(false);
     const [titleEditExpropriation, setTitleEditExpropriation] = useState(null);
+    const initialCollateralDetail = {
+        id_KFKPolicy: '',
+        policyNO: '',
+        assetType: 'โฉนด',
+        collateral_status: 'โอนได้',
+        parceL_province: '',
+        pre_emption_province: '',
+        nS3_province: '',
+        nS3A_province: '',
+        nS3B_province: '',
+        alrO_province: '',
+        condO_province: '',
+        labT5_province: '',
+        house_province: '',
+        otheR_province: '',
+        changeCollateral: {
+          assetType: 'โฉนด',
+        },
+        separateCollateral: [{
+          assetType: 'โฉนด',
+        }],
+        req_docu: [],
+        borrowdeed_docu: [],
+        approve_docu: [],
+        results_docu: [],
+        report_docu: [],
+      };
     const [itemExpropriation, setItemExpropriation] = useState(null);
     const handleAddForm = () => {
         setCollateralForms([...collateralForms, { id: Date.now(), assetType: '' }]);
@@ -83,12 +113,40 @@ const PlanPay = (props) => {
         );
     };
 
-    const handleShowDetail = async () => {
+    const handleShowDetail = async (item) => {
         setShowDetail(true);
+        await getChangeCollateral(item.id_AssetPolicy);
+        await getSeparateCollateral(item.id_AssetPolicy);
+        await getUseDeed(item);
+        setCollateralDetail(prev => ({
+            ...prev,
+            ...item, 
+            changeCollateral: { assetType: item.assetType || 'โฉนด' },
+            separateCollateral: [{ assetType: item.assetType || 'โฉนด' }],
+            req_docu: [],
+            borrowdeed_docu: [],
+            approve_docu: [],
+            results_docu: [],
+            report_docu: [],
+          }));
     }
-
-    const handleShowEdit = async () => {
+    const handleShowEdit = async (item) => {
         setShowEdit(true);
+        await setCollateralDetail(item);
+        await getChangeCollateral(item.id_AssetPolicy);
+        await getSeparateCollateral(item.id_AssetPolicy);
+        await getUseDeed(item);
+        setCollateralDetail(prev => ({
+            ...prev,
+            ...item, 
+            changeCollateral: { assetType: item.assetType || 'โฉนด' },
+            separateCollateral: [{ assetType: item.assetType || 'โฉนด' }],
+            req_docu: [],
+            borrowdeed_docu: [],
+            approve_docu: [],
+            results_docu: [],
+            report_docu: [],
+          }));
     }
 
     const [provinces, setProvOp] = useState(null);
@@ -166,8 +224,52 @@ const PlanPay = (props) => {
         if (result.isSuccess) {
         }
     }
+    const getSeparateCollateral = async (id) => {
+        console.log(id);
+        const result = await getExpropriationSeparate(id);
+        if (result.isSuccess) {
+            setItemExpropriation(prev => ({
+                ...prev,
+                assetType: result.data?.assetType ?? prev.separateCollateral?.assetType, 
+            }));
+        }
+    }
+    const getChangeCollateral = async (id) => {
+        console.log(id);
+        const result = await getExpropriationChange(id);
+        if (result.isSuccess) {
+            setItemExpropriation(prev => ({
+                ...prev, 
+                ...result.data, 
+                assetType: result.data?.assetType ?? prev.changeCollateral?.assetType, 
+            }));
+        }
+    }
+    const getUseDeed = async (item) => {
+        const params ={
+            id_KFKPolicy: item.id_KFKPolicy,
+            policyNO: item.policyNO,
+            id_AssetPolicy: item.id_AssetPolicy,
+            indexAssetPolicy: item.indexAssetPolicy,
+            operations_type: item.operations_type,
+            id_operations_type: item.id_operations_type
+          }
+        const result = await getExpropriationSeparateUsedeed(params);
+        if (result.isSuccess) {
+            if(result.data.length > 0){
+                setItemExpropriation(prev => ({
+                    ...prev,
+                    changeCollateral: {
+                        ...result.changeCollateral,
+                        assetType: result.changeCollateral?.assetType ?? prev.changeCollateral?.assetType,
+                    },
+                    ...result.data
+                }));
+            }
+        }
+    }
     const fetchData = async () => {
-        const result = await getOperationDetail(policy.id_KFKPolicy);
+        const result = await getExpropriationDetail(policy.id_KFKPolicy);
         if (result.isSuccess) {
 
             const mockData =[{
@@ -232,10 +334,10 @@ const PlanPay = (props) => {
                 "contract_area_ngan": "string",
                 "contract_area_sqaure_wa": 0,
                 "borrowdeed_no": "string",
-                "borrowdeed_date": "2025-08-02T19:47:53.346Z",
+                "borrowdeed_date": "2025-08-03T06:40:55.344Z",
                 "borrowdeed_reason": "string",
                 "returndeed_no": "string",
-                "returndeed_date": "2025-08-02T19:47:53.346Z",
+                "returndeed_date": "2025-08-03T06:40:55.344Z",
                 "returndeed_remark": "string",
                 "asset_operations_type": "string",
                 "asset_operations_other": "string",
@@ -268,7 +370,15 @@ const PlanPay = (props) => {
                 "rental_years_period": "string",
                 "rental_start": "string",
                 "rental_end": "string",
-                "rental_remark": "string"
+                "rental_remark": "string",
+                "id_AssetExpropriation": 0,
+                "expro_contract_docu": "string",
+                "expro_agency": "string",
+                "expro_area_rai": "string",
+                "expro_area_ngan": "string",
+                "expro_area_sqaure_wa": 0,
+                "expro_amount": "string",
+                "expro_remark": "string"
               }]
             await setData(mockData);
         }
@@ -287,10 +397,12 @@ const PlanPay = (props) => {
                         <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenLandRentalNO" onClick={() => setOpenExpropriationPaymentModal(true)}><span class="fas fa-money-check-alt"></span></button>
                     </div>
                 </td>
-                <td>{item.assetType}</td>
+                <td>{item.asset_operations_type}</td>
+                <td>{item.asset_operations_name}</td>              
                 <td>{item.policyNO}</td>
                 <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>
+                <td>{item.name_legal_owner}</td>
                 <td>{item.collateral_no}</td>
                 <td>{item.collateral_province}</td>
                 <td>{item.collateral_district}</td>
@@ -355,10 +467,25 @@ const PlanPay = (props) => {
         setOpenEditExpropriationModal(true);
         setTitleEditExpropriation('เพิ่มการเวนคืน');
     }
-    const handleOpenEditExpropriation = (item) => {
+    const handleOpenEditExpropriation = async (item) => {
         setOpenEditExpropriationModal(true);
         setItemExpropriation(item);
         setTitleEditExpropriation('แก้ไขการเวนคืน');
+        await setCollateralDetail(item);
+        await getChangeCollateral(item.id_AssetPolicy);
+        await getSeparateCollateral(item.id_AssetPolicy);
+        await getUseDeed(item);
+        setCollateralDetail(prev => ({
+            ...prev,
+            ...item, 
+            changeCollateral: { assetType: item.assetType || 'โฉนด' },
+            separateCollateral: [{ assetType: item.assetType || 'โฉนด' }],
+            req_docu: [],
+            borrowdeed_docu: [],
+            approve_docu: [],
+            results_docu: [],
+            report_docu: [],
+          }));
 
     }
     return (
@@ -375,6 +502,8 @@ const PlanPay = (props) => {
                                 <th rowSpan="2">#</th>
                                 <th colSpan="4">ดำเนินการในที่ดิน</th>
                                 <th colSpan="11">หลักประกัน</th>
+                                <th colSpan="3">ยืมโฉนด</th>
+                                <th colSpan="3">คืนโฉนด</th>
                             </tr>
                             <tr>
                                 <th>รายละเอียด</th>
@@ -392,6 +521,12 @@ const PlanPay = (props) => {
                                 <th>ไร่</th>
                                 <th>งาน</th>
                                 <th>ตารางวา</th>
+                                <th>เลขที่หนังสือ</th>
+                                <th>วันที่หนังสือ</th>
+                                <th>เหตุผล</th>
+                                <th>เลขที่หนังสือ</th>
+                                <th>วันที่หนังสือ</th>
+                                <th>หมายเหตุ</th>
                             </tr>
                         </thead>
                         <tbody className="list text-center align-middle" id="bulk-select-body">

@@ -26,6 +26,9 @@ import {
   addContractNPAToList,
   submitListNPA,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const DebtRegisterNpa = () => {
@@ -48,15 +51,18 @@ const DebtRegisterNpa = () => {
   });
   const handleAddRegister = async (debt) => {
     const result = await addRegistrationNPA(debt);
-    // if (result.isSuccess) {
-    //   await setEditDebt(null)
-    //   const result1 = await searchRegisteredNPA(filter);
-    //   if (result1.isSuccess) {
-    //     await setDataRegister(result1)
-    //   } else {
-    //     await setDataRegister(null)
-    //   }
-    // }
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      // await setEditDebt(null)
+      // const result1 = await searchRegisteredNPA(filter);
+      // if (result1.isSuccess) {
+      //   await setDataRegister(result1)
+      // } else {
+      //   await setDataRegister(null)
+      // }
+    }
   }
   const handleEditRegister = async (debt) => {
     const result = await submitEditRegisteredNPA(debt);

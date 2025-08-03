@@ -116,19 +116,19 @@ const DebtRegisterSelectedTableNpa = (props) => {
               <tr>
               <th className="align-middle text-center" data-sort="name">เลขบัตรประชาชน</th>
                 <th className="align-middle text-center" data-sort="email">คำนำหน้า</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อ-นามสกุล</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>ชื่อ-นามสกุล</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัด</th>
                 <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิกองค์กร (ครั้งแรก)</th>
                 <th className="align-middle text-center" data-sort="email">วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
                 <th className="align-middle text-center" data-sort="age">รอบองค์กร</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อองค์กรการเกษตร</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 180 }}>ชื่อองค์กรการเกษตร</th>
                 <th className="align-middle text-center" data-sort="age">หมายเลของค์กร</th>
                 <th className="align-middle text-center" data-sort="age">รอบหนี้</th>
                 <th className="align-middle text-center" data-sort="age">วันที่ยื่นขึ้นทะเบียนหนี้</th>
                 <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบครั้งที่</th>
                 <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบวันที่</th>
-                <th className="align-middle text-center" data-sort="age">ประเภทเจ้าหนี้</th>
-                <th className="align-middle text-center" data-sort="age">สถาบันเจ้าหนี้</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>ประเภทเจ้าหนี้</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 180 }}>สถาบันเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัดเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">สาขาเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">เลขที่สัญญา</th>
