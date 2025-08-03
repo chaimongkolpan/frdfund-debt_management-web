@@ -18,17 +18,44 @@ const editLandLeaseModal = (props) => {
     const [data, setData] = useState([]);
     const [clearFile, setClear] = useState({});
     const [files, setFiles] = useState({});
-    
-    // เปลี่ยนเป็น array ของ objects สำหรับจัดการหลายฟอร์ม
-    const [formData, setFormData] = useState([]);
-    
+  
+    const [formData, setFormData] = useState({
+        id_AssetRental: 0,
+        id_AssetRentalLog: 0,
+        rtNo: 0,
+        payment_docu: '',
+        rent_no: '',
+        rent_date: null,
+        pay_docuno: '',
+        pay_date: null,
+        cheques_no: '',
+        cheques_date: null,
+        cashier_check_no: '',
+        cashier_check_date: null,
+        transfer_rent_date: null,
+        cashier_check_amount: 0,
+        rf: 0,
+        rfNo: 0,
+        refund_farmers_docu: '',
+        refund_amount: 0,
+        debt_deduc_amount: 0,
+        transfer_req_docu: '',
+        transfer_no: '',
+        transfer_date: null,
+        payment_no: '',
+        refund_date: null,
+        amount: 0,
+        interest: 0,
+        total_amount: 0});
+
+        const [showForm, setShowForm] = useState(false); 
+        const [addForm, setAddForm] = useState(false);
     // ฟังก์ชันเพิ่มฟอร์มใหม่
     const handleAddForm = () => {
-        const newForm = {
-            id: Date.now(),
+        setFormData({
             id_AssetRentalLog: 0,
             id_AssetRental: 0,
-            rtNo: formData.length,
+            rtNo: data.length,
             payment_docu: '',
             rent_no: '',
             rent_date: null,
@@ -53,8 +80,9 @@ const editLandLeaseModal = (props) => {
             amount: 0,
             interest: 0,
             total_amount: 0
-        };
-        setFormData([...formData, newForm]);
+        });
+        setAddForm(true);
+        setShowForm(true);
     };
 
     // ฟังก์ชันลบฟอร์ม
@@ -63,58 +91,72 @@ const editLandLeaseModal = (props) => {
     };
 
     // ฟังก์ชันจัดการการเปลี่ยนแปลงข้อมูลในฟอร์ม
-    const handleChange = (formId, fieldName, value) => {
-        setFormData(prevData => 
-            prevData.map(form => 
-                form.id === formId 
-                    ? { ...form, [fieldName]: value }
-                    : form
-            )
-        );
+    const handleChange = (fieldName, value) => {
+        setFormData(prev => ({
+            ...prev,
+            [fieldName]: value
+        }));
     };
 
-    // ฟังก์ชันจัดการไฟล์
-    const onFileChange = async (formId, fieldName, files) => {
+    const onFileChange = async (fieldName, files) => {
         if (files.length > 0) {
-            setFiles(prev => ({
+            setFormData(prev => ({
                 ...prev,
-                [`${formId}_${fieldName}`]: files
-            }));
-            setClear(prev => ({
-                ...prev,
-                [`${formId}_${fieldName}`]: false
+                [fieldName]: files[0]
             }));
         }
     };
 
     const save = async () => {
         try {
-            const dataToSave = {
-                ...form,
-                id_KFKPolicy: policy?.id_KFKPolicy,
-                policyNO: policy?.policyNO,
-                id_AssetPolicy: policy?.id_AssetPolicy,
-                id_AssetRental: policy?.id_AssetRental,
-                indexAssetPolicy: policy?.indexAssetPolicy,
-            };
-    
-            console.log("Data before submit:", dataToSave);
+            const form = new FormData();
             
-            let result;
-            if (form.id_AssetRentalLog && form.id_AssetRentalLog > 0) {
-                result = await updateRecieveRent(dataToSave); // เอา return ออก
-            } else {
-                result = await saveRecieveRent(dataToSave); // เอา return ออก
+            form.append('id_AssetRentalLog', formData.id_AssetRentalLog || 0);
+            form.append('id_AssetReantal', formData.id_AssetReantal || 0);
+            form.append('rtNo', formData.rtNo || 0);
+            form.append('rent_no', formData.rent_no || "");
+            form.append('rent_date', formData.rent_date ? formData.rent_date.toISOString() : '');
+            form.append('pay_docuno', formData.pay_docuno || "");
+            form.append('pay_date', formData.pay_date ? formData.pay_date.toISOString() : '');
+            form.append('cheques_no', formData.cheques_no || "");
+            form.append('cheques_date', formData.cheques_date ? formData.cheques_date.toISOString() : '');
+            form.append('cashier_check_no', formData.cashier_check_no || "");
+            form.append('cashier_check_date', formData.cashier_check_date ? formData.cashier_check_date.toISOString() : '');
+            form.append('transfer_rent_date', formData.transfer_rent_date ? formData.transfer_rent_date.toISOString() : '');
+            form.append('cashier_check_amount', formData.cashier_check_amount || 0);
+            form.append('rf', formData.rf || 0);
+            form.append('rfNo', formData.rfNo || 0);
+            form.append('refund_amount', formData.refund_amount || 0);
+            form.append('debt_deduc_amount', formData.debt_deduc_amount || 0);
+            form.append('transfer_no', formData.transfer_no || "");
+            form.append('transfer_date', formData.transfer_date ? formData.transfer_date.toISOString() : '');
+            form.append('payment_no', formData.payment_no || "");
+            form.append('refund_date', formData.refund_date ? formData.refund_date.toISOString() : '');
+            form.append('amount', formData.amount || 0);
+            form.append('interest', formData.interest || 0);
+            form.append('total_amount', formData.total_amount || 0);
+            
+            // ไฟล์
+            if (formData.payment_docu instanceof File) {
+                form.append('payment_docu', formData.payment_docu);
             }
-    
-            console.log("API Result:", result);
-    
+            if (formData.refund_farmers_docu instanceof File) {
+                form.append('refund_farmers_docu', formData.refund_farmers_docu);
+            }
+            if (formData.transfer_req_docu instanceof File) {
+                form.append('transfer_req_docu', formData.transfer_req_docu);
+            }
+            
+            const result = addForm ? await saveRecieveRent(form) : await updateRecieveRent(form);
+
+          
             if (result?.isSuccess) {
-                setModal(false);
-                fetchData();
+                setShowForm(false);
+                setFormData({});
+                fetchData(); // รีเฟรชข้อมูลในตาราง
             }
         } catch (error) {
-            console.error('Error saving data:', error);
+            console.error('Error:', error);
         }
     };
 
@@ -155,13 +197,13 @@ const editLandLeaseModal = (props) => {
               ];
               setData(mockData);
             // ถ้ามีข้อมูลจาก API ให้ใส่ใน formData สำหรับแก้ไข
-            if (result.data && result.data.length > 0) {
-                const formsFromAPI = result.data.map((item, index) => ({
-                    ...item,
-                    id: item.id_AssetRentalLog || Date.now() + index
-                }));
-                setFormData(formsFromAPI);
-            }
+            // if (result.data && result.data.length > 0) {
+            //     const formsFromAPI = result.data.map((item, index) => ({
+            //         ...item,
+            //         id: item.id_AssetRentalLog || Date.now() + index
+            //     }));
+            //     setFormData(formsFromAPI);
+            // }
         }
     };
 
@@ -171,14 +213,9 @@ const editLandLeaseModal = (props) => {
 
     const handleOpenReceiveRentDetail = (item) => {
         // เปิดฟอร์มแก้ไขสำหรับ item นี้
-        const existingFormIndex = formData.findIndex(form => 
-            form.id_AssetRentalLog === item.id_AssetRentalLog
-        );
-        
-        if (existingFormIndex === -1) {
-            // ถ้ายังไม่มีในฟอร์ม ให้เพิ่มเข้าไป
-            setFormData(prev => [...prev, { ...item, id: item.id_AssetRentalLog || Date.now() }]);
-        }
+        setFormData(item);
+        setShowForm(true);
+        setAddForm(false);
     };
 
     const toggle = () => setModal(!isOpen);
@@ -206,6 +243,13 @@ const editLandLeaseModal = (props) => {
             </tr>
         ))
     };
+    const wrappedSetModal = (value) => {
+        if (!value) { // เมื่อปิด modal
+            setFormData({});
+            setShowForm(false);
+        }
+        setModal(value);
+    };
 
     return (
         <Modal
@@ -216,7 +260,7 @@ const editLandLeaseModal = (props) => {
             onOk={onOk}
             size='lg'
             hideFooter={true}
-            setModal={setModal}
+            setModal={wrappedSetModal}
         >
             <div className="card my-2 border-0" data-component-card="data-component-card">
                 <div className="p-3 code-to-copy">
@@ -227,6 +271,7 @@ const editLandLeaseModal = (props) => {
                                     className="btn btn-primary me-1 mb-1" 
                                     type="button" 
                                     onClick={handleAddForm}
+                                    disabled={addForm}
                                 >
                                     <span className="fas fa-plus fs-8"></span> เพิ่มรับเงินค่าเช่า
                                 </button>
@@ -263,13 +308,13 @@ const editLandLeaseModal = (props) => {
                     </table>
 
                     {/* Render ฟอร์มทั้งหมด */}
-                    {formData.map((form, index) => (
-                        <div key={form.id} className="mb-1 rounded p-3 position-relative">
+                    {showForm && (
+                        <div  className="mb-1 rounded p-3 position-relative">
                             <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                 <div className="card-body p-0">
                                     <div className="p-3 code-to-copy">
                                     <div className="d-flex justify-content-center mb-3">
-                                        <span className="text-center fw-bold">รับเงินค่าเช่าครั้งที่ {form.rtNo + 1}</span>
+                                        <span className="text-center fw-bold">รับเงินค่าเช่าครั้งที่ {formData.rtNo + 1}</span>
                                     </div>
                                         
                                         <div className="d-flex justify-content-center mt-1">
@@ -279,8 +324,8 @@ const editLandLeaseModal = (props) => {
                                         
                                         <div className="col-12 mt-1 mb-3">
                                             <DropZone 
-                                                onChange={(f) => onFileChange(form.id, 'payment_docu', f)} 
-                                                clearFile={clearFile[`${form.id}_payment_docu`]} 
+                                                onChange={(f) => onFileChange('payment_docu', f)} 
+                                                clearFile={clearFile.payment_docu} 
                                                 accept={'*'} 
                                             />
                                         </div>
@@ -291,15 +336,15 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'เลขที่หนังสือ'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'rent_no', val)}  
-                                                    value={form?.rent_no || ''} 
+                                                    handleChange={(val) => handleChange('rent_no', val)}  
+                                                    value={formData?.rent_no || ''} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <DatePicker 
                                                     title={'วันที่หนังสือ'}
-                                                    value={form.rent_date} 
-                                                    handleChange={(val) => handleChange(form.id, 'rent_date', val)}  
+                                                    value={formData.rent_date} 
+                                                    handleChange={(val) => handleChange('rent_date', val)}  
                                                 /> 
                                             </div>
 
@@ -307,15 +352,15 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'เลขที่ใบสำคัญรับ'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'pay_docuno', val)}  
-                                                    value={form?.pay_docuno || ''} 
+                                                    handleChange={(val) => handleChange('pay_docuno', val)}  
+                                                    value={formData?.pay_docuno || ''} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <DatePicker 
                                                     title={'วันที่ได้รับเงิน'} 
-                                                    value={form.pay_date} 
-                                                    handleChange={(val) => handleChange(form.id, 'pay_date', val)}  
+                                                    value={formData.pay_date} 
+                                                    handleChange={(val) => handleChange('pay_date', val)}  
                                                 /> 
                                             </div>
 
@@ -323,15 +368,15 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'เลขที่เช็ค'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'cheques_no', val)}  
-                                                    value={form?.cheques_no || ''} 
+                                                    handleChange={(val) => handleChange('cheques_no', val)}  
+                                                    value={formData?.cheques_no || ''} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <DatePicker 
                                                     title={'วันที่เช็ค'} 
-                                                    value={form.cheques_date} 
-                                                    handleChange={(val) => handleChange(form.id, 'cheques_date', val)}  
+                                                    value={formData.cheques_date} 
+                                                    handleChange={(val) => handleChange('cheques_date', val)}  
                                                 /> 
                                             </div>
 
@@ -339,31 +384,31 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'เลขที่แคชเชียร์เช็ค'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'cashier_check_no', val)}  
-                                                    value={form?.cashier_check_no || ''} 
+                                                    handleChange={(val) => handleChange('cashier_check_no', val)}  
+                                                    value={formData?.cashier_check_no || ''} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <DatePicker 
                                                     title={'วันที่แคชเชียร์เช็ค'} 
-                                                    value={form.cashier_check_date} 
-                                                    handleChange={(val) => handleChange(form.id, 'cashier_check_date', val)}  
+                                                    value={formData.cashier_check_date} 
+                                                    handleChange={(val) => handleChange('cashier_check_date', val)}  
                                                 /> 
                                             </div>
 
                                             <div className="col-sm-12 col-md-6 col-lg-6">
                                                 <DatePicker 
                                                     title={'วันที่การโอน'} 
-                                                    value={form.transfer_rent_date} 
-                                                    handleChange={(val) => handleChange(form.id, 'transfer_rent_date', val)}  
+                                                    value={formData.transfer_rent_date} 
+                                                    handleChange={(val) => handleChange('transfer_rent_date', val)}  
                                                 /> 
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <Textbox 
                                                     title={'จำนวนเงิน'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'cashier_check_amount', val)}  
-                                                    value={form?.cashier_check_amount || 0} 
+                                                    handleChange={(val) => handleChange('cashier_check_amount', val)}  
+                                                    value={formData?.cashier_check_amount || 0} 
                                                 />
                                             </div>
                                         </div>
@@ -376,18 +421,18 @@ const editLandLeaseModal = (props) => {
                                     <p className='fw-bold mb-0'>คืนเงิน/หักหนี้</p>
                                     <Input 
                                         type='switch' 
-                                        id={`rf_${form.id}`} 
                                         name='rf' 
-                                        onChange={(e) => handleChange(form.id, 'rf', e.target.checked ? 1 : 0)} 
-                                        checked={form?.rf == 1} 
+                                        onChange={(e) => handleChange( 'rf', e.target.checked ? 1 : 0)} 
+                                        checked={formData?.rf == 1} 
                                     />
                                 </div>
                             </div>
-                            {form?.rf == 1 && ( <div className="card shadow-none border my-2" data-component-card="data-component-card">
+                            {formData?.rf == 1 && ( 
+                            <div className="card shadow-none border my-2" data-component-card="data-component-card">
                                 <div className="card-body p-0">
                                     <div className="p-3 code-to-copy">
                                         <div className="d-flex justify-content-center mb-1">
-                                            <span className="text-center fw-bold">คืนเงิน/หักหนี้ ครั้งที่ {form.rfNo + 1}</span>
+                                            <span className="text-center fw-bold">คืนเงิน/หักหนี้ ครั้งที่ {formData.rfNo + 1}</span>
                                         </div>
                                         <div className="d-flex justify-content-center mt-1">
                                             <span className="text-center fw-bold">เอกสารเกษตรกรรับแจ้งรับเงินคืนหรือหักหนี้</span>
@@ -396,8 +441,8 @@ const editLandLeaseModal = (props) => {
                                         
                                         <div className="col-12 mt-1 mb-3">
                                             <DropZone 
-                                                onChange={(f) => onFileChange(form.id, 'refund_farmers_docu', f)} 
-                                                clearFile={clearFile[`${form.id}_refund_farmers_docu`]} 
+                                                onChange={(f) => onFileChange('refund_farmers_docu', f)} 
+                                                clearFile={clearFile.refund_farmers_docu} 
                                                 accept={'*'} 
                                             />
                                         </div>
@@ -408,16 +453,16 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'คืนเงินจำนวน'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'refund_amount', val)}  
-                                                    value={form?.refund_amount || 0} 
+                                                    handleChange={(val) => handleChange('refund_amount', val)}  
+                                                    value={formData?.refund_amount} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <Textbox 
                                                     title={'หักหนี้จำนวน'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'debt_deduc_amount', val)}  
-                                                    value={form?.debt_deduc_amount || 0} 
+                                                    handleChange={(val) => handleChange('debt_deduc_amount', val)}  
+                                                    value={formData?.debt_deduc_amount} 
                                                 />
                                             </div>
                                         </div>
@@ -429,8 +474,8 @@ const editLandLeaseModal = (props) => {
                                         
                                         <div className="col-12 mt-1 mb-3">
                                             <DropZone 
-                                                onChange={(f) => onFileChange(form.id, 'transfer_req_docu', f)} 
-                                                clearFile={clearFile[`${form.id}_transfer_req_docu`]} 
+                                                onChange={(f) => onFileChange('transfer_req_docu', f)} 
+                                                clearFile={clearFile.transfer_req_docu} 
                                                 accept={'*'} 
                                             />
                                         </div>
@@ -441,15 +486,15 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'เลขที่หนังสือ'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'transfer_no', val)}  
-                                                    value={form?.transfer_no || ''} 
+                                                    handleChange={(val) => handleChange('transfer_no', val)}  
+                                                    value={formData?.transfer_no || ''} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <DatePicker 
                                                     title={'วันที่หนังสือ'} 
-                                                    value={form.transfer_date} 
-                                                    handleChange={(val) => handleChange(form.id, 'transfer_date', val)}  
+                                                    value={formData.transfer_date} 
+                                                    handleChange={(val) => handleChange('transfer_date', val)}  
                                                 /> 
                                             </div>
 
@@ -457,15 +502,15 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'เลขที่ใบสำคัญการจ่าย'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'payment_no', val)}  
-                                                    value={form?.payment_no || ''} 
+                                                    handleChange={(val) => handleChange('payment_no', val)}  
+                                                    value={formData?.payment_no || ''} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <DatePicker 
                                                     title={'วันที่โอนเงิน'} 
-                                                    value={form.refund_date} 
-                                                    handleChange={(val) => handleChange(form.id, 'refund_date', val)}  
+                                                    value={formData.refund_date} 
+                                                    handleChange={(val) => handleChange('refund_date', val)}  
                                                 /> 
                                             </div>
 
@@ -473,40 +518,43 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox 
                                                     title={'จำนวนเงินค่าเช่า'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'amount', val)}  
-                                                    value={form?.amount || 0} 
+                                                    handleChange={(val) => handleChange('amount', val)}  
+                                                    value={formData?.amount} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6">
                                                 <Textbox 
                                                     title={'ดอกเบี้ย'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'interest', val)}  
-                                                    value={form?.interest || 0} 
+                                                    handleChange={(val) => handleChange('interest', val)}  
+                                                    value={formData?.interest} 
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6">
                                                 <Textbox 
                                                     title={'รวมจำนวนเงินทั้งสิ้น'} 
                                                     containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChange(form.id, 'total_amount', val)}  
-                                                    value={form?.total_amount || 0} 
+                                                    handleChange={(val) => handleChange('total_amount', val)}  
+                                                    value={formData?.total_amount} 
                                                 />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>)}
-
-                        </div>
-                    ))}
+                            <div className="d-flex justify-content-center mt-3">
+                                <button className="btn btn-success me-2" type="button" onClick={() => save()}>
+                                    บันทึก
+                                </button>
+                                {/* <button className="btn btn-secondary" type="button" onClick={handleCloseForm}>
+                                    ยกเลิก
+                                </button> */}
+                            </div>
+                            </div>
+                    )}
                 </div>
                 
-                <div className="d-flex justify-content-center">
-                    <button className="btn btn-success me-2" type="button" onClick={() => save()}>
-                        บันทึก
-                    </button>
-                </div>
+                
             </div>
         </Modal>
     );

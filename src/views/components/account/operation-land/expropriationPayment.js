@@ -51,6 +51,7 @@ const editLandLeaseModal = (props) => {
     });
 
     const [showForm, setShowForm] = useState(false);
+    const [addForm, setAddForm] = useState(false);
 
     // ฟังก์ชันเพิ่มฟอร์มใหม่
     const handleAddForm = () => {
@@ -84,6 +85,7 @@ const editLandLeaseModal = (props) => {
             total_amount: 0
         });
         setShowForm(true);
+        setAddForm(true);
     };
 
     // ฟังก์ชันปิดฟอร์ม
@@ -149,7 +151,8 @@ const editLandLeaseModal = (props) => {
                 form.append('transfer_req_docu', formData.transfer_req_docu);
             }
             
-            const result = await insertExpropriationLog(form);
+            const result = addForm ? await insertExpropriationLog(form) : await updateExpropriationLog(form);
+
             
             if (result?.isSuccess) {
                 setShowForm(false);
@@ -207,6 +210,7 @@ const editLandLeaseModal = (props) => {
         // เปิดฟอร์มแก้ไขสำหรับ item นี้
         setFormData(item);
         setShowForm(true);
+        setAddForm(false);
     };
 
     const toggle = () => setModal(!isOpen);
@@ -263,7 +267,7 @@ const editLandLeaseModal = (props) => {
                                     className="btn btn-primary me-1 mb-1"
                                     type="button"
                                     onClick={handleAddForm}
-                                    disabled={showForm} // ปิดการใช้งานเมื่อกำลังแสดงฟอร์ม
+                                    disabled={addForm} 
                                 >
                                     <span className="fas fa-plus fs-8"></span> เพิ่มรับเงินค่าเวนคืน
                                 </button>
