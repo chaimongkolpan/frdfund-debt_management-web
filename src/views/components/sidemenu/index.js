@@ -531,7 +531,7 @@ const Sidebar = props => {
                           </ul>
                         </div>
                       </li>
-                      <li className="nav-item">
+                      {/* <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/approval/additional-action') ? 'active' : ''}`} href="#nv-RequestApprovalPayAdditionalActions" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayAdditionalActions">
                           <div className="d-flex align-items-center">
                             <div className="dropdown-indicator-icon-wrapper">
@@ -540,7 +540,6 @@ const Sidebar = props => {
                             <span className="nav-link-text">การดำเนินการเพิ่มเติม</span>
                           </div>
                         </a>
-                        {/* more inner pages*/}
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayAdditionalActions">
                             <li className="nav-item">
@@ -556,7 +555,7 @@ const Sidebar = props => {
                             </li>
                           </ul>
                         </div>
-                      </li>
+                      </li> */}
                     </ul>
                   </div>
                 </div>
