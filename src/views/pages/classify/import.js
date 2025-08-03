@@ -4,6 +4,9 @@ import { getUserData } from "@utils";
 import Filter from "@views/components/classify/filterImport";
 import According from "@views/components/panel/according";
 import DataTable from "@views/components/classify/importTable";
+import { Spinner } from 'reactstrap'
+import Loading from "@views/components/modal/loading";
+import logo from '@src/assets/images/icons/logo.png'
 import { 
   importClassify
 } from "@services/api";
@@ -14,17 +17,20 @@ import ToastError from "@views/components/toast/error";
 const user = getUserData();
 const ImportClassify = () => {
   const navigate = useNavigate();
+  const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
   const [failed, setFailed] = useState(0);
   const [fail_list, setFailList] = useState([]);
   const [succeed, setSuceed] = useState(0);
   const onSubmit = async (filter) => {
     if (filter.file) {
+      await setLoadBigData(true);
       const form = new FormData();
       form.append('debtType', filter.debtType);
       form.append('creditorType', filter.creditorType);
       form.append('file', filter.file);
       const result = await importClassify(form);
+      await setLoadBigData(false);
       if (result.isSuccess) {
         setFailed(result.failed);
         setFailList(result.fail_list);
@@ -83,6 +89,12 @@ const ImportClassify = () => {
           </div>
         </div>
       </div>
+      <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
+        <div className="d-flex flex-column align-items-center justify-content-center">
+          <img className='mb-5' src={logo} alt='logo' width={150} height={150} />
+          <Spinner className='mb-3' style={{ height: '3rem', width: '3rem' }} />
+        </div>
+      </Loading>
     </>
   );
 };
