@@ -99,6 +99,24 @@ const PageContent = () => {
   
     return formData;
   };
+
+  function appendFormData(formData, data, parentKey = '') {
+    if (data === null || data === undefined) return;
+  
+    if (data instanceof File) {
+      formData.append(parentKey, data);
+    } else if (Array.isArray(data)) {
+      data.forEach((value, index) => {
+        appendFormData(formData, value, `${parentKey}[${index}]`);
+      });
+    } else if (typeof data === 'object') {
+      Object.entries(data).forEach(([key, value]) => {
+        appendFormData(formData, value, parentKey ? `${parentKey}.${key}` : key);
+      });
+    } else {
+      formData.append(parentKey, data);
+    }
+  }
   
   
 const submitOperation = async () => {
@@ -119,9 +137,9 @@ const submitOperation = async () => {
     detail.flag3 = detail.flag3 ? 'Y' : 'N';
   }
 
-  const formData = convertToFormData(detail);
-
-  const result = await updateOperationLand(detail);
+  const formData = new FormData();
+  appendFormData(formData, detail);
+  const result = await updateOperationLand(formData);
   if (result.isSuccess) {
     console.log("save operation done");
   }
@@ -143,8 +161,9 @@ const submitOperation = async () => {
     if (typeof detail?.flag3 === 'boolean') {
       detail.flag3 = detail.flag3 ? 'Y' : 'N';
     }
-    const formData = convertToFormData(detail);
-    const result = await updateSurvey(detail);
+    const formData = new FormData();
+    appendFormData(formData, detail);
+    const result = await updateSurvey(formData);
     if (result.isSuccess) {
       console.log("save survey done");
     }
