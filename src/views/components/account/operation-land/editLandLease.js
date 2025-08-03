@@ -19,13 +19,21 @@ const editLandLeaseModal = (props) => {
     const [year, setYear] = useState(null);
     const [plans, setPlan] = useState(null);
     const [clearFile, setClear] = useState(false);
-    const [files, setFiles] = useState(null);
-    const onFileChange = async (files) => {
+    const [files, setFiles] = useState([]);
+
+    const onFileChange = async (fieldName, files) => {
         if (files.length > 0) {
-            await setFiles(files);
-            await setClear(false);
+            setFormData(prev => ({
+                ...prev,
+                [fieldName]: files[0]
+            }));
         }
-    }
+    };
+    const safeDate = (dateString) => {
+        if (!dateString) return null;
+        const d = new Date(dateString);
+        return isNaN(d.getTime()) ? null : d;
+      }
     const onSubmitFile = async () => {
         if (files && files.length > 0) {
             const form = new FormData();
@@ -54,13 +62,29 @@ const editLandLeaseModal = (props) => {
         };
       
         console.log("Data before submit:", dataToSave);
-      
+        
+        const form = new FormData();
+        
+        Object.entries(dataToSave).forEach(([key, value]) => {
+            form.append(key, value);
+          });
+        
+        //   if (files && typeof files === 'object') {
+        //     Object.entries(files).forEach(([fieldKey, fileList]) => {
+        //       if (Array.isArray(fileList)) {
+        //         fileList.forEach((file) => {
+        //           form.append(fieldKey, file);
+        //         });
+        //       }
+        //     });
+        //   }
+
         let result;
       
         if (propData) {
-          result = await updateAssetRental(dataToSave); 
+          result = await updateAssetRental(form); 
         } else {
-          result = await saveAssetRental(dataToSave); 
+          result = await saveAssetRental(form); 
         }
       
         if (result?.isSuccess) {
@@ -172,7 +196,7 @@ const editLandLeaseModal = (props) => {
 
                             <div className="col-sm-12 col-md-6 col-lg-6 mb-1">
                                 <DatePicker title={'วันที่ทำสัญญา'} 
-                                 value={formData.contract_rental_date} 
+                                 value={safeDate(formData.contract_rental_date)} 
                                  handleChange={(val) => handleChange('contract_rental_date', val)} disabled={formData.rt == 1} />
                             </div>
 
@@ -209,12 +233,12 @@ const editLandLeaseModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-4 col-lg-4 mb-1">
                                 <DatePicker title={'ระยะเวลาเริ่มต้น'}  
-                                value={formData.rental_start} 
+                                value={safeDate(formData.rental_start)} 
                                 handleChange={(val) => handleChange('rental_start', val)}  disabled={formData.rt == 1}/>
                             </div>
                             <div className="col-sm-12 col-md-4 col-lg-4 mb-1">
                                 <DatePicker title={'ระยะเวลาสิ้นสุด'} 
-                                 value={formData.rental_end} 
+                                 value={safeDate(formData.rental_end)} 
                                  handleChange={(val) => handleChange('rental_end', val)} disabled={formData.rt == 1} />
                             </div>
                         </div>
