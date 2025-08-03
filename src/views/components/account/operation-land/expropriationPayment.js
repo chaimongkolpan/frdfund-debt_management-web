@@ -8,9 +8,9 @@ import DropZone from "@views/components/input/DropZone";
 import { Input, Label } from 'reactstrap'
 import DatePicker from "@views/components/input/DatePicker";
 import {
-    getReceiveRent,
-    saveRecieveRent,
-    updateRecieveRent
+    getExpropriationReceiveRent,
+    updateExpropriationLog,
+    insertExpropriationLog
 } from "@services/api";
 
 const editLandLeaseModal = (props) => {
@@ -26,12 +26,12 @@ const editLandLeaseModal = (props) => {
     const handleAddForm = () => {
         const newForm = {
             id: Date.now(),
-            id_AssetRentalLog: 0,
-            id_AssetRental: 0,
+            id_AssetExpropriationLog: 0,
+            id_AssetExpropriation: 0,
             rtNo: formData.length,
             payment_docu: '',
-            rent_no: '',
-            rent_date: null,
+            expro_no: '',
+            expro_date: null,
             pay_docuno: '',
             pay_date: null,
             cheques_no: '',
@@ -88,58 +88,57 @@ const editLandLeaseModal = (props) => {
     };
 
     const save = async () => {
-        const promises = formData.map(async (form) => {
+        try {
             const dataToSave = {
-                ...form,
+                ...formData, // ไม่ต้อง map แล้ว
                 id_KFKPolicy: policy?.id_KFKPolicy,
                 policyNO: policy?.policyNO,
                 id_AssetPolicy: policy?.id_AssetPolicy,
-                id_AssetRental: policy?.id_AssetRental,
+                id_AssetExpropriation: policy?.id_AssetExpropriation,
                 indexAssetPolicy: policy?.indexAssetPolicy,
             };
-
+    
             console.log("Data before submit:", dataToSave);
-
-            if (form.id_AssetRentalLog && form.id_AssetRentalLog > 0) {
-                return await updateRecieveRent(dataToSave);
+            console.log("Will call:", formData.id_AssetExpropriationLog > 0 ? "UPDATE" : "INSERT");
+            
+            let result;
+            if (formData.id_AssetExpropriationLog && formData.id_AssetExpropriationLog > 0) {
+                result = await updateExpropriationLog(dataToSave);
             } else {
-                return await saveRecieveRent(dataToSave);
+                result = await insertExpropriationLog(dataToSave);
             }
-        });
-
-        try {
-            const results = await Promise.all(promises);
-            const allSuccess = results.every(result => result?.isSuccess);
-
-            if (allSuccess) {
+            
+            console.log("API Result:", result);
+            
+            if (result?.isSuccess) {
                 setModal(false);
-                // อาจจะต้อง refresh data
                 fetchData();
             }
+            
         } catch (error) {
             console.error('Error saving data:', error);
         }
     };
 
     const fetchData = async () => {
-        const result = await getReceiveRent(policy.id_KFKPolicy);
+        const result = await getExpropriationReceiveRent(policy.id_KFKPolicy);
         if (result.isSuccess) {
             // setData(result.data || []);
             const mockData = [
                 {
-                    "id_AssetRentalLog": 0,
-                    "id_AssetRental": 0,
+                    "id_AssetExpropriationLog": 0,
+                    "id_AssetExpropriation": 0,
                     "rtNo": 0,
                     "payment_docu": "string",
-                    "rent_no": "string",
-                    "rent_date": "2025-08-02T13:28:53.211Z",
+                    "expro_no": "string",
+                    "expro_date": "2025-08-03T08:40:46.062Z",
                     "pay_docuno": "string",
-                    "pay_date": "2025-08-02T13:28:53.211Z",
+                    "pay_date": "2025-08-03T08:40:46.062Z",
                     "cheques_no": "string",
-                    "cheques_date": "2025-08-02T13:28:53.211Z",
+                    "cheques_date": "2025-08-03T08:40:46.062Z",
                     "cashier_check_no": "string",
-                    "cashier_check_date": "2025-08-02T13:28:53.211Z",
-                    "transfer_rent_date": "2025-08-02T13:28:53.211Z",
+                    "cashier_check_date": "2025-08-03T08:40:46.062Z",
+                    "transfer_rent_date": "2025-08-03T08:40:46.062Z",
                     "cashier_check_amount": 0,
                     "rf": 0,
                     "rfNo": 0,
@@ -148,20 +147,20 @@ const editLandLeaseModal = (props) => {
                     "debt_deduc_amount": 0,
                     "transfer_req_docu": "string",
                     "transfer_no": "string",
-                    "transfer_date": "2025-08-02T13:28:53.211Z",
+                    "transfer_date": "2025-08-03T08:40:46.062Z",
                     "payment_no": "string",
-                    "refund_date": "2025-08-02T13:28:53.211Z",
+                    "refund_date": "2025-08-03T08:40:46.062Z",
                     "amount": 0,
                     "interest": 0,
                     "total_amount": 0
-                }
+                  }
             ];
             setData(mockData);
             // ถ้ามีข้อมูลจาก API ให้ใส่ใน formData สำหรับแก้ไข
             if (result.data && result.data.length > 0) {
                 const formsFromAPI = result.data.map((item, index) => ({
                     ...item,
-                    id: item.id_AssetRentalLog || Date.now() + index
+                    id: item.id_AssetExpropriationLog || Date.now() + index
                 }));
                 setFormData(formsFromAPI);
             }
@@ -175,12 +174,12 @@ const editLandLeaseModal = (props) => {
     const handleOpenReceiveRentDetail = (item) => {
         // เปิดฟอร์มแก้ไขสำหรับ item นี้
         const existingFormIndex = formData.findIndex(form =>
-            form.id_AssetRentalLog === item.id_AssetRentalLog
+            form.id_AssetExpropriationLog === item.id_AssetExpropriationLog
         );
 
         if (existingFormIndex === -1) {
             // ถ้ายังไม่มีในฟอร์ม ให้เพิ่มเข้าไป
-            setFormData(prev => [...prev, { ...item, id: item.id_AssetRentalLog || Date.now() }]);
+            setFormData(prev => [...prev, { ...item, id: item.id_AssetExpropriationLog || Date.now() }]);
         }
     };
 
@@ -299,15 +298,15 @@ const editLandLeaseModal = (props) => {
                                                 <Textbox
                                                     title={'เลขที่หนังสือ'}
                                                     containerClassname={'mb-3'}
-                                                    handleChange={(val) => handleChange(form.id, 'rent_no', val)}
-                                                    value={form?.rent_no || ''}
+                                                    handleChange={(val) => handleChange(form.id, 'expro_no', val)}
+                                                    value={form?.expro_no || ''}
                                                 />
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 ">
                                                 <DatePicker
                                                     title={'วันที่หนังสือ'}
-                                                    value={form.rent_date}
-                                                    handleChange={(val) => handleChange(form.id, 'rent_date', val)}
+                                                    value={form.expro_date}
+                                                    handleChange={(val) => handleChange(form.id, 'expro_date', val)}
                                                 />
                                             </div>
 

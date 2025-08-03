@@ -1732,6 +1732,21 @@ export const getOperationDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
+export const getExpropriationDetail = async (ids) => {
+  const path = '/operationLand/get-expropriation';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+
 export const getSurveyDetail = async (ids) => {
   const path = '/operationLand/get-surveying';
   try {
@@ -1774,6 +1789,48 @@ export const getReceiveRent = async (ids) => {
     return defaultErrorResponse;
   }
 };
+export const getExpropriationReceiveRent = async (ids) => {
+  const path = '/operationLand/get-expropriation-receiverent';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateExpropriationLog = async (params) => {
+  const path = '/OperationLand/update-expropriationlog';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const insertExpropriationLog = async (params) => {
+  const path = '/OperationLand/insert-expropriationlog';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getOperationChangeCollateral = async (id) => {
   const path = '/operationLand/view-operationland-changecollateral';
   try {
@@ -1804,6 +1861,49 @@ export const getOperationSeparateCollateral = async (id) => {
 };
 export const getOperationSeparateUsedeed = async (params) => {
   const path = '/operationLand/view-operationland-usedeed';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+
+export const getExpropriationChange = async (id) => {
+  const path = '/operationLand/view-expropriation-changecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getExpropriationSeparate = async (id) => {
+  const path = '/operationLand/view-expropriation-separatecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getExpropriationSeparateUsedeed = async (params) => {
+  const path = '/operationLand/view-expropriation-usedeed';
   try {
     const result = await axios.post(path, params);
     if (result.status == 200)
@@ -1860,6 +1960,20 @@ export const getSurveySeparateUsedeed = async (params) => {
 };
 export const updateOperationLand = async (params) => {
   const path = '/operationLand/update-operationland';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateExpropriation = async (params) => {
+  const path = '/operationLand/update-expropriation';
   try {
     const result = await axios.post(path, params);
     if (result.status == 200)
