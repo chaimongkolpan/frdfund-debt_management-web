@@ -63,12 +63,15 @@ const editLandLeaseModal = (props) => {
         separateCollateral: propData?.separateCollateral || initialCollateralDetail.separateCollateral
     });
     const [collateralDetail, setCollateralDetail] = useState(initialCollateralDetail);
-    const onFileChange = async (files) => {
+
+    const onFileChange = async (fieldName, files) => {
         if (files.length > 0) {
-            await setFiles(files);
-            await setClear(false);
+            setFormData(prev => ({
+                ...prev,
+                [fieldName]: files[0]
+            }));
         }
-    }
+    };
     const onSubmitFile = async () => {
         if (files && files.length > 0) {
             const form = new FormData();
@@ -96,6 +99,7 @@ const editLandLeaseModal = (props) => {
         await setMounted(true);
     }
     const save = async () => {
+
         const updatedFormData = {
             ...formData,
             flag1: typeof formData?.flag1 === 'boolean' ? (formData.flag1 ? 'Y' : 'N') : '',
@@ -109,12 +113,33 @@ const editLandLeaseModal = (props) => {
         };
     
         console.log("test formdata", updatedFormData);
+        const formDataToSend = new FormData();
+        appendFormData(formDataToSend, updatedFormData);
         
-        const result = await updateExpropriation(updatedFormData);
+        const result = await updateExpropriation(formDataToSend);
         if (result.isSuccess) {
             console.log("save expropriation done");
         }
     };
+
+    function appendFormData(formData, data, parentKey = '') {
+        if (data === null || data === undefined) return;
+      
+        if (data instanceof File) {
+          formData.append(parentKey, data);
+        } else if (Array.isArray(data)) {
+          data.forEach((value, index) => {
+            appendFormData(formData, value, `${parentKey}[${index}]`);
+          });
+        } else if (typeof data === 'object') {
+          Object.entries(data).forEach(([key, value]) => {
+            appendFormData(formData, value, parentKey ? `${parentKey}.${key}` : key);
+          });
+        } else {
+          formData.append(parentKey, data);
+        }
+      }
+      
     const convertToFormData = (data) => {
         const formData = new FormData();
       
