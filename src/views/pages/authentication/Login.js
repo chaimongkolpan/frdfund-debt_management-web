@@ -33,14 +33,14 @@ const ToastContent = ({ t, name }) => {
       <div className="me-1"><CheckCircle size={12} color="success" /></div>
       <div className="d-flex flex-column">
         <div className="d-flex justify-content-between">
-          <h6 style={{ color: '#1c6c09' }}>{name}</h6>
+          <h4 style={{ color: '#1c6c09' }}>{name}</h4>
           <X
             size={12}
             className="cursor-pointer"
             onClick={() => toast.dismiss(t.id)}
           />
         </div>
-        <span>เข้าสู่ระบบสำเร็จ</span>
+        <span style={{ fontSize: 18 }}>เข้าสู่ระบบสำเร็จ</span>
       </div>
     </div>
   );
@@ -52,7 +52,7 @@ const ToastError = ({ t, message }) => {
       <div className="me-1"><X size={12} color="danger" /></div>
       <div className="d-flex flex-column">
         <div className="d-flex justify-content-between">
-          <h6 style={{ color: '#fa3b1d' }}>{message}</h6>
+          <h4 style={{ color: '#fa3b1d' }}>{message}</h4>
           <X
             size={12}
             className="cursor-pointer"

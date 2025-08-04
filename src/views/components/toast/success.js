@@ -6,14 +6,14 @@ const ToastContent = ({ t, title, message }) => {
       <div className="me-1"><CheckCircle size={12} color="success" /></div>
       <div className="d-flex flex-column">
         <div className="d-flex justify-content-between">
-          <h2 style={{ color: '#1c6c09' }}>{title}</h2>
+          <h4 style={{ color: '#1c6c09' }}>{title}</h4>
           <X
             size={12}
             className="cursor-pointer"
             onClick={() => toast.dismiss(t.id)}
           />
         </div>
-        <span style={{ fontSize: 24 }}>{message}</span>
+        <span style={{ fontSize: 18 }}>{message}</span>
       </div>
     </div>
   );
