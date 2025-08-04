@@ -146,7 +146,7 @@ const editLandLeaseModal = (props) => {
             if (formData.transfer_req_docu instanceof File) {
                 form.append('transfer_req_docu', formData.transfer_req_docu);
             }
-            
+
             const result = addForm ? await saveRecieveRent(form) : await updateRecieveRent(form);
 
           
@@ -164,38 +164,8 @@ const editLandLeaseModal = (props) => {
         const result = await getReceiveRent(policy.id_KFKPolicy);
         if (result.isSuccess) {
            // setData(result.data || []);
-            const mockData = [
-                {
-                  "id_AssetRentalLog": 0,
-                  "id_AssetRental": 0,
-                  "rtNo": 0,
-                  "payment_docu": "string",
-                  "rent_no": "string",
-                  "rent_date": "2025-08-02T13:28:53.211Z",
-                  "pay_docuno": "string",
-                  "pay_date": "2025-08-02T13:28:53.211Z",
-                  "cheques_no": "string",
-                  "cheques_date": "2025-08-02T13:28:53.211Z",
-                  "cashier_check_no": "string",
-                  "cashier_check_date": "2025-08-02T13:28:53.211Z",
-                  "transfer_rent_date": "2025-08-02T13:28:53.211Z",
-                  "cashier_check_amount": 0,
-                  "rf": 0,
-                  "rfNo": 0,
-                  "refund_farmers_docu": "string",
-                  "refund_amount": 0,
-                  "debt_deduc_amount": 0,
-                  "transfer_req_docu": "string",
-                  "transfer_no": "string",
-                  "transfer_date": "2025-08-02T13:28:53.211Z",
-                  "payment_no": "string",
-                  "refund_date": "2025-08-02T13:28:53.211Z",
-                  "amount": 0,
-                  "interest": 0,
-                  "total_amount": 0
-                }
-              ];
-              setData(mockData);
+
+             await setData(result.data);
             // ถ้ามีข้อมูลจาก API ให้ใส่ใน formData สำหรับแก้ไข
             // if (result.data && result.data.length > 0) {
             //     const formsFromAPI = result.data.map((item, index) => ({
