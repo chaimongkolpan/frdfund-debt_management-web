@@ -169,7 +169,6 @@ const Filter = (props) => {
           {committeeNoOp && (
             <Dropdown 
               title={'ครั้งที่เสนอคณะกรรมการ'} 
-              containerClassname={'mb-3'} 
               defaultValue={committeeNoOp[0]} 
               options={committeeNoOp}
               handleChange={(val) => onChange('proposal_committee_no', val)}
@@ -180,7 +179,6 @@ const Filter = (props) => {
           {committeeDateOp && (
             <Dropdown 
               title={'วันที่เสนอคณะกรรมการ'} 
-              containerClassname={'mb-3'} 
               defaultValue={committeeDateOp[0]} 
               options={committeeDateOp}
               handleChange={(val) => onChange('proposal_committee_date', val)}
@@ -191,7 +189,6 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
@@ -202,7 +199,6 @@ const Filter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={creditorTypeOp[0]} 
               options={creditorTypeOp}
               handleChange={(val) => onChange('creditorType', val)}
@@ -213,7 +209,6 @@ const Filter = (props) => {
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={creditorOp}
               handleChange={(val) => onChange('creditor', val)} hasAll
@@ -224,7 +219,6 @@ const Filter = (props) => {
           {statusDebtOp && (
             <Dropdown 
               title={'สถานะหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={statusDebtOp}
               handleChange={(val) => onChange('debtStatus', val)}

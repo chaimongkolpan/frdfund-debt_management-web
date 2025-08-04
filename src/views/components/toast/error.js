@@ -6,14 +6,14 @@ const ToastError = ({ t, title, message }) => {
       <div className="me-1"><X size={12} color="danger" /></div>
       <div className="d-flex flex-column">
         <div className="d-flex justify-content-between">
-          <h4 style={{ color: '#fa3b1d' }}>{title ?? message}</h4>
+          <h2 style={{ color: '#fa3b1d' }}>{title ?? message}</h2>
           <X
             size={12}
             className="cursor-pointer"
             onClick={() => toast.dismiss(t.id)}
           />
         </div>
-        <span style={{ fontSize: 18 }}>{message}</span>
+        <span style={{ fontSize: 24 }}>{message}</span>
       </div>
     </div>
   );
