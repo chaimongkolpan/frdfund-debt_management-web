@@ -67,15 +67,17 @@ const ThemeNavbar = props => {
             <DropdownMenu end style={{ minWidth: 250 }}>
               <div className="card-body p-0">
                 <div className="text-center pb-3">
-                  <h6 className="mt-2 text-body-emphasis">ผู้ดูแลระบบ</h6>
+                  <h6 className="mt-2 text-body-emphasis">{userData?.role_detail ?? 'ผู้ใช้งาน'}</h6>
                 </div>
               </div>
               <DropdownItem tag={Link} to={prefix_url + '/profile'}>
                 <User className="me-2 text-body align-bottom" size={16} />ข้อมูลโปรไฟล์
               </DropdownItem>
-              <DropdownItem tag={Link} to={prefix_url + '/settings'}>
-                <Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ
-              </DropdownItem>
+              {userData?.role == 1 && (
+                <DropdownItem tag={Link} to={prefix_url + '/settings'}>
+                  <Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ
+                </DropdownItem>
+              )}
               <DropdownItem divider />
               <div className="card-footer">
                 <div className="px-3"> 
