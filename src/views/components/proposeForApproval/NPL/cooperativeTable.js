@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toCurrency } from "@utils";
 
 const CooperativeTable = ({
   data = [],
@@ -50,13 +51,13 @@ const CooperativeTable = ({
           <td className="align-middle">{item.debt_manage_creditor_province}</td>
           <td className="align-middle">{item.debt_manage_creditor_branch}</td>
           <td className="align-middle">{item.debt_manage_contract_no}</td>
-          <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
-          <td className="align-middle">{item.debt_manage_accrued_interest}</td>
-          <td className="align-middle">{item.debt_manage_fine}</td>
-          <td className="align-middle">{item.debt_manage_litigation_expenses}</td>
-          <td className="align-middle">{item.debt_manage_forfeiture_withdrawal_fee}</td>
-          <td className="align-middle">{item.debt_manage_total_expenses}</td>
-          <td className="align-middle">{item.debt_manage_total}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_outstanding_principal,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_accrued_interest,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_fine,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_litigation_expenses,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_forfeiture_withdrawal_fee,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_total_expenses,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_total,2)}</td>
           <td className="align-middle">{item.debt_manage_status}</td>
           <td className="align-middle">{item.collateral_type}</td>
           <td className="align-middle">{item.debt_manage_objective}</td>
@@ -111,16 +112,16 @@ const CooperativeTable = ({
               <th className="align-middle text-center" data-sort="email">
                 คำนำหน้า
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>
                 ชื่อ-นามสกุล
               </th>
               <th className="align-middle text-center" data-sort="age">
                 จังหวัด
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>
                 ประเภทเจ้าหนี้
               </th>
-              <th className="align-middle text-center" data-sort="age">
+              <th className="align-middle text-center" data-sort="age" style={{ minWidth: 180 }}>
                 สถาบันเจ้าหนี้
               </th>
               <th className="align-middle text-center" data-sort="age">

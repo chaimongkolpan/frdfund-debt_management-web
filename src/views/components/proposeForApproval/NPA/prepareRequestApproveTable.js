@@ -100,10 +100,10 @@ const SearchTable = (props) => {
               <tr>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
-                <th>ชื่อ-นามสกุล</th>
+                <th style={{ minWidth: 150 }}>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
-                <th>ประเภทเจ้าหนี้</th>
-                <th>สถาบันเจ้าหนี้</th>
+                <th style={{ minWidth: 150 }}>ประเภทเจ้าหนี้</th>
+                <th style={{ minWidth: 180 }}>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
                 <th>สาขาเจ้าหนี้</th>
                 <th>รอบ NPA</th>
@@ -142,7 +142,7 @@ const SearchTable = (props) => {
       <div className="d-flex align-items-center justify-content-center my-3">
         <div className={`${isSome ? '' : 'd-none'}`}>
           <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาขออนุมัติรายชื่อ</button>
           </div>
         </div>
       </div>
