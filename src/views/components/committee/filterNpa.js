@@ -46,10 +46,10 @@ const SearchFilter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getCreditors(val, temp1[0]);
+        const resultCreditor = await getCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
