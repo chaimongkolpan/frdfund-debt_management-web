@@ -64,7 +64,8 @@ const FullModal = (props) => {
     }))
   }
   const submitBorrower = async() => {
-    const result = await updateBorrowerClassify({ ...editDetail, ids: ids });
+    const id = ids && ids?.length > 0 ? ids[0] : 0;
+    const result = await updateBorrowerClassify({ ...editDetail, ids: [id] });
     if (result.isSuccess) {
       await fetchData();
     }
