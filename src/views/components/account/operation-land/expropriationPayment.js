@@ -167,38 +167,7 @@ const editLandLeaseModal = (props) => {
     const fetchData = async () => {
         const result = await getExpropriationReceiveRent(policy.id_KFKPolicy);
         if (result.isSuccess) {
-            const mockData = [
-                {
-                    "id_AssetExpropriationLog": 0,
-                    "id_AssetExpropriation": 0,
-                    "rtNo": 0,
-                    "payment_docu": "string",
-                    "expro_no": "string",
-                    "expro_date": "2025-08-03T08:40:46.062Z",
-                    "pay_docuno": "string",
-                    "pay_date": "2025-08-03T08:40:46.062Z",
-                    "cheques_no": "string",
-                    "cheques_date": "2025-08-03T08:40:46.062Z",
-                    "cashier_check_no": "string",
-                    "cashier_check_date": "2025-08-03T08:40:46.062Z",
-                    "transfer_rent_date": "2025-08-03T08:40:46.062Z",
-                    "cashier_check_amount": 0,
-                    "rf": 0,
-                    "rfNo": 0,
-                    "refund_farmers_docu": "string",
-                    "refund_amount": 0,
-                    "debt_deduc_amount": 0,
-                    "transfer_req_docu": "string",
-                    "transfer_no": "string",
-                    "transfer_date": "2025-08-03T08:40:46.062Z",
-                    "payment_no": "string",
-                    "refund_date": "2025-08-03T08:40:46.062Z",
-                    "amount": 0,
-                    "interest": 0,
-                    "total_amount": 0
-                }
-            ];
-            setData(mockData);
+            await setData(result.data);
         }
     };
 
