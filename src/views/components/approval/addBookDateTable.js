@@ -30,7 +30,9 @@ const BookDateTable = (props) => {
     if (result.isSuccess) {
       await setSavePetition((prevState) => ({
         ...prevState,
-        id_petition: item.id_petition
+        id_petition: item.id_petition,
+        petition_no_office: null,
+        petition_date_office: null,
       }))
       await setPetition(item);
       await setDetail(result.data);
