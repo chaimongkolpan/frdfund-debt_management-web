@@ -12,11 +12,12 @@ axios.defaults.baseURL = url;
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
 axios.defaults.headers.common['access-control-allow-origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
 */
-axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
-axios.defaults.headers.common['authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
+// axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
+// axios.defaults.headers.common['authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
 axios.interceptors.response.use(response => {
   return response;
 }, error => {
+  console.log('error', error)
   const currentPath = window.location.pathname;
   const exemptPaths = ['login'];
   const isExempt = exemptPaths.some(path => currentPath.includes(path))
