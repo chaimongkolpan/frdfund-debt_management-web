@@ -15,12 +15,16 @@ import logo from '@src/assets/images/icons/logo.png'
 const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 const ThemeNavbar = props => {
   // ** Props
+  const { menuVisibility, setMenuVisibility } = props; 
   const navigate = useNavigate()
   const [userData, setUserData] = useState(null)
   // ** Store Vars
   const dispatch = useDispatch()
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   
+  const handleVisibleChange = () => {
+    setMenuVisibility(!menuVisibility)
+  }
   const handleWindowWidth = () => {
     setWindowWidth(window.innerWidth)
   }
@@ -47,7 +51,7 @@ const ThemeNavbar = props => {
       <nav className="navbar navbar-top fixed-top navbar-expand">
         <div className="collapse navbar-collapse justify-content-between">
           <div className="navbar-logo">
-            <button className="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span className="navbar-toggle-icon"><i className="toggle-line"></i></span></button>
+            <button className="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation" onClick={() => handleVisibleChange()}><span className="navbar-toggle-icon"><i className="toggle-line"></i></span></button>
             <a className="navbar-brand me-1 me-sm-3">
               <div className="d-flex align-items-center">
                 <div className="d-flex align-items-center"><img src={logo} alt="frdfund" width="50" />
