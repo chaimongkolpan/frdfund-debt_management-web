@@ -1,4 +1,6 @@
 import axios from "axios";
+import useJwt from '@src/auth/jwt/useJwt'
+const config = useJwt.jwtConfig
 const url = process.env.API_URL ?? (process.env.ENVIRONMENT == 'develop' 
                                       ? 'https://localhost:7039' : (
                                         process.env.ENVIRONMENT == 'uat' 
@@ -6,7 +8,23 @@ const url = process.env.API_URL ?? (process.env.ENVIRONMENT == 'develop'
                                         : 'https://debtinfo.frdfund.org/api'
                                     ));
 axios.defaults.baseURL = url;
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://debtinfo.frdfund.org';
+/*
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
+axios.defaults.headers.common['access-control-allow-origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
+*/
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
+axios.defaults.headers.common['authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
+axios.interceptors.response.use(response => {
+  return response;
+}, error => {
+  const currentPath = window.location.pathname;
+  const exemptPaths = ['login'];
+  const isExempt = exemptPaths.some(path => currentPath.includes(path))
+  if (error.status == 401 && !isExempt ) {
+    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
+  }
+  return error;
+});
 const defaultErrorResponse = { statusCode: 400, isSuccess: false, data: null };
 function SaveAs(blob, filename) {
   const url = window.URL.createObjectURL(blob);
@@ -2143,7 +2161,7 @@ export const getPlanPay = async (id,no) => {
 export const savePlanPay = async (params) => {
   const path = '/LegalContract/save-refund-planpay';
   try {
-    const result = await axios.post(path, { data: params });
+    const result = await axios.post(path, params);
     if (result.status == 200)
       return result.data;
     else
@@ -2215,7 +2233,7 @@ export const printPlanPay = async (params) => {
   try {
     const result = await axios.post(
       path,
-      { data: params.data },
+      params.data,
       { responseType: "blob" }
     );
     if (result.status == 200) {

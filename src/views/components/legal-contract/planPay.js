@@ -51,7 +51,7 @@ const PlanPay = (props) => {
     }
   }
   const save = async () => {
-    const result = await savePlanPay(plans);
+    const result = await savePlanPay({ installment, year, data: plans });
     if (result.isSuccess) {
       await fetchData();
     } 
@@ -64,18 +64,16 @@ const PlanPay = (props) => {
   const fetchData = async () => {
     const result = await getPlanPay(policy.id_KFKPolicy, policy.policyNO);
     if (result.isSuccess) {
-      await setDate(result.data.policyStartDate)
+      await setDate(result.data.policyStartDate ?? new Date())
       await setYear(result.data.numberOfYearPayback)
       await setInstallment(result.data.numberOfPeriodPayback)
       await setPlan(result.listData);
-    } 
+    } else {
+      await setDate(new Date())
+    }
   }
   useEffect(() => {
-    if (isView) {
-      fetchData();
-    } else {
-      setDate(new Date())
-    }
+    fetchData();
   },[])
   return (
     <>
