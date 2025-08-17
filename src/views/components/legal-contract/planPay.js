@@ -57,7 +57,7 @@ const PlanPay = (props) => {
     } 
   }
   const print = async () => {
-    const result = await printPlanPay({ type: 'application/octet-stream', filename: 'แผนการชำระเงินคืน_' + (new Date().getTime()) + '.zip', data: { id_KFKPolicy: policy.id_KFKPolicy, policyNo: policy.policyNO }});
+    const result = await printPlanPay({ type: 'application/octet-stream', filename: 'แผนการชำระเงินคืน_' + (new Date().getTime()) + '.xlsx', data: { id_KFKPolicy: policy.id_KFKPolicy, policyNo: policy.policyNO }});
     if (result.isSuccess) {
     } 
   }
