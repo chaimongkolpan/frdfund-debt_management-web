@@ -2858,8 +2858,8 @@ export const getInvoice = async (ids) => {
   }
 };
 export const printInvoice = async (params) => {
-  // const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Receipt';
-  const path = 'https://localhost:5001/report/Print-Receipt';
+  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Receipt';
+  // const path = 'https://localhost:5001/report/Print-Receipt';
   try {
     const result = await axios.post(path, params.data, { responseType: "blob" });
     if (result.status == 200) {
@@ -3235,6 +3235,6 @@ export const downloadOldReport = async (params) => {
   } catch (e) {
     console.error("error: " + path + " =>", e);
   }
-  return;
+  return true;
 };
 // #endregion
