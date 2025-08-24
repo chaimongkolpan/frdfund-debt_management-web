@@ -41,7 +41,7 @@ const PageContent = () => {
   const printReceipt = async (item) => {
     const ids = [item.id_PlanPay]
     const selectedData = await getInvoice(ids);
-    const receipts = selectedData.data.map(item => { return { ...item, isExportExcel: true }});
+    const receipts = selectedData.data.map(item => { return { ...item, isExportExcel: false }});
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
     if (result.isSuccess) {
