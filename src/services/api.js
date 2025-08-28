@@ -2642,7 +2642,7 @@ export const getReimbursementPlan = async (filter) => {
   }
 };
 export const printPlanRe = async (params) => {
-  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-PayLog';
+  const path = '/report/Print-PayLog';
   try {
     const result = await axios.post(path, params.data, { responseType: "blob" });
     if (result.status == 200) {
@@ -2669,7 +2669,7 @@ export const getReimbursementCard = async (filter) => {
   }
 };
 export const printCardRe = async (params) => {
-  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Card';
+  const path = '/report/Print-Card';
   try {
     const result = await axios.post(path, params.data, { responseType: "blob" });
     if (result.status == 200) {
@@ -2933,7 +2933,7 @@ export const getPrintClose = async (filter) => {
   }
 };
 export const printClose = async (params) => {
-  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Close';
+  const path = '/report/Print-Close';
   try {
     const result = await axios.post(path, params.data, { responseType: "blob" });
     if (result.status == 200) {
@@ -2946,7 +2946,7 @@ export const printClose = async (params) => {
   return;
 };
 export const exportClose = async (params) => {
-  const path = 'https://debtinfo.frdfund.org/report-old/close/Export?LegalNo=';
+  const path = '/report/Export-Close?LegalNo=';
   try {
     const result = await axios.get(path, { responseType: "blob" });
     if (result.status == 200) {

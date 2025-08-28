@@ -72,65 +72,36 @@ const Report = () => {
     var myInterval = setInterval(async () => {
       await setNow(new Date());
     }, 1000);
-/*
-    //var a = document.createElement('a');
-    //a.style.display = 'none';
-    //a.href = '/Report/Download?' + param;
-    //a.download = filename;
-    //document.body.appendChild(a);
-    //a.click();   
-*/
-    // if (await downloadReport(param, filenames[id - 1])) {
-    //   setLoad(false);
-    // } else {
-    //   alert('ไม่สามารถดาวน์โหลดรายงานได้');
-    //   setLoad(false);
-    // }
 
-    if (await downloadOldReport(param)) {
-      toast((t) => (
-        <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
-      ));
-      clearInterval(myInterval);
-      await setOpenDownload(false);
+    if (process.env.REPORT_NEW == "1") {
+      if (await downloadReport(param, filenames[id - 1])) {
+        toast((t) => (
+          <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'ดาวน์โหลดรายงาน'} message={'ไม่สามารถดาวน์โหลดรายงานได้'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      }
     } else {
-      toast((t) => (
-        <ToastError t={t} title={'ดาวน์โหลดรายงาน'} message={'ไม่สามารถดาวน์โหลดรายงานได้'} />
-      ));
-      clearInterval(myInterval);
-      await setOpenDownload(false);
+      if (await downloadOldReport(param)) {
+        toast((t) => (
+          <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'ดาวน์โหลดรายงาน'} message={'ไม่สามารถดาวน์โหลดรายงานได้'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      }
     }
-
-    /*
-    let reportId = 0;
-    if (id == 1) reportId = 4; if (id == 2) reportId = 5;
-    if (id == 3) reportId = 7; if (id == 4) reportId = 38;
-    if (id == 5) reportId = 9; if (id == 6) reportId = 20;
-    if (id == 7) reportId = 13; if (id == 8) reportId = 11;
-    if (id == 9) reportId = 14; if (id == 10) reportId = 39;
-
-    var param = 'id=' + reportId + '&';
-    var start =startDate;
-    if (start != null && start != undefined && start != '') param += 'start=' + saveDate(start) + '&';
-    var stop = endDate;
-    if (stop != null && stop != undefined && stop != '') param += 'stop=' + saveDate(stop) + '&';
-    if (year != null && year != undefined && year != '') param += 'year=' + (year == 'all' ? '0' : year) + '&';
-    var CreditorType = (creditorType == 'all' ? 'ทั้งหมด' : creditorType);
-    if (CreditorType != null && CreditorType != undefined && CreditorType != '') param += 'creditortype=' + CreditorType + '&';
-    var Creditor = (creditor == 'all' ? '0' : creditor);
-    if (Creditor != null && Creditor != undefined && Creditor != '') param += 'creditor=' + Creditor + '&';
-    var DebtType = (debtType == 'all' ? 'ทั้งหมด' : debtType);
-    if (DebtType != null && DebtType != undefined && DebtType != '') param += 'debttype=' + DebtType + '&';
-    var LegalNo = (accountType == 'all' ? 'ทั้งหมด' : accountType);
-    if (LegalNo != null && LegalNo != undefined && LegalNo != '') param += 'legalno=' + LegalNo + '&';
-    var ApproveNo = committee;
-    if (ApproveNo != null && ApproveNo != undefined && ApproveNo != '') param += 'approveno=' + ApproveNo + '&';
-    var ProvinceId = 0;
-    if (ProvinceId != null && ProvinceId != undefined && ProvinceId != '') param += 'province=' + ProvinceId + '&';
-    var AccountStatus = (debtStatus == 'all' ? 'ทั้งหมด' : debtStatus);
-    if (AccountStatus != null && AccountStatus != undefined && AccountStatus != '') param += 'account_status=' + AccountStatus + '&'; 
-    window.open('https://debtinfo.frdfund.org/report-old/report/Download?exportpdf=true&' + param, '_blank').focus();
-    */
   }
   const onChange = async(key, val) => {
     if (key == 'province') {
