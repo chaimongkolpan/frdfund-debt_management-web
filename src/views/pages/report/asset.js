@@ -56,6 +56,7 @@ const Report = () => {
   ];
   const download = async (id) => {
     await setStartDownload(new Date());
+    await setNow(null);
     await setOpenDownload(true);
     const param = {
       reportId: id,
