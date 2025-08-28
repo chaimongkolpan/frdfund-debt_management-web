@@ -40,7 +40,8 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder, disable
           pointerEvents: 'none'
         }}
       >
-        <span className="uil uil-calendar-alt text-body-tertiary"></span>
+        {/* <span className="uil uil-calendar-alt text-body-tertiary"></span> */}
+        <i class="fa fa-calendar-alt text-body-tertiary" aria-hidden="true"></i>
       </div>
     </div>
   </div>
