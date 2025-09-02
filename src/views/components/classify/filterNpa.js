@@ -3,8 +3,8 @@ import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
 import { 
   getProvinces,
-  getCreditors,
-  getCreditorTypes,
+  getBigDataCreditors,
+  getBigDataCreditorTypes,
   getDebtStatuses,
   getCheckingStatuses,
   getNpaRoundFilter,
@@ -40,7 +40,7 @@ const ClassifySearchFilter = (props) => {
   const onChange = async(key, val) => {
     if (key == 'province') {
       await setCreditorTypeOp(null);
-      const resultCreditorType = await getCreditorTypes(val);
+      const resultCreditorType = await getBigDataCreditorTypes(val);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
@@ -49,7 +49,7 @@ const ClassifySearchFilter = (props) => {
           ...({creditorType: "all"})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getCreditors(val, '');
+        const resultCreditor = await getBigDataCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -65,7 +65,7 @@ const ClassifySearchFilter = (props) => {
     }
     if (key == 'creditorType') {
       await setCreditorOp(null);
-      const resultCreditor = await getCreditors(filter.province, val);
+      const resultCreditor = await getBigDataCreditors(filter.province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
         await setCreditorOp(temp2);
@@ -102,7 +102,7 @@ const ClassifySearchFilter = (props) => {
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-      const resultCreditorType = await getCreditorTypes(null);
+      const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
@@ -110,7 +110,7 @@ const ClassifySearchFilter = (props) => {
           ...prevState,
           ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getCreditors(null, 'all');
+        const resultCreditor = await getBigDataCreditors(null, 'all');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);

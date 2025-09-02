@@ -3,7 +3,7 @@ import Dropdown from "@views/components/input/DropdownSearch";
 import { 
   getCommitteeNo,
   getCommitteeDate,
-  getCreditorTypes,
+  getBigDataCreditorTypes,
 } from "@services/api";
 const SearchFilter = (props) => {
   const { handleSubmit } = props;
@@ -32,7 +32,7 @@ const SearchFilter = (props) => {
   async function fetchData() {
     const resultCommitteeNo = await getCommitteeNo('');
     const resultCommitteeDate = await getCommitteeDate('');
-    const resultCreditorType = await getCreditorTypes(null);
+    const resultCreditorType = await getBigDataCreditorTypes(null);
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);

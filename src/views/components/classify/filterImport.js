@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import DropZone from "@views/components/input/DropZone";
 import { 
-  getCreditorTypes,
+  getBigDataCreditorTypes,
 } from "@services/api";
 
 const ClassifyImportFilter = (props) => {
@@ -43,7 +43,7 @@ const ClassifyImportFilter = (props) => {
       }))
   }
   async function fetchData() {
-    const resultCreditorType = await getCreditorTypes();
+    const resultCreditorType = await getBigDataCreditorTypes();
     if (resultCreditorType.isSuccess) {
       const temp = resultCreditorType.data.map(item => item.name);
       setFilter({
@@ -99,7 +99,7 @@ const ClassifyImportFilter = (props) => {
           <div className="col-12">
             <div className="card text-dark bg-light border-danger"> {/* ถ้านำไฟล์เข้าไม่สำเร็จให้แสดง border-danger และไม่แสดงตาราง*/}
               <div className="card-body">
-                <h4 className="card-title text-danger">นำไฟล์เข้าระบบไม่สำเร็จ กรุณาตรวจสอบข้อมูลบรรทัดที่ : {listToString(fail_list)}</h4>
+                <h4 className="card-title text-danger m-0">นำไฟล์เข้าระบบไม่สำเร็จ กรุณาตรวจสอบข้อมูลบรรทัดที่ : {listToString(fail_list)}</h4>
               </div>
             </div>
         </div>
@@ -108,7 +108,7 @@ const ClassifyImportFilter = (props) => {
           <div className="col-12">
             <div className="card text-dark bg-light border-success"> 
               <div className="card-body">
-                <h4 className="card-title text-success-dark">นำไฟล์เข้าระบบสำเร็จ จำนวน {succeed} รายการ</h4>
+                <h4 className="card-title text-success-dark m-0">นำไฟล์เข้าระบบสำเร็จ จำนวน {succeed} รายการ</h4>
               </div>
             </div>
           </div>

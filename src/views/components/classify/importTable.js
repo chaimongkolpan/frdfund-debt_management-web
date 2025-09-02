@@ -35,12 +35,12 @@ const ClassifyImportTable = (props) => {
         <td className="align-middle">{item.organization_no}</td>
         <td className="align-middle">{item.organization_register_round}</td>
         <td className="align-middle">{item.organization_status}</td>
-        <td className="align-middle">{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false) : '-'}</td>
+        <td className="align-middle">{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, "dd/MM/yyyy") : '-'}</td>
         <td className="align-middle">{item.debt_register_status}</td>
         <td className="align-middle">{item.debt_register_round}</td>
-        <td className="align-middle">{item.date_member_current ? stringToDateTh(item.date_member_current, false) : '-'}</td>
+        <td className="align-middle">{item.date_member_current ? stringToDateTh(item.date_member_current, false, "dd/MM/yyyy") : '-'}</td>
         <td className="align-middle">{item.passed_approval_no}</td>
-        <td className="align-middle">{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false) : '-'}</td>
+        <td className="align-middle">{item.passed_approval_date ? stringToDateTh(item.passed_approval_date, false, "dd/MM/yyyy") : '-'}</td>
         <td className="align-middle">{item.creditor_type}</td>
         <td className="align-middle">{item.creditor_name}</td>
         <td className="align-middle">{item.creditor_province}</td>
