@@ -7,7 +7,7 @@ import BookNo from "@views/components/input/BookNo";
 import { 
   getCommitteeNo,
   getCommitteeDate,
-  getCreditorTypes,
+  getBigDataCreditorTypes,
   searchCommitteePrepare,
   cleanData
 } from "@services/api";
@@ -43,7 +43,7 @@ const EditDataTable = (props) => {
   async function fetchData() {
     const resultCommitteeNo = await getCommitteeNo("\'รอเสนอคณะกรรมการจัดการหนี้\'");
     const resultCommitteeDate = await getCommitteeDate("\'รอเสนอคณะกรรมการจัดการหนี้\'");
-    const resultCreditorType = await getCreditorTypes(null);
+    const resultCreditorType = await getBigDataCreditorTypes(null);
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);

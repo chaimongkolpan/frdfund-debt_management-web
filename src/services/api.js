@@ -3213,6 +3213,7 @@ export const downloadOldReport = async (params) => {
     var stop = params.endDate;
     if (stop != null && stop != undefined && stop != '') param += 'stop=' + stop + '&';
     if (params.year != null && params.year != undefined && params.year != '') param += 'year=' + (params.year == 'all' ? '0' : params.year) + '&';
+    else param += 'year=0&';
     var CreditorType = (params.creditorType == 'all' ? 'ทั้งหมด' : params.creditorType);
     if (CreditorType != null && CreditorType != undefined && CreditorType != '') param += 'creditortype=' + CreditorType + '&';
     var Creditor = (params.creditor == 'all' ? '0' : params.creditor);
