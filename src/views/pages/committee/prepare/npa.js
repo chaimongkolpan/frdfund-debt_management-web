@@ -131,6 +131,8 @@ const NPA = () => {
           type: "application/octet-stream",
           filename: "คณะกรรมการจัดการหนี้อนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
           data: requestApproveData,
+          proposal_committee_no: 'กฟก.' + bookNo,
+          proposal_committee_date: stringToDateTh(bookDate,false),
           status
         });
         if (result) {
