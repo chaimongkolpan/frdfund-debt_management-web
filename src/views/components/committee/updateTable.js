@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { stringToDateTh, toCurrency } from "@utils";
 const DataTable = (props) => {
-  const { result, handleSubmit, handleReject } = props;
+  const { result, handleSubmit, handleReject, can_action } = props;
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
   const [isSome, setIsSome] = useState(false);
@@ -33,11 +33,13 @@ const DataTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
-          <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" 
-              disabled={item.debt_management_audit_status != 'รอเสนอคณะกรรมการจัดการหนี้'} 
-              checked={checked} onChange={() => onChange(index)} />
-          </div>
+          {can_action ? (
+            <div className="form-check ms-2 mb-0 fs-8">
+              <input className="form-check-input" type="checkbox" 
+                disabled={item.debt_management_audit_status != 'รอเสนอคณะกรรมการจัดการหนี้'} 
+                checked={checked} onChange={() => onChange(index)} />
+            </div>
+          ) : (index + 1)}
         </td>
         <td>
           {item.debt_management_audit_status == 'รอเสนอคณะกรรมการจัดการหนี้' ? null : 
@@ -118,10 +120,12 @@ const DataTable = (props) => {
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
-                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
-                  <div className="form-check ms-2 me-0 mb-0 fs-8">
-                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
-                  </div>
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>
+                  {can_action ? (
+                    <div className="form-check ms-2 me-0 mb-0 fs-8">
+                      <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                    </div>
+                  ) : '#'}
                 </th>
                 <th rowSpan="2">สถานะอนุมัติ</th>
                 <th rowSpan="2">ครั้งที่เสนอคณะกรรมการ</th>
@@ -186,14 +190,16 @@ const DataTable = (props) => {
           </table>
         </div>
       </div>
-      <div className="d-flex align-items-center justify-content-center my-3">
-        <div className={`${isSome ? '' : 'd-none'}`}>
-          <div className="d-flex">
-            <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span className="fas fa-check"></span> อนุมัติ</button>
-            <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onReject()}><span className="fas fa-times"></span> ไม่อนุมัติ</button>
+      {can_action && (
+        <div className="d-flex align-items-center justify-content-center my-3">
+          <div className={`${isSome ? '' : 'd-none'}`}>
+            <div className="d-flex">
+              <button className="btn btn-success btn-sm ms-2" type="button" onClick={() => onSubmit()}><span className="fas fa-check"></span> อนุมัติ</button>
+              <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onReject()}><span className="fas fa-times"></span> ไม่อนุมัติ</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

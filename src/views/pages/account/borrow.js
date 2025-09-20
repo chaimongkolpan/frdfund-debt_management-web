@@ -20,6 +20,8 @@ import {
 
 const user = getUserData();
 const PageContent = () => {
+  const allow_roles = [1,2,4,5];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -97,7 +99,7 @@ const PageContent = () => {
                       <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                       <br />
                       {data && (
-                        <SearchTable result={data} filter={filter} getData={onSearch} handleShowDetail={handleShowDetail} handleHistory={handleHistory}/>
+                        <SearchTable result={data} filter={filter} getData={onSearch} handleShowDetail={handleShowDetail} handleHistory={handleHistory} can_action={can_action} />
                       )}
                     </>
                   )}

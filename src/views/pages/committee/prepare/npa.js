@@ -27,6 +27,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPA = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const status = 'รอเสนอคณะกรรมการจัดการหนี้';
   const [showModal, setShowModal] = useState(false);
   const [isLoadBigData, setLoadBigData] = useState(false);
@@ -194,39 +196,41 @@ const NPA = () => {
     <>
       <div className="content">
         <h4>จัดทำรายชื่อเสนอคณะกรรมการจัดการหนี้ NPA</h4>
-        <div className="d-flex flex-row-reverse">
-          <div>
-            <button
-              type="button"
-              className="btn btn-primary btn-sm ms-2"
-              onClick={() => setShowModal(true)}
-            >
-              <span className="fas fa-file-upload"></span>{" "}
-              แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ
-            </button>
-            {showModal && (
-              <CustomerModal
-                isOpen={showModal}
-                setModal={setShowModal}
-                onOk={onSubmitEdit}
-                onClose={() => setShowModal(false)}
-                title={"แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ"}
-                okText={"ดาวน์โหลดเอกสารและบันทึก"}
-                closeText={"ปิด"}
-                fullscreen
-                children={
-                  <EditDataTable 
-                    bookNo={bookNoEdit} 
-                    setBookNo={setBookNoEdit}
-                    bookDate={bookDateEdit}
-                    setBookDate={setBookDateEdit}
-                    setEditData={setEditData}
-                  />
-                }
-              />
-            )}
+        {can_action && (
+          <div className="d-flex flex-row-reverse">
+            <div>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm ms-2"
+                onClick={() => setShowModal(true)}
+              >
+                <span className="fas fa-file-upload"></span>{" "}
+                แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ
+              </button>
+              {showModal && (
+                <CustomerModal
+                  isOpen={showModal}
+                  setModal={setShowModal}
+                  onOk={onSubmitEdit}
+                  onClose={() => setShowModal(false)}
+                  title={"แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ"}
+                  okText={"ดาวน์โหลดเอกสารและบันทึก"}
+                  closeText={"ปิด"}
+                  fullscreen
+                  children={
+                    <EditDataTable 
+                      bookNo={bookNoEdit} 
+                      setBookNo={setBookNoEdit}
+                      bookDate={bookDateEdit}
+                      setBookDate={setBookDateEdit}
+                      setEditData={setEditData}
+                    />
+                  }
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -244,26 +248,29 @@ const NPA = () => {
                       <SearchDataTable
                         result={data}
                         handleSubmit={onAddBigData}
+                        can_action={can_action}
                       />
                     )}
                   </>
                 )}
               />
-              <According 
-                title={'เสนอคณะกรรมการจัดการหนี้'}
-                className={"mb-3"}
-                children={(
-                  <>
-                    <SelectDataTable
-                      result={addedData}
-                      handleSubmit={handleSubmit}
-                      handleRemove={onRemoveMakelist}
-                      filter={filterAdded}
-                      getData={fetchData}
-                    />
-                  </>
-                )}
-              />
+              {can_action && (
+                <According 
+                  title={'เสนอคณะกรรมการจัดการหนี้'}
+                  className={"mb-3"}
+                  children={(
+                    <>
+                      <SelectDataTable
+                        result={addedData}
+                        handleSubmit={handleSubmit}
+                        handleRemove={onRemoveMakelist}
+                        filter={filterAdded}
+                        getData={fetchData}
+                      />
+                    </>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

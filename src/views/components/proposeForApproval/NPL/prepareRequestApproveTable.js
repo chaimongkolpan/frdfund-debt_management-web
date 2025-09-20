@@ -4,7 +4,7 @@ import CooperativeTable from "@views/components/proposeForApproval/NPL/cooperati
 import CommercialBanksOrLegalEntitiesTable from "@views/components/proposeForApproval/NPL/commercialBanksOrLegalEntitiesTable";
 
 const PrepareRequestApproveTable = (props) => {
-  const { result, handleSubmit } = props;
+  const { result, filter, handleSubmit, can_action, getData } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [cooperativeSelected, setCooperativeSelected] = useState([]);
@@ -88,6 +88,9 @@ const PrepareRequestApproveTable = (props) => {
             isSelectedAll={isSelectedAllCooperative}
             onSelect={onSelectCooperative}
             onSelectAll={onSelectAllCooperative}
+            selectable={can_action}
+            currentPage={paging?.currentPage ?? 0}
+            pageSize={process.env.PAGESIZE}
           />
         )}
         {(commercialBanksOrLegalEntitiesData && commercialBanksOrLegalEntitiesData.length > 0) && (
@@ -97,6 +100,9 @@ const PrepareRequestApproveTable = (props) => {
             isSelectedAll={isSelectedAllCommercialBanksOrLegalEntities}
             onSelect={onSelectCommercialBanksOrLegalEntities}
             onSelectAll={onSelectAllCommercialBanksOrLegalEntities}
+            selectable={can_action}
+            currentPage={paging?.currentPage ?? 0}
+            pageSize={process.env.PAGESIZE}
           />
         )}
         {paging?.total > 0 && (
@@ -105,19 +111,21 @@ const PrepareRequestApproveTable = (props) => {
           />
         )}
       </div>
-      <div className="d-flex align-items-center justify-content-center my-3">
-        <div className={`${isSelectedSome ? "" : "d-none"}`}>
-          <div className="d-flex">
-            <button
-              className="btn btn-subtle-success btn-sm ms-2"
-              type="button"
-              onClick={() => onSubmit()}
-            >
-              เลือกสัญญาขออนุมัติรายชื่อ
-            </button>
+      {can_action && (
+        <div className="d-flex align-items-center justify-content-center my-3">
+          <div className={`${isSelectedSome ? "" : "d-none"}`}>
+            <div className="d-flex">
+              <button
+                className="btn btn-subtle-success btn-sm ms-2"
+                type="button"
+                onClick={() => onSubmit()}
+              >
+                เลือกสัญญาขออนุมัติรายชื่อ
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

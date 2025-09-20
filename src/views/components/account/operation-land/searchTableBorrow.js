@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handleHistory
+  const { result, filter, getData, handleShowDetail, handleHistory, can_action
   } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -11,7 +11,7 @@ const SearchTable = (props) => {
         <td className="fs-9 align-middle">{index + 1}</td>
         <td className="align-middle white-space-nowrap text-center pe-0">
           <div className="btn-reveal-trigger position-static">
-            <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+            <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action}  type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
             <div className="dropdown-menu dropdown-menu-end py-2">
               <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>รายละเอียดหลักทรัพย์</button>
               <button className="dropdown-item" type="button" onClick={() => handleHistory(item)}>ประวัติการยืม-คืนโฉนด</button>

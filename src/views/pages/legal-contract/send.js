@@ -25,6 +25,8 @@ import {
 
 const user = getUserData();
 const LegalContractSend = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -164,6 +166,7 @@ const LegalContractSend = () => {
                         handleSpouse={handleSpouse} 
                         handleSubmit={handleSubmit} 
                         handleUpload={handleUpload}
+                        can_action={can_action}
                       />
                     )}
                   </>
@@ -220,7 +223,7 @@ const LegalContractSend = () => {
                           </button>
                           <div className="dropdown-menu dropdown-menu-end border border-translucent py-2">
                             <button className="dropdown-item" type="button" onClick={() => download(file)}>Download File</button>
-                            <button className="dropdown-item" type="button" onClick={() => RemoveFile(index)}>Remove File</button>
+                            {can_action && (<button className="dropdown-item" type="button" onClick={() => RemoveFile(index)}>Remove File</button>)}
                           </div>
                         </div>
                       </div>
@@ -228,14 +231,18 @@ const LegalContractSend = () => {
                   ))}
                 </div>
               )}
-              <div className="col-12">
-                <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
-              </div>
-              <div className="row justify-content-center mt-3 mb-3">
-                <div className="col-auto">
-                  <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
-                </div>
-              </div>
+              {can_action && (
+                <>
+                  <div className="col-12">
+                    <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
+                  </div>
+                  <div className="row justify-content-center mt-3 mb-3">
+                    <div className="col-auto">
+                      <button className="btn btn-primary me-1 mb-1" type="button" onClick={onSubmitFile}>นำไฟล์เข้าระบบ</button>
+                    </div>
+                  </div>
+                </>
+              )}
               {uploadStatus && (
                 <div className={`alert alert-outline-${uploadStatus == "success" ? 'success' : 'danger'} d-flex align-items-center`} role="alert">
                   <p className="mb-0 flex-1 text-center"><span className={`fas ${uploadStatus == "success" ? 'fa-check-circle text-success' : 'fa-times-circle text-danger'} fs-5 me-3`} ></span>
