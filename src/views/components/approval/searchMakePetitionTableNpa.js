@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, handleSubmit, filter, getData } = props;
+  const { result, handleSubmit, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
@@ -28,9 +28,11 @@ const SearchTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
-          <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
-          </div>
+          {can_action ? (
+            <div className="form-check ms-2 mb-0 fs-8">
+              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            </div>
+          ) : (((paging?.currentPage - 1) * process.env.PAGESIZE) + index + 1)}
         </td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>

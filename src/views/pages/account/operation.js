@@ -25,6 +25,8 @@ import {
 
 const user = getUserData();
 const PageContent = () => {
+  const allow_roles = [1,2,4,5];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const operationLandRef = useRef();
   const surveyRef =useRef();
@@ -208,7 +210,7 @@ const submitOperation = async () => {
       </div>
       {openDetail && (
         <Modal isOpen={openDetail} setModal={setOpenDetail} onClose={() => setOpenDetail(false)}  okText={'บันทึก'} onOk={submitOperation} title={'ดำเนินการในที่ดิน'} closeText={'ปิด'} scrollable fullscreen>
-          <OperationLand ref={operationLandRef}  policy={policy} /> 
+          <OperationLand ref={operationLandRef}  policy={policy} can_action={can_action} /> 
         </Modal>
       )}
       {openRequestClose && (
@@ -218,17 +220,17 @@ const submitOperation = async () => {
       )}
       {openSurvey && (
         <Modal isOpen={openSurvey} setModal={setOpenSurvey} onClose={() => setOpenSurvey(false)}  title={'การรังวัด'} closeText={'ปิด'} scrollable fullscreen okText={'บันทึก'} onOk={() => submitSurvey()} >
-          <SurveyLand ref={surveyRef} policy={policy} isView />
+          <SurveyLand ref={surveyRef} policy={policy} isView can_action={can_action} />
         </Modal>
       )}
       {openLandLease && (
         <Modal isOpen={openLandLease} setModal={setOpenLandLease} onClose={() => setOpenLandLease(false)}  title={'การเช่า'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()}  scrollable fullscreen>
-          <LandLease policy={policy} isView />
+          <LandLease policy={policy} isView can_action={can_action} />
         </Modal>
       )}
       {openExpropriation && (
         <Modal isOpen={openExpropriation} setModal={setOpenExpropriation} onClose={() => setOpenExpropriation(false)}  title={'การเวนคืน'} closeText={'ปิด'} okText={'บันทึก'} onOk={() => submitOperation()} scrollable fullscreen>
-          <Expropriation policy={policy} isView />
+          <Expropriation policy={policy} isView can_action={can_action} />
         </Modal>
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

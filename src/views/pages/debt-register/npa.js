@@ -32,6 +32,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const DebtRegisterNpa = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [refreshFilter, setRefreshFilter] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -169,24 +171,26 @@ const DebtRegisterNpa = () => {
     <>
       <div className="content">
         <h4 >จัดทำรายชื่อเกษตรกร NPA</h4>
-        <div className="d-flex flex-row-reverse">
-          <div>
-          <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => setShowModal(true)}><span className="fas fa-plus"></span> สร้างทะเบียน NPA</button>
-            {showModal && (
-                <RegisterNPAModal isOpen={showModal} setModal={setShowModal} onClose={onCloseRegisterNPAModel}  title={'สร้างทะเบียนหนี้ NPA'} closeText={'ปิด'} scrollable
-                children={(
-                  <>
-                    <FilterRegisNPA handleSubmit={onSearchRegister} setLoading={setLoadBigData} />
-                    <br />
-                    {dataRegister && (
-                      <BigDataRegisterTable result={dataRegister} fetchData={onSearchRegister} handleSubmit={handleAddRegister} filter={filterRegister}/>
-                    )}
-                  </>
-                )}
-              />
-            )}
-            </div>
-        </div>
+        {can_action && (
+          <div className="d-flex flex-row-reverse">
+            <div>
+            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => setShowModal(true)}><span className="fas fa-plus"></span> สร้างทะเบียน NPA</button>
+              {showModal && (
+                  <RegisterNPAModal isOpen={showModal} setModal={setShowModal} onClose={onCloseRegisterNPAModel}  title={'สร้างทะเบียนหนี้ NPA'} closeText={'ปิด'} scrollable
+                  children={(
+                    <>
+                      <FilterRegisNPA handleSubmit={onSearchRegister} setLoading={setLoadBigData} />
+                      <br />
+                      {dataRegister && (
+                        <BigDataRegisterTable result={dataRegister} fetchData={onSearchRegister} handleSubmit={handleAddRegister} filter={filterRegister}/>
+                      )}
+                    </>
+                  )}
+                />
+              )}
+              </div>
+          </div>
+        )}
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -200,18 +204,20 @@ const DebtRegisterNpa = () => {
                     )}
                     <br />
                     {data && (
-                      <BigDataTable result={data} handleSubmit={onAddBigData} onEditNpaRegister={(debt) => onEditNpaRegister(debt)}/>
+                      <BigDataTable result={data} handleSubmit={onAddBigData} onEditNpaRegister={(debt) => onEditNpaRegister(debt)} can_action={can_action}/>
                     )}
                   </>
                 )}
               />
-              <According 
-                title={'จัดทำรายชื่อเกษตรกร'}
-                className={"mb-3"}
-                children={(
-                  <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
-                )}
-              />
+              {can_action && (
+                <According 
+                  title={'จัดทำรายชื่อเกษตรกร'}
+                  className={"mb-3"}
+                  children={(
+                    <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

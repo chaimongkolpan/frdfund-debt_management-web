@@ -44,6 +44,9 @@ const ThemeNavbar = props => {
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
       setUserData(JSON.parse(localStorage.getItem('userData')))
+    } else {
+      dispatch(handleLogout());
+      navigate(prefix_url + '/login');
     }
   }, [])
   return (

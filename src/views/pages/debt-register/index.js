@@ -21,6 +21,8 @@ import {
 
 const user = getUserData();
 const DebtRegister = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
@@ -101,18 +103,20 @@ const DebtRegister = () => {
                       <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                       <br />
                       {data && (
-                        <BigDataTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} />
+                        <BigDataTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} can_action={can_action} />
                       )}
                     </>
                   )}
                 />
-                <According 
-                  title={'จัดทำรายชื่อเกษตรกร'}
-                  className={"mb-3"}
-                  children={(
-                    <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
-                  )}
-                />
+                {can_action && (
+                  <According 
+                    title={'จัดทำรายชื่อเกษตรกร'}
+                    className={"mb-3"}
+                    children={(
+                      <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
+                    )}
+                  />
+                )}
               </div>
             </div>
           </div>

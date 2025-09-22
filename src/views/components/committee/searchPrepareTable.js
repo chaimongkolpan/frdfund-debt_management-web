@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, handleSubmit, filter, getData } = props;
+  const { result, handleSubmit, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
@@ -29,9 +29,11 @@ const SearchTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
-          <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
-          </div>
+          {can_action ? (
+            <div className="form-check ms-2 mb-0 fs-8">
+              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            </div>
+          ) : (((paging?.currentPage - 1) * process.env.PAGESIZE) + index + 1)}
         </td>
         <td>{item.branch_proposes_approval_no}</td>
         <td>{item.branch_proposes_approval_date ? stringToDateTh(item.branch_proposes_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
@@ -96,10 +98,12 @@ const SearchTable = (props) => {
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
-                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
-                  <div className="form-check ms-2 me-0 mb-0 fs-8">
-                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
-                  </div>
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>
+                  {can_action ? (
+                    <div className="form-check ms-2 me-0 mb-0 fs-8">
+                      <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                    </div>
+                  ) : '#'}
                 </th>
                 <th colSpan="2">สาขาเสนอขออนุมัติ</th>
                 <th colSpan="4">เกษตรกร</th>
@@ -155,13 +159,15 @@ const SearchTable = (props) => {
           />
         )}
       </div>
-      <div className="d-flex align-items-center justify-content-center my-3">
-        <div className={`${isSome ? '' : 'd-none'}`}>
-          <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+      {can_action && (
+        <div className="d-flex align-items-center justify-content-center my-3">
+          <div className={`${isSome ? '' : 'd-none'}`}>
+            <div className="d-flex">
+              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

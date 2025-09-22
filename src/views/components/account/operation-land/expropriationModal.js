@@ -22,7 +22,7 @@ import {
 } from "@services/api";
 
 const PlanPay = (props) => {
-    const { policy, isView } = props;
+    const { policy, isView, can_action } = props;
     const [date, setDate] = useState(null);
     const [data, setData] = useState([]);
     const interest = 0.0;
@@ -280,12 +280,12 @@ const PlanPay = (props) => {
                 <td></td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenEditLandRental" onClick={() => handleOpenEditExpropriation(item)}><span class="fas fa-list"></span></button>
+                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenEditLandRental" disabled={!can_action} onClick={() => handleOpenEditExpropriation(item)}><span class="fas fa-list"></span></button>
                     </div>
                 </td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenLandRentalNO" onClick={() => setOpenExpropriationPaymentModal(true)}><span class="fas fa-money-check-alt"></span></button>
+                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="OpenLandRentalNO" disabled={!can_action} onClick={() => setOpenExpropriationPaymentModal(true)}><span class="fas fa-money-check-alt"></span></button>
                     </div>
                 </td>
                 <td>{item.asset_operations_type}</td>
@@ -384,9 +384,11 @@ const PlanPay = (props) => {
             <form>
                 <br />
                 <div className="row g-3">
-                    <div className={`d-flex mb-3 flex-row-reverse`}>
-                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}><span className="fas fa-plus fs-8"></span> เพิ่มการเวนคืน</button>
-                    </div>
+                    {can_action && (
+                        <div className={`d-flex mb-3 flex-row-reverse`}>
+                            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}><span className="fas fa-plus fs-8"></span> เพิ่มการเวนคืน</button>
+                        </div>
+                    )}
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                         <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
                             <tr>

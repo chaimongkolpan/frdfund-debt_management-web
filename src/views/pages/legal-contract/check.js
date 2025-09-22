@@ -25,6 +25,8 @@ import {
 
 const user = getUserData();
 const LegalContractSend = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -200,6 +202,7 @@ const LegalContractSend = () => {
                         handleViewEdit={handleViewEdit}
                         handleViewEditAsset={handleViewEditAsset}
                         handleViewReturn={handleViewReturn}
+                        can_action={can_action}
                       />
                     )}
                   </>
