@@ -5,6 +5,7 @@ import {
 } from "@services/api";
 const ClassifyAlreadyTable = (props) => {
   const { idcard, province, creditorType } = props;
+  const total_amount = 5000000;
   const [data, setData] = useState(null);
   const [sum_npl, setNpl] = useState(null);
   const [sum_npa, setNpa] = useState(null);
@@ -31,7 +32,7 @@ const ClassifyAlreadyTable = (props) => {
       await setData(result.contracts)
       await setNpl(result.sum_npl)
       await setNpa(result.sum_npa)
-      await setTotal(result.total)
+      await setTotal(total_amount - result.total)
     } else {
       await setData(null)
       await setNpl(0.00)
