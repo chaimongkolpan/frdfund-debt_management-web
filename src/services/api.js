@@ -77,9 +77,13 @@ export const getNplCondition = async () => {
 export const getAlertSide = async () => {
   const path = "/common/alert";
   try {
-    const result = await axios.get(path);
-    if (result.status == 200) return result.data;
-    else return defaultErrorResponse;
+    if (process.env.ENVIRONMENT == 'develop')
+      return { isSuccess: true, data: {} }
+    else {
+      const result = await axios.get(path);
+      if (result.status == 200) return result.data;
+      else return defaultErrorResponse;
+    }
   } catch (e) {
     console.error("error: " + path + " =>", e);
     return defaultErrorResponse;

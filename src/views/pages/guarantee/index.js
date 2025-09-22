@@ -26,6 +26,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const LegalContractPrepare = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -147,6 +149,7 @@ const LegalContractPrepare = () => {
                         handleReturnGuarantee={handleReturnGuarantee}
                         handleSpouse={handleSpouse} 
                         handleSubmit={handleSubmit} 
+                        can_action={can_action}
                       />
                     )}
                   </>

@@ -29,6 +29,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPA = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [petition, setPetition] = useState(null);
@@ -131,13 +133,15 @@ const NPA = () => {
     <>
       <div className="content">
         <h4 className="mb-3">ขออนุมัติชำระหนี้แทน NPA</h4>
-        <div className="d-flex flex-row-reverse">
-          <div>
-            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
-              <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
-            </button>
+        {can_action && (
+          <div className="d-flex flex-row-reverse">
+            <div>
+              <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
+                <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -149,20 +153,22 @@ const NPA = () => {
                     <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                     <br />
                     {data && (
-                      <SearchTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} />
+                      <SearchTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} can_action={can_action}  />
                     )}
                   </>
                 )}
               />
-              <According 
-                title={'จัดทำฎีกา'}
-                className={"mb-3"}
-                children={(
-                  <>
-                    <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
-                  </>
-                )}
-              />
+              {can_action && (
+                <According 
+                  title={'จัดทำฎีกา'}
+                  className={"mb-3"}
+                  children={(
+                    <>
+                      <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
+                    </>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

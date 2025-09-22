@@ -1,6 +1,6 @@
 import { toCurrency } from "@utils";
 const ClassifyDebtManageTable = (props) => {
-  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleCreateNPL } = props;
+  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleCreateNPL, can_action } = props;
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index} style={{
@@ -23,27 +23,27 @@ const ClassifyDebtManageTable = (props) => {
         <td>{item.hasNPL && (<i className="fas fa-check"></i>)}</td>
         <td>
           <div className="d-flex justify-content-center"> 
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" onClick={() => handleShowDetail(item)}><i className="far fa-list-alt "></i></button>
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" disabled={!can_action} onClick={() => handleShowDetail(item)}><i className="far fa-list-alt "></i></button>
           </div>
         </td>
         <td className="align-middle white-space-nowrap text-center pe-0">
           {item.isCombine ? (
             <div className="btn-reveal-trigger position-static">
-              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
                 <button className="dropdown-item text-danger" onClick={() => handleCancelCombine(item.id_combining)}>ยกเลิกรวมสัญญา</button>
               </div>
             </div>
           ) : (item.isSplit ? (
             <div className="btn-reveal-trigger position-static">
-              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
                 <button className="dropdown-item text-danger" type="button" onClick={() => handleCancelSplit(item.id_separate)}>ยกเลิกแยกสัญญา</button>
               </div>
             </div>
           ) : (
             <div className="btn-reveal-trigger position-static">
-              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
                 {!item.hasNPL && (
                   <button className="dropdown-item" type="button" onClick={() => handleCreateNPL(item.id_debt_management)}>สร้างสัญญา NPL</button>

@@ -13,13 +13,14 @@ import {
 import { getUserData } from '@utils'
 const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 const Sidebar = props => {
+  const user = getUserData();
+  const branchList = [1,4]; // [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  const officeList = [1,2,3,5,6,7,8,9,10,11,12,13,14];
+  const importList = [1,2,4,7,8,9];
   // ** Props
   const { menuCollapsed,setMenuCollapsed, menuVisibility, windowWidth } = props
   const path = window.location.pathname
   const [alert, setAlert] = useState(null);
-  const branchList = [1,4];
-  const officeList = [1,2,7,8];
-  const user = getUserData();
   const handleHide = async(flag) => {
     await setMenuCollapsed(flag);
   }
@@ -110,12 +111,14 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-ClassifyDebt">
                       <li className="collapsed-nav-item-title d-none">จำแนกมูลหนี้
                       </li>
-                      <li className="nav-item">
-                        <Link className={`nav-link ${path == '/classify/import' ? 'active' : ''}`} to={`${prefix_url + "/classify/import"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">นำไฟล์เข้าระบบ</span></div>
-                        </Link>
-                        {/* more inner pages*/}
-                      </li>
+                      {importList.includes(user?.role) && (
+                        <li className="nav-item">
+                          <Link className={`nav-link ${path == '/classify/import' ? 'active' : ''}`} to={`${prefix_url + "/classify/import"}`}>
+                            <div className="d-flex align-items-center"><span className="nav-link-text">นำไฟล์เข้าระบบ</span></div>
+                          </Link>
+                          {/* more inner pages*/}
+                        </li>
+                      )}
                       <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/classify/search') ? 'active' : ''}`} href="#nv-Search" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Search">
                           <div className="d-flex align-items-center">

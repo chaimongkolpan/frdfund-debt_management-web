@@ -8,6 +8,8 @@ const CooperativeTable = ({
   onSelect = () => {},
   onSelectAll = () => {},
   selectable = true,
+  currentPage = 0,
+  pageSize = 10
 }) => {
   
   const [selData, setSelected] = useState([]);
@@ -38,7 +40,7 @@ const CooperativeTable = ({
               </div>
             </td>
           ) : (
-            <td className="fs-9 align-middle">{index + 1}</td>
+            <td className="fs-9 align-middle">{(((currentPage - 1) * pageSize) + index + 1)}</td>
           )}
           <td className="align-middle">{item.id_card}</td>
           <td className="align-middle">{item.name_prefix}</td>

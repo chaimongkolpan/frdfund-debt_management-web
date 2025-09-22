@@ -21,7 +21,7 @@ import {
 } from "@services/api";
 
 const survey = forwardRef((props, ref) => {
-    const { policy, isView } = props;
+    const { policy, isView, can_action } = props;
     const [date, setDate] = useState(null);
     const [data, setData] = useState([]);
     const interest = 0.0;
@@ -282,7 +282,7 @@ const survey = forwardRef((props, ref) => {
                 <td></td>
                 <td>
                     <div className='d-flex justify-content-center'>
-                    {!item.deedBorrowReturn_status || item.deedBorrowReturn_status == 'ยืมโฉนด' ? 
+                    {((!item.deedBorrowReturn_status || item.deedBorrowReturn_status == 'ยืมโฉนด') && can_action) ? 
                         (<button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowEdit}>
                             <i className="far fa-edit"></i>
                         </button>) : (<button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={handleShowDetail}>
@@ -375,9 +375,11 @@ const survey = forwardRef((props, ref) => {
             <form>
                 <br />
                 <div className="row g-3">
-                    <div className={`d-flex mb-3 flex-row-reverse `}>
-                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()} ><span className="fas fa-plus fs-8"></span> เพิ่มการรังวัด</button>
-                    </div>
+                    {can_action && (
+                        <div className={`d-flex mb-3 flex-row-reverse `}>
+                            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()} ><span className="fas fa-plus fs-8"></span> เพิ่มการรังวัด</button>
+                        </div>
+                    )}
                     <div className="table-responsive mx-n1 px-1">
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                         <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>

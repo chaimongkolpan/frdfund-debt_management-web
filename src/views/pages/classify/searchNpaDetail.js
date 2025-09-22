@@ -25,6 +25,8 @@ import CustomModal from "@views/components/modal/customModal";
 
 const user = getUserData();
 const SearchClassifyNPADetail = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const qprov = searchParams.get("province");
@@ -231,7 +233,9 @@ const SearchClassifyNPADetail = () => {
                   children={(
                     <>
                       <div className="d-flex mb-3 flex-row-reverse">
-                        <button type="button" className="btn btn-info btn-sm ms-2" onClick={() => handleDocument()}><span className="far fa-file-alt"></span> เอกสารประกอบ</button>
+                        {can_action && (
+                          <button type="button" className="btn btn-info btn-sm ms-2" onClick={() => handleDocument()}><span className="far fa-file-alt"></span> เอกสารประกอบ</button>
+                        )}
                         <button type="button" className="btn btn-warning btn-sm ms-2" onClick={() => handleBorrow()}><span className="fas fa-users"></span> ผู้รับสภาพหนี้แทน</button>
                       </div>
                       <DebtManageTable data={debts} 
@@ -241,6 +245,7 @@ const SearchClassifyNPADetail = () => {
                         handleCancelCombine={handleCancelCombine} 
                         handleCancelSplit={handleCancelSplit} 
                         handleCreateNPL={handleCreateNPL}
+                        can_action={can_action}
                       />
                       <br />
                       {(debts && debts.length > 0) && (
@@ -292,7 +297,7 @@ const SearchClassifyNPADetail = () => {
               {/*start modal ผู้รับสภาพหนี้แทน*/}
               {isOpenBorrow && (
                 <BorrowModal isOpen={isOpenBorrow} setModal={setOpenBorrow} onClose={() => handleBorrowerClose()} 
-                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} debtManagementType={'NPA'}
+                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} debtManagementType={'NPA'} can_action={can_action}
                 />
               )}
               {/*end modal ผู้รับสภาพหนี้แทน*/}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { stringToDateTh } from "@utils";
 const DebtNPABigDataTable = (props) => {
-  const { result, handleSubmit, onEditNpaRegister } = props;
+  const { result, handleSubmit, onEditNpaRegister, can_action } = props;
   const [data, setData] = useState([]);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
@@ -26,9 +26,11 @@ const DebtNPABigDataTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
-          <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
-          </div>
+          {can_action ? (
+            <div className="form-check ms-2 mb-0 fs-8">
+              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            </div>
+          ) : (index + 1)}
         </td>
         <td className="align-middle">{item.id_card}</td>
         <td className="align-middle">{item.name_prefix}</td>
@@ -104,9 +106,11 @@ const DebtNPABigDataTable = (props) => {
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
-                  <div className="form-check ms-2 me-0 mb-0 fs-8">
-                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
-                  </div>
+                  {can_action ? (
+                    <div className="form-check ms-2 me-0 mb-0 fs-8">
+                      <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                    </div>
+                  ) : '#'}
                 </th>
                 <th className="text-center" colSpan="7">เกษตรกร</th>
                 <th className="text-center" colSpan="2">องค์กร</th>
@@ -173,13 +177,15 @@ const DebtNPABigDataTable = (props) => {
           </div>
         </div> */}
       </div>
-      <div className="d-flex align-items-center justify-content-center my-3">
-        <div className={`${isSome ? '' : 'd-none'}`}>
-          <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาจัดทำรายชื่อเกษตรกร</button>
+      {can_action && (
+        <div className="d-flex align-items-center justify-content-center my-3">
+          <div className={`${isSome ? '' : 'd-none'}`}>
+            <div className="d-flex">
+              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาจัดทำรายชื่อเกษตรกร</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

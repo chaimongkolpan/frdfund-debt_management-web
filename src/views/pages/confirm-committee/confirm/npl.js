@@ -23,6 +23,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPL = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
   const [data, setData] = useState(null);
@@ -196,26 +198,29 @@ const NPL = () => {
                         handleSubmit={onAddBigData}
                         filter={filter}
                         getData={onSearchTop}
+                        can_action={can_action}
                       />
                     )}
                   </>
                 )}
               />
-              <According 
-                title={'สาขายืนยันยอด'}
-                className={"mb-3"}
-                children={(
-                  <>
-                    <SelectDataTable
-                      result={addedData}
-                      handleSubmit={handleSubmit}
-                      handleRemove={onRemoveMakelist}
-                      filter={filterAdded}
-                      getData={fetchData}
-                    />
-                  </>
-                )}
-              />
+              {can_action && (
+                <According 
+                  title={'สาขายืนยันยอด'}
+                  className={"mb-3"}
+                  children={(
+                    <>
+                      <SelectDataTable
+                        result={addedData}
+                        handleSubmit={handleSubmit}
+                        handleRemove={onRemoveMakelist}
+                        filter={filterAdded}
+                        getData={fetchData}
+                      />
+                    </>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

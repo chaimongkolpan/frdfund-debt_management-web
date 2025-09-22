@@ -21,6 +21,8 @@ import {
 
 const user = getUserData();
 const LegalContractPrepare = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -101,6 +103,7 @@ const LegalContractPrepare = () => {
                         handleGuarantor={handleGuarantor} 
                         handleSpouse={handleSpouse} 
                         handlePrint={handlePrint} 
+                        can_action={can_action}
                       />
                     )}
                   </>
