@@ -3,7 +3,7 @@ import { getUserData, toCurrency, stringToDateTh } from "@utils";
 import { Spinner } from "reactstrap";
 import Loading from "@views/components/modal/loading";
 import logo from "@src/assets/images/icons/logo.png";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import According from "@views/components/panel/according";
 import Filter from "@views/components/committee/updateFilterNpa";
 import DataTable from "@views/components/committee/updateTableNpa";

@@ -8,7 +8,7 @@ import Textbox from "@views/components/input/Textbox";
 import { Spinner } from 'reactstrap'
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import { 
   getProvinces,
   getBigDataCreditors,

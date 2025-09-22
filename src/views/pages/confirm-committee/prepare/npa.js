@@ -7,7 +7,7 @@ import BookNo from "@views/components/input/BookNo";
 import Loading from "@views/components/modal/loading";
 import logo from "@src/assets/images/icons/logo.png";
 import According from "@views/components/panel/according";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import Filter from "@views/components/confirm-committee/filterNpa";
 import SearchDataTable from "@views/components/confirm-committee/searchPrepareTableNpa";
 import SelectDataTable from "@views/components/confirm-committee/selectPrepareTableNpa";

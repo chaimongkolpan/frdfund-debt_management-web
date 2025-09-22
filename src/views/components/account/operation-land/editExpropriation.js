@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import { useEffect, useState, useRef } from "react";
 import Textarea from "@views/components/input/Textarea";
 import Textbox from "@views/components/input/Textbox";
