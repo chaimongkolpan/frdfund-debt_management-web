@@ -7,7 +7,7 @@ import BookNo from "@views/components/input/BookNo";
 import { 
   getCommitteeNoNpa,
   getCommitteeDateNpa,
-  getCreditorTypes,
+  getBigDataCreditorTypes,
   searchCommitteePrepareNpa,
   cleanData
 } from "@services/api";

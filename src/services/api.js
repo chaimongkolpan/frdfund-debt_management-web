@@ -1,4 +1,6 @@
 import axios from "axios";
+import useJwt from '@src/auth/jwt/useJwt'
+const config = useJwt.jwtConfig
 const url = process.env.API_URL ?? (process.env.ENVIRONMENT == 'develop' 
                                       ? 'https://localhost:7039' : (
                                         process.env.ENVIRONMENT == 'uat' 
@@ -6,7 +8,24 @@ const url = process.env.API_URL ?? (process.env.ENVIRONMENT == 'develop'
                                         : 'https://debtinfo.frdfund.org/api'
                                     ));
 axios.defaults.baseURL = url;
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://debtinfo.frdfund.org';
+/*
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
+axios.defaults.headers.common['access-control-allow-origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
+*/
+// axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
+// axios.defaults.headers.common['authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
+axios.interceptors.response.use(response => {
+  return response;
+}, error => {
+  console.log('error', error)
+  const currentPath = window.location.pathname;
+  const exemptPaths = ['login'];
+  const isExempt = exemptPaths.some(path => currentPath.includes(path))
+  if (error.status == 401 && !isExempt ) {
+    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
+  }
+  return error;
+});
 const defaultErrorResponse = { statusCode: 400, isSuccess: false, data: null };
 function SaveAs(blob, filename) {
   const url = window.URL.createObjectURL(blob);
@@ -1718,10 +1737,278 @@ export const searchOperationLand = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getOperationDetail = async (id) => {
+export const getOperationDetail = async (ids) => {
   const path = '/operationLand/get-operationland';
   try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getExpropriationDetail = async (ids) => {
+  const path = '/operationLand/get-expropriation';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+
+export const getSurveyDetail = async (ids) => {
+  const path = '/operationLand/get-surveying';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getRentalDetail = async (ids) => {
+  const path = '/operationLand/get-rental';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getReceiveRent = async (ids) => {
+  const path = '/operationLand/get-receiverent';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getExpropriationReceiveRent = async (ids) => {
+  const path = '/operationLand/get-expropriation-receiverent';
+  try {
+    const result = await axios.get(path, { params: {ids} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateExpropriationLog = async (params) => {
+  const path = '/OperationLand/update-expropriationlog';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const insertExpropriationLog = async (params) => {
+  const path = '/OperationLand/insert-expropriationlog';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getOperationChangeCollateral = async (id) => {
+  const path = '/operationLand/view-operationland-changecollateral';
+  try {
     const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getOperationSeparateCollateral = async (id) => {
+  const path = '/operationLand/view-operationland-separatecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getOperationSeparateUsedeed = async (params) => {
+  const path = '/operationLand/view-operationland-usedeed';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+
+export const getExpropriationChange = async (id) => {
+  const path = '/operationLand/view-expropriation-changecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getExpropriationSeparate = async (id) => {
+  const path = '/operationLand/view-expropriation-separatecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getExpropriationSeparateUsedeed = async (params) => {
+  const path = '/operationLand/view-expropriation-usedeed';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getSurveyChangeCollateral = async (id) => {
+  const path = '/operationLand/view-surveying-changecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getSurveySeparateCollateral = async (id) => {
+  const path = '/operationLand/view-surveying-separatecollateral';
+  try {
+    const result = await axios.get(path, { params: {id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getSurveySeparateUsedeed = async (params) => {
+  const path = '/operationLand/view-surveying-usedeed';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateOperationLand = async (params) => {
+  const path = '/operationLand/update-operationland';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateExpropriation = async (params) => {
+  const path = '/operationLand/update-expropriation';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateSurvey = async (params) => {
+  const path = '/operationLand/update-surveying';
+  try {
+    const result = await axios.post(path, params);
     if (result.status == 200)
       return result.data;
     else
@@ -1886,12 +2173,68 @@ export const savePlanPay = async (params) => {
     return defaultErrorResponse;
   }
 };
+export const saveAssetRental = async (params) => {
+  const path = '/OperationLand/insert-assetrental';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateAssetRental = async (params) => {
+  const path = '/OperationLand/update-assetrental';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const saveRecieveRent = async (params) => {
+  const path = '/OperationLand/insert-assetrentallog';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateRecieveRent = async (params) => {
+  const path = '/OperationLand/update-assetrentallog';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const printPlanPay = async (params) => {
   const path = '/LegalContract/print-refund-planpay';
   try {
     const result = await axios.post(
       path,
-      { data: params.data },
+      params.data,
       { responseType: "blob" }
     );
     if (result.status == 200) {
@@ -1985,6 +2328,19 @@ export const getDebtManagementPolicyDate = async (no) => {
     console.error("error: " + path + " =>", e);
     return defaultErrorResponse;
   }
+};
+export const printLegalContract = async (params) => {
+  const path = '/LegalContract/print-legal-contract';
+  try {
+    const result = await axios.post(path, params.data, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
 };
 //#endregion
 //#region Guarantee
@@ -2228,15 +2584,23 @@ export const searchExpropriated = async (filter) => {
   }
 };
 export const searchBorrow = async (filter) => {
-  const path = '/Operation/search-legal-contract';
+  const path = '/Account/search-deed-borrow';
   try {
-    return {
-      isSuccess: true,
-      data: [
-        1,1,1,1,1,1
-      ]
-    }
     const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getBorrowHistory = async (id) => {
+  const path = '/Account/get-deed-borrow-history';
+  try {
+    const result = await axios.get(path, { params: { id } });
     if (result.status == 200)
       return result.data;
     else
@@ -2262,6 +2626,60 @@ export const searchReimbursement = async (filter) => {
     console.error('error: ' + path + ' =>', e);
     return defaultErrorResponse;
   }
+};
+export const getReimbursementPlan = async (filter) => {
+  const path = '/Account/get-reimbursement-plan';
+  try {
+    const result = await axios.get(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const printPlanRe = async (params) => {
+  const path = '/report/Print-PayLog';
+  try {
+    const result = await axios.post(path, params.data, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
+export const getReimbursementCard = async (filter) => {
+  const path = '/Account/get-reimbursement-card';
+  try {
+    const result = await axios.get(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const printCardRe = async (params) => {
+  const path = '/report/Print-Card';
+  try {
+    const result = await axios.post(path, params.data, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
 };
 //#endregion
 //#region Adjust
@@ -2311,6 +2729,34 @@ export const searchFollow = async (filter) => {
   const path = '/Account/search-follow';
   try {
     const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const saveIsLoss = async (params) => {
+  const path = '/Account/add-is-loss';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getIsLoss = async (id) => {
+  const path = '/Account/get-is-loss';
+  try {
+    const result = await axios.get(path, { params: { id } });
     if (result.status == 200)
       return result.data;
     else
@@ -2383,8 +2829,37 @@ export const searchInvoice = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getInvoiceByPolicyNo = async (no) => {
+  const path = '/Account/get-invoice-policy';
+  try {
+    const result = await axios.get(path, { params: { policyNo: no } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getInvoice = async (ids) => {
+  const path = '/Account/get-invoice';
+  try {
+    const result = await axios.post(path, { ids });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const printInvoice = async (params) => {
-  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Receipt';
+  // const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Receipt';
+  const path = '/Account/Print-Receipt';
   try {
     const result = await axios.post(path, params.data, { responseType: "blob" });
     if (result.status == 200) {
@@ -2458,7 +2933,7 @@ export const getPrintClose = async (filter) => {
   }
 };
 export const printClose = async (params) => {
-  const path = 'https://debtinfo.frdfund.org/report-old/report/Print-Close';
+  const path = '/report/Print-Close';
   try {
     const result = await axios.post(path, params.data, { responseType: "blob" });
     if (result.status == 200) {
@@ -2471,7 +2946,7 @@ export const printClose = async (params) => {
   return;
 };
 export const exportClose = async (params) => {
-  const path = 'https://debtinfo.frdfund.org/report-old/close/Export?LegalNo=';
+  const path = '/report/Export-Close?LegalNo=';
   try {
     const result = await axios.get(path, { responseType: "blob" });
     if (result.status == 200) {
@@ -2738,6 +3213,7 @@ export const downloadOldReport = async (params) => {
     var stop = params.endDate;
     if (stop != null && stop != undefined && stop != '') param += 'stop=' + stop + '&';
     if (params.year != null && params.year != undefined && params.year != '') param += 'year=' + (params.year == 'all' ? '0' : params.year) + '&';
+    else param += 'year=0&';
     var CreditorType = (params.creditorType == 'all' ? 'ทั้งหมด' : params.creditorType);
     if (CreditorType != null && CreditorType != undefined && CreditorType != '') param += 'creditortype=' + CreditorType + '&';
     var Creditor = (params.creditor == 'all' ? '0' : params.creditor);
@@ -2760,6 +3236,6 @@ export const downloadOldReport = async (params) => {
   } catch (e) {
     console.error("error: " + path + " =>", e);
   }
-  return;
+  return true;
 };
 // #endregion

@@ -104,9 +104,9 @@ const Filter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...{ creditorType: temp1[0] },
+          ...{ creditorType: 'all' },
         }));
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map((item) => item.name);
           await setCreditorOp(temp2);

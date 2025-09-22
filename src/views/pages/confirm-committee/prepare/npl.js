@@ -232,7 +232,7 @@ const NPL = () => {
                 )}
               />
               <According 
-                title={'เสนอขออนุมัติรายชื่อ'}
+                title={'รวบรวมยืนยันยอด'}
                 className={"mb-3"}
                 children={(
                   <>

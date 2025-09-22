@@ -179,7 +179,7 @@ const NPA = () => {
                 )}
               />
               <According 
-                title={'เสนอขออนุมัติรายชื่อ'}
+                title={'สาขายืนยันยอด'}
                 className={"mb-3"}
                 children={(
                   <>

@@ -113,7 +113,7 @@ const PrepareRequestApproveTable = (props) => {
               type="button"
               onClick={() => onSubmit()}
             >
-              เลือกสัญญาจัดทำรายชื่อเกษตรกร
+              เลือกสัญญาขออนุมัติรายชื่อ
             </button>
           </div>
         </div>

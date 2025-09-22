@@ -8,8 +8,8 @@ import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import { 
   getProvinces,
-  getCreditors,
-  getCreditorTypes,
+  getBigDataCreditors,
+  getBigDataCreditorTypes,
   getYears,
 } from "@services/api";
 
@@ -35,13 +35,13 @@ const Report = () => {
     if (key == 'province') {
       await setCreditorTypeOp(null);
       await setProvince(val)
-      const resultCreditorType = await getCreditorTypes(val);
+      const resultCreditorType = await getBigDataCreditorTypes(val);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
         await setCreditorType('all');
         await setCreditorOp(null);
-        const resultCreditor = await getCreditors(val);
+        const resultCreditor = await getBigDataCreditors(val);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -54,7 +54,7 @@ const Report = () => {
     } else if (key == 'creditorType') {
       await setCreditorOp(null);
       await setCreditorType(val);
-      const resultCreditor = await getCreditors(province, val);
+      const resultCreditor = await getBigDataCreditors(province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
         await setCreditorOp(temp2);
@@ -73,11 +73,11 @@ const Report = () => {
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
-      const resultCreditorType = await getCreditorTypes(null);
+      const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
-        const resultCreditor = await getCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);

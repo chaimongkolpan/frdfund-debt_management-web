@@ -48,16 +48,16 @@ const Filter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -75,7 +75,7 @@ const Filter = (props) => {
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -188,7 +188,6 @@ const Filter = (props) => {
           {committeeNoOp && (
             <Dropdown 
               title={'ครั้งที่เสนอคณะกรรมการ'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={committeeNoOp} hasAll
               handleChange={(val) => onChange('proposal_committee_no', val)}
@@ -199,7 +198,6 @@ const Filter = (props) => {
           {committeeDateOp && (
             <Dropdown 
               title={'วันที่เสนอคณะกรรมการ'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={committeeDateOp} hasAll
               handleChange={(val) => onChange('proposal_committee_date', val)}
@@ -210,7 +208,6 @@ const Filter = (props) => {
           {petitionNoOp && (
             <Dropdown 
               title={'เลขที่หนังสือฎีกาจัดการหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={petitionNoOp} hasAll
               handleChange={(val) => onChange('petition_no', val)}
@@ -221,7 +218,6 @@ const Filter = (props) => {
           {petitionDateOp && (
             <Dropdown 
               title={'วันที่หนังสือฎีกาจัดการหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={petitionDateOp} hasAll
               handleChange={(val) => onChange('petition_date', val)}
@@ -232,7 +228,6 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
@@ -243,7 +238,6 @@ const Filter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={creditorTypeOp} hasAll
               handleChange={(val) => onChange('creditorType', val)}
@@ -254,7 +248,6 @@ const Filter = (props) => {
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={creditorOp} hasAll
               handleChange={(val) => onChange('creditor', val)}
@@ -265,7 +258,6 @@ const Filter = (props) => {
           {statusDebtOp && (
             <Dropdown 
               title={'สถานะการชำระหนี้แทน'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={statusDebtOp}
               handleChange={(val) => onChange('debtStatus', val)}

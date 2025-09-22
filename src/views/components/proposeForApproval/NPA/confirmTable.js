@@ -49,10 +49,10 @@ const ConfirmTable = (props) => {
               <tr>
                 <th>เลขบัตรประชาชน</th>
                 <th>คำนำหน้า</th>
-                <th>ชื่อ-นามสกุล</th>
+                <th style={{ minWidth: 150 }}>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
-                <th>ประเภทเจ้าหนี้</th>
-                <th>สถาบันเจ้าหนี้</th>
+                <th style={{ minWidth: 150 }}>ประเภทเจ้าหนี้</th>
+                <th style={{ minWidth: 180 }}>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
                 <th>สาขาเจ้าหนี้</th>
                 <th>รอบ NPA</th>
