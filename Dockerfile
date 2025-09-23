@@ -1,9 +1,20 @@
-FROM node:21.1.0
+FROM node:21.1.0 AS build
+ENV NODE_OPTIONS=--max-old-space-size=4096
 
 WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm install
+
 COPY . .
+RUN npm ci --silent
+RUN npm run build
+
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
-RUN npm install
-RUN npm run build
-CMD ["npm", "run", "dev"]
+CMD ["nginx", "-g", "daemon off;"]
+# CMD ["npm", "run", "dev"]

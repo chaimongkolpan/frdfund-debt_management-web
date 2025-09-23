@@ -4,7 +4,7 @@ import { Spinner } from "reactstrap";
 import Loading from "@views/components/modal/loading";
 import logo from "@src/assets/images/icons/logo.png";
 import According from "@views/components/panel/according";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import Filter from "@views/components/committee/filterNpa";
 import SearchDataTable from "@views/components/committee/searchPrepareTableNpa";
 import SelectDataTable from "@views/components/committee/selectPrepareTableNpa";

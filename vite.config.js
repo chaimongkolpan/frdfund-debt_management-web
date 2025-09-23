@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 export default defineConfig({
+    base: process.env.ENVIRONMENT == 'uat' ? '/uat/': '',
     plugins: [react()],
     define: {
         global: 'globalThis',
@@ -21,7 +22,17 @@ export default defineConfig({
         allowedHosts: [
             'fonts.googleapis.com',
             'debtinfo.frdfund.org'
-        ]
+        ],
+        hmr: {
+            protocol: 'ws'
+        },
+        proxy: {
+          '^/uat/.*': {
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/uat/, ''),
+          },
+        },
     },
     css: {
         preprocessorOptions: {
@@ -90,7 +101,13 @@ export default defineConfig({
                     }
                 }
             ]
-        }
+        },
+        optimizeDeps: {
+          include: [
+            'react-router-dom',
+            '@remix-run/router',
+          ],
+        },
     },
     build: {
         minify: false,

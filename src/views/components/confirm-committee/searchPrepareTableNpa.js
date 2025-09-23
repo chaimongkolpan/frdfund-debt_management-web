@@ -4,7 +4,7 @@ import { stringToDateTh, toCurrency } from "@utils";
 import DatePicker from "@views/components/input/DatePicker";
 import BookNo from "@views/components/input/BookNo";
 import EditDetail from "@views/components/confirm-committee/editDetailNpa";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import { 
   updateConfirmCommitteeCreditor,
   updateConfirmCommitteeNo,
