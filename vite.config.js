@@ -23,6 +23,7 @@ export default defineConfig({
             'fonts.googleapis.com',
             'debtinfo.frdfund.org'
         ],
+        strictPort: true,
         hmr: {
             protocol: 'ws'
         },
