@@ -36,6 +36,7 @@ const Report = () => {
   const [isLoad, setLoad] = useState(false);
   const [yearOp, setYearOp] = useState(null);
   const [provOp, setProvOp] = useState(null);
+  const [provinces, setProv] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
   const [openDownload, setOpenDownload] = useState(false);
@@ -58,6 +59,7 @@ const Report = () => {
     await setStartDownload(new Date());
     await setNow(null);
     await setOpenDownload(true);
+    const prov = provinces.find(x => x.name == province)
     const param = {
       reportId: id,
       accountType, 
@@ -67,7 +69,8 @@ const Report = () => {
       startDate: startDate ? saveDate(startDate) : null, 
       endDate: endDate ? saveDate(endDate) : null, 
       year, 
-      province, creditorType, creditor, debtType, debtStatus ,
+      province: prov ? prov?.id : 0, 
+      creditorType, creditor, debtType, debtStatus ,
       type: 'application/octet-stream', filename: filenames[id - 1]
     }
     var myInterval = setInterval(async () => {
@@ -145,6 +148,7 @@ const Report = () => {
     } else await setYearOp(null);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
+      await setProv(resultProv.data)
       await setProvOp(temp);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
