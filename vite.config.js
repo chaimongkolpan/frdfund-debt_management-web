@@ -126,6 +126,8 @@ export default defineConfig({
             'date-fns/locale/th', 
             'date-fns', 
             'lodash/range',
+            'prop-types', 
+            'classnames',
         ],
     },
     build: {
