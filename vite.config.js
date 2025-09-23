@@ -24,16 +24,17 @@ export default defineConfig({
             'debtinfo.frdfund.org'
         ],
         strictPort: true,
-        hmr: {
-            protocol: 'ws'
-        },
-        proxy: {
-          '^/uat/.*': {
-            target: 'http://localhost:5000',
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/uat/, ''),
-          },
-        },
+        hmr: false
+        // hmr: {
+        //     protocol: 'ws'
+        // },
+        // proxy: {
+        //   '^/uat/.*': {
+        //     target: 'http://localhost:5000',
+        //     changeOrigin: true,
+        //     rewrite: (path) => path.replace(/^\/uat/, ''),
+        //   },
+        // },
     },
     css: {
         preprocessorOptions: {
@@ -103,12 +104,29 @@ export default defineConfig({
                 }
             ]
         },
-        optimizeDeps: {
-          include: [
+        include: [
             'react-router-dom',
             '@remix-run/router',
-          ],
-        },
+            'react-dom/client', 
+            'react-router-dom', 
+            'react-redux', 
+            'react-hot-toast', 
+            '@reduxjs/toolkit', 
+            '@casl/react', 
+            '@casl/ability', 
+            'reactstrap', 
+            'axios',
+            'lodash', 
+            'moment', 
+            'react-feather', 
+            'react-paginate',
+            'react-router', 
+            'react-dropzone', 
+            'react-datepicker', 
+            'date-fns/locale/th', 
+            'date-fns', 
+            'lodash/range',
+        ],
     },
     build: {
         minify: false,
