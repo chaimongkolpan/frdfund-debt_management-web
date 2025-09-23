@@ -32,11 +32,6 @@ export default defineConfig({
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/uat/, ''),
           },
-          '/uat/socket.io': {
-            target: 'ws://localhost:5000',
-            ws: true,
-            rewriteWsOrigin: true,
-          },
         },
     },
     css: {
@@ -106,7 +101,13 @@ export default defineConfig({
                     }
                 }
             ]
-        }
+        },
+        optimizeDeps: {
+          include: [
+            'react-router-dom',
+            '@remix-run/router',
+          ],
+        },
     },
     build: {
         minify: false,
