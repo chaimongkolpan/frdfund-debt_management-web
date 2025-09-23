@@ -21,7 +21,10 @@ export default defineConfig({
         allowedHosts: [
             'fonts.googleapis.com',
             'debtinfo.frdfund.org'
-        ]
+        ],
+        hmr: {
+            wss: false, 
+        },
     },
     css: {
         preprocessorOptions: {

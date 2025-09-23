@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
 import { getUserData } from "@utils";
 import According from "@views/components/panel/according";
-import Modal from "@views/components/modal/FullModal";
+import Modal from "@views/components/modal/fullModal";
 import Loading from "@views/components/modal/loading";
 import Filter from "@views/components/debtRegister/filterNpa";
 import BigDataTable from "@views/components/debtRegister/bigdataTableNpa";

@@ -5,7 +5,7 @@ import DropZone from "@views/components/input/DropZone";
 import Loading from "@views/components/modal/loading";
 import logo from "@src/assets/images/icons/logo.png";
 import According from "@views/components/panel/according";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import DatePicker from "@views/components/input/DatePicker";
 import BookNo from "@views/components/input/BookNo";
 import Filter from "@views/components/confirm-committee/filter";

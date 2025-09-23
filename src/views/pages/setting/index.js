@@ -3,7 +3,7 @@ import { getUserData } from "@utils";
 import According from "@views/components/panel/according";
 import UserTable from "@views/components/setting/userTable";
 import NplTable from "@views/components/setting/nplTable";
-import CustomModal from "@views/components/modal/CustomModal";
+import CustomModal from "@views/components/modal/customModal";
 import { 
   getUsers,
   getNplCondition,

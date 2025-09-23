@@ -1,0 +1,5 @@
+docker build --platform=linux/amd64 -t frdfund-web:1.0.1 .
+docker run -p 80:80 frdfund-web --name frdfund-web
+
+docker build --platform=linux/amd64 -t frdfund-web-uat:1.0.1 .
+docker run -p 5000:5000 frdfund-web-uat --name frdfund-web-uat
