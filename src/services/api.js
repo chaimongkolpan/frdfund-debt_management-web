@@ -3228,7 +3228,7 @@ export const downloadOldReport = async (params) => {
     if (LegalNo != null && LegalNo != undefined && LegalNo != '') param += 'legalno=' + LegalNo + '&';
     var ApproveNo = params.committee;
     if (ApproveNo != null && ApproveNo != undefined && ApproveNo != '') param += 'approveno=' + ApproveNo + '&';
-    var ProvinceId = 0;
+    var ProvinceId = params.province;
     if (ProvinceId != null && ProvinceId != undefined && ProvinceId != '') param += 'province=' + ProvinceId + '&';
     var AccountStatus = (params.debtStatus == 'all' ? 'ทั้งหมด' : params.debtStatus);
     if (AccountStatus != null && AccountStatus != undefined && AccountStatus != '') param += 'account_status=' + AccountStatus + '&'; 
