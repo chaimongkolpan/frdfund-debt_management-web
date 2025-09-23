@@ -4,13 +4,17 @@ ENV NODE_OPTIONS=--max-old-space-size=4096
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+RUN npm install
 
 COPY . .
-
 RUN npm ci --silent
-
 RUN npm run build
 
-EXPOSE 80
 
-CMD ["npm", "run", "dev"]
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+# CMD ["npm", "run", "dev"]
