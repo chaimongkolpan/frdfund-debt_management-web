@@ -1,4 +1,4 @@
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 const DebtRegisterConfirmTable = (props) => {
   const { data } = props;
   const RenderData = (item, index) => {
@@ -24,7 +24,7 @@ const DebtRegisterConfirmTable = (props) => {
         <td>{item.creditor_province}</td>
         <td>{item.creditor_branch}</td>
         <td>{item.contract_no}</td>
-        <td>{item.remaining_principal_contract}</td>
+        <td>{toCurrency(item.remaining_principal_contract)}</td>
         <td>{item.dept_status}</td>
         <td>{item.collateral_type}</td>
         <td>{item.purpose_loan_contract}</td>

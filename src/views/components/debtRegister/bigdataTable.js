@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 const DebtRegisterBigDataTable = (props) => {
   const { result, handleSubmit, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
@@ -52,7 +52,7 @@ const DebtRegisterBigDataTable = (props) => {
         <td>{item.creditor_province}</td>
         <td>{item.creditor_branch}</td>
         <td>{item.contract_no}</td>
-        <td>{item.remaining_principal_contract}</td>
+        <td>{toCurrency(item.remaining_principal_contract)}</td>
         <td>{item.dept_status}</td>
         <td>{item.collateral_type}</td>
         <td>{item.purpose_loan_contract}</td>
