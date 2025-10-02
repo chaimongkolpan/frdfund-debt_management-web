@@ -2939,7 +2939,11 @@ export const getPrintClose = async (filter) => {
 export const printClose = async (params) => {
   const path = '/report/Print-Close';
   try {
-    const result = await axios.post(path, params.data, { responseType: "blob" });
+    const data = {
+      ...params.data,
+      isClose: true,
+    }
+    const result = await axios.post(path, data, { responseType: "blob" });
     if (result.status == 200) {
       const blob = new Blob([result.data], { type: params.type });
       SaveAs(blob, params.filename);
