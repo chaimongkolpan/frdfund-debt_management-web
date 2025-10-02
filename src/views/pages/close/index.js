@@ -190,7 +190,7 @@ const Close = () => {
   const print = async () => {
     const result = await getPrintClose({ id_KFKPolicy: policy.id_KFKPolicy, calDate: ToDateDb(closeDate, false)});
     if (result.isSuccess) {
-      await printClose({ data: result.data, type: 'application/octet-stream', filename: 'ใบแจ้งการชำระเงิน.xlsx' });
+      await printClose({ data: result.data, type: 'application/octet-stream', filename: 'ใบแจ้งการชำระเงิน.pdf' });
     } else {
       toast((t) => (
         <ToastError t={t} title={'ดาวน์โหลดข้อมูล'} message={'ดาวน์โหลดไม่สำเร็จ'} />
