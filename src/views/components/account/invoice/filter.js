@@ -14,7 +14,7 @@ const Filter = (props) => {
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
-  const statusOp = ["แจ้งเตือน","ปกติ"];
+  const statusOp = ["แจ้งเตือน","ปกติ","สิ้นสุดสัญญา"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
