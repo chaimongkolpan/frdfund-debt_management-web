@@ -29,7 +29,7 @@ const PageContent = () => {
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
   const handlePrint = async (selected) => {
-    const ids = selected.map(item => item.id_PlanPay)
+    const ids = selected.map(item => { return { id: item.id_PlanPay, policyNo: item.policyNO } })
     const selectedData = await getInvoice(ids);
     const receipts = selectedData.data;
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
@@ -39,7 +39,7 @@ const PageContent = () => {
     }
   }
   const printReceipt = async (item) => {
-    const ids = [item.id_PlanPay]
+    const ids = [{ id:item.id_PlanPay, policyNo: item.policyNO }]
     const selectedData = await getInvoice(ids);
     const receipts = selectedData.data.map(item => { return { ...item, isExportExcel: false }});
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
