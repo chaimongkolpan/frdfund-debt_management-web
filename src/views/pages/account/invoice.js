@@ -29,31 +29,37 @@ const PageContent = () => {
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
   const handlePrint = async (selected) => {
+    await setLoadBigData(true);
     const ids = selected.map(item => { return { id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO } })
     const selectedData = await getInvoice(ids);
     const receipts = selectedData.data;
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }
   }
   const printReceipt = async (item) => {
+    await setLoadBigData(true);
     const ids = [{ id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO }]
     const selectedData = await getInvoice(ids);
     const receipts = selectedData.data.map(item => { return { ...item, isExportExcel: false }});
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }
   }
   const handleShowDetail = async (item) => {
+    await setLoadBigData(true);
     await setPolicy(item);
     const result = await getInvoiceByPolicyNo(item.policyNO);
     if (result.isSuccess) {
       await setPlans(result.data)
     }
+    await setLoadBigData(false);
     await setOpenDetail(true);
   }
   const onSearch = async (filter) => {

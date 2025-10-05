@@ -79,15 +79,19 @@ const PageContent = () => {
     await setOpenPlan(true);
   }
   const printCard = async () => {
+    await setLoadBigData(true);
     const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', data: cardPrint };
     const result = await printCardRe(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }
   }
   const printPlan = async () => {
+    await setLoadBigData(true);
     const param = { type: 'application/octet-stream', filename: 'ชำระหนี้คืน_' + (new Date().getTime()) + '.xlsx', data: planPrint };
     const result = await printPlanRe(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }

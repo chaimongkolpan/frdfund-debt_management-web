@@ -185,7 +185,7 @@ const DebtFilterNpa = (props) => {
             <Dropdown 
               title={'จังหวัด'} 
               defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
-              options={provOp} hasAll={provOp.length > 1}
+              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
               handleChange={(val) => onChange('province', val)} />
           )}
         </div>
