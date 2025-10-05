@@ -140,7 +140,7 @@ const Report = () => {
                             <Dropdown 
                               title={'จังหวัด'} 
                               containerClassname={'mb-3'} 
-                              defaultValue={'all'} 
+                              defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
                               options={provOp} hasAll={provOp.length > 1}
                               handleChange={(val) => onChange('province', val)} />
                           )}
