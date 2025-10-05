@@ -140,9 +140,9 @@ const Filter = (props) => {
             <Dropdown 
               title={'จังหวัด'} 
               defaultValue={'all'} 
-              options={provOp}
+              options={provOp} hasAll={provOp.length > 1}
               handleChange={(val) => onChange('loan_province', val)}
-              hasAll />
+              />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">

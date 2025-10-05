@@ -115,9 +115,8 @@ const Filter = (props) => {
             <Dropdown 
               title={'จังหวัด'} 
               defaultValue={'all'} 
-              options={provOp}
-              handleChange={(val) => onChange('loan_province', val)}
-              hasAll />
+              options={provOp} hasAll={provOp.length > 1}
+              handleChange={(val) => onChange('loan_province', val)} />
           )}
         </div>
 
