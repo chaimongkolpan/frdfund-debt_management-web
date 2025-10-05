@@ -188,10 +188,13 @@ const Close = () => {
     await setOpenDetail(true);
   }
   const print = async () => {
+    await setLoadBigData(true);
     const result = await getPrintClose({ id_KFKPolicy: policy.id_KFKPolicy, calDate: ToDateDb(closeDate, false)});
     if (result.isSuccess) {
       await printClose({ data: result.data, type: 'application/octet-stream', filename: 'ใบแจ้งการชำระเงิน.pdf' });
+      await setLoadBigData(false);
     } else {
+      await setLoadBigData(false);
       toast((t) => (
         <ToastError t={t} title={'ดาวน์โหลดข้อมูล'} message={'ดาวน์โหลดไม่สำเร็จ'} />
       ));

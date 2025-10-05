@@ -101,7 +101,7 @@ const ClassifySearchFilter = (props) => {
 
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
@@ -175,7 +175,7 @@ const ClassifySearchFilter = (props) => {
             <Dropdown 
               title={'จังหวัด'} 
               defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
-              options={provOp} hasAll={provOp.length > 1}
+              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
               handleChange={(val) => onChange('province', val)} />
           )}
         </div>

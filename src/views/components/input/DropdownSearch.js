@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input, Label } from "reactstrap";
 const DropdownSearch = (props) => {
-  const { title, placeholder, handleChange, containerClassname, classname, hasAll, defaultValue, options, onModal } = props;
+  const { title, placeholder, handleChange, containerClassname, classname, hasAll, defaultValue, options, onModal, hideSel } = props;
   const [val, setValue] = useState(defaultValue ?? null);
   const onChange = (newval) => {
     setValue(newval?.target.value);
@@ -96,7 +96,9 @@ const DropdownSearch = (props) => {
         ) : (
           <option value="" selected>กรุณาเลือกข้อมูล...</option>
         )} */}
+        {!hideSel && (
          <option value="">{hasAll ? 'ทั้งหมด' : 'กรุณาเลือกข้อมูล...'}</option>
+        )}
         {options && (
           options.map((option, index) => (
             <option key={index} value={option}>{option}</option>
