@@ -31,6 +31,7 @@ const SearchClassifyNPADetail = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const qprov = searchParams.get("province");
   const qcreditorType = searchParams.get("creditor-type");
+  const [debt, setDebt] = useState(null);
   const [debts, setDebts] = useState(null);
   const [collaterals, setCollaterals] = useState(null);
   const [selectedDebt, setShowDebts] = useState(null);
@@ -157,12 +158,18 @@ const SearchClassifyNPADetail = () => {
     await setOpenBorrow(false);
   }
   const handleDocument = () => {
+    setDebt(item)
     setOpenDocument(true);
+  }
+  const handleCloseDocument = (flag) => {
+    setDebt(flag ? debt : null)
+    setOpenDocument(flag);
   }
   const handleSubmitDocument = async () => {
       toast((t) => (
         <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
+    setDebt(null)
     await fetchData();
     await setOpenDocument(false);
   }
@@ -233,9 +240,9 @@ const SearchClassifyNPADetail = () => {
                   children={(
                     <>
                       <div className="d-flex mb-3 flex-row-reverse">
-                        {can_action && (
+                        {/* {can_action && (
                           <button type="button" className="btn btn-info btn-sm ms-2" onClick={() => handleDocument()}><span className="far fa-file-alt"></span> เอกสารประกอบ</button>
-                        )}
+                        )} */}
                         <button type="button" className="btn btn-warning btn-sm ms-2" onClick={() => handleBorrow()}><span className="fas fa-users"></span> ผู้รับสภาพหนี้แทน</button>
                       </div>
                       <DebtManageTable data={debts} 
@@ -245,6 +252,7 @@ const SearchClassifyNPADetail = () => {
                         handleCancelCombine={handleCancelCombine} 
                         handleCancelSplit={handleCancelSplit} 
                         handleCreateNPL={handleCreateNPL}
+                        handleDocument={handleDocument}
                         can_action={can_action}
                       />
                       <br />
@@ -304,7 +312,7 @@ const SearchClassifyNPADetail = () => {
               
               {/* start modal เอกสารประกอบ*/}
               {isOpenDocument && (
-                <DocumentModal isOpen={isOpenDocument} setModal={setOpenDocument} onOk={handleSubmitDocument} onClose={() => setOpenDocument(false)} data={debts} />
+                <DocumentModal isOpen={isOpenDocument} setModal={handleCloseDocument} onOk={handleSubmitDocument} onClose={() => handleCloseDocument(false)} data={debt} />
               )}
               {/* end modal เอกสารประกอบ*/}
 
