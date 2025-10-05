@@ -2748,7 +2748,7 @@ export const exportSaveFollow = async (filter) => {
   try {
     const result = await axios.post(path, filter, { responseType: "blob" });
     if (result.status == 200) {
-      const blob = new Blob([result.data], { type: params.type });
+      const blob = new Blob([result.data], { type: 'application/octet-stream' });
       SaveAs(blob, 'การติดตามชำระหนี้คืน.xlsx');
     }
   } catch (e) {
