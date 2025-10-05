@@ -183,9 +183,8 @@ const DebtRegisterFilter = (props) => {
             <Dropdown 
               title={'จังหวัด'} 
               defaultValue={'all'} 
-              options={provOp}
-              handleChange={(val) => onChange('province', val)}
-              hasAll />
+              options={provOp} hasAll={provOp.length > 1}
+              handleChange={(val) => onChange('province', val)} />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
