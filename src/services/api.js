@@ -2743,6 +2743,20 @@ export const searchFollow = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const exportSaveFollow = async (filter) => {
+  const path = '/Account/export-follow';
+  try {
+    const result = await axios.post(path, filter, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, 'การติดตามชำระหนี้คืน.xlsx');
+    }
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+  return;
+};
 export const saveIsLoss = async (params) => {
   const path = '/Account/add-is-loss';
   try {
