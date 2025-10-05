@@ -1,6 +1,6 @@
 import { toCurrency } from "@utils";
 const ClassifyDebtManageTable = (props) => {
-  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleCreateNPL, can_action } = props;
+  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleCreateNPL, handleDocument, can_action } = props;
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index} style={{
@@ -19,7 +19,18 @@ const ClassifyDebtManageTable = (props) => {
         <td>{toCurrency(item.npL_creditors_receive)}</td>
         <td>{toCurrency(item.frD_total_payment)}</td>
         <td>{item.borrower_status}</td>
-        <td>{item.hasDocument && (<i className="fas fa-check"></i>)}</td>
+        {/* <td>{item.hasDocument && (<i className="fas fa-check"></i>)}</td> */}
+        <td style={{ paddingBlock: 10 }}>
+          {item.hasDocument ? (
+            <div className="d-flex justify-content-center"> 
+              <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" disabled={!can_action} onClick={() => handleDocument(item)}><i className="far fa-file"></i></button>
+            </div>
+          ) : (
+            <div className="d-flex justify-content-center"> 
+              <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" disabled={!can_action} onClick={() => handleDocument(item)}><i className="far fa-file"></i></button>
+            </div>
+          )}
+        </td>
         <td>{item.hasNPL && (<i className="fas fa-check"></i>)}</td>
         <td>
           <div className="d-flex justify-content-center"> 

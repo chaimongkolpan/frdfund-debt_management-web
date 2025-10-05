@@ -1,6 +1,6 @@
 import { toCurrency } from "@utils";
 const ClassifyDebtManageTable = (props) => {
-  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, can_action } = props;
+  const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleDocument, can_action } = props;
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index} style={{
@@ -18,7 +18,18 @@ const ClassifyDebtManageTable = (props) => {
         <td>{item.dept_status}</td>
         <td>{item.collateral_type}</td>
         <td>{item.borrower_status}</td>
-        <td>{item.hasDocument && (<i className="fas fa-check"></i>)}</td>
+        {/* <td>{item.hasDocument && (<i className="fas fa-check"></i>)}</td> */}
+        <td style={{ paddingBlock: 10 }}>
+          {item.hasDocument ? (
+            <div className="d-flex justify-content-center"> 
+              <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" disabled={!can_action} onClick={() => handleDocument(item)}><i className="far fa-file"></i></button>
+            </div>
+          ) : (
+            <div className="d-flex justify-content-center"> 
+              <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger-dark px-0" disabled={!can_action} onClick={() => handleDocument(item)}><i className="far fa-file"></i></button>
+            </div>
+          )}
+        </td>
         <td>{item.hasNPA && (<i className="fas fa-check"></i>)}</td>
         <td>
           <div className="d-flex justify-content-center"> 

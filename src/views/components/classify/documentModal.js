@@ -12,28 +12,29 @@ const FullModal = (props) => {
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
   const [files, setFiles] = useState(null);
+  const [oldfiles, setOldFiles] = useState(null);
   const toggle = () => setModal(!isOpen);
   const onSubmit = async () => {
     if (files && files.length > 0) {
-      const selectedData = data.filter((i, index) => selected[index]);
+      // const selectedData = data.filter((i, index) => selected[index]);
       const form = new FormData();
-      await new Promise((resolve, reject) => {
-        try {
-          const param = selectedData.map((item,index) => {
-            form.append('data[' + index + '].id_debt_management', item.id_debt_management);
-            form.append('data[' + index + '].debt_management_audit_status', item.debt_management_audit_status);
-            form.append('data[' + index + '].debt_management_type', item.debt_management_type);
-            return {
-              id_debt_management: item.id_debt_management,
-              debt_management_audit_status: item.debt_management_audit_status,
-              debt_management_type: item.debt_management_type
-            }
-          });
-          resolve(param);
-        } catch {
-          reject(null);
-        }
-      });
+      form.append('data.id_debt_management', data.id_debt_management);
+      form.append('data.debt_management_audit_status', data.debt_management_audit_status);
+      form.append('data.debt_management_type', data.debt_management_type);
+      // await new Promise((resolve, reject) => {
+      //   try {
+      //     const param = selectedData.map((item,index) => {
+      //       return {
+      //         id_debt_management: item.id_debt_management,
+      //         debt_management_audit_status: item.debt_management_audit_status,
+      //         debt_management_type: item.debt_management_type
+      //       }
+      //     });
+      //     resolve(param);
+      //   } catch {
+      //     reject(null);
+      //   }
+      // });
       files.forEach((item) => form.append("files", item));
       const result = await uploadDocumentClassify(form);
       if (result.isSuccess) {
@@ -42,6 +43,13 @@ const FullModal = (props) => {
     } else {
       console.error('no file upload');
     }
+  }
+  const download = (file) => {
+    console.log('download', file)
+  }
+  const RemoveFile = (index) => {
+    oldfiles.splice(index, 1);
+    setOldFiles(oldfiles);
   }
   const onChange = async (id) => {
     await setSelected((prev) => {
@@ -59,15 +67,15 @@ const FullModal = (props) => {
     await setSelected(data.map(() => checked));
     await setIsAll(checked)
   }
-  const RenderData = (item, index, checked) => {
+  const RenderData = (item) => {
     return (item && (
-      <tr key={index}>
-        <td className="fs-9">
+      <tr>
+        {/* <td className="fs-9">
           <div className="form-check ms-2 mb-0 fs-8">
             <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
-        </td>
-        <td>{index + 1}</td>
+        </td> */}
+        <td>{1}</td>
         <td>{item.checking_management_status}</td>
         <td>{item.debt_manage_contract_no}</td>
         <td>{item.creditor_type}</td>
@@ -87,7 +95,9 @@ const FullModal = (props) => {
   },[selected])
   useEffect(() => {
     if(data) {
-      setSelected(data.map(() => false));
+      if (data.document_name) {
+        setOldFiles(data.document_name.split(','))
+      } else setOldFiles(null)
     }
   },[data])
   return (
@@ -104,11 +114,11 @@ const FullModal = (props) => {
                         <table className="table table-sm table-bordered fs-9 mb-0">
                           <thead className="align-middle text-center text-nowrap" style={{backgroundColor: '#d9fbd0',border: '#cdd0c7'}}>
                             <tr>
-                              <th className="white-space-nowrap fs-9 ps-0" rowSpan="2" style={{ minWidth: 30 }}>
+                              {/* <th className="white-space-nowrap fs-9 ps-0" rowSpan="2" style={{ minWidth: 30 }}>
                                 <div className="form-check ms-2 mb-0 fs-8">
                                   <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                                 </div>
-                              </th>
+                              </th> */}
                               <th style={{ minWidth: 30 }}>#</th>
                               <th>สถานะสัญญาจำแนกมูลหนี้</th>
                               <th>เลขที่สัญญา</th>
@@ -122,7 +132,14 @@ const FullModal = (props) => {
                             </tr>
                           </thead>
                           <tbody className="list text-center align-middle">
-                            {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
+                            {/* {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
+                              <tr>
+                                <td className="fs-9 text-center align-middle" colSpan={11}>
+                                  <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                                </td>
+                              </tr>
+                            )} */}
+                            {(data) ? (RenderData(data)) : (
                               <tr>
                                 <td className="fs-9 text-center align-middle" colSpan={11}>
                                   <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
@@ -136,6 +153,31 @@ const FullModal = (props) => {
                   </div>
                 </div>
               </div>
+              {oldfiles && (
+                <div className="col-12">
+                  {oldfiles.map((file, index) => (
+                    <div key={index} className="d-flex pb-3 border-bottom border-translucent media px-2">
+                      <div className="border p-2 rounded-2 me-2">
+                        <img className="rounded-2" width={25} src="/assets/img/icons/file.png" alt="..." data-dz-thumbnail="data-dz-thumbnail" />
+                      </div>
+                      <div className="flex-1 d-flex flex-between-center">
+                        <div>
+                          <h6 data-dz-name="data-dz-name">{file}</h6>
+                        </div>
+                        <div className="dropdown">
+                          <button className="btn btn-link text-body-quaternary btn-sm dropdown-toggle btn-reveal dropdown-caret-none" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span className="fas fa-ellipsis-h"></span>
+                          </button>
+                          <div className="dropdown-menu dropdown-menu-end border border-translucent py-2">
+                            <button className="dropdown-item" type="button" onClick={() => download(file)}>Download File</button>
+                            {/* <button className="dropdown-item" type="button" onClick={() => RemoveFile(index)}>Remove File</button> */}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="col-12 ">
                 <DropZone onChange={onFileChange} clearFile={clearFile} accept={'*'} />
               </div>
