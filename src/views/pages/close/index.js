@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner, Label, Input } from 'reactstrap'
 import { stringToDateTh, toCurrency, getUserData, ToDateDb } from "@utils";
 import According from "@views/components/panel/according";
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/close/filter";
@@ -190,7 +190,7 @@ const Close = () => {
   const print = async () => {
     const result = await getPrintClose({ id_KFKPolicy: policy.id_KFKPolicy, calDate: ToDateDb(closeDate, false)});
     if (result.isSuccess) {
-      await printClose({ data: result.data, type: 'application/octet-stream', filename: 'ใบแจ้งการชำระเงิน.xlsx' });
+      await printClose({ data: result.data, type: 'application/octet-stream', filename: 'ใบแจ้งการชำระเงิน.pdf' });
     } else {
       toast((t) => (
         <ToastError t={t} title={'ดาวน์โหลดข้อมูล'} message={'ดาวน์โหลดไม่สำเร็จ'} />

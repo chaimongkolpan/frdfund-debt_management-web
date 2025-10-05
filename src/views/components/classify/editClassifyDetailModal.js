@@ -7,8 +7,8 @@ import DatePicker from "@views/components/input/DatePicker";
 import According from "@views/components/panel/according";
 import { 
   getProvinces,
-  getCreditorTypes,
-  getCreditors,
+  getBigDataCreditorTypes,
+  getBigDataCreditors,
   upsertGuarantorClassify,
   removeGuarantorClassify,
   getDebtManagementDetailClassify,
@@ -466,7 +466,7 @@ const FullModal = (props) => {
     await setMounted(true);
   }
   const getCreditorType = async () => {
-    const result = await getCreditorTypes(null);
+    const result = await getBigDataCreditorTypes(null);
     if (result.isSuccess) {
       const temp = result.data.map(item => item.name);
       await setCreditorTypeOp(temp);
@@ -476,7 +476,7 @@ const FullModal = (props) => {
     await setMounted(true);
   }
   const getCreditor = async () => {
-    const result = await getCreditors(null, creditor_type);
+    const result = await getBigDataCreditors(null, creditor_type);
     if (result.isSuccess) {
       const temp = result.data.map(item => item.name);
       await setCreditorOp(temp);

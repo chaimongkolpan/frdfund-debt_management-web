@@ -13,13 +13,17 @@ import {
 import { getUserData } from '@utils'
 const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 const Sidebar = props => {
+  const user = getUserData();
+  const branchList = [1,4]; // [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  const officeList = [1,2,3,5,6,7,8,9,10,11,12,13,14];
+  const importList = [1,2,4,7,8,9];
   // ** Props
-  const { menuCollapsed,setMenuCollapsed } = props
+  const { menuCollapsed,setMenuCollapsed, menuVisibility, windowWidth } = props
   const path = window.location.pathname
   const [alert, setAlert] = useState(null);
-  const branchList = [1,4];
-  const officeList = [1,2,7,8];
-  const user = getUserData();
+  const handleHide = async(flag) => {
+    await setMenuCollapsed(flag);
+  }
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
@@ -55,8 +59,8 @@ const Sidebar = props => {
   }, [alert])
   return (
     <Fragment>
-      <nav className="navbar navbar-vertical navbar-expand-lg" style={{ position: 'fixed' }}>
-        <div className="collapse navbar-collapse" id="navbarVerticalCollapse">
+      <nav className={`navbar navbar-vertical navbar-expand-lg ${(windowWidth < 992 && !menuVisibility) ? "d-none" : ""}`} style={{ position: 'fixed', backgroundColor: 'transparent' }}>
+        <div className="collapse navbar-collapse" id="navbarVerticalCollapse" style={{ backgroundColor: '#ffffff' }}>
           {/* scrollbar removed*/}
           <div className="navbar-vertical-content">
             <ul className="navbar-nav flex-column" id="navbarVerticalNav">
@@ -107,12 +111,14 @@ const Sidebar = props => {
                     <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-ClassifyDebt">
                       <li className="collapsed-nav-item-title d-none">จำแนกมูลหนี้
                       </li>
-                      <li className="nav-item">
-                        <Link className={`nav-link ${path == '/classify/import' ? 'active' : ''}`} to={`${prefix_url + "/classify/import"}`}>
-                          <div className="d-flex align-items-center"><span className="nav-link-text">นำไฟล์เข้าระบบ</span></div>
-                        </Link>
-                        {/* more inner pages*/}
-                      </li>
+                      {importList.includes(user?.role) && (
+                        <li className="nav-item">
+                          <Link className={`nav-link ${path == '/classify/import' ? 'active' : ''}`} to={`${prefix_url + "/classify/import"}`}>
+                            <div className="d-flex align-items-center"><span className="nav-link-text">นำไฟล์เข้าระบบ</span></div>
+                          </Link>
+                          {/* more inner pages*/}
+                        </li>
+                      )}
                       <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/classify/search') ? 'active' : ''}`} href="#nv-Search" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-Search">
                           <div className="d-flex align-items-center">
@@ -531,7 +537,7 @@ const Sidebar = props => {
                           </ul>
                         </div>
                       </li>
-                      <li className="nav-item">
+                      {/* <li className="nav-item">
                         <a className={`nav-link dropdown-indicator ${path.includes('/approval/additional-action') ? 'active' : ''}`} href="#nv-RequestApprovalPayAdditionalActions" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayAdditionalActions">
                           <div className="d-flex align-items-center">
                             <div className="dropdown-indicator-icon-wrapper">
@@ -540,7 +546,6 @@ const Sidebar = props => {
                             <span className="nav-link-text">การดำเนินการเพิ่มเติม</span>
                           </div>
                         </a>
-                        {/* more inner pages*/}
                         <div className="parent-wrapper">
                           <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayAdditionalActions">
                             <li className="nav-item">
@@ -556,7 +561,7 @@ const Sidebar = props => {
                             </li>
                           </ul>
                         </div>
-                      </li>
+                      </li> */}
                     </ul>
                   </div>
                 </div>
@@ -888,7 +893,7 @@ const Sidebar = props => {
           </div>
         </div>
         <div className="navbar-vertical-footer">
-          <button className="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center" onClick={() => setMenuCollapsed(!menuCollapsed)}>
+          <button className="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center" onClick={() => handleHide(!menuCollapsed)}>
             <span className="uil uil-left-arrow-to-left fs-8"></span>
             <span className="uil uil-arrow-from-right fs-8"></span>
             <span className="navbar-vertical-footer-text ms-2">ซ่อนเมนู</span>

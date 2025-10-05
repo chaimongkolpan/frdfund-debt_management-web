@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 export default defineConfig({
+    base: process.env.ENVIRONMENT == 'uat' ? '/uat/': '',
     plugins: [react()],
     define: {
         global: 'globalThis',
@@ -18,6 +19,22 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         port: Number(process.env.PORT) || 3000,
+        allowedHosts: [
+            'fonts.googleapis.com',
+            'debtinfo.frdfund.org'
+        ],
+        strictPort: true,
+        hmr: false
+        // hmr: {
+        //     protocol: 'ws'
+        // },
+        // proxy: {
+        //   '^/uat/.*': {
+        //     target: 'http://localhost:5000',
+        //     changeOrigin: true,
+        //     rewrite: (path) => path.replace(/^\/uat/, ''),
+        //   },
+        // },
     },
     css: {
         preprocessorOptions: {
@@ -86,7 +103,32 @@ export default defineConfig({
                     }
                 }
             ]
-        }
+        },
+        include: [
+            'react-router-dom',
+            '@remix-run/router',
+            'react-dom/client', 
+            'react-router-dom', 
+            'react-redux', 
+            'react-hot-toast', 
+            '@reduxjs/toolkit', 
+            '@casl/react', 
+            '@casl/ability', 
+            'reactstrap', 
+            'axios',
+            'lodash', 
+            'moment', 
+            'react-feather', 
+            'react-paginate',
+            'react-router', 
+            'react-dropzone', 
+            'react-datepicker', 
+            'date-fns/locale/th', 
+            'date-fns', 
+            'lodash/range',
+            'prop-types', 
+            'classnames',
+        ],
     },
     build: {
         minify: false,

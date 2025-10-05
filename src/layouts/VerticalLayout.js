@@ -37,7 +37,7 @@ const VerticalLayout = props => {
 
   //** This function will detect the Route Change and will hide the menu on menu item click
   useEffect(() => {
-    if (menuVisibility && windowWidth < 1200) {
+    if (menuVisibility && windowWidth < 992) {
       setMenuVisibility(false)
     }
   }, [location])
@@ -49,11 +49,6 @@ const VerticalLayout = props => {
     }
   }, [windowWidth])
 
-  useEffect(() => {
-    if (window !== undefined) {
-      window.addEventListener('resize', handleWindowWidth)
-    }
-  }, [windowWidth])
   useEffect(() => {
     if (window !== undefined) {
       if (isHide) {
@@ -92,9 +87,9 @@ const VerticalLayout = props => {
         menuCollapsed={isHide}
         setMenuCollapsed={handleMenuCollapsed}
         menuVisibility={menuVisibility}
-        setMenuVisibility={setMenuVisibility}
+        windowWidth={windowWidth}
       />
-      <NavbarComponent setMenuVisibility={setMenuVisibility} />
+      <NavbarComponent menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
       <Outlet />
     </Fragment>
   )

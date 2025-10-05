@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
 import { stringToDateTh, toCurrency, ToDateDb, getUserData } from "@utils";
 import According from "@views/components/panel/according";
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/follow/filter";

@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
 import { stringToDateTh, toCurrency, getUserData } from "@utils";
 import According from "@views/components/panel/according";
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/operation-land/filterBorrow";
 import SearchTable from "@views/components/account/operation-land/searchTableBorrow";
-import DetailAsset from "@views/components/account/operation-land/DetailAssetModal";
+import DetailAsset from "@views/components/account/operation-land/detailAssetModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
@@ -20,6 +20,8 @@ import {
 
 const user = getUserData();
 const PageContent = () => {
+  const allow_roles = [1,2,4,5];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -97,7 +99,7 @@ const PageContent = () => {
                       <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                       <br />
                       {data && (
-                        <SearchTable result={data} filter={filter} getData={onSearch} handleShowDetail={handleShowDetail} handleHistory={handleHistory}/>
+                        <SearchTable result={data} filter={filter} getData={onSearch} handleShowDetail={handleShowDetail} handleHistory={handleHistory} can_action={can_action} />
                       )}
                     </>
                   )}

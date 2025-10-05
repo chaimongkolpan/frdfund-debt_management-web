@@ -8,11 +8,11 @@ import Textbox from "@views/components/input/Textbox";
 import { Spinner } from 'reactstrap'
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import { 
   getProvinces,
-  getCreditors,
-  getCreditorTypes,
+  getBigDataCreditors,
+  getBigDataCreditorTypes,
   getYears,
   downloadReport,
   downloadOldReport,
@@ -36,6 +36,7 @@ const Report = () => {
   const [isLoad, setLoad] = useState(false);
   const [yearOp, setYearOp] = useState(null);
   const [provOp, setProvOp] = useState(null);
+  const [provinces, setProv] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
   const [openDownload, setOpenDownload] = useState(false);
@@ -56,7 +57,9 @@ const Report = () => {
   ];
   const download = async (id) => {
     await setStartDownload(new Date());
+    await setNow(null);
     await setOpenDownload(true);
+    const prov = provinces.find(x => x.name == province)
     const param = {
       reportId: id,
       accountType, 
@@ -66,83 +69,55 @@ const Report = () => {
       startDate: startDate ? saveDate(startDate) : null, 
       endDate: endDate ? saveDate(endDate) : null, 
       year, 
-      province, creditorType, creditor, debtType, debtStatus ,
+      province: prov ? prov?.id : 0, 
+      creditorType, creditor, debtType, debtStatus ,
       type: 'application/octet-stream', filename: filenames[id - 1]
     }
     var myInterval = setInterval(async () => {
       await setNow(new Date());
     }, 1000);
-/*
-    //var a = document.createElement('a');
-    //a.style.display = 'none';
-    //a.href = '/Report/Download?' + param;
-    //a.download = filename;
-    //document.body.appendChild(a);
-    //a.click();   
-*/
-    // if (await downloadReport(param, filenames[id - 1])) {
-    //   setLoad(false);
-    // } else {
-    //   alert('ไม่สามารถดาวน์โหลดรายงานได้');
-    //   setLoad(false);
-    // }
 
-    if (await downloadOldReport(param)) {
-      toast((t) => (
-        <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
-      ));
-      clearInterval(myInterval);
-      await setOpenDownload(false);
+    if (process.env.REPORT_NEW == "1") {
+      if (await downloadReport(param, filenames[id - 1])) {
+        toast((t) => (
+          <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'ดาวน์โหลดรายงาน'} message={'ไม่สามารถดาวน์โหลดรายงานได้'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      }
     } else {
-      toast((t) => (
-        <ToastError t={t} title={'ดาวน์โหลดรายงาน'} message={'ไม่สามารถดาวน์โหลดรายงานได้'} />
-      ));
-      clearInterval(myInterval);
-      await setOpenDownload(false);
+      if (await downloadOldReport(param)) {
+        toast((t) => (
+          <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      } else {
+        toast((t) => (
+          <ToastError t={t} title={'ดาวน์โหลดรายงาน'} message={'ไม่สามารถดาวน์โหลดรายงานได้'} />
+        ));
+        clearInterval(myInterval);
+        await setOpenDownload(false);
+      }
     }
-
-    /*
-    let reportId = 0;
-    if (id == 1) reportId = 4; if (id == 2) reportId = 5;
-    if (id == 3) reportId = 7; if (id == 4) reportId = 38;
-    if (id == 5) reportId = 9; if (id == 6) reportId = 20;
-    if (id == 7) reportId = 13; if (id == 8) reportId = 11;
-    if (id == 9) reportId = 14; if (id == 10) reportId = 39;
-
-    var param = 'id=' + reportId + '&';
-    var start =startDate;
-    if (start != null && start != undefined && start != '') param += 'start=' + saveDate(start) + '&';
-    var stop = endDate;
-    if (stop != null && stop != undefined && stop != '') param += 'stop=' + saveDate(stop) + '&';
-    if (year != null && year != undefined && year != '') param += 'year=' + (year == 'all' ? '0' : year) + '&';
-    var CreditorType = (creditorType == 'all' ? 'ทั้งหมด' : creditorType);
-    if (CreditorType != null && CreditorType != undefined && CreditorType != '') param += 'creditortype=' + CreditorType + '&';
-    var Creditor = (creditor == 'all' ? '0' : creditor);
-    if (Creditor != null && Creditor != undefined && Creditor != '') param += 'creditor=' + Creditor + '&';
-    var DebtType = (debtType == 'all' ? 'ทั้งหมด' : debtType);
-    if (DebtType != null && DebtType != undefined && DebtType != '') param += 'debttype=' + DebtType + '&';
-    var LegalNo = (accountType == 'all' ? 'ทั้งหมด' : accountType);
-    if (LegalNo != null && LegalNo != undefined && LegalNo != '') param += 'legalno=' + LegalNo + '&';
-    var ApproveNo = committee;
-    if (ApproveNo != null && ApproveNo != undefined && ApproveNo != '') param += 'approveno=' + ApproveNo + '&';
-    var ProvinceId = 0;
-    if (ProvinceId != null && ProvinceId != undefined && ProvinceId != '') param += 'province=' + ProvinceId + '&';
-    var AccountStatus = (debtStatus == 'all' ? 'ทั้งหมด' : debtStatus);
-    if (AccountStatus != null && AccountStatus != undefined && AccountStatus != '') param += 'account_status=' + AccountStatus + '&'; 
-    window.open('https://debtinfo.frdfund.org/report-old/report/Download?exportpdf=true&' + param, '_blank').focus();
-    */
   }
   const onChange = async(key, val) => {
     if (key == 'province') {
       await setCreditorTypeOp(null);
       await setProvince(val)
-      const resultCreditorType = await getCreditorTypes(val);
+      const resultCreditorType = await getBigDataCreditorTypes(val);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
         await setCreditorType('all');
         await setCreditorOp(null);
-        const resultCreditor = await getCreditors(val);
+        const resultCreditor = await getBigDataCreditors(val);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -155,7 +130,7 @@ const Report = () => {
     } else if (key == 'creditorType') {
       await setCreditorOp(null);
       await setCreditorType(val);
-      const resultCreditor = await getCreditors(province, val);
+      const resultCreditor = await getBigDataCreditors(province, val);
       if (resultCreditor.isSuccess) {
         const temp2 = resultCreditor.data.map(item => item.name);
         await setCreditorOp(temp2);
@@ -173,12 +148,13 @@ const Report = () => {
     } else await setYearOp(null);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
+      await setProv(resultProv.data)
       await setProvOp(temp);
-      const resultCreditorType = await getCreditorTypes(null);
+      const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
         await setCreditorTypeOp(temp1);
-        const resultCreditor = await getCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);

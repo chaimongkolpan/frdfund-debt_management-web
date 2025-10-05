@@ -3,16 +3,16 @@ import { Spinner } from "reactstrap";
 import According from "@views/components/panel/according";
 import BookNo from "@views/components/input/BookNo";
 import DatePicker from "@views/components/input/DatePicker";
-import Modal from "@views/components/modal/FullModal";
+import Modal from "@views/components/modal/fullModal";
 import Loading from "@views/components/modal/loading";
 import Filter from "@views/components/proposeForApproval/NPA/filter";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import PrepareRequestApproveTable from "@views/components/proposeForApproval/NPA/prepareRequestApproveTable";
 import RequestApproveTable from "@views/components/proposeForApproval/NPA/requestApproveTable";
 import ConfirmTable from "@views/components/proposeForApproval/NPA/confirmTable";
 import FilterRegis from "@views/components/proposeForApproval/NPA/filterResigtration";
 import logo from "@src/assets/images/icons/logo.png";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, getUserData } from "@utils";
 import {
   cleanData,
   searchBranchOfferNpa,
@@ -27,8 +27,10 @@ import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
 import ToastError from "@views/components/toast/error";
 
-
+const user = getUserData();
 const BranchOfferNPA = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const [showModal, setShowModal] = useState(false);
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
@@ -164,41 +166,43 @@ const BranchOfferNPA = () => {
     <>
       <div className="content">
         <h4>สาขาเสนอขออนุมัติรายชื่อ NPA</h4>
-        <div className="d-flex flex-row-reverse">
-          <div>
-            <button
-              type="button"
-              className="btn btn-primary btn-sm ms-2"
-              onClick={() => setShowModal(true)}
-            >
-              <span className="fas fa-file-upload"></span> อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ
-            </button>
-            {showModal && (
-              <CustomerModal
-                isOpen={showModal}
-                setModal={setShowModal}
-                onOk={onUpload}
-                onClose={onCloseRegisterNPAModel}
-                title={"อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ"}
-                okText={"เสนอขออนุมัติรายชื่อ"}
-                closeText={"ปิด"}
-                size={'xl'}
-                children={
-                  <>
-                    <FilterRegis
-                      bookNo={uploadBookNo}
-                      setBookNo={setUploadBookNo}
-                      bookDate={uploadBookDate}
-                      setBookDate={setUploadBookDate}
-                      files={files}
-                      setFiles={setFiles}
-                    />
-                  </>
-                }
-              />
-            )}
+        {can_action && (
+          <div className="d-flex flex-row-reverse">
+            <div>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm ms-2"
+                onClick={() => setShowModal(true)}
+              >
+                <span className="fas fa-file-upload"></span> อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ
+              </button>
+              {showModal && (
+                <CustomerModal
+                  isOpen={showModal}
+                  setModal={setShowModal}
+                  onOk={onUpload}
+                  onClose={onCloseRegisterNPAModel}
+                  title={"อัพโหลดเอกสารและเสนอขออนุมัติรายชื่อ"}
+                  okText={"เสนอขออนุมัติรายชื่อ"}
+                  closeText={"ปิด"}
+                  size={'xl'}
+                  children={
+                    <>
+                      <FilterRegis
+                        bookNo={uploadBookNo}
+                        setBookNo={setUploadBookNo}
+                        bookDate={uploadBookDate}
+                        setBookDate={setUploadBookDate}
+                        files={files}
+                        setFiles={setFiles}
+                      />
+                    </>
+                  }
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -213,24 +217,26 @@ const BranchOfferNPA = () => {
                     />
                     <br />
                     {data && (
-                      <PrepareRequestApproveTable result={data} handleSubmit={onAddBigData} />
+                      <PrepareRequestApproveTable result={data} handleSubmit={onAddBigData} can_action={can_action} filter={filter} getData={onSearch} />
                     )}
                   </>
                 }
               />
-              <According
-                title={"เสนอขออนุมัติรายชื่อ"}
-                className={"mb-3"}
-                children={
-                  <RequestApproveTable
-                    result={addedData}
-                    handleSubmit={handleSubmit}
-                    handleRemove={onRemoveMakelist}
-                    filter={filterAdded}
-                    getData={fetchData}
-                  />
-                }
-              />
+              {can_action && (
+                <According
+                  title={"เสนอขออนุมัติรายชื่อ"}
+                  className={"mb-3"}
+                  children={
+                    <RequestApproveTable
+                      result={addedData}
+                      handleSubmit={handleSubmit}
+                      handleRemove={onRemoveMakelist}
+                      filter={filterAdded}
+                      getData={fetchData}
+                    />
+                  }
+                />
+              )}
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { getUserData, toCurrency, stringToDateTh } from "@utils";
 import { Spinner } from "reactstrap";
 import Loading from "@views/components/modal/loading";
 import logo from "@src/assets/images/icons/logo.png";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import According from "@views/components/panel/according";
 import Filter from "@views/components/committee/updateFilterNpa";
 import DataTable from "@views/components/committee/updateTableNpa";
@@ -22,6 +22,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPA = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const status = 'คณะกรรมการจัดการหนี้อนุมัติ';
   const [showModal, setShowModal] = useState(false);
   const [isLoadBigData, setLoadBigData] = useState(false);
@@ -94,38 +96,40 @@ const NPA = () => {
     <>
       <div className="content">
         <h4>ปรับปรุงรายชื่อที่ผ่านการอนุมัติจากคณะกรรมการ NPA</h4>
-        <div className="d-flex flex-row-reverse">
-          <div>
-            <button
-              type="button"
-              className="btn btn-primary btn-sm ms-2"
-              onClick={() => setShowModal(true)}
-            >
-              <span className="fas fa-file-upload"></span>{" "}
-              ดาวน์โหลดเอกสารประกาศรายชื่อ
-            </button>
-            {showModal && (
-              <CustomerModal
-                isOpen={showModal}
-                setModal={setShowModal}
-                // onOk={onSubmitEdit}
-                onClose={() => setShowModal(false)}
-                title={"ดาวน์โหลดเอกสารประกาศรายชื่อ"}
-                okText={"ดาวน์โหลด"}
-                closeText={"ปิด"}
-                size={'xl'}
-                children={
-                  <EditDataTable 
-                    bookNo={bookNoEdit} 
-                    setBookNo={setBookNoEdit}
-                    bookDate={bookDateEdit}
-                    setBookDate={setBookDateEdit}
-                  />
-                }
-              />
-            )}
+        {can_action && (
+          <div className="d-flex flex-row-reverse">
+            <div>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm ms-2"
+                onClick={() => setShowModal(true)}
+              >
+                <span className="fas fa-file-upload"></span>{" "}
+                ดาวน์โหลดเอกสารประกาศรายชื่อ
+              </button>
+              {showModal && (
+                <CustomerModal
+                  isOpen={showModal}
+                  setModal={setShowModal}
+                  // onOk={onSubmitEdit}
+                  onClose={() => setShowModal(false)}
+                  title={"ดาวน์โหลดเอกสารประกาศรายชื่อ"}
+                  okText={"ดาวน์โหลด"}
+                  closeText={"ปิด"}
+                  size={'xl'}
+                  children={
+                    <EditDataTable 
+                      bookNo={bookNoEdit} 
+                      setBookNo={setBookNoEdit}
+                      bookDate={bookDateEdit}
+                      setBookDate={setBookDateEdit}
+                    />
+                  }
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -144,6 +148,7 @@ const NPA = () => {
                         result={data}
                         handleSubmit={onAddBigData}
                         handleReject={onRemoveMakelist}
+                        can_action={can_action}
                       />
                     )}
                   </>

@@ -152,7 +152,7 @@ const DebtRegisterFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {provOp && (
-            <div className="form-floating form-floating-advance-select mb-3">
+            <div className="form-floating form-floating-advance-select">
               <label htmlFor="Search_province">จังหวัด</label>
               <select className="form-select" value={filter?.province} onChange={(e) => onChange('province', e.target?.value)}>
                 <option value="all" >ทั้งหมด</option>
@@ -167,7 +167,7 @@ const DebtRegisterFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorTypeOp && (
-            <div className="form-floating form-floating-advance-select mb-3">
+            <div className="form-floating form-floating-advance-select">
               <label htmlFor="Search_province">ประเภทเจ้าหนี้</label>
               <select className="form-select" value={filter?.creditorType} onChange={(e) => onChange('creditorType', e.target?.value)}>
                 {creditorTypeOp && (
@@ -181,7 +181,7 @@ const DebtRegisterFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorOp && (
-            <div className="form-floating form-floating-advance-select mb-3">
+            <div className="form-floating form-floating-advance-select">
               <label htmlFor="Search_province">สถาบันเจ้าหนี้</label>
               <select className="form-select" value={filter?.creditor} onChange={(e) => onChange('creditor', e.target?.value)}>
                 {creditorOp && (
@@ -195,7 +195,7 @@ const DebtRegisterFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {statusDebtOp && (
-            <div className="form-floating form-floating-advance-select mb-3">
+            <div className="form-floating form-floating-advance-select">
               <label htmlFor="Search_province">สถานะหนี้</label>
               <select className="form-select" value={filter?.debtStatus} onChange={(e) => onChange('debtStatus', e.target?.value)}>
                 <option value="all" >ทั้งหมด</option>
@@ -210,7 +210,7 @@ const DebtRegisterFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {checkingStatusOp && (
-            <div className="form-floating form-floating-advance-select mb-3">
+            <div className="form-floating form-floating-advance-select">
               <label htmlFor="Search_province">สถานะสัญญาจำแนกมูลหนี้</label>
               <select className="form-select" value={filter?.checkingStatus} onChange={(e) => onChange('checkingStatus', e.target?.value)}>
                 <option value="all" >ทั้งหมด</option>

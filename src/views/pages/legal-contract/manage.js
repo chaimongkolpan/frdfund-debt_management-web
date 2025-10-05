@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
 import { stringToDateTh, toCurrency, getUserData, ToDateDb } from "@utils";
 import According from "@views/components/panel/according";
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/legal-contract/filterManage";
@@ -25,6 +25,8 @@ import {
 
 const user = getUserData();
 const LegalContractSend = () => {
+  const allow_roles = [1,2,5];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -173,6 +175,7 @@ const LegalContractSend = () => {
                         handleViewEdit={handleViewEdit}
                         handleViewEditAsset={handleViewEditAsset}
                         handleViewReturn={handleViewReturn}
+                        can_action={can_action}
                       />
                     )}
                   </>

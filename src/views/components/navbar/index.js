@@ -15,12 +15,16 @@ import logo from '@src/assets/images/icons/logo.png'
 const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
 const ThemeNavbar = props => {
   // ** Props
+  const { menuVisibility, setMenuVisibility } = props; 
   const navigate = useNavigate()
   const [userData, setUserData] = useState(null)
   // ** Store Vars
   const dispatch = useDispatch()
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   
+  const handleVisibleChange = () => {
+    setMenuVisibility(!menuVisibility)
+  }
   const handleWindowWidth = () => {
     setWindowWidth(window.innerWidth)
   }
@@ -40,6 +44,9 @@ const ThemeNavbar = props => {
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
       setUserData(JSON.parse(localStorage.getItem('userData')))
+    } else {
+      dispatch(handleLogout());
+      navigate(prefix_url + '/login');
     }
   }, [])
   return (
@@ -47,7 +54,7 @@ const ThemeNavbar = props => {
       <nav className="navbar navbar-top fixed-top navbar-expand">
         <div className="collapse navbar-collapse justify-content-between">
           <div className="navbar-logo">
-            <button className="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span className="navbar-toggle-icon"><i className="toggle-line"></i></span></button>
+            <button className="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation" onClick={() => handleVisibleChange()}><span className="navbar-toggle-icon"><i className="toggle-line"></i></span></button>
             <a className="navbar-brand me-1 me-sm-3">
               <div className="d-flex align-items-center">
                 <div className="d-flex align-items-center"><img src={logo} alt="frdfund" width="50" />
@@ -67,15 +74,17 @@ const ThemeNavbar = props => {
             <DropdownMenu end style={{ minWidth: 250 }}>
               <div className="card-body p-0">
                 <div className="text-center pb-3">
-                  <h6 className="mt-2 text-body-emphasis">ผู้ดูแลระบบ</h6>
+                  <h6 className="mt-2 text-body-emphasis">{userData?.role_detail ?? 'ผู้ใช้งาน'}</h6>
                 </div>
               </div>
               <DropdownItem tag={Link} to={prefix_url + '/profile'}>
                 <User className="me-2 text-body align-bottom" size={16} />ข้อมูลโปรไฟล์
               </DropdownItem>
-              <DropdownItem tag={Link} to={prefix_url + '/settings'}>
-                <Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ
-              </DropdownItem>
+              {userData?.role == 1 && (
+                <DropdownItem tag={Link} to={prefix_url + '/settings'}>
+                  <Settings className="me-2 text-body align-bottom" size={16} />ตั้งค่าระบบ
+                </DropdownItem>
+              )}
               <DropdownItem divider />
               <div className="card-footer">
                 <div className="px-3"> 

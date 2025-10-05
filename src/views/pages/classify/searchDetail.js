@@ -28,11 +28,14 @@ import CustomModal from "@views/components/modal/customModal";
 
 const user = getUserData();
 const SearchClassifyNPLDetail = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const qprov = searchParams.get("province");
   const qcreditorType = searchParams.get("creditor-type");
   const [debts, setDebts] = useState(null);
+  const [debt, setDebt] = useState(null);
   const [collaterals, setCollaterals] = useState(null);
   const [guarantors, setGuarantors] = useState(null);
   const [selectedDebt, setShowDebts] = useState(null);
@@ -142,13 +145,19 @@ const SearchClassifyNPLDetail = () => {
     await fetchData()
     await setOpenBorrow(false);
   }
-  const handleDocument = () => {
+  const handleDocument = (item) => {
+    setDebt(item)
     setOpenDocument(true);
+  }
+  const handleCloseDocument = (flag) => {
+    setDebt(flag ? debt : null)
+    setOpenDocument(flag);
   }
   const handleSubmitDocument = async () => {
     toast((t) => (
       <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
     ));
+    setDebt(null)
     await fetchData();
     await setOpenDocument(false);
   }
@@ -223,7 +232,9 @@ const SearchClassifyNPLDetail = () => {
                   children={(
                     <>
                       <div className="d-flex mb-3 flex-row-reverse">
-                        <button type="button" className="btn btn-info btn-sm ms-2" onClick={() => handleDocument()}><span className="far fa-file-alt"></span> เอกสารประกอบ</button>
+                        {/* {can_action && (
+                          <button type="button" className="btn btn-info btn-sm ms-2" onClick={() => handleDocument()}><span className="far fa-file-alt"></span> เอกสารประกอบ</button>
+                        )} */}
                         <button type="button" className="btn btn-warning btn-sm ms-2" onClick={() => handleBorrow()}><span className="fas fa-users"></span> ผู้รับสภาพหนี้แทน</button>
                       </div>
                       <DebtManageTable data={debts} 
@@ -232,6 +243,8 @@ const SearchClassifyNPLDetail = () => {
                         handleShowDetail={handleShowDetail} 
                         handleCancelCombine={handleCancelCombine} 
                         handleCancelSplit={handleCancelSplit} 
+                        handleDocument={handleDocument}
+                        can_action={can_action}
                       />
                       <br />
                       {(debts && debts.length > 0) && (
@@ -304,14 +317,14 @@ const SearchClassifyNPLDetail = () => {
               {/*start modal ผู้รับสภาพหนี้แทน*/}
               {isOpenBorrow && (
                 <BorrowModal isOpen={isOpenBorrow} setModal={setOpenBorrow} onClose={() => handleBorrowerClose()} 
-                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} ids={ids}
+                  idcard={params.idcard} province={qprov} creditorType={qcreditorType} ids={ids} can_action={can_action}
                 />
               )}
               {/*end modal ผู้รับสภาพหนี้แทน*/}
               
               {/* start modal เอกสารประกอบ*/}
               {isOpenDocument && (
-                <DocumentModal isOpen={isOpenDocument} setModal={setOpenDocument} onOk={handleSubmitDocument} onClose={() => setOpenDocument(false)} data={debts} />
+                <DocumentModal isOpen={isOpenDocument} setModal={handleCloseDocument} onOk={handleSubmitDocument} onClose={() => handleCloseDocument(false)} data={debt} />
               )}
               {/* end modal เอกสารประกอบ*/}
 

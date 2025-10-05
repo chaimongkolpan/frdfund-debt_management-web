@@ -9,7 +9,7 @@ import {
   updateBorrowerClassify,
 } from "@services/api";
 const FullModal = (props) => {
-  const {isOpen, setModal, onClose, idcard, province, creditorType, ids, debtManagementType = "NPL" } = props;
+  const {isOpen, setModal, onClose, idcard, province, creditorType, ids, debtManagementType = "NPL", can_action } = props;
   const [isMounted, setMounted] = useState(false);
   const [data, setData] = useState([]);
   const [provinces, setProvOp] = useState(null);
@@ -64,7 +64,8 @@ const FullModal = (props) => {
     }))
   }
   const submitBorrower = async() => {
-    const result = await updateBorrowerClassify({ ...editDetail, ids: ids });
+    const id = ids && ids?.length > 0 ? ids[0] : 0;
+    const result = await updateBorrowerClassify({ ...editDetail, ids: [id] });
     if (result.isSuccess) {
       await fetchData();
     }
@@ -83,7 +84,15 @@ const FullModal = (props) => {
             {(item.borrower_status == 'ผู้กู้') ? (
               <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => viewData(item)}><i className="fas fa-eye"></i></button>
             ) : (
-              <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' disabled={!item.is_active} onClick={() => editData(item)}><i className="far fa-edit"></i></button>
+              !item.is_active ? (
+                <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => viewData(item)}><i className="fas fa-eye"></i></button>
+              ) : (
+                !can_action ? (
+                  <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => viewData(item)}><i className="fas fa-eye"></i></button>
+                ) : (
+                  <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => editData(item)}><i className="far fa-edit"></i></button>
+                )
+              )
             )}
           </div>
         </td>
@@ -126,11 +135,13 @@ const FullModal = (props) => {
         <ModalHeader toggle={toggle}>ผู้รับสภาพหนี้แทน</ModalHeader>
         <ModalBody>
           <form>
-            <div className="d-flex mb-3 flex-row-reverse">
-              <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}>
-                <span className="fas fa-plus fs-8"></span> เพิ่มผู้รับสภาพหนี้แทน
-              </button>
-            </div>
+            {can_action && (
+              <div className="d-flex mb-3 flex-row-reverse">
+                <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addData()}>
+                  <span className="fas fa-plus fs-8"></span> เพิ่มผู้รับสภาพหนี้แทน
+                </button>
+              </div>
+            )}
             <div id="tableExample" data-list='{"valueNames":["id","name","province"],"page":10,"pagination":true}'>
               <div className="table-responsive mx-n1 px-1">
                 <table className="table table-sm table-bordered fs-9 mb-0">
@@ -158,7 +169,7 @@ const FullModal = (props) => {
               </div>
             </div>
             <br />
-            <div className="row">
+            <div className="row d-none">
               <div className=" col-sm-12 col-md-6 col-lg-3">
                 <div className=" input-group">
                   <select value={selectedType} className="form-select" onChange={(e) => onTypeChange(e.target?.value)}>

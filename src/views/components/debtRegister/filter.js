@@ -66,16 +66,16 @@ const DebtRegisterFilter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -98,7 +98,7 @@ const DebtRegisterFilter = (props) => {
         await setError('creditor', null);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -121,15 +121,15 @@ const DebtRegisterFilter = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -182,7 +182,6 @@ const DebtRegisterFilter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
@@ -193,8 +192,8 @@ const DebtRegisterFilter = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={`mb-3 ${errors?.creditorType ? 'border-error' : ''}`}
-              defaultValue={creditorTypeOp[0]} 
+              containerClassname={`${errors?.creditorType ? 'border-error' : ''}`}
+              defaultValue={'all'} hasAll
               options={creditorTypeOp}
               handleChange={(val) => onChange('creditorType', val)}
             />
@@ -204,8 +203,8 @@ const DebtRegisterFilter = (props) => {
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={`mb-3 ${errors?.creditor ? 'border-error' : ''}`}
-              defaultValue={creditorOp[0]} 
+              containerClassname={`${errors?.creditor ? 'border-error' : ''}`}
+              defaultValue={'all'}  hasAll
               options={creditorOp}
               handleChange={(val) => onChange('creditor', val)}
             />
@@ -215,7 +214,6 @@ const DebtRegisterFilter = (props) => {
           {statusDebtOp && (
             <Dropdown 
               title={'สถานะหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={statusDebtOp}
               handleChange={(val) => onChange('debtStatus', val)}
@@ -226,7 +224,6 @@ const DebtRegisterFilter = (props) => {
           {checkingStatusOp && (
             <Dropdown 
               title={'สถานะสัญญาจำแนกมูลหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={checkingStatusOp}
               handleChange={(val) => onChange('checkingStatus', val)}

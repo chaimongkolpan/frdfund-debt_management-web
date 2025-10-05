@@ -5,7 +5,7 @@ import DropZone from "@views/components/input/DropZone";
 import Loading from "@views/components/modal/loading";
 import logo from "@src/assets/images/icons/logo.png";
 import According from "@views/components/panel/according";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import DatePicker from "@views/components/input/DatePicker";
 import BookNo from "@views/components/input/BookNo";
 import Filter from "@views/components/confirm-committee/filter";
@@ -23,6 +23,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPL = () => {
+  const allow_roles = [1,2,4,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const status = 'สาขายืนยันยอด';
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
@@ -226,26 +228,29 @@ const NPL = () => {
                         handleSubmit={onAddBigData}
                         filter={filter}
                         getData={onSearchTop}
+                        can_action={can_action}
                       />
                     )}
                   </>
                 )}
               />
-              <According 
-                title={'เสนอขออนุมัติรายชื่อ'}
-                className={"mb-3"}
-                children={(
-                  <>
-                    <SelectDataTable
-                      result={addedData}
-                      handleSubmit={handleSubmit}
-                      handleRemove={onRemoveMakelist}
-                      filter={filterAdded}
-                      getData={fetchData}
-                    />
-                  </>
-                )}
-              />
+              {can_action && (
+                <According 
+                  title={'รวบรวมยืนยันยอด'}
+                  className={"mb-3"}
+                  children={(
+                    <>
+                      <SelectDataTable
+                        result={addedData}
+                        handleSubmit={handleSubmit}
+                        handleRemove={onRemoveMakelist}
+                        filter={filterAdded}
+                        getData={fetchData}
+                      />
+                    </>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

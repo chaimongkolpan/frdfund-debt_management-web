@@ -33,7 +33,7 @@ const FullModal = (props) => {
     await setSelectedType("ผู้รับสภาพหนี้");
   }
   const addData = async () => {
-    await setEditDetail({});
+    await setEditDetail({ id_card: policy?.k_idcard,province: policy?.loan_province,creditor_type: policy?.loan_creditor_type });
     await setOpenView(false);
     await setOpenEdit(true);
     await setSelectedType("ผู้รับสภาพหนี้");
@@ -63,7 +63,7 @@ const FullModal = (props) => {
     }))
   }
   const submitBorrower = async() => {
-    const result = await updateBorrowerClassify({ ...editDetail });
+    const result = await updateBorrowerClassify({ ...editDetail, ids: [policy?.id_debt_management ?? 0] });
     if (result.isSuccess) {
       await fetchData();
     }
@@ -99,7 +99,7 @@ const FullModal = (props) => {
     }
   }
   const fetchData = async() => {
-    const result = await getBorrowerClassify();
+    const result = await getBorrowerClassify(policy?.k_idcard, policy?.loan_province, policy?.loan_creditor_type, policy?.loan_debt_type);
     if (result.isSuccess) {
       setData(result.borrowers);
       var item = result.borrowers.find(x => x.is_active);

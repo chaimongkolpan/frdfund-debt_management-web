@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
 import { getUserData } from "@utils";
 import According from "@views/components/panel/according";
-import AddModal from "@views/components/modal/CustomModal";
-import Modal from "@views/components/modal/FullModal";
+import AddModal from "@views/components/modal/customModal";
+import Modal from "@views/components/modal/fullModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/approval/filterMakePetition";

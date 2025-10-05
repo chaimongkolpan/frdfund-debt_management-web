@@ -4,7 +4,7 @@ import { Spinner } from "reactstrap";
 import Loading from "@views/components/modal/loading";
 import logo from "@src/assets/images/icons/logo.png";
 import According from "@views/components/panel/according";
-import CustomerModal from "@views/components/modal/CustomModal";
+import CustomerModal from "@views/components/modal/customModal";
 import Filter from "@views/components/committee/filter";
 import SearchDataTable from "@views/components/committee/searchPrepareTable";
 import SelectDataTable from "@views/components/committee/selectPrepareTable";
@@ -27,6 +27,8 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPL = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const status = 'รอเสนอคณะกรรมการจัดการหนี้';
   const [showModal, setShowModal] = useState(false);
   const [isLoadBigData, setLoadBigData] = useState(false);
@@ -131,6 +133,8 @@ const NPL = () => {
           type: "application/octet-stream",
           filename: "คณะกรรมการจัดการหนี้อนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
           data: requestApproveData,
+          proposal_committee_no: 'กฟก.' + bookNo,
+          proposal_committee_date: stringToDateTh(bookDate,false),
           status
         });
         if (result) {
@@ -192,39 +196,41 @@ const NPL = () => {
     <>
       <div className="content">
         <h4>จัดทำรายชื่อเสนอคณะกรรมการจัดการหนี้ NPL</h4>
-        <div className="d-flex flex-row-reverse">
-          <div>
-            <button
-              type="button"
-              className="btn btn-primary btn-sm ms-2"
-              onClick={() => setShowModal(true)}
-            >
-              <span className="fas fa-file-upload"></span>{" "}
-              แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ
-            </button>
-            {showModal && (
-              <CustomerModal
-                isOpen={showModal}
-                setModal={setShowModal}
-                onOk={onSubmitEdit}
-                onClose={() => setShowModal(false)}
-                title={"แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ"}
-                okText={"ดาวน์โหลดเอกสารและบันทึก"}
-                closeText={"ปิด"}
-                fullscreen
-                children={
-                  <EditDataTable 
-                    bookNo={bookNoEdit} 
-                    setBookNo={setBookNoEdit}
-                    bookDate={bookDateEdit}
-                    setBookDate={setBookDateEdit}
-                    setEditData={setEditData}
-                  />
-                }
-              />
-            )}
+        {can_action && (
+          <div className="d-flex flex-row-reverse">
+            <div>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm ms-2"
+                onClick={() => setShowModal(true)}
+              >
+                <span className="fas fa-file-upload"></span>{" "}
+                แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ
+              </button>
+              {showModal && (
+                <CustomerModal
+                  isOpen={showModal}
+                  setModal={setShowModal}
+                  onOk={onSubmitEdit}
+                  onClose={() => setShowModal(false)}
+                  title={"แก้ไขครั้งที่/วันที่เสนอคณะกรรมการ"}
+                  okText={"ดาวน์โหลดเอกสารและบันทึก"}
+                  closeText={"ปิด"}
+                  fullscreen
+                  children={
+                    <EditDataTable 
+                      bookNo={bookNoEdit} 
+                      setBookNo={setBookNoEdit}
+                      bookDate={bookDateEdit}
+                      setBookDate={setBookDateEdit}
+                      setEditData={setEditData}
+                    />
+                  }
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -242,26 +248,29 @@ const NPL = () => {
                       <SearchDataTable
                         result={data}
                         handleSubmit={onAddBigData}
+                        can_action={can_action}
                       />
                     )}
                   </>
                 )}
               />
-              <According 
-                title={'เสนอคณะกรรมการจัดการหนี้'}
-                className={"mb-3"}
-                children={(
-                  <>
-                    <SelectDataTable
-                      result={addedData}
-                      handleSubmit={handleSubmit}
-                      handleRemove={onRemoveMakelist}
-                      filter={filterAdded}
-                      getData={fetchData}
-                    />
-                  </>
-                )}
-              />
+              {can_action && (
+                <According 
+                  title={'เสนอคณะกรรมการจัดการหนี้'}
+                  className={"mb-3"}
+                  children={(
+                    <>
+                      <SelectDataTable
+                        result={addedData}
+                        handleSubmit={handleSubmit}
+                        handleRemove={onRemoveMakelist}
+                        filter={filterAdded}
+                        getData={fetchData}
+                      />
+                    </>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toCurrency } from "@utils";
 
 const CommercialBanksOrLegalEntitiesTable = ({
   data = [],
@@ -7,6 +8,8 @@ const CommercialBanksOrLegalEntitiesTable = ({
   onSelect = () => {},
   onSelectAll = () => {},
   selectable = true,
+  currentPage = 0,
+  pageSize = 10
 }) => {
   const [selData, setSelected] = useState([]);
   const handleSelectAll = async() => {
@@ -40,7 +43,7 @@ const CommercialBanksOrLegalEntitiesTable = ({
               </div>
             </td>
           ) : (
-            <td className="fs-9 align-middle">{index + 1}</td>
+            <td className="fs-9 align-middle">{(((currentPage - 1) * pageSize) + index + 1)}</td>
           )}
           <td className="align-middle">{item.id_card}</td>
           <td className="align-middle">{item.name_prefix}</td>
@@ -53,15 +56,15 @@ const CommercialBanksOrLegalEntitiesTable = ({
           <td className="align-middle">{item.debt_manage_creditor_province}</td>
           <td className="align-middle">{item.debt_manage_creditor_branch}</td>
           <td className="align-middle">{item.debt_manage_contract_no}</td>
-          <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
-          <td className="align-middle">{item.debt_manage_accrued_interest}</td>
-          <td className="align-middle">{item.debt_manage_fine}</td>
-          <td className="align-middle">{item.debt_manage_litigation_expenses}</td>
-          <td className="align-middle">{item.debt_manage_forfeiture_withdrawal_fee}</td>
-          <td className="align-middle">{item.debt_manage_insurance_premium}</td>
-          <td className="align-middle">{item.debt_manage_other_expenses}</td>
-          <td className="align-middle">{item.debt_manage_total_expenses}</td>
-          <td className="align-middle">{item.debt_manage_total}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_outstanding_principal,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_accrued_interest,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_fine,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_litigation_expenses,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_forfeiture_withdrawal_fee,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_insurance_premium,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_other_expenses,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_total_expenses,2)}</td>
+          <td className="align-middle">{toCurrency(item.debt_manage_total,2)}</td>
           <td className="align-middle">{item.debt_manage_status}</td>
           <td className="align-middle">{item.collateral_type}</td>
           <td className="align-middle">{item.debt_manage_objective}</td>
@@ -113,16 +116,16 @@ const CommercialBanksOrLegalEntitiesTable = ({
               <th className="align-middle text-center">
                 คำนำหน้า
               </th>
-              <th className="align-middle text-center">
+              <th className="align-middle text-center" style={{ minWidth: 150 }}>
                 ชื่อ-นามสกุล
               </th>
               <th className="align-middle text-center">
                 จังหวัด
               </th>
-              <th className="align-middle text-center">
+              <th className="align-middle text-center" style={{ minWidth: 150 }}>
                 ประเภทเจ้าหนี้
               </th>
-              <th className="align-middle text-center">
+              <th className="align-middle text-center" style={{ minWidth: 180 }}>
                 สถาบันเจ้าหนี้
               </th>
               <th className="align-middle text-center">

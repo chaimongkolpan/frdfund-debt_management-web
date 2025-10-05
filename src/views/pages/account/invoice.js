@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
 import { stringToDateTh, toCurrency, getUserData } from "@utils";
 import According from "@views/components/panel/according";
-import Modal from "@views/components/modal/CustomModal";
+import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/account/invoice/filter";
@@ -29,7 +29,7 @@ const PageContent = () => {
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
   const handlePrint = async (selected) => {
-    const ids = selected.map(item => item.id_PlanPay)
+    const ids = selected.map(item => { return { id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO } })
     const selectedData = await getInvoice(ids);
     const receipts = selectedData.data;
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
@@ -39,9 +39,9 @@ const PageContent = () => {
     }
   }
   const printReceipt = async (item) => {
-    const ids = [item.id_PlanPay]
+    const ids = [{ id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO }]
     const selectedData = await getInvoice(ids);
-    const receipts = selectedData.data;
+    const receipts = selectedData.data.map(item => { return { ...item, isExportExcel: false }});
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
     if (result.isSuccess) {

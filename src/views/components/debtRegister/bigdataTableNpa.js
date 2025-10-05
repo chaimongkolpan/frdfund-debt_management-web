@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 const DebtNPABigDataTable = (props) => {
-  const { result, handleSubmit, onEditNpaRegister } = props;
+  const { result, handleSubmit, onEditNpaRegister, can_action } = props;
   const [data, setData] = useState([]);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
@@ -26,9 +26,11 @@ const DebtNPABigDataTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
-          <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
-          </div>
+          {can_action ? (
+            <div className="form-check ms-2 mb-0 fs-8">
+              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            </div>
+          ) : (index + 1)}
         </td>
         <td className="align-middle">{item.id_card}</td>
         <td className="align-middle">{item.name_prefix}</td>
@@ -48,7 +50,7 @@ const DebtNPABigDataTable = (props) => {
         <td className="align-middle">{item.creditor_province}</td>
         <td className="align-middle">{item.creditor_branch}</td>
         <td className="align-middle">{item.contract_no}</td>
-        <td className="align-middle">{item.remaining_principal_contract}</td>
+        <td className="align-middle">{toCurrency(item.remaining_principal_contract)}</td>
         <td className="align-middle">{item.dept_status}</td>
         <td className="align-middle">{item.collateral_type}</td>
         <td className="align-middle">{item.purpose_loan_contract}</td>
@@ -104,9 +106,11 @@ const DebtNPABigDataTable = (props) => {
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
-                  <div className="form-check ms-2 me-0 mb-0 fs-8">
-                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
-                  </div>
+                  {can_action ? (
+                    <div className="form-check ms-2 me-0 mb-0 fs-8">
+                      <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                    </div>
+                  ) : '#'}
                 </th>
                 <th className="text-center" colSpan="7">เกษตรกร</th>
                 <th className="text-center" colSpan="2">องค์กร</th>
@@ -118,19 +122,19 @@ const DebtNPABigDataTable = (props) => {
               <tr>
                 <th className="align-middle text-center" data-sort="name">เลขบัตรประชาชน</th>
                 <th className="align-middle text-center" data-sort="email">คำนำหน้า</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อ-นามสกุล</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>ชื่อ-นามสกุล</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัด</th>
                 <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิกองค์กร (ครั้งแรก)</th>
                 <th className="align-middle text-center" data-sort="email">วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
                 <th className="align-middle text-center" data-sort="age">รอบองค์กร</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อองค์กรการเกษตร</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 180 }}>ชื่อองค์กรการเกษตร</th>
                 <th className="align-middle text-center" data-sort="age">หมายเลของค์กร</th>
                 <th className="align-middle text-center" data-sort="age">รอบหนี้</th>
                 <th className="align-middle text-center" data-sort="age">วันที่ยื่นขึ้นทะเบียนหนี้</th>
                 <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบครั้งที่</th>
                 <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบวันที่</th>
-                <th className="align-middle text-center" data-sort="age">ประเภทเจ้าหนี้</th>
-                <th className="align-middle text-center" data-sort="age">สถาบันเจ้าหนี้</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>ประเภทเจ้าหนี้</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 180 }}>สถาบันเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัดเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">สาขาเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">เลขที่สัญญา</th>
@@ -173,13 +177,15 @@ const DebtNPABigDataTable = (props) => {
           </div>
         </div> */}
       </div>
-      <div className="d-flex align-items-center justify-content-center my-3">
-        <div className={`${isSome ? '' : 'd-none'}`}>
-          <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาจัดทำรายชื่อเกษตรกร</button>
+      {can_action && (
+        <div className="d-flex align-items-center justify-content-center my-3">
+          <div className={`${isSome ? '' : 'd-none'}`}>
+            <div className="d-flex">
+              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาจัดทำรายชื่อเกษตรกร</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

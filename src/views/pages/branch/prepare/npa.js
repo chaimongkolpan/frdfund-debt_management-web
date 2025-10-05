@@ -4,8 +4,8 @@ import { getUserData, stringToDateTh, toCurrency } from "@utils";
 import { Spinner } from 'reactstrap'
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
-import AddModal from "@views/components/modal/CustomModal";
-import Modal from "@views/components/modal/FullModal";
+import AddModal from "@views/components/modal/customModal";
+import Modal from "@views/components/modal/fullModal";
 import According from "@views/components/panel/according";
 import Filter from "@views/components/branch/filterNpa";
 import SearchTable from "@views/components/branch/searchTableNpa";
@@ -18,9 +18,10 @@ import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
 import ToastError from "@views/components/toast/error";
 
-
 const user = getUserData();
 const NPL = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -179,7 +180,7 @@ const NPL = () => {
                       <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                       <br />
                       {data && (
-                        <SearchTable result={data} handleSubmit={handleSubmit} handleSubmitFail={handleSubmitFail} filter={filter} getData={onSearch} />
+                        <SearchTable result={data} handleSubmit={handleSubmit} handleSubmitFail={handleSubmitFail} filter={filter} getData={onSearch} can_action={can_action} />
                       )}
                     </>
                   )}

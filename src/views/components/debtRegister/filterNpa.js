@@ -51,16 +51,16 @@ const DebtFilterNpa = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -78,7 +78,7 @@ const DebtFilterNpa = (props) => {
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -118,15 +118,15 @@ const DebtFilterNpa = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -184,7 +184,6 @@ const DebtFilterNpa = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={provOp}
               handleChange={(val) => onChange('province', val)}
@@ -195,9 +194,8 @@ const DebtFilterNpa = (props) => {
           {creditorTypeOp && (
             <Dropdown 
               title={'ประเภทเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={creditorTypeOp[0]} 
-              options={creditorTypeOp}
+              defaultValue={'all'} 
+              options={creditorTypeOp} hasAll 
               handleChange={(val) => onChange('creditorType', val)}
             />
           )}
@@ -206,9 +204,8 @@ const DebtFilterNpa = (props) => {
           {creditorOp && (
             <Dropdown 
               title={'สถาบันเจ้าหนี้'} 
-              containerClassname={'mb-3'} 
-              defaultValue={creditorOp[0]} 
-              options={creditorOp}
+              defaultValue={'all'} 
+              options={creditorOp} hasAll 
               handleChange={(val) => onChange('creditor', val)}
             />
           )}
@@ -217,7 +214,6 @@ const DebtFilterNpa = (props) => {
           {statusDebtOp && (
             <Dropdown 
               title={'สถานะหนี้'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={statusDebtOp}
               handleChange={(val) => onChange('debtStatus', val)}
@@ -228,7 +224,6 @@ const DebtFilterNpa = (props) => {
           {npaRoundOp && (
             <Dropdown 
               title={'รอบ NPA'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={npaRoundOp}
               handleChange={(val) => onChange('npaRound', val)}
@@ -239,7 +234,6 @@ const DebtFilterNpa = (props) => {
           {collateralOp && (
             <Dropdown 
               title={'เอกสารสิทธิ์'} 
-              containerClassname={'mb-3'} 
               defaultValue={'all'} 
               options={collateralOp}
               handleChange={(val) => onChange('collateralNo', val)}

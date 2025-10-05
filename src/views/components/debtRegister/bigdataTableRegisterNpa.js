@@ -7,6 +7,8 @@ import { stringToDateTh, toCurrency } from "@utils";
 import { 
   getProvinces,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastError from "@views/components/toast/error";
 const DebtRegisterBigDataTable = (props) => {
   const ref = useRef(null);
   const { result, filter, fetchData, handleSubmit } = props;
@@ -14,17 +16,42 @@ const DebtRegisterBigDataTable = (props) => {
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [debt, setDebt] = useState(null);
+  const [errors, setErrors] = useState(null);
+  const validate = async () => {
+    if (!debt?.npA_round || !debt?.title_document_no) {
+      await setErrors((prevState) => ({
+      ...prevState,
+      npA_round: !debt?.npA_round,
+      title_document_no: !debt?.title_document_no,
+    }))
+      return false;
+    } else return true;
+  }
   const onSubmit = async() => {
-    if (handleSubmit) await handleSubmit(debt);
-    await setDebt(null)
+    if (await validate()) {
+      if (handleSubmit) await handleSubmit(debt);
+      await setDebt(null)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'ข้อมูลไม่ครบถ้วน'} />
+      ));
+    }
   }
   const handleChangeDebt = async (key, val) => {
+    await setErrors((prevState) => ({
+      ...prevState,
+      ...({[key]: null})
+    }))
     await setDebt((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
   }
   const selectDebt = async(item) => {
+    await setErrors({
+      npA_round: null,
+      title_document_no: null
+    })
     await setDebt({ 
       ...item, 
       title_document_type: 'โฉนด',
@@ -35,6 +62,11 @@ const DebtRegisterBigDataTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="align-middle">{index + 1}</td>
+        <td classname="align-middle">
+          <div className="d-flex justify-content-center"> 
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type="button" onClick={() => selectDebt(item)}><i className="fas fa-plus"></i></button>
+          </div>
+        </td>
         <td className="align-middle">{item.id_card}</td>
         <td className="align-middle">{item.name_prefix}</td>
         <td className="align-middle">{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
@@ -59,11 +91,6 @@ const DebtRegisterBigDataTable = (props) => {
         <td className="align-middle">{item.purpose_loan_contract}</td>
         <td className="align-middle">{item.purpose_type_loan_contract}</td>
         <td className="align-middle">{item.debt_management_audit_status}</td>
-        <td classname="align-middle">
-          <div className="d-flex justify-content-center"> 
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type="button" onClick={() => selectDebt(item)}><i className="fas fa-plus"></i></button>
-          </div>
-        </td>
       </tr>
     ))
   }
@@ -94,28 +121,29 @@ const DebtRegisterBigDataTable = (props) => {
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th rowSpan="2" style={{ minWidth: 30 }}>#</th>
+                <th rowSpan="2">สร้างทะเบียนหนี้ NPA</th>
                 <th colSpan="7">เกษตรกร</th>
                 <th colSpan="2">องค์กร</th>
                 <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="8">สัญญา</th>
+                <th colSpan="7">สัญญา</th>
               </tr>
               <tr>
                 <th className="align-middle text-center" data-sort="name">เลขบัตรประชาชน</th>
                 <th className="align-middle text-center" data-sort="email">คำนำหน้า</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อ-นามสกุล</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>ชื่อ-นามสกุล</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัด</th>
                 <th className="align-middle text-center" data-sort="email">วันที่เป็นสมาชิก (ครั้งแรก)</th>
                 <th className="align-middle text-center" data-sort="email">วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
                 <th className="align-middle text-center" data-sort="age">รอบองค์กร</th>
-                <th className="align-middle text-center" data-sort="age">ชื่อองค์กรการเกษตร</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 180 }}>ชื่อองค์กรการเกษตร</th>
                 <th className="align-middle text-center" data-sort="age">หมายเลของค์กร</th>
                 <th className="align-middle text-center" data-sort="age">รอบหนี้</th>
                 <th className="align-middle text-center" data-sort="age">วันที่ยื่นขึ้นทะเบียนหนี้</th>
                 <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบครั้งที่</th>
                 <th className="align-middle text-center" data-sort="age">ผ่านความเห็นชอบวันที่</th>
-                <th className="align-middle text-center" data-sort="age">ประเภทเจ้าหนี้</th>
-                <th className="align-middle text-center" data-sort="age">สถาบันเจ้าหนี้</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 150 }}>ประเภทเจ้าหนี้</th>
+                <th className="align-middle text-center" data-sort="age" style={{ minWidth: 180 }}>สถาบันเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">จังหวัดเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">สาขาเจ้าหนี้</th>
                 <th className="align-middle text-center" data-sort="age">เลขที่สัญญา</th>
@@ -125,7 +153,6 @@ const DebtRegisterBigDataTable = (props) => {
                 <th className="align-middle text-center" data-sort="age">วัตถุประสงค์การกู้ตามสัญญา</th>
                 <th className="align-middle text-center" data-sort="age">ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
                 <th className="align-middle text-center" data-sort="age">สถานะสัญญาจำแนกมูลหนี้</th>
-                <th className="align-middle text-center" data-sort="age">สร้างทะเบียนหนี้ NPA</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
@@ -162,7 +189,7 @@ const DebtRegisterBigDataTable = (props) => {
                 />
               </div>
               <div className="col-sm-12 col-md-12 col-lg-6">
-                <NpaRoundText containerClassname={'mb-3'} value={debt?.npA_round}
+                <NpaRoundText containerClassname={`mb-3 ${errors?.npA_round ? 'border-error' : ''}`} value={debt?.npA_round}
                   handleChange={(val) => handleChangeDebt('npA_round', val)}
                 />
               </div>
@@ -186,16 +213,18 @@ const DebtRegisterBigDataTable = (props) => {
                   <label htmlFor="floatingSelectTeam">หลักประกัน</label>
                 </div>
               </div>
-              <div className="col-sm-12 col-md-12 col-lg-6">
-                <Textbox title={'อื่นๆโปรดระบุ'} 
-                  handleChange={(val) => handleChangeDebt('other', val)} 
-                  containerClassname={'mb-3'} value={debt?.other}
-                />
-              </div>
+              {debt?.title_document_type == 'อื่นๆ' && (
+                <div className="col-sm-12 col-md-12 col-lg-6">
+                  <Textbox title={'อื่นๆโปรดระบุ'} 
+                    handleChange={(val) => handleChangeDebt('other', val)} 
+                    containerClassname={'mb-3'} value={debt?.other}
+                  />
+                </div>
+              )}
               <div className="col-sm-12 col-md-12 col-lg-6">
                 <Textbox title={'หลักประกันเลขที่'} 
                   handleChange={(val) => handleChangeDebt('title_document_no', val)} 
-                  containerClassname={'mb-3'} value={debt?.title_document_no}
+                  containerClassname={`mb-3 ${errors?.title_document_no ? 'border-error' : ''}`} value={debt?.title_document_no}
                 />
               </div>
               <div className="col-sm-12 col-md-12 col-lg-6">
