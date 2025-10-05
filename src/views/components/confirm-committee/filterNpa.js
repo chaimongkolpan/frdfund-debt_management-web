@@ -86,7 +86,7 @@ const SearchFilter = (props) => {
     const resultCommitteeDate = await getCommitteeDateNpa("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);

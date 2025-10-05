@@ -35,7 +35,7 @@ const Filter = (props) => {
     const resultProv = await getBigDataProvinces();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp); if (temp.length == 1) onChange('province', temp[0]);
     } else {
        await setProvOp(null);
     }

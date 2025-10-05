@@ -40,7 +40,7 @@ const Filter = (props) => {
     const resultDate = await getSendAssetPolicyDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('loan_province', temp[0]);
     } else {
        await setProvOp(null);
     }
