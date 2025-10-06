@@ -30,9 +30,15 @@ const PageContent = () => {
   const [openDetail, setOpenDetail] = useState(false);
   const handlePrint = async (selected) => {
     await setLoadBigData(true);
-    const ids = selected.map(item => { return { id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO } })
+    const ids = selected.map(item => { return { id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO, invStatus: item.invStatus } })
     const selectedData = await getInvoice(ids);
-    const receipts = selectedData.data;
+    const receipts = selectedData.data.map(rec => {
+      return {
+        ...rec,
+        isEnd: ids.find(item => item.policyNo == rec.policyNo && item.invStatus == 'สิ้นสุดสัญญา') != null
+      }
+    });
+    console.log('re1', receipts, ids)
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
     await setLoadBigData(false);
@@ -42,9 +48,13 @@ const PageContent = () => {
   }
   const printReceipt = async (item) => {
     await setLoadBigData(true);
-    const ids = [{ id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO }]
+    const ids = [{ id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO, invStatus: item.invStatus }]
     const selectedData = await getInvoice(ids);
-    const receipts = selectedData.data.map(item => { return { ...item, isExportExcel: false }});
+    const receipts = selectedData.data.map(rec => { 
+      return { ...rec, isExportExcel: false, 
+        isEnd: item.invStatus == 'สิ้นสุดสัญญา' }
+    });
+    console.log('re2', receipts, ids)
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
     await setLoadBigData(false);
