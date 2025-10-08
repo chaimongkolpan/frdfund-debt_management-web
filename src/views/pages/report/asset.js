@@ -71,7 +71,9 @@ const Report = () => {
       year, 
       province: prov ? prov?.id : 0, 
       creditorType, creditor, debtType, debtStatus ,
-      type: 'application/octet-stream', filename: filenames[id - 1]
+      type: 'application/octet-stream', filename: filenames[id - 1],
+      firstname: user?.firstname,
+      lastname: user?.lastname,
     }
     var myInterval = setInterval(async () => {
       await setNow(new Date());
