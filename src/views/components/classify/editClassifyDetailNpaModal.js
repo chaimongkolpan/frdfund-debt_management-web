@@ -502,7 +502,7 @@ const FullModal = (props) => {
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <div className="form-floating needs-validation">
                             <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} onChange={(e) => handleChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status == 'โอนได้'}>
-                              <option value="ติดอายัติ(เจ้าหนี้อื่น)">โอติดอายัติ(เจ้าหนี้อื่น)</option>
+                              <option value="ติดอายัติ(เจ้าหนี้อื่น)">ติดอายัติ(เจ้าหนี้อื่น)</option>
                               <option value="เจ้าของหลักประกันเสียชีวิต">เจ้าของหลักประกันเสียชีวิต</option>
                               <option value="ติดข้อกฎหมาย">ติดข้อกฎหมาย</option>
                               <option value="ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น">ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น</option>
