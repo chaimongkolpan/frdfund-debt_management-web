@@ -80,7 +80,12 @@ const PageContent = () => {
   }
   const printCard = async () => {
     await setLoadBigData(true);
-    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', data: cardPrint };
+    const cardReq = {
+      ...cardPrint,
+      fname: user?.firstname,
+      lname: user?.lastname,
+    }
+    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', data: cardReq };
     const result = await printCardRe(param);
     await setLoadBigData(false);
     if (result.isSuccess) {
