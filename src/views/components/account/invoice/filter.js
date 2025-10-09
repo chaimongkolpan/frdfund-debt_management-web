@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
+import DatePicker from "@views/components/input/DatePicker";
 import { 
   getBigDataProvinces,
   getBigDataCreditors,
@@ -182,6 +183,16 @@ const Filter = (props) => {
               handleChange={(val) => onChange('printStatus', val)}
               hasAll />
           )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          <DatePicker title={'วันที่เริ่มต้น'}
+            handleChange={(val) => onChange('start_date', val)} 
+          />
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          <DatePicker title={'วันที่สิ้นสุด'}
+            handleChange={(val) => onChange('end_date', val)} 
+          />
         </div>
         <div className="col-12">
           <div className="row g-3 justify-content-center">
