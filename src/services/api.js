@@ -111,6 +111,7 @@ export const getProvinces = async () => {
     else return defaultErrorResponse;
   } catch (e) {
     console.error("error: " + path + " =>", e);
+    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
     return defaultErrorResponse;
   }
 };
@@ -180,6 +181,7 @@ export const getBigDataProvinces = async () => {
     else return defaultErrorResponse;
   } catch (e) {
     console.error("error: " + path + " =>", e);
+    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
     return defaultErrorResponse;
   }
 };
