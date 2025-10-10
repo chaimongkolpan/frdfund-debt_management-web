@@ -213,7 +213,7 @@ const Filter = (props) => {
               title={'เดือน'} 
               defaultValue={monthOp[new Date().getMonth()]} 
               options={monthOp}
-              handleChange={(val) => onChange('month', monthOp.indexOf(val) + 1)} />
+              handleChange={(val) => onChange('month', (monthOp.indexOf(val) + 1).toString())} />
           )}
         </div>
         <div className="col-12">
