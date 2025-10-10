@@ -1743,10 +1743,10 @@ export const searchOperationLand = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getOperationDetail = async (ids) => {
+export const getOperationDetail = async (id) => {
   const path = '/operationLand/get-operationland';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1757,10 +1757,10 @@ export const getOperationDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getExpropriationDetail = async (ids) => {
+export const getExpropriationDetail = async (id) => {
   const path = '/operationLand/get-expropriation';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1772,10 +1772,10 @@ export const getExpropriationDetail = async (ids) => {
   }
 };
 
-export const getSurveyDetail = async (ids) => {
+export const getSurveyDetail = async (id) => {
   const path = '/operationLand/get-surveying';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1786,10 +1786,10 @@ export const getSurveyDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getRentalDetail = async (ids) => {
+export const getRentalDetail = async (id) => {
   const path = '/operationLand/get-rental';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1800,10 +1800,10 @@ export const getRentalDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getReceiveRent = async (ids) => {
+export const getReceiveRent = async (id) => {
   const path = '/operationLand/get-receiverent';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1814,10 +1814,10 @@ export const getReceiveRent = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getExpropriationReceiveRent = async (ids) => {
+export const getExpropriationReceiveRent = async (id) => {
   const path = '/operationLand/get-expropriation-receiverent';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
