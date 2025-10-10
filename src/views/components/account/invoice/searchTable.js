@@ -23,7 +23,7 @@ const SearchTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map((item) => (checked && item.invStatus != 'ปกติ')));
+    await setSelected(result.data.map((item) => checked));// && item.invStatus != 'ปกติ'
   }
   const RenderData = (item, index, checked) => {
     return (item && (
