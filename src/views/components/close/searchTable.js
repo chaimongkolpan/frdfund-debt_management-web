@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handleRequestClose, handleRedeemAsset, handleRequestRefund
+  const { result, filter, getData, handleShowDetail, handleRequestClose, handleRedeemAsset, handleRequestRefund, handleShowPlan, handleShowCard
   } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -37,6 +37,9 @@ const SearchTable = (props) => {
               <button className="dropdown-item" type="button" onClick={() => handleRequestClose(item)}>ยื่นคำร้องปิดสัญญา</button>
               <button className="dropdown-item" type="button" onClick={() => handleRedeemAsset(item)}>โอนคืนหลักทรัพย์</button>
               <button className="dropdown-item" type="button" onClick={() => handleRequestRefund(item)}>ทำเรื่องคืนเงิน</button>
+              <hr />
+              <button className="dropdown-item" type="button" onClick={() => handleShowPlan(item)}>ตารางผ่อนชำระหนี้คืน</button>
+              <button className="dropdown-item" type="button" onClick={() => handleShowCard(item)}>การ์ดลูกหนี้</button>
             </div>
           </div>
         </td>
