@@ -15,6 +15,7 @@ import {
   cleanData,
   searchReimbursement,
   getReimbursementPlan,
+  getReimbursementSummary,
   getReimbursementCard,
   printPlanRe,
   printCardRe,
@@ -26,6 +27,7 @@ const PageContent = () => {
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
   const [plan, setPlan] = useState(null);
+  const [summary, setSummary] = useState(null);
   const [planPrint, setPlanPrint] = useState(null);
   const [card, setCard] = useState(null);
   const [cardPrint, setCardPrint] = useState(null);
@@ -75,6 +77,12 @@ const PageContent = () => {
     } else {
       await setPlan(null)
       await setPlanPrint(null)
+    }
+    const resultSum = await getReimbursementSummary(param);
+    if (resultSum.isSuccess) {
+      await setSummary(resultSum);
+    } else {
+      await setSummary(null);
     }
     await setOpenPlan(true);
   }
@@ -183,9 +191,11 @@ const PageContent = () => {
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3" style={{ backgroundColor: 'honeydew', color: 'grey', height: 60 }}>
                         <div className="d-flex justify-content-evenly align-items-center h-100">
-                          <span>{'เงินต้น : '}<b>{toCurrency(policy?.loan_amount ?? 0, 2)}</b></span>
-                          <span>{'ดอกเบี้ย : '}<b>{toCurrency(policy?.interest ?? 0, 2)}</b></span>
-                          <span>{'ยอดที่ต้องชำระ : '}<b>{toCurrency(policy?.loan_amount ?? 0, 2)}</b></span>
+                          <span>{'ชำระเงินต้น : '}<b>{toCurrency(summary?.deduc ?? 0, 2)}</b></span>
+                          <span>{'ชำระดอกเบี้ย : '}<b>{toCurrency(summary?.interest ?? 0, 2)}</b></span>
+                          <span>{'ชำระค่าปรับ : '}<b>{toCurrency(summary?.plub ?? 0, 2)}</b></span>
+                          <span>{'รวมยอดเงินที่ชำระ : '}<b>{toCurrency(summary?.amountPaid ?? 0, 2)}</b></span>
+                          <span>{'ยอดเงินต้นคงเหลือ : '}<b>{toCurrency(summary?.balance ?? 0, 2)}</b></span>
                         </div>
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
