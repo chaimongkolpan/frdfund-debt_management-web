@@ -2647,6 +2647,20 @@ export const getReimbursementPlan = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getReimbursementSummary = async (filter) => {
+  const path = '/Account/get-reimbursement-summary';
+  try {
+    const result = await axios.get(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const printPlanRe = async (params) => {
   const path = '/report/Print-PayLog';
   try {
