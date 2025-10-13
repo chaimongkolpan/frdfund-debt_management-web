@@ -18,7 +18,7 @@ const Setting = () => {
   const [isAddNpl, setAddNpl] = useState(null);
   const [filter, setFilter] = useState({
     currentPage: 1,
-    pageSize: process.env.PAGESIZE,
+    pageSize: process.env.VITE_PAGESIZE,
   });
   const fetchData = async (filter) => {
     const result = await getUsers(filter);

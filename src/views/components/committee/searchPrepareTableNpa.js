@@ -32,7 +32,7 @@ const SearchTable = (props) => {
             <div className="form-check ms-2 mb-0 fs-8">
               <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
-          ) : (((paging?.currentPage - 1) * process.env.PAGESIZE) + index + 1)}
+          ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
         <td>{item.branch_proposes_approval_no}</td>
         <td>{item.branch_proposes_approval_date ? stringToDateTh(item.branch_proposes_approval_date, false, 'DD/MM/YYYY') : '-'}</td>
