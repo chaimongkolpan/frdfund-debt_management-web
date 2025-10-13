@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { stringToDateTh, toCurrency } from "@utils";
+import { stringToDateTh, toCurrency, getBookNo } from "@utils";
 import DatePicker from "@views/components/input/DatePicker";
 import BookNo from "@views/components/input/BookNo";
 import { 
@@ -144,7 +144,7 @@ const BookDateTable = (props) => {
                     </div>
                   </div>
                   <div className="col-sm-12 col-md-12 col-lg-6">
-                    <BookNo title={'เลขที่หนังสือฎีกา'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => onChange('petition_no_office',val)} value={savePetition?.petition_no_office} />
+                    <BookNo title={'เลขที่หนังสือฎีกา'} subtitle={'กฟก.'+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => onChange('petition_no_office',val)} value={savePetition?.petition_no_office} />
                   </div>
                   <div className="col-sm-12 col-md-12 col-lg-6">
                     <DatePicker title={'วันที่หนังสือฎีกา'}

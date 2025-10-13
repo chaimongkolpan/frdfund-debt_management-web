@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { toCurrency } from "@utils";
+import { toCurrency, getBookNo } from "@utils";
 import Remark from "@views/components/input/BookNo";
 const DataTable = (props) => {
   const { result,remark, setRemark } = props;
@@ -104,7 +104,7 @@ const DataTable = (props) => {
         <Remark
           value={remark}
           title={'หมายเหตุ'}
-          subtitle={'กฟก.'}
+          subtitle={'กฟก.'+ getBookNo() }
           containerClassname={''}
           handleChange={setRemark}
         />
