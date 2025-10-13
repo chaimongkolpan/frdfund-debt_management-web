@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUserData, toCurrency, stringToDateTh } from "@utils";
+import { getUserData, toCurrency, stringToDateTh, getBookNo } from "@utils";
 import { Spinner } from "reactstrap";
 import DropZone from "@views/components/input/DropZone";
 import DatePicker from "@views/components/input/DatePicker";
@@ -65,7 +65,7 @@ const NPA = () => {
       });
       files.forEach((item) => form.append("files", item));
       form.append("debt_manage_type", 'NPA')
-      form.append("branch_correspondence_no", 'กฟก.' + branchNo)
+      form.append("branch_correspondence_no", 'กฟก.'+ getBookNo()  + branchNo)
       form.append("branch_correspondencel_date", stringToDateTh(branchDate, false))
       const result = await submitConfirmCommitteePrepare(form);
       if (result.isSuccess) {
@@ -262,7 +262,7 @@ const NPA = () => {
       >
         <div className="row">
           <div className="col-sm-12 col-md-12 col-lg-6">
-            <BookNo title={'เลขหนังสือนำส่งสาขา'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setBranchNo(val)} value={branchNo} />
+            <BookNo title={'เลขหนังสือนำส่งสาขา'} subtitle={'กฟก.'+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setBranchNo(val)} value={branchNo} />
           </div>
           <div className="col-sm-12 col-md-12 col-lg-6">
             <DatePicker title={'วันที่หนังสือนำส่งสาขา'}

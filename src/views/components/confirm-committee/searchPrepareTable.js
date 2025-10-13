@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
-import { stringToDateTh, toCurrency } from "@utils";
+import { stringToDateTh, toCurrency, getBookNo } from "@utils";
 import DatePicker from "@views/components/input/DatePicker";
 import BookNo from "@views/components/input/BookNo";
 import EditDetail from "@views/components/confirm-committee/editDetail";
@@ -81,7 +81,7 @@ const SearchTable = (props) => {
     const selectedData = data.filter((i, index) => selected[index]);
     const ids = selectedData.map(item => item.id_debt_confirm.toString());
     const result = await updateConfirmCommitteeCreditor({
-      ids, creditor_confirm_no: 'กฟก.' + creditorNo, creditor_confirm_date: stringToDateTh(creditorDate, false)
+      ids, creditor_confirm_no: 'กฟก.'+ getBookNo()  + creditorNo, creditor_confirm_date: stringToDateTh(creditorDate, false)
     });
     if (result.isSuccess) {
       await getData(filter);
@@ -92,7 +92,7 @@ const SearchTable = (props) => {
     const selectedData = data.filter((i, index) => selected[index]);
     const ids = selectedData.map(item => item.id_debt_confirm.toString());
     const result = await updateConfirmCommitteeNo({
-      ids, debt_manage_type: 'NPL', proposal_committee_no: 'กฟก.' + committeeNo, proposal_committee_date: stringToDateTh(committeeDate, false)
+      ids, debt_manage_type: 'NPL', proposal_committee_no: 'กฟก.'+ getBookNo()  + committeeNo, proposal_committee_date: stringToDateTh(committeeDate, false)
     });
     if (result.isSuccess) {
       await getData(filter);
@@ -309,7 +309,7 @@ const SearchTable = (props) => {
           <br />
           <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6">
-              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
+              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} subtitle={'กฟก.'+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
             </div>
             <div className="col-sm-12 col-md-12 col-lg-6">
               <DatePicker title={'วันที่หนังสือเจ้าหนี้ยืนยันยอด'}
@@ -334,7 +334,7 @@ const SearchTable = (props) => {
           <br />
           <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6">
-              <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'} containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
+              <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
             </div>
             <div className="col-sm-12 col-md-12 col-lg-6">
               <DatePicker title={'วันที่เสนอคณะกรรมการ'}

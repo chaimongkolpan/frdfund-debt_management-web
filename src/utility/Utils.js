@@ -202,3 +202,15 @@ export const saveDate = (value) => {
   const year = (y < 2500 ? y: y - 543);
   return `${year}-${month}-${day}`;
 };
+
+export const getBookNo = () => {
+  const user = JSON.parse(localStorage.getItem("userData"));
+  if (user?.role == 4) return user?.short_th + '/';
+  if (user?.role == 2) return '0600/';
+  if (user?.role == 7) return '0610/';
+  if (user?.role == 8) return '0620/';
+  if (user?.role == 9) return '0630/';
+  if (user?.role == 6) return '0640/';
+  if (user?.role == 5) return '0650/';
+  return ''
+}
