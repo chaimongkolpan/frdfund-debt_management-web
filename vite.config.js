@@ -13,7 +13,7 @@ export default defineConfig({
     define: {
         global: 'globalThis',
         process: {
-            env: process.env.VITE_
+            env: process.env
         }
     },
     server: {
