@@ -141,7 +141,7 @@ const operationLand = forwardRef((props, ref) => {
         }
       };
     const fetchData = async () => {
-        const result = await getOperationDetail(policy.id_KFKPolicy);
+        const result = await getOperationDetail(policy.id_AssetPolicy);
         if (result.isSuccess) {
             await setDate(result.data.policyStartDate)
             await setYear(result.data.numberOfYearPayback)
@@ -225,7 +225,7 @@ const operationLand = forwardRef((props, ref) => {
                             )}
                     </div>
                 </td>
-                <td>{item.assetType}</td>
+                <td>{item.asset_operations_type}</td>
                 <td>{item.policyNO}</td>
                 <td>{item.indexAssetPolicy}</td>
                 <td>{item.assetType}</td>
@@ -326,7 +326,7 @@ const operationLand = forwardRef((props, ref) => {
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                         <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0', border: '#cdd0c7' }}>
                             <tr>
-                                <th rowSpan="2">#</th>
+                                <th rowSpan="2" style={{ minWidth: 30 }}>#</th>
                                 <th colSpan="2">ดำเนินการในที่ดิน</th>
                                 <th colSpan="11">หลักประกัน</th>
                                 <th colSpan="3">ยืมโฉนด</th>
