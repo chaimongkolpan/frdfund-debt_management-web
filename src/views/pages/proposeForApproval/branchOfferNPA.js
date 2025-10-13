@@ -12,7 +12,7 @@ import RequestApproveTable from "@views/components/proposeForApproval/NPA/reques
 import ConfirmTable from "@views/components/proposeForApproval/NPA/confirmTable";
 import FilterRegis from "@views/components/proposeForApproval/NPA/filterResigtration";
 import logo from "@src/assets/images/icons/logo.png";
-import { stringToDateTh, getUserData } from "@utils";
+import { stringToDateTh, getUserData, getBookNo } from "@utils";
 import {
   cleanData,
   searchBranchOfferNpa,
@@ -121,7 +121,7 @@ const BranchOfferNPA = () => {
     const ids = requestApproveData.map(item => item.id_debt_management.toString())
     const param = {
         ids,
-        text_no: 'กฟก.' + bookNo,
+        text_no: 'กฟก.' + getBookNo() + bookNo,
         date: stringToDateTh(bookDate,false)
     }
     const resultUpdate = await updateBranchOfferNpa(param)
@@ -253,7 +253,7 @@ const BranchOfferNPA = () => {
       >
         <div className="row">
           <div className="col-sm-12 col-md-6 col-lg-6 mb-3">
-            <BookNo title={'เลขหนังสือ'} subtitle={'กฟก.'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+            <BookNo title={'เลขหนังสือ'} subtitle={'กฟก.' + getBookNo()} handleChange={(val) => setBookNo(val)} value={bookNo} />
           </div>
           <div className="col-sm-12 col-md-6 col-lg-6 mb-3">
             <DatePicker title={'วันที่หนังสือ'}

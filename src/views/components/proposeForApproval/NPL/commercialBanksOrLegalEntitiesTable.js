@@ -8,7 +8,7 @@ const CommercialBanksOrLegalEntitiesTable = ({
   onSelect = () => {},
   onSelectAll = () => {},
   selectable = true,
-  currentPage = 0,
+  currentPage = 1,
   pageSize = 10
 }) => {
   const [selData, setSelected] = useState([]);
