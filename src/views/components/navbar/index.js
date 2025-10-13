@@ -12,7 +12,7 @@ import logo from '@src/assets/images/icons/logo.png'
 
 
 
-const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
+const prefix_url = process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : ''
 const ThemeNavbar = props => {
   // ** Props
   const { menuVisibility, setMenuVisibility } = props; 

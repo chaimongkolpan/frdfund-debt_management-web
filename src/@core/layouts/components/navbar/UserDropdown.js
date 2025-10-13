@@ -21,7 +21,7 @@ import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from
 // ** Default Avatar Image
 import defaultAvatar from '@src/assets/images/portrait/small/avatar-s-11.jpg'
 
-const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
+const prefix_url = process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : ''
 const UserDropdown = () => {
   // ** Store Vars
   const dispatch = useDispatch()

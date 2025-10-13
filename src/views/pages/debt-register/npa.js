@@ -49,7 +49,7 @@ const DebtRegisterNpa = () => {
   const [makelistSelected, setMakeList] = useState(null);
   const [filterAdded, setFilterAdded] = useState({
     currentPage: 1,
-    pageSize: process.env.PAGESIZE
+    pageSize: process.env.VITE_PAGESIZE
   });
   const handleAddRegister = async (debt) => {
     const result = await addRegistrationNPA(debt);

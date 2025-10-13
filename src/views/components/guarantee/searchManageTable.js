@@ -48,7 +48,7 @@ const SearchTable = (props) => {
             <div className="form-check ms-2 mb-0 fs-8">
               <input className="form-check-input" disabled={item.transferStatus == 'จัดเก็บหลักทรัพย์'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
-          ) : (((paging?.currentPage - 1) * process.env.PAGESIZE) + index + 1)}
+          ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
         <td>{item.debt_management_asset_no}</td>
         <td>{item.debt_management_asset_date ? stringToDateTh(item.debt_management_asset_date, false) : '-'}</td>

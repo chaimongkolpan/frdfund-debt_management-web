@@ -8,17 +8,17 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 export default defineConfig({
-    base: process.env.ENVIRONMENT == 'uat' ? '/uat/': '',
+    base: process.env.VITE_ENVIRONMENT == 'uat' ? '/uat/': '',
     plugins: [react()],
     define: {
         global: 'globalThis',
         process: {
-            env: process.env
+            env: process.env.VITE_
         }
     },
     server: {
         host: '0.0.0.0',
-        port: Number(process.env.PORT) || 3000,
+        port: Number(process.env.VITE_PORT) || 3000,
         allowedHosts: [
             'fonts.googleapis.com',
             'debtinfo.frdfund.org'

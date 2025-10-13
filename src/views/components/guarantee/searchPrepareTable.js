@@ -36,7 +36,7 @@ const SearchTable = (props) => {
                 }}
               />
             </div>
-          ) : (((paging?.currentPage - 1) * process.env.PAGESIZE) + index + 1)}
+          ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
         <td>{item.k_idcard}</td>
         <td>{item.k_name_prefix}</td>
