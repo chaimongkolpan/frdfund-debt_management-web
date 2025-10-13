@@ -32,7 +32,7 @@ const DebtRegisterBigDataTable = (props) => {
             <div className="form-check ms-2 mb-0 fs-8">
               <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
-          ) : (((paging?.currentPage - 1) * process.env.PAGESIZE) + index + 1)}
+          ) : (((paging?.currentPage - 1) * process.env.VITE_.PAGESIZE) + index + 1)}
         </td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>

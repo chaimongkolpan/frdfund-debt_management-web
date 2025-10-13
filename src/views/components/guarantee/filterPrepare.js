@@ -26,7 +26,7 @@ const Filter = (props) => {
         loan_province: "",
         ...filter,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE,
+        pageSize: process.env.VITE_.PAGESIZE,
         //  transferStatus: ((filter?.transferStatus == 'all' || !filter?.transferStatus) ? statusOp : [filter?.transferStatus])
       });
     }

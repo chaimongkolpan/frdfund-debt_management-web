@@ -32,7 +32,7 @@ const Filter = (props) => {
         month: (new Date().getMonth() + 1).toString(),
         ...filter,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE,
+        pageSize: process.env.VITE_.PAGESIZE,
       });
     }
   }

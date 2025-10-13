@@ -33,7 +33,7 @@ const Filter = (props) => {
         debtClassifyStatusList: ['ยืนยันยอดสำเร็จ','อยู่ระหว่างการชำระหนี้แทน'],
         ...filter,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE
+        pageSize: process.env.VITE_.PAGESIZE
       });
     }
   }

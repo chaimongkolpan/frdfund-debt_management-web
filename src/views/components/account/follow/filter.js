@@ -26,7 +26,7 @@ const Filter = (props) => {
         debtStatusType: "",
         ...filter,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE,
+        pageSize: process.env.VITE_.PAGESIZE,
       });
     }
   }

@@ -9,7 +9,7 @@ const SearchTable = (props) => {
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index}>
-        <td className="fs-9 align-middle">{((filter?.currentPage - 1) * process.env.PAGESIZE) + index + 1}</td>
+        <td className="fs-9 align-middle">{((filter?.currentPage - 1) * process.env.VITE_.PAGESIZE) + index + 1}</td>
         {/* <td>
           <div className='d-flex justify-content-center'>
             <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" type='button' onClick={() => handleOperation(item)}>

@@ -21,7 +21,7 @@ const Filter = (props) => {
         restructurePolicyStatus: ['ยังไม่รับปรับโครงสร้างหนี้','ปรับโครงสร้างหนี้แล้ว'],
         ...filter,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE,
+        pageSize: process.env.VITE_.PAGESIZE,
       });
     }
   }

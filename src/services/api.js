@@ -1,16 +1,16 @@
 import axios from "axios";
 import useJwt from '@src/auth/jwt/useJwt'
 const config = useJwt.jwtConfig
-const url = process.env.API_URL ?? (process.env.ENVIRONMENT == 'develop' 
+const url = process.env.VITE_.API_URL ?? (process.env.VITE_.ENVIRONMENT == 'develop' 
                                       ? 'https://localhost:7039' : (
-                                        process.env.ENVIRONMENT == 'uat' 
+                                        process.env.VITE_.ENVIRONMENT == 'uat' 
                                         ? 'https://debtinfo.frdfund.org/uat/api' 
                                         : 'https://debtinfo.frdfund.org/api'
                                     ));
 axios.defaults.baseURL = url;
 /*
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
-axios.defaults.headers.common['access-control-allow-origin'] = (process.env.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = (process.env.VITE_.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
+axios.defaults.headers.common['access-control-allow-origin'] = (process.env.VITE_.ENVIRONMENT == 'develop' ? 'https://localhost:7039' : 'https://debtinfo.frdfund.org');
 */
 // axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
 // axios.defaults.headers.common['authorization'] = `Bearer ${localStorage.getItem(config.storageTokenKeyName)}`;
@@ -22,7 +22,7 @@ axios.interceptors.response.use(response => {
   const exemptPaths = ['login'];
   const isExempt = exemptPaths.some(path => currentPath.includes(path))
   if (error.status == 401 && !isExempt ) {
-    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
+    window.location.href = (process.env.VITE_.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
   }
   return error;
 });
@@ -77,7 +77,7 @@ export const getNplCondition = async () => {
 export const getAlertSide = async () => {
   const path = "/common/alert";
   try {
-    if (process.env.ENVIRONMENT == 'develop')
+    if (process.env.VITE_.ENVIRONMENT == 'develop')
       return { isSuccess: true, data: {} }
     else {
       const result = await axios.get(path);
@@ -111,7 +111,7 @@ export const getProvinces = async () => {
     else return defaultErrorResponse;
   } catch (e) {
     console.error("error: " + path + " =>", e);
-    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
+    window.location.href = (process.env.VITE_.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
     return defaultErrorResponse;
   }
 };
@@ -181,7 +181,7 @@ export const getBigDataProvinces = async () => {
     else return defaultErrorResponse;
   } catch (e) {
     console.error("error: " + path + " =>", e);
-    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
+    window.location.href = (process.env.VITE_.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
     return defaultErrorResponse;
   }
 };

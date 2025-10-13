@@ -17,7 +17,7 @@ const SearchFilter = (props) => {
         ...filter,
         // debtClassifyStatus: status,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE
+        pageSize: process.env.VITE_.PAGESIZE
       });
     }
   }

@@ -79,7 +79,7 @@ const Report = () => {
       await setNow(new Date());
     }, 1000);
 
-    if (process.env.REPORT_NEW == "1") {
+    if (process.env.VITE_.REPORT_NEW == "1") {
       if (await downloadReport(param, filenames[id - 1])) {
         toast((t) => (
           <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
