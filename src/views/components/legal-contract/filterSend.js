@@ -29,7 +29,7 @@ const Filter = (props) => {
         debtStatus: "",
         ...filter,
         currentPage: 1,
-        pageSize: process.env.VITE_.PAGESIZE,
+        pageSize: process.env.VITE_PAGESIZE,
         policyStatus: ((filter?.policyStatus == 'all' || !filter?.policyStatus) ? statusOp : [filter?.policyStatus])
       });
     }

@@ -34,7 +34,7 @@ const Filter = (props) => {
         DebtClassifyStatusList: ['อยู่ระหว่างการโอนเงินให้สาขา','อยู่ระหว่างการชำระหนี้แทน','ชำระหนี้แทนแล้ว'],
         ...filter,
         currentPage: 1,
-        pageSize: process.env.VITE_.PAGESIZE
+        pageSize: process.env.VITE_PAGESIZE
       });
     }
   }

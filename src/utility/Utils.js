@@ -75,7 +75,7 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
-  const prefix_url = process.env.VITE_.ENVIRONMENT == 'uat' ? '/uat' : ''
+  const prefix_url = process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : ''
   if (userRole === "admin") return prefix_url + '/debt';
   if (userRole === "client") return prefix_url + "/debt";
   return prefix_url + "/login";

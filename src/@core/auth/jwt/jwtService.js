@@ -38,7 +38,7 @@ export default class JwtService {
         const { config, response } = error
         const originalRequest = config
 
-        const prefix_url = process.env.VITE_.ENVIRONMENT == 'uat' ? '/uat' : ''
+        const prefix_url = process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : ''
         // ** if (status === 401) {
         if (response && response.status === 401) {
           window.location.href = `${prefix_url}/login`

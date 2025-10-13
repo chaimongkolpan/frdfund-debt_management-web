@@ -46,7 +46,7 @@ const BranchOfferNPL = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [filterAdded, setFilterAdded] = useState({
     currentPage: 1,
-    pageSize: process.env.VITE_.PAGESIZE,
+    pageSize: process.env.VITE_PAGESIZE,
   });
   const [requestApproveData, setRequestApproveData] = useState([]);
   const onUpload = async () => {

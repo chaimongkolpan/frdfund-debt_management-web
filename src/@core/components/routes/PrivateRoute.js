@@ -7,7 +7,7 @@ import { AbilityContext } from '@src/utility/context/Can'
 
 // ** Spinner Import
 import Spinner from '../spinner/Loading-spinner'
-const prefix_url = process.env.VITE_.ENVIRONMENT == 'uat' ? '/uat' : ''
+const prefix_url = process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : ''
 
 const PrivateRoute = ({ children, route }) => {
   // ** Hooks & Vars

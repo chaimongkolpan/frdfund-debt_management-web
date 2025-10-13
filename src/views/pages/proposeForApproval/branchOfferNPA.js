@@ -46,7 +46,7 @@ const BranchOfferNPA = () => {
   const [requestApproveData, setRequestApproveData] = useState([]);
   const [filterAdded, setFilterAdded] = useState({
     currentPage: 1,
-    pageSize: process.env.VITE_.PAGESIZE,
+    pageSize: process.env.VITE_PAGESIZE,
   });
   const onUpload = async () => {
     const form = new FormData();
