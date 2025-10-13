@@ -12,7 +12,7 @@ import { isUserLoggedIn } from "@utils";
 import { handleLogout } from '@store/authentication'
 
 import "@assets/css/theme.css"
-const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
+const prefix_url = process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : ''
 
 const VerticalLayout = props => {
   const navigate = useNavigate();

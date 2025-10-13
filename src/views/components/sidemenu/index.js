@@ -11,7 +11,7 @@ import {
 
 // ** Utils
 import { getUserData } from '@utils'
-const prefix_url = process.env.ENVIRONMENT == 'uat' ? '/uat' : ''
+const prefix_url = process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : ''
 const Sidebar = props => {
   const user = getUserData();
   const branchList = [1,4]; // [1,2,3,4,5,6,7,8,9,10,11,12,13,14];

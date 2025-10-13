@@ -36,7 +36,7 @@ const SearchFilter = (props) => {
         checkingStatus: "all",
         ...filter,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE
+        pageSize: process.env.VITE_PAGESIZE
       });
     }
   }

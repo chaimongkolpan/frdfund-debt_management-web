@@ -52,7 +52,7 @@ const DebtRegisterFilter = (props) => {
         max: 0,
         ...filter,
         currentPage: 1,
-        pageSize: process.env.PAGESIZE
+        pageSize: process.env.VITE_PAGESIZE
       });
     }
   }

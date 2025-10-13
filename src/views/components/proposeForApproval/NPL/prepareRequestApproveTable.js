@@ -90,7 +90,7 @@ const PrepareRequestApproveTable = (props) => {
             onSelectAll={onSelectAllCooperative}
             selectable={can_action}
             currentPage={paging?.currentPage ?? 0}
-            pageSize={process.env.PAGESIZE}
+            pageSize={process.env.VITE_PAGESIZE}
           />
         )}
         {(commercialBanksOrLegalEntitiesData && commercialBanksOrLegalEntitiesData.length > 0) && (
@@ -102,7 +102,7 @@ const PrepareRequestApproveTable = (props) => {
             onSelectAll={onSelectAllCommercialBanksOrLegalEntities}
             selectable={can_action}
             currentPage={paging?.currentPage ?? 0}
-            pageSize={process.env.PAGESIZE}
+            pageSize={process.env.VITE_PAGESIZE}
           />
         )}
         {paging?.total > 0 && (
