@@ -17,6 +17,7 @@ import {
   searchFollow,
   saveIsLoss,
   getIsLoss,
+  exportSaveFollow,
 } from "@services/api";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
@@ -111,7 +112,12 @@ const PageContent = () => {
     await setOpenDetail(true);
   }
   const exportFollow = async () => {
-
+    await setLoadBigData(true);
+    const result = await exportSaveFollow(filter);
+    await setLoadBigData(false);
+    if (result.isSuccess) {
+      await onSearch(filter)
+    } 
   }
   return (
     <>

@@ -29,31 +29,47 @@ const PageContent = () => {
   const [filter, setFilter] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
   const handlePrint = async (selected) => {
-    const ids = selected.map(item => { return { id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO } })
+    await setLoadBigData(true);
+    const ids = selected.map(item => { return { id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO, invStatus: item.invStatus } })
     const selectedData = await getInvoice(ids);
-    const receipts = selectedData.data;
+    const receipts = selectedData.data.map(rec => {
+      return {
+        ...rec,
+        isEnd: ids.find(item => item.policyNo == rec.policyNo && item.invStatus == 'สิ้นสุดสัญญา') != null
+      }
+    });
+    console.log('re1', receipts, ids)
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }
   }
   const printReceipt = async (item) => {
-    const ids = [{ id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO }]
+    await setLoadBigData(true);
+    const ids = [{ id: (item.invStatus == 'สิ้นสุดสัญญา' ? 0 : item.id_PlanPay), policyNo: item.policyNO, invStatus: item.invStatus }]
     const selectedData = await getInvoice(ids);
-    const receipts = selectedData.data.map(item => { return { ...item, isExportExcel: false }});
+    const receipts = selectedData.data.map(rec => { 
+      return { ...rec, isExportExcel: false, 
+        isEnd: item.invStatus == 'สิ้นสุดสัญญา' }
+    });
+    console.log('re2', receipts, ids)
     const param = { type: 'application/octet-stream', filename: 'หนังสือ-ใบแจ้งหนี้_' + (new Date().getTime()) + '.zip', data: { receipts } };
     const result = await printInvoice(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }
   }
   const handleShowDetail = async (item) => {
+    await setLoadBigData(true);
     await setPolicy(item);
     const result = await getInvoiceByPolicyNo(item.policyNO);
     if (result.isSuccess) {
       await setPlans(result.data)
     }
+    await setLoadBigData(false);
     await setOpenDetail(true);
   }
   const onSearch = async (filter) => {

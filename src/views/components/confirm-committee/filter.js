@@ -86,7 +86,7 @@ const SearchFilter = (props) => {
     const resultCommitteeDate = await getCommitteeDate("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
@@ -183,10 +183,9 @@ const SearchFilter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              defaultValue={'all'} 
-              options={provOp}
-              handleChange={(val) => onChange('province', val)}
-              hasAll />
+              defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
+              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
+              handleChange={(val) => onChange('province', val)} />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">

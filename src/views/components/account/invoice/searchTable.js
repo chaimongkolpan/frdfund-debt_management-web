@@ -23,14 +23,15 @@ const SearchTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map((item) => (checked && item.invStatus != 'ปกติ')));
+    await setSelected(result.data.map((item) => checked));// && item.invStatus != 'ปกติ'
   }
   const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
-            <input className="form-check-input" disabled={item.invStatus == 'ปกติ'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            {/* disabled={item.invStatus == 'ปกติ'} */}
+            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
         <td>{item.k_idcard}</td>

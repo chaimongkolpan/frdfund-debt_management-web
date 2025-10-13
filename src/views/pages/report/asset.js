@@ -71,7 +71,9 @@ const Report = () => {
       year, 
       province: prov ? prov?.id : 0, 
       creditorType, creditor, debtType, debtStatus ,
-      type: 'application/octet-stream', filename: filenames[id - 1]
+      type: 'application/octet-stream', filename: filenames[id - 1],
+      firstname: user?.firstname,
+      lastname: user?.lastname,
     }
     var myInterval = setInterval(async () => {
       await setNow(new Date());
@@ -149,7 +151,7 @@ const Report = () => {
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProv(resultProv.data)
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
@@ -230,10 +232,10 @@ const Report = () => {
                           {provOp && (
                             <Dropdown 
                               title={'จังหวัด'} 
-                              defaultValue={'all'} 
-                              options={provOp}
+                              defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
+                              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
                               handleChange={(val) => onChange('province', val)}
-                              hasAll />
+                              />
                           )}
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-6">

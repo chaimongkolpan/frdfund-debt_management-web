@@ -15,6 +15,7 @@ import {
   cleanData,
   searchReimbursement,
   getReimbursementPlan,
+  getReimbursementSummary,
   getReimbursementCard,
   printPlanRe,
   printCardRe,
@@ -26,6 +27,7 @@ const PageContent = () => {
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
   const [plan, setPlan] = useState(null);
+  const [summary, setSummary] = useState(null);
   const [planPrint, setPlanPrint] = useState(null);
   const [card, setCard] = useState(null);
   const [cardPrint, setCardPrint] = useState(null);
@@ -76,18 +78,33 @@ const PageContent = () => {
       await setPlan(null)
       await setPlanPrint(null)
     }
+    const resultSum = await getReimbursementSummary(param);
+    if (resultSum.isSuccess) {
+      await setSummary(resultSum);
+    } else {
+      await setSummary(null);
+    }
     await setOpenPlan(true);
   }
   const printCard = async () => {
-    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', data: cardPrint };
+    await setLoadBigData(true);
+    const cardReq = {
+      ...cardPrint,
+      fname: user?.firstname,
+      lname: user?.lastname,
+    }
+    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', data: cardReq };
     const result = await printCardRe(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }
   }
   const printPlan = async () => {
+    await setLoadBigData(true);
     const param = { type: 'application/octet-stream', filename: 'ชำระหนี้คืน_' + (new Date().getTime()) + '.xlsx', data: planPrint };
     const result = await printPlanRe(param);
+    await setLoadBigData(false);
     if (result.isSuccess) {
       await onSearch(filter)
     }
@@ -174,9 +191,11 @@ const PageContent = () => {
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3" style={{ backgroundColor: 'honeydew', color: 'grey', height: 60 }}>
                         <div className="d-flex justify-content-evenly align-items-center h-100">
-                          <span>{'เงินต้น : '}<b>{toCurrency(policy?.loan_amount ?? 0, 2)}</b></span>
-                          <span>{'ดอกเบี้ย : '}<b>{toCurrency(policy?.interest ?? 0, 2)}</b></span>
-                          <span>{'ยอดที่ต้องชำระ : '}<b>{toCurrency(policy?.loan_amount ?? 0, 2)}</b></span>
+                          <span>{'ชำระเงินต้น : '}<b>{toCurrency(summary?.deduc ?? 0, 2)}</b></span>
+                          <span>{'ชำระดอกเบี้ย : '}<b>{toCurrency(summary?.interest ?? 0, 2)}</b></span>
+                          <span>{'ชำระค่าปรับ : '}<b>{toCurrency(summary?.plub ?? 0, 2)}</b></span>
+                          <span>{'รวมยอดเงินที่ชำระ : '}<b>{toCurrency(summary?.amountPaid ?? 0, 2)}</b></span>
+                          <span>{'ยอดเงินต้นคงเหลือ : '}<b>{toCurrency(summary?.balance ?? 0, 2)}</b></span>
                         </div>
                       </div>
                       <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
@@ -286,11 +305,11 @@ const PageContent = () => {
                             <td>{item.cashierChequeNo}</td>
                             <td>{item.receiptDate}</td>
                             <td>{item.receiptNo}</td>
-                            <td>{toCurrency(item.amountPaid, 2)}</td>
-                            <td>{toCurrency(item.planDeduc, 2)}</td>
-                            <td>{toCurrency(item.intdeduc, 2)}</td>
-                            <td>{toCurrency(item.deduc, 2)}</td>
-                            <td>{toCurrency(item.balance, 2)}</td>
+                            <td>{item.trc == 'PAYOUT' ? toCurrency(item.balance, 2) : item.trc == 'SPN' ? toCurrency(Math.abs(item.amountPaid), 2) : ''}</td>
+                            <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.planDeduc, 2)}</td>
+                            <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.intdeduc, 2)}</td>
+                            <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.deduc, 2)}</td>
+                            <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.amountPaid, 2)}</td>
                             <td>{toCurrency(item.balance, 2)}</td>
                           </tr>
                         ))) : (

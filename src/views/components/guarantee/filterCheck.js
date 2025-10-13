@@ -40,7 +40,7 @@ const Filter = (props) => {
     const resultDate = await getSendAssetPolicyDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('loan_province', temp[0]);
     } else {
        await setProvOp(null);
     }
@@ -114,10 +114,9 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              defaultValue={'all'} 
-              options={provOp}
-              handleChange={(val) => onChange('loan_province', val)}
-              hasAll />
+              defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
+              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
+              handleChange={(val) => onChange('loan_province', val)} />
           )}
         </div>
 

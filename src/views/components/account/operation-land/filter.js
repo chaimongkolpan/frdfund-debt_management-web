@@ -33,7 +33,7 @@ const Filter = (props) => {
     const resultProv = await getBigDataProvinces();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('loan_province', temp[0]);
     } else {
        await setProvOp(null);
     }
@@ -78,10 +78,9 @@ const Filter = (props) => {
         <div className="col-sm-12 col-md-6 col-lg-6">    
             <Dropdown 
               title={'จังหวัด'} 
-              defaultValue={'all'} 
-              options={provOp}
-              handleChange={(val) => onChange('loan_province', val)}
-              hasAll />
+              defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
+              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
+              handleChange={(val) => onChange('loan_province', val)} />
         </div>
         <div className="col-12">
           <div className="row g-3 justify-content-center">

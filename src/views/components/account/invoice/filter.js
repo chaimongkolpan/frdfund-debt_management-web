@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Textbox from "@views/components/input/Textbox";
+import DatePicker from "@views/components/input/DatePicker";
 import { 
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
+  getYears,
 } from "@services/api";
 
 const Filter = (props) => {
+  const nextMonth = new Date(new Date().getTime()+(365*24*3600000));
   const { handleSubmit, setLoading } = props;
   const [isMounted, setIsMounted] = useState(false);
   const [filter, setFilter] = useState({});
   const [provOp, setProvOp] = useState(null);
+  const [yearOp, setYearOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
   const statusOp = ["แจ้งเตือน","ปกติ","สิ้นสุดสัญญา"];
+  const monthOp = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน"
+    ,"กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
   const onSubmit = () => {
     if (handleSubmit) {
       handleSubmit({
@@ -22,6 +28,8 @@ const Filter = (props) => {
         name: "",
         loan_province: "",
         printStatus: "",
+        year: (new Date().getFullYear() + 543).toString(),
+        month: (new Date().getMonth() + 1).toString(),
         ...filter,
         currentPage: 1,
         pageSize: process.env.PAGESIZE,
@@ -76,10 +84,17 @@ const Filter = (props) => {
     }))
   }
   async function fetchData() {
+    const resultYear = await getYears();
     const resultProv = await getBigDataProvinces();
+    if (resultYear.isSuccess) {
+      await setYearOp([
+        ...([nextMonth.getFullYear() + 543]),
+        ...resultYear.data,
+      ]);
+    } else await setYearOp(null);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);  if (temp.length == 1) onChange('loan_province', temp[0]);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
@@ -139,10 +154,10 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown 
               title={'จังหวัด'} 
-              defaultValue={'all'} 
-              options={provOp}
+              defaultValue={provOp.length > 1 ? 'all' : provOp[0]} 
+              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
               handleChange={(val) => onChange('loan_province', val)}
-              hasAll />
+              />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
@@ -181,6 +196,24 @@ const Filter = (props) => {
               options={statusOp}
               handleChange={(val) => onChange('printStatus', val)}
               hasAll />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {yearOp && (
+            <Dropdown 
+              title={'ปี'} 
+              defaultValue={new Date().getFullYear() + 543} 
+              options={yearOp}
+              handleChange={(val) => onChange('year', val)} />
+          )}
+        </div>
+        <div className="col-sm-12 col-md-6 col-lg-6">
+          {yearOp && (
+            <Dropdown 
+              title={'เดือน'} 
+              defaultValue={monthOp[new Date().getMonth()]} 
+              options={monthOp}
+              handleChange={(val) => onChange('month', (monthOp.indexOf(val) + 1).toString())} />
           )}
         </div>
         <div className="col-12">

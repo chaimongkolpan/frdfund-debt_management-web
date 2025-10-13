@@ -111,6 +111,7 @@ export const getProvinces = async () => {
     else return defaultErrorResponse;
   } catch (e) {
     console.error("error: " + path + " =>", e);
+    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
     return defaultErrorResponse;
   }
 };
@@ -180,6 +181,7 @@ export const getBigDataProvinces = async () => {
     else return defaultErrorResponse;
   } catch (e) {
     console.error("error: " + path + " =>", e);
+    window.location.href = (process.env.ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
     return defaultErrorResponse;
   }
 };
@@ -1741,10 +1743,10 @@ export const searchOperationLand = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getOperationDetail = async (ids) => {
+export const getOperationDetail = async (id) => {
   const path = '/operationLand/get-operationland';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1755,10 +1757,10 @@ export const getOperationDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getExpropriationDetail = async (ids) => {
+export const getExpropriationDetail = async (id) => {
   const path = '/operationLand/get-expropriation';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1770,10 +1772,10 @@ export const getExpropriationDetail = async (ids) => {
   }
 };
 
-export const getSurveyDetail = async (ids) => {
+export const getSurveyDetail = async (id) => {
   const path = '/operationLand/get-surveying';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1784,10 +1786,10 @@ export const getSurveyDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getRentalDetail = async (ids) => {
+export const getRentalDetail = async (id) => {
   const path = '/operationLand/get-rental';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1798,10 +1800,10 @@ export const getRentalDetail = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getReceiveRent = async (ids) => {
+export const getReceiveRent = async (id) => {
   const path = '/operationLand/get-receiverent';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -1812,10 +1814,10 @@ export const getReceiveRent = async (ids) => {
     return defaultErrorResponse;
   }
 };
-export const getExpropriationReceiveRent = async (ids) => {
+export const getExpropriationReceiveRent = async (id) => {
   const path = '/operationLand/get-expropriation-receiverent';
   try {
-    const result = await axios.get(path, { params: {ids} });
+    const result = await axios.get(path, { params: {id} });
     if (result.status == 200)
       return result.data;
     else
@@ -2645,6 +2647,20 @@ export const getReimbursementPlan = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getReimbursementSummary = async (filter) => {
+  const path = '/Account/get-reimbursement-summary';
+  try {
+    const result = await axios.get(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const printPlanRe = async (params) => {
   const path = '/report/Print-PayLog';
   try {
@@ -2742,6 +2758,20 @@ export const searchFollow = async (filter) => {
     console.error('error: ' + path + ' =>', e);
     return defaultErrorResponse;
   }
+};
+export const exportSaveFollow = async (filter) => {
+  const path = '/Account/export-follow';
+  try {
+    const result = await axios.post(path, filter, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: 'application/octet-stream' });
+      SaveAs(blob, 'การติดตามชำระหนี้คืน.xlsx');
+    }
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+  return;
 };
 export const saveIsLoss = async (params) => {
   const path = '/Account/add-is-loss';

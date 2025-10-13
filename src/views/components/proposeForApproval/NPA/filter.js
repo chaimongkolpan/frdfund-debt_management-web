@@ -97,7 +97,7 @@ const Filter = (props) => {
     const resultChecking = await getCheckingStatuses();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map((item) => item.name);
-      await setProvOp(temp);
+      await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map((item) => item.name);
@@ -151,10 +151,9 @@ const Filter = (props) => {
           {provOp && (
             <Dropdown
               title={"จังหวัด"}
-              defaultValue={"all"}
-              options={provOp}
+              defaultValue={provOp.length > 1 ? 'all' : provOp[0]}
+              options={provOp} hasAll={provOp.length > 1} hideSel={provOp.length == 1}
               handleChange={(val) => onChange("province", val)}
-              hasAll
             />
           )}
         </div>
