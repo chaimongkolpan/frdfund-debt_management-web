@@ -202,7 +202,7 @@ const Filter = (props) => {
           {yearOp && (
             <Dropdown 
               title={'ปี'} 
-              defaultValue={new Date().getFullYear() + 543} 
+              defaultValue={null} 
               options={yearOp}
               handleChange={(val) => onChange('year', val)} />
           )}
@@ -211,7 +211,7 @@ const Filter = (props) => {
           {yearOp && (
             <Dropdown 
               title={'เดือน'} 
-              defaultValue={monthOp[new Date().getMonth()]} 
+              defaultValue={null} 
               options={monthOp}
               handleChange={(val) => onChange('month', (monthOp.indexOf(val) + 1).toString())} />
           )}
