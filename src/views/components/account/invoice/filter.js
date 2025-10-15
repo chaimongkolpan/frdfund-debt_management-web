@@ -28,8 +28,6 @@ const Filter = (props) => {
         name: "",
         loan_province: "",
         printStatus: "",
-        year: (new Date().getFullYear() + 543).toString(),
-        month: (new Date().getMonth() + 1).toString(),
         ...filter,
         currentPage: 1,
         pageSize: process.env.VITE_PAGESIZE,
