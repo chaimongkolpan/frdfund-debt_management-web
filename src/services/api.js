@@ -74,6 +74,28 @@ export const getNplCondition = async () => {
     return defaultErrorResponse;
   }
 };
+export const getConstProvince = async () => {
+  const path = "/const-province";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateConstProvince = async (params) => {
+  const path = "/const-province";
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 export const getAlertSide = async () => {
   const path = "/common/alert";
   try {
