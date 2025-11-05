@@ -30,8 +30,8 @@ const ClassifySearchFilter = (props) => {
         creditorType: "all",
         creditor: "all",
         debtStatus: "all",
-        checkingStatus: "all",
         ...filter,
+        debtClassifyStatus: filter.debtClassifyStatus == "all" ? '' : filter.debtClassifyStatus,
         currentPage: 1,
         pageSize: process.env.VITE_PAGESIZE
       });
@@ -235,7 +235,7 @@ const ClassifySearchFilter = (props) => {
               title={'สถานะสัญญาจำแนกมูลหนี้'} 
               defaultValue={'all'} 
               options={checkingStatusOp}
-              handleChange={(val) => onChange('checkingStatus', val)}
+              handleChange={(val) => onChange('debtClassifyStatus', val)}
               hasAll />
           )}
         </div>
