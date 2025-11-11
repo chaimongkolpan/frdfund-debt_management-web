@@ -45,6 +45,7 @@ const FullModal = (props) => {
   const [expense, setExpense] = useState(0);
   const [not_correct_list, setNotCorrectList] = useState(null);
   const toggle = () => setModal(!isOpen);
+  const showLegalList = ['ปกติ','ผิดนัดชำระ','ปรับโครงสร้างหนี้'];
 
   const submitDebt = async () => {
     let rate = 1;
@@ -945,12 +946,14 @@ const FullModal = (props) => {
                             <label htmlFor="floatingSelectPrivacy">ดำเนินการทางกฎหมาย</label>
                           </div>
                         </div>
-                        <div className="col-sm-12 col-md-6 col-lg-4">
-                          <DatePicker title={'วันที่ดำเนินการทางกฎหมาย'}
-                            value={debts?.debt_manage_legal_action_date} 
-                            handleChange={(val) => handleChangeDebt('debt_manage_legal_action_date', val)} 
-                          />
-                        </div>
+                        {!showLegalList.includes(debts?.debt_manage_status) && (
+                          <div className="col-sm-12 col-md-6 col-lg-4">
+                            <DatePicker title={'วันที่ดำเนินการทางกฎหมาย'}
+                              value={debts?.debt_manage_legal_action_date} 
+                              handleChange={(val) => handleChangeDebt('debt_manage_legal_action_date', val)} 
+                            />
+                          </div>
+                        )}
                         <div className="col-sm-12 col-md-12 col-lg-12">
                           <Textarea title={'หมายเหตุ'} 
                             handleChange={(val) => handleChangeDebt('debt_manage_remark', val)} 

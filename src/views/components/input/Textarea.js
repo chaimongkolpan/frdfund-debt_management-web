@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input, Label }  from "reactstrap";
 const Textarea = (props) => {
   const { title, placeholder, handleChange, containerClassname, classname, value, disabled } = props;
@@ -8,6 +8,9 @@ const Textarea = (props) => {
     if (handleChange)
       handleChange(newval?.target.value);
   }
+  useEffect(() => {
+    setValue(value ?? ''); 
+  },[value])
   return (
     <div className={`input-group h-100 ${containerClassname ?? ''}`}>
       <Label className={`input-group-text`}>{title}</Label>
