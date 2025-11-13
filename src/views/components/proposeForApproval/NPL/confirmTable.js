@@ -5,9 +5,8 @@ const ConfirmTable = (props) => {
   const { data } = props;
 
   const commercialBanksOrLegalEntitiesData = data.filter(
-    (i) =>
-      i.debt_manage_creditor_type == "ธนาคารพาณิชย์" ||
-      i.debt_manage_creditor_type == "นิติบุคคล"
+    (i) => i.debt_manage_creditor_type != "สหกรณ์"
+      // i.debt_manage_creditor_type == "ธนาคารพาณิชย์" || i.debt_manage_creditor_type == "นิติบุคคล"
   );
   const cooperativeData = data.filter(
     (i) => i.debt_manage_creditor_type == "สหกรณ์"
