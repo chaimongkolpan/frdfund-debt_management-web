@@ -74,17 +74,17 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
         <td>{item.debt_manage_status}</td>
-        <td>{item.debt_manage_objective_details}</td>
-        <td>{item.collateral_type}</td>
+        <td>{item.debt_manage_objective}</td>
+        <td>{item.debt_manage_payment_default_date ? stringToDateTh(item.debt_manage_payment_default_date, false) : '-'}</td>
         {coop ? (
-          <td>{item.debt_management_audit_status}</td>
+          <td>{item.debt_manage_calculate_ondate ? stringToDateTh(item.debt_manage_calculate_ondate, false) : '-'}</td>
         ) : (
-          <td>{item.debt_management_audit_status}</td>
+          <td>{item.debt_manage_contract_date ? stringToDateTh(item.debt_manage_contract_date, false) : '-'}</td>
         )}
         <td>{item.collateral_type}</td>
-        <td>{item.collateral_no}</td>
-        <td>{0}</td>
-        <td>{''}</td>
+        <td>{item.collateral_no ?? ''}</td>
+        <td>{item.collateral_count ?? 0}</td>
+        <td>{item.collateral_status ?? ''}</td>
       </tr>
     ))
   }
@@ -170,7 +170,11 @@ const SearchTable = (props) => {
                 <th>สถานะหนี้</th>
                 <th>วัตถุประสงค์การกู้</th>
                 <th>วันที่ผิดนัดชำระ</th>
-                <th>คำนวณดอกเบี้ยถึงวันที่</th>
+                {coop ? (
+                  <th>คำนวณดอกเบี้ยถึงวันที่</th>
+                ) : (
+                  <th>วันที่ทำสัญญา</th>
+                )}
                 <th>ประเภทหลักประกัน</th>
                 <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
                 <th>จำนวนแปลง</th>

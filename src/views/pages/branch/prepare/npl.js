@@ -160,17 +160,17 @@ const NPL = () => {
         <td><input className="form-check-input" type="checkbox" checked={item.incorrect[8]} 
         onChange={(e) => onCheckChange(index, 8, e.target.checked)} /><br />{item.debt_manage_status}</td>
         <td><input className="form-check-input" type="checkbox" checked={item.incorrect[9]} 
-        onChange={(e) => onCheckChange(index, 9, e.target.checked)} /><br />{item.debt_manage_objective_details}</td>
-        <td>{item.collateral_type}</td>
+        onChange={(e) => onCheckChange(index, 9, e.target.checked)} /><br />{item.debt_manage_objective}</td>
+        <td>{item.debt_manage_payment_default_date ? stringToDateTh(item.debt_manage_payment_default_date, false) : '-'}</td>
         {creditorType == "สหกรณ์" ? (
-          <td>{item.debt_management_audit_status}</td>
+          <td>{item.debt_manage_calculate_ondate ? stringToDateTh(item.debt_manage_calculate_ondate, false) : '-'}</td>
         ) : (
-          <td>{item.debt_management_audit_status}</td>
+          <td>{item.debt_manage_contract_date ? stringToDateTh(item.debt_manage_contract_date, false) : '-'}</td>
         )}
         <td>{item.collateral_type}</td>
-        <td>{item.collateral_no}</td>
-        <td>{0}</td>
-        <td>{''}</td>
+        <td>{item.collateral_no ?? ''}</td>
+        <td>{item.collateral_count ?? 0}</td>
+        <td>{item.collateral_status ?? ''}</td>
       </tr>
     ))
   }
