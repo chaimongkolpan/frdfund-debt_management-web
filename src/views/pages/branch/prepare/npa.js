@@ -150,13 +150,13 @@ const NPL = () => {
         <td><input className="form-check-input" type="checkbox" checked={item.incorrect[6]} 
         onChange={(e) => onCheckChange(index, 6, e.target.checked)} /><br />{item.debt_manage_status}</td>
         <td><input className="form-check-input" type="checkbox" checked={item.incorrect[7]} 
-        onChange={(e) => onCheckChange(index, 7, e.target.checked)} /><br />{item.debt_manage_objective_details}</td>
+        onChange={(e) => onCheckChange(index, 7, e.target.checked)} /><br />{item.debt_manage_objective}</td>
         <td><input className="form-check-input" type="checkbox" checked={item.incorrect[8]} 
         onChange={(e) => onCheckChange(index, 8, e.target.checked)} /><br />{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
         <td>{item.collateral_no}</td>
-        <td>{0}</td>
-        <td>{''}</td>
+        <td>{item.collateral_count}</td>
+        <td>{item.collateral_status}</td>
       </tr>
     ))
   }
