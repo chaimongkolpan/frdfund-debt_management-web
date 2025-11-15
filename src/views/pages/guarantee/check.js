@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { stringToDateTh, toCurrency, getUserData, ToDateDb } from "@utils";
+import { stringToDateTh, toCurrency, getUserData, ToDateDb, getBookNo } from "@utils";
 import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
@@ -15,6 +15,7 @@ import Guarantor from "@views/components/guarantee/editGuaranteeModal";
 import ReturnGuarantee from "@views/components/guarantee/returnGuaranteeModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
 import Textbox from "@views/components/input/Textbox";
+import BookNo from "@views/components/input/BookNo";
 import Textarea from "@views/components/input/Textarea";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
@@ -113,7 +114,7 @@ const LegalContractSend = () => {
     const param = selectedData.map(item => {
       return {
         id_AssetPolicy: item.id_AssetPolicy,
-        debt_management_asset_no: bookNo,
+        debt_management_asset_no: 'กฟก.' + getBookNo() + bookNo,
         debt_management_asset_date: ToDateDb(bookDate),
       }
     });
@@ -175,7 +176,7 @@ const LegalContractSend = () => {
       const param = selectedData.map(item => {
         return {
           id_AssetPolicy: item.id_AssetPolicy,
-          return_asset_no: bookNo,
+          return_asset_no: 'กฟก.' + getBookNo() + bookNo,
           return_asset_date: ToDateDb(bookDate),
           return_asset_reason: remark,
         }
@@ -451,7 +452,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <Textbox title={'เลขที่หนังสือส่งคืน'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} handleChange={(val) => setBookDate(val)} />
@@ -627,7 +628,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <Textbox title={'เลขที่หนังสือนำส่งจัดการหนี้'} handleChange={(val) => setBookNo(val)} containerClassname={'mb-3'} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือนำส่งจัดการหนี้'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือนำส่งจัดการหนี้'} value={bookDate} handleChange={(val) => setBookDate(val)} />

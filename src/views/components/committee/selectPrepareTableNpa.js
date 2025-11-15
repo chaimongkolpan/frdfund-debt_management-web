@@ -131,7 +131,7 @@ const SelectedTable = (props) => {
                     <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
                   </div>
                 </th>
-                <th colSpan="2">คณะกรรมการจัดการหนี้</th>
+                <th colSpan="2">สาขาเสนอขออนุมัติ</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="1">องค์กร</th>
                 <th colSpan="4">ทะเบียนหนี้</th>

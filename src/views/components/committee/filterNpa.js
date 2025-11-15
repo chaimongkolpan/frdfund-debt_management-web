@@ -75,6 +75,18 @@ const SearchFilter = (props) => {
         }))
       } else await setCreditorOp(null);
     }
+    if (key == 'creditorType') {
+      await setCommitteeDateOp(null);
+      const resultCommitteeDate = await getBranchBookDateNpa(status, val);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_proposes_approval_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
+    }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -84,7 +96,6 @@ const SearchFilter = (props) => {
     const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
     const resultCommitteeNo = await getBranchBookNoNpa(status);
-    const resultCommitteeDate = await getBranchBookDateNpa(status);
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
@@ -125,16 +136,17 @@ const SearchFilter = (props) => {
       await setFilter((prevState) => ({
         ...prevState,
         ...({branch_proposes_approval_no: temp[0]})
-      }))
+      }));
+      const resultCommitteeDate = await getBranchBookDateNpa(status, temp[0]);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_proposes_approval_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
     } else await setCommitteeNoOp(null);
-    if (resultCommitteeDate.isSuccess) {
-      const temp = resultCommitteeDate.data.map(item => item.name);
-      await setCommitteeDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({branch_proposes_approval_date: temp[0]})
-      }))
-    } else await setCommitteeDateOp(null);
     setIsMounted(true);
   }
 

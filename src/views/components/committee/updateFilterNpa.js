@@ -22,14 +22,25 @@ const SearchFilter = (props) => {
     }
   }
   const onChange = async(key, val) => {
-    setFilter((prevState) => ({
+    if (key == 'proposal_committee_no') {
+      await setCommitteeDateOp(null);
+      const resultCommitteeDate = await getCommitteeDate('', val); 
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
+    }
+    await setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
   }
   async function fetchData() {
     const resultCommitteeNo = await getCommitteeNoNpa('');
-    const resultCommitteeDate = await getCommitteeDateNpa('');
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
@@ -37,15 +48,16 @@ const SearchFilter = (props) => {
         ...prevState,
         ...({proposal_committee_no: temp[0]})
       }))
+      const resultCommitteeDate = await getCommitteeDateNpa('', temp[0]);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
     } else await setCommitteeNoOp(null);
-    if (resultCommitteeDate.isSuccess) {
-      const temp = resultCommitteeDate.data.map(item => item.name);
-      await setCommitteeDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({proposal_committee_date: temp[0]})
-      }))
-    } else await setCommitteeDateOp(null);
     setIsMounted(true);
   }
 

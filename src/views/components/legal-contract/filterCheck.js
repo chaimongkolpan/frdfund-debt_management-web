@@ -78,7 +78,21 @@ const Filter = (props) => {
       } else await setCreditorOp(null);
       setLoading(false);
     }
-    setFilter((prevState) => ({
+    if (key == 'branch_policy_no') {
+      setLoading(true);
+      await setDateOp(null);
+      const resultDate = await getCommitteeDate('', val);
+      if (resultDate.isSuccess) {
+        const temp = resultDate.data.map(item => item.name);
+        await setDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_policy_date: 'all'})
+        }))
+      } else await setDateOp(null);
+      setLoading(false);
+    }
+    await setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
@@ -86,7 +100,6 @@ const Filter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultNo = await getCommitteeNo();
-    const resultDate = await getCommitteeDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('loan_province', temp[0]);
@@ -124,15 +137,16 @@ const Filter = (props) => {
         ...prevState,
         ...({branch_policy_no: 'all'})
       }))
+      const resultDate = await getCommitteeDate('', temp[0]);
+      if (resultDate.isSuccess) {
+        const temp = resultDate.data.map(item => item.name);
+        await setDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_policy_date: 'all'})
+        }))
+      } else await setDateOp(null);
     } else await setNoOp(null);
-    if (resultDate.isSuccess) {
-      const temp = resultDate.data.map(item => item.name);
-      await setDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({branch_policy_date: 'all'})
-      }))
-    } else await setDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }

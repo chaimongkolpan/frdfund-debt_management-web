@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { stringToDateTh, toCurrency, getUserData, ToDateDb } from "@utils";
+import { stringToDateTh, toCurrency, getUserData, ToDateDb, getBookNo } from "@utils";
 import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
@@ -14,6 +14,7 @@ import Asset from "@views/components/legal-contract/assetModal";
 import Guarantor from "@views/components/legal-contract/guarantorModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
 import Textbox from "@views/components/input/Textbox";
+import BookNo from "@views/components/input/BookNo";
 import DatePicker from "@views/components/input/DatePicker";
 import DropZone from "@views/components/input/DropZone";
 import { 
@@ -136,7 +137,7 @@ const LegalContractSend = () => {
         policyNO: item.policyNO,
         policyStatus: "จัดส่งนิติกรรมสัญญา",
         sendStatus: "จัดส่งนิติกรรมสัญญา",
-        branch_policy_no: bookNo,
+        branch_policy_no: 'กฟก.' + getBookNo() + bookNo,
         branch_policy_date: ToDateDb(bookDate),
       }
     });
@@ -406,7 +407,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <Textbox title={'เลขที่หนังสือส่งคืน'} handleChange={(val) => setBookNo(val)} containerClassname={'mb-3'} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} handleChange={(val) => setBookDate(val)} />
@@ -577,7 +578,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <Textbox title={'เลขที่หนังสือนำส่งจัดการหนี้'} handleChange={(val) => setBookNo(val)} containerClassname={'mb-3'} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือนำส่งจัดการหนี้'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือนำส่งจัดการหนี้'} value={bookDate} handleChange={(val) => setBookDate(val)} />
