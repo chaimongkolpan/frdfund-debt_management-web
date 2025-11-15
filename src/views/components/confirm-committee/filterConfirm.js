@@ -78,7 +78,31 @@ const SearchFilter = (props) => {
         }))
       } else await setCreditorOp(null);
     }
-    setFilter((prevState) => ({
+    if (key == 'proposal_committee_no') {
+      await setCommitteeDateOp(null);
+      const resultCommitteeDate = await getCommitteeDate("\'สาขายืนยันยอด\'", val);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
+    }
+    if (key == 'branch_correspondence_no') {
+      await setConfirmDateOp(null);
+      const resultConfirmDate = await getConfirmDate(status, 'NPL', val);
+      if (resultConfirmDate.isSuccess) {
+        const temp = resultConfirmDate.data.map(item => item.name);
+        await setConfirmDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_correspondence_date: temp[0]})
+        }))
+      } else await setConfirmDateOp(null);
+    }
+    await setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
@@ -87,9 +111,7 @@ const SearchFilter = (props) => {
     const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
     const resultCommitteeNo = await getCommitteeNo("\'สาขายืนยันยอด\'");
-    const resultCommitteeDate = await getCommitteeDate("\'สาขายืนยันยอด\'");
     const resultConfirmNo = await getConfirmNo(status, 'NPL');
-    const resultConfirmDate = await getConfirmDate(status, 'NPL');
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
@@ -131,15 +153,18 @@ const SearchFilter = (props) => {
         ...prevState,
         ...({proposal_committee_no: temp[0]})
       }))
+      const resultCommitteeDate = await getCommitteeDate("\'สาขายืนยันยอด\'", temp[0]);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
     } else await setCommitteeNoOp(null);
-    if (resultCommitteeDate.isSuccess) {
-      const temp = resultCommitteeDate.data.map(item => item.name);
-      await setCommitteeDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({proposal_committee_date: temp[0]})
-      }))
-    } else await setCommitteeDateOp(null);
+
+
     if (resultConfirmNo.isSuccess) {
       const temp = resultConfirmNo.data.map(item => item.name);
       await setConfirmNoOp(temp);
@@ -147,15 +172,17 @@ const SearchFilter = (props) => {
         ...prevState,
         ...({branch_correspondence_no: temp[0]})
       }))
+
+      const resultConfirmDate = await getConfirmDate(status, 'NPL', temp[0]);
+      if (resultConfirmDate.isSuccess) {
+        const temp = resultConfirmDate.data.map(item => item.name);
+        await setConfirmDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_correspondence_date: temp[0]})
+        }))
+      } else await setConfirmDateOp(null);
     } else await setConfirmNoOp(null);
-    if (resultConfirmDate.isSuccess) {
-      const temp = resultConfirmDate.data.map(item => item.name);
-      await setConfirmDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({branch_correspondence_date: temp[0]})
-      }))
-    } else await setConfirmDateOp(null);
     setIsMounted(true);
   }
 

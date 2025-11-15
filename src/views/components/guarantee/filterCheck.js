@@ -29,7 +29,19 @@ const Filter = (props) => {
     }
   }
   const onChange = async (key, val) => {
-    setFilter((prevState) => ({
+    if (key == 'branch_asset_no') {
+      await setDateOp(null);
+      const resultDate = await getSendAssetPolicyDate('', val);
+      if (resultDate.isSuccess) {
+        const temp = resultDate.data.map(item => stringToDateTh(item.name, false));
+        await setDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_asset_date: 'all'})
+        }))
+      } else await setDateOp(null);
+    }
+    await setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
@@ -37,7 +49,6 @@ const Filter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultNo = await getSendAssetPolicyNo();
-    const resultDate = await getSendAssetPolicyDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('loan_province', temp[0]);
@@ -51,15 +62,17 @@ const Filter = (props) => {
         ...prevState,
         ...({branch_asset_no: 'all'})
       }))
+
+      const resultDate = await getSendAssetPolicyDate('', temp[0]);
+      if (resultDate.isSuccess) {
+        const temp = resultDate.data.map(item => stringToDateTh(item.name, false));
+        await setDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_asset_date: 'all'})
+        }))
+      } else await setDateOp(null);
     } else await setNoOp(null);
-    if (resultDate.isSuccess) {
-      const temp = resultDate.data.map(item => stringToDateTh(item.name, false));
-      await setDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({branch_asset_date: 'all'})
-      }))
-    } else await setDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }

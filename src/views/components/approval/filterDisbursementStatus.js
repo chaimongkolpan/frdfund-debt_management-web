@@ -80,7 +80,35 @@ const Filter = (props) => {
       } else await setCreditorOp(null);
       setLoading(false);
     }
-    setFilter((prevState) => ({
+    if (key == 'proposal_committee_no') {
+      setLoading(true);
+      await setCommitteeDateOp(null);
+      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", val);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
+      setLoading(false);
+    }
+    if (key == 'petition_no') {
+      setLoading(true);
+      await setPetitionDateOp(null);
+      const resultPetitionDate = await getPetitionDate(val);
+      if (resultPetitionDate.isSuccess) {
+        const temp = resultPetitionDate.data.map(item => item.name);
+        await setPetitionDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({petition_date: temp[0]})
+        }))
+      } else await setPetitionDateOp(null);
+      setLoading(false);
+    }
+    await setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
@@ -88,9 +116,7 @@ const Filter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultCommitteeNo = await getCommitteeNo("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
-    const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
     const resultPetitionNo = await getPetitionNo();
-    const resultPetitionDate = await getPetitionDate();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
@@ -133,15 +159,18 @@ const Filter = (props) => {
         ...prevState,
         ...({proposal_committee_no: 'all'})
       }))
+      
+      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", temp[0]);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
     } else await setCommitteeNoOp(null);
-    if (resultCommitteeDate.isSuccess) {
-      const temp = resultCommitteeDate.data.map(item => item.name);
-      await setCommitteeDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({proposal_committee_date: 'all'})
-      }))
-    } else await setCommitteeDateOp(null);
+
     if (resultPetitionNo.isSuccess) {
       const temp = resultPetitionNo.data.map(item => item.name);
       await setPetitionNoOp(temp);
@@ -149,15 +178,17 @@ const Filter = (props) => {
         ...prevState,
         ...({petition_no: 'all'})
       }))
+      
+      const resultPetitionDate = await getPetitionDate(temp[0]);
+      if (resultPetitionDate.isSuccess) {
+        const temp = resultPetitionDate.data.map(item => item.name);
+        await setPetitionDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({petition_date: temp[0]})
+        }))
+      } else await setPetitionDateOp(null);
     } else await setPetitionNoOp(null);
-    if (resultPetitionDate.isSuccess) {
-      const temp = resultPetitionDate.data.map(item => item.name);
-      await setPetitionDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({petition_date: 'all'})
-      }))
-    } else await setPetitionDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }

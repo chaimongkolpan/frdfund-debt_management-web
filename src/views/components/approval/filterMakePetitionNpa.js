@@ -79,7 +79,19 @@ const Filter = (props) => {
       } else await setCreditorOp(null);
       setLoading(false);
     }
-    setFilter((prevState) => ({
+    if (key == 'proposal_committee_no') {
+      await setCommitteeDateOp(null);
+      const resultCommitteeDate = await getCommitteeDateNpa("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'", val);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
+    }
+    await setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
     }))
@@ -88,7 +100,6 @@ const Filter = (props) => {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
     const resultCommitteeNo = await getCommitteeNoNpa("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'");
-    const resultCommitteeDate = await getCommitteeDateNpa("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
@@ -130,15 +141,17 @@ const Filter = (props) => {
         ...prevState,
         ...({proposal_committee_no: temp[0]})
       }))
+          
+      const resultCommitteeDate = await getCommitteeDateNpa("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'", temp[0]);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
     } else await setCommitteeNoOp(null);
-    if (resultCommitteeDate.isSuccess) {
-      const temp = resultCommitteeDate.data.map(item => item.name);
-      await setCommitteeDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({proposal_committee_date: temp[0]})
-      }))
-    } else await setCommitteeDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }

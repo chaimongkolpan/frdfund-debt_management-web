@@ -1130,10 +1130,10 @@ export const getConfirmNo = async (status,type) => {
     return defaultErrorResponse;
   }
 };
-export const getConfirmDate = async (status,type) => {
+export const getConfirmDate = async (status,type, branch_correspondence_no) => {
   const path = '/common/branch-correspondence-date';
   try {
-    const result = await axios.get(path, { params: {status,type} });
+    const result = await axios.get(path, { params: {status,type, branch_correspondence_no} });
     if (result.status == 200)
       return result.data;
     else
@@ -1327,10 +1327,10 @@ export const getCommitteeNo = async (status) => {
     return defaultErrorResponse;
   }
 };
-export const getCommitteeDate = async (status) => {
+export const getCommitteeDate = async (status, proposal_committee_no) => {
   const path = '/common/proposal-committee-date';
   try {
-    const result = await axios.get(path, { params: {status} });
+    const result = await axios.get(path, { params: {status, proposal_committee_no} });
     if (result.status == 200)
       return result.data;
     else
@@ -1538,10 +1538,10 @@ export const getPetitionNo = async () => {
     return defaultErrorResponse;
   }
 };
-export const getPetitionDate = async () => {
+export const getPetitionDate = async (petition_no) => {
   const path = '/common/get-petition_date_office';
   try {
-    const result = await axios.get(path);
+    const result = await axios.get(path, { params: {petition_no} });
     if (result.status == 200)
       return result.data;
     else
@@ -1581,10 +1581,10 @@ export const getCommitteeNoNpa = async (status) => {
     return defaultErrorResponse;
   }
 };
-export const getCommitteeDateNpa = async (status) => {
+export const getCommitteeDateNpa = async (status, proposal_committee_no) => {
   const path = '/common/proposal-committee-date-npa';
   try {
-    const result = await axios.get(path, { params: {status} });
+    const result = await axios.get(path, { params: {status, proposal_committee_no} });
     if (result.status == 200)
       return result.data;
     else

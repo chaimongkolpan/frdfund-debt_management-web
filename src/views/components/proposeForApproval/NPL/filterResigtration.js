@@ -21,7 +21,7 @@ const FilterResigtration = (props) => {
       ]))
   }
   async function fetchData() {
-    const resultBookNo = await getBranchBookNoNpa(status);
+    const resultBookNo = await getBranchBookNo(status);
     if (resultBookNo.isSuccess) {
       const temp = resultBookNo.data.map(item => item.name);
       setBookNo(temp[0])
@@ -30,7 +30,7 @@ const FilterResigtration = (props) => {
   }
   useEffect(() => {
     async function getDate() {
-      const resultBookDate = await getBranchBookDateNpa(status, bookNo);
+      const resultBookDate = await getBranchBookDate(status, bookNo);
       if (resultBookDate.isSuccess) {
         const temp = resultBookDate.data.map(item => item.name);
         await setBookDate(temp[0])
