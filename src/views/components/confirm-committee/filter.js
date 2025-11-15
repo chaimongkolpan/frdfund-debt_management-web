@@ -74,6 +74,18 @@ const SearchFilter = (props) => {
         }))
       } else await setCreditorOp(null);
     }
+    if (key == 'proposal_committee_no') {
+      await setCommitteeDateOp(null);
+      const resultCommitteeDate = await getCommitteeDate("\'คณะกรรมการจัดการหนี้อนุมัติ\'", val);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
+    }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -83,7 +95,6 @@ const SearchFilter = (props) => {
     const resultProv = await getProvinces();
     const resultDebtSt = await getDebtStatuses();
     const resultCommitteeNo = await getCommitteeNo("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
-    const resultCommitteeDate = await getCommitteeDate("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
@@ -125,15 +136,17 @@ const SearchFilter = (props) => {
         ...prevState,
         ...({proposal_committee_no: temp[0]})
       }))
+      
+      const resultCommitteeDate = await getCommitteeDate("\'คณะกรรมการจัดการหนี้อนุมัติ\'" , temp[0]);
+      if (resultCommitteeDate.isSuccess) {
+        const temp = resultCommitteeDate.data.map(item => item.name);
+        await setCommitteeDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({proposal_committee_date: temp[0]})
+        }))
+      } else await setCommitteeDateOp(null);
     } else await setCommitteeNoOp(null);
-    if (resultCommitteeDate.isSuccess) {
-      const temp = resultCommitteeDate.data.map(item => item.name);
-      await setCommitteeDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({proposal_committee_date: temp[0]})
-      }))
-    } else await setCommitteeDateOp(null);
     setIsMounted(true);
   }
 
