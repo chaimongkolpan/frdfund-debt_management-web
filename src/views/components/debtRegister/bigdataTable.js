@@ -8,6 +8,7 @@ const DebtRegisterBigDataTable = (props) => {
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
+  const disabled_status = ['อยู่ระหว่างการสอบยอด', 'ชำระหนี้แทนแล้ว'];
   const onSubmit = () => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
@@ -30,7 +31,7 @@ const DebtRegisterBigDataTable = (props) => {
         <td className="fs-9 align-middle">
           {can_action ? (
             <div className="form-check ms-2 mb-0 fs-8">
-              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+              <input className="form-check-input" disabled={disabled_status.includes(item.debt_management_audit_status)} type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
           ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
