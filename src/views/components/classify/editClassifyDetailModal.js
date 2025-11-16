@@ -86,6 +86,8 @@ const FullModal = (props) => {
       await setCreditorType(val);
     }
     if (key == 'debt_repayment_conditions') {
+      await setRepaymentCon(val)
+      /*
       let frd = debts?.frD_paymen_amount;
       let ex = 0;
       if (val == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = debts?.debt_manage_total;}
@@ -94,7 +96,6 @@ const FullModal = (props) => {
       else if (val == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.4; ex = expense;}
       else if (val == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = debts?.debt_manage_outstanding_principal * 0.3; ex = expense;}
       else if (val == 'ต้นเงิน50%') { frd = debts?.debt_manage_outstanding_principal * 0.5}
-      await setRepaymentCon(val)
       await setDebts((prevState) => ({
         ...prevState,
         ...({frD_paymen_amount: frd + ex})
@@ -111,8 +112,11 @@ const FullModal = (props) => {
         ...prevState,
         ...({contract_amount: pri + ex1})
       }))
+      */
     }
     if (key == 'contract_conditions') {
+      await setContractCon(val)
+      /*
       const total = debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
       let frd = debts?.frD_paymen_amount;
       let ex = 0;
@@ -132,11 +136,11 @@ const FullModal = (props) => {
       else if (val == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4; ex1 = expense;}
       else if (val == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3; ex1 = expense;}
       else if (val == 'ต้นเงิน50%') { pri = (frd * 0.5)}
-      await setContractCon(val)
       await setDebts((prevState) => ({
         ...prevState,
         ...({contract_amount: pri + ex1})
       }))
+      */
     }
     if (key == 'debt_manage_accrued_interest') {
       const total = debts?.debt_manage_outstanding_principal + val + debts?.debt_manage_fine + expense;
@@ -503,6 +507,11 @@ const FullModal = (props) => {
         debt_agreement: (debt?.debt_agreement ?? 'ตามข้อตกลง'),
         debt_repayment_type: (debt?.debt_repayment_type ?? 'ชำระหนี้แทน'),
         frD_paymen_amount: (debt?.frD_paymen_amount ?? 0),
+        debt_manage_accrued_interest: (debt?.debt_manage_accrued_interest ?? 0),
+        debt_manage_fine: (debt?.debt_manage_fine ?? 0),
+        debt_manage_outstanding_principal: (debt?.debt_manage_outstanding_principal ?? 0),
+        debt_manage_total_expenses: (debt?.debt_manage_total_expenses ?? 0),
+        debt_manage_total: (debt?.debt_manage_total ?? 0),
         contract_amount: (debt?.contract_amount ?? 0)
       });
       await setRepaymentCon(debt.debt_repayment_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน');
