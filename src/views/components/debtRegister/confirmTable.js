@@ -11,7 +11,6 @@ const DebtRegisterConfirmTable = (props) => {
         <td>{item.province}</td>
         <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.date_member_current ? stringToDateTh(item.date_member_current, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.status}</td>
         <td>{item.organization_register_round}</td>
         <td>{item.organization_name}</td>
         <td>{item.organization_no}</td>
@@ -29,7 +28,7 @@ const DebtRegisterConfirmTable = (props) => {
         <td>{item.collateral_type}</td>
         <td>{item.purpose_loan_contract}</td>
         <td>{item.purpose_type_loan_contract}</td>
-        <td>{item.status}</td>
+        <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
   }
@@ -41,9 +40,9 @@ const DebtRegisterConfirmTable = (props) => {
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th rowSpan="2" style={{ minWidth: 40 }}>#</th>
-                <th colSpan="4">เกษตรกร</th>
-                <th colSpan="5">องค์กร</th>
-                <th colSpan="5">ทะเบียนหนี้</th>
+                <th colSpan="7">เกษตรกร</th>
+                <th colSpan="2">องค์กร</th>
+                <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan="7">สัญญา</th>
               </tr>
@@ -53,13 +52,12 @@ const DebtRegisterConfirmTable = (props) => {
                 <th style={{ minWidth: 150 }}>ชื่อ-นามสกุล</th>
                 <th>จังหวัด</th>
 
+                <th>วันที่เป็นสมาชิก (ครั้งแรก)</th>
+                <th>วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
+                <th>รอบองค์กร</th>
                 <th style={{ minWidth: 180 }}>ชื่อองค์กรการเกษตร</th>
                 <th>หมายเลของค์กร</th>
-                <th>รอบองค์กร</th>
-                <th>สถานะองค์กร</th>
-                <th>วันที่เป็นสมาชิก (ครั้งแรก)</th>
 
-                <th>สถานะการตรวจสอบทะเบียนหนี้</th>
                 <th>รอบหนี้</th>
                 <th>วันที่ยื่นขึ้นทะเบียนหนี้</th>
                 <th>ผ่านความเห็นชอบครั้งที่</th>
@@ -71,12 +69,12 @@ const DebtRegisterConfirmTable = (props) => {
                 <th>สาขาเจ้าหนี้</th>
 
                 <th>เลขที่สัญญา</th>
-                <th>เงินต้นตามสัญญา</th>
+                <th>เงินต้นคงเหลือตามสัญญา</th>
                 <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
                 <th>วัตถุประสงค์การกู้ตามสัญญา</th>
                 <th>ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
-                <th>สถานะการตรวจสอบจัดการหนี้</th>
+                <th>สถานะการตรวจสอบจำแนกมูลหนี้</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle">

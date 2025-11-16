@@ -393,6 +393,14 @@ const FullModal = (props) => {
                                 <select className={`form-select`} disabled={isView} value={debts?.debt_manage_status_cf ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status_cf', e.target?.value)}>
                                   <option value="ปกติ">ปกติ</option>
                                   <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
+                                  <option value="ปรับโครงสร้างหนี้" >ปรับโครงสร้างหนี้</option>
+                                  <option value="ดำเนินคดี" >ดำเนินคดี</option>
+                                  <option value="บังคับคดี" >บังคับคดี</option>
+                                  <option value="ปิดบัญชี" >ปิดบัญชี</option>
+                                  <option value="พิพากษา" >พิพากษา</option>
+                                  <option value="ล้มละลาย" >ล้มละลาย</option>
+                                  <option value="NPA" >NPA</option>
+                                  <option value="อื่นๆ" >อื่นๆ</option>
                                 </select>
                               </div>
                             </div>
@@ -526,6 +534,14 @@ const FullModal = (props) => {
                                 <select className={`form-select`} disabled={isView} value={debts?.debt_manage_status_cf ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status_cf', e.target?.value)}>
                                   <option value="ปกติ">ปกติ</option>
                                   <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
+                                  <option value="ปรับโครงสร้างหนี้" >ปรับโครงสร้างหนี้</option>
+                                  <option value="ดำเนินคดี" >ดำเนินคดี</option>
+                                  <option value="บังคับคดี" >บังคับคดี</option>
+                                  <option value="ปิดบัญชี" >ปิดบัญชี</option>
+                                  <option value="พิพากษา" >พิพากษา</option>
+                                  <option value="ล้มละลาย" >ล้มละลาย</option>
+                                  <option value="NPA" >NPA</option>
+                                  <option value="อื่นๆ" >อื่นๆ</option>
                                 </select>
                               </div>
                             </div>
