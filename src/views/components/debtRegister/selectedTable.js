@@ -61,7 +61,7 @@ const DebtRegisterSelectedTable = (props) => {
         <td>{item.collateral_type}</td>
         <td>{item.purpose_loan_contract}</td>
         <td>{item.purpose_type_loan_contract}</td>
-        <td>{item.status}</td>
+        <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
   }
@@ -111,6 +111,7 @@ const DebtRegisterSelectedTable = (props) => {
                 <th>คำนำหน้า</th>
                 <th  style={{ minWidth: 150 }}>ชื่อ-นามสกุล</th>
                 <th >จังหวัด</th>
+
                 <th>วันที่เป็นสมาชิก (ครั้งแรก)</th>
                 <th>วันที่ขึ้นทะเบียนองค์กรปัจจุบัน</th>
                 <th>รอบองค์กร</th>

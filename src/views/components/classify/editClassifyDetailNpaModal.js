@@ -281,8 +281,16 @@ const FullModal = (props) => {
                           <div className="form-floating form-floating-advance-select mb-3">
                             <label htmlFor="floaTingLabelSingleSelect">สถานะหนี้</label>
                             <select className={`form-select ${(not_correct_list && not_correct_list[6] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_status ?? ''} onChange={(e) => handleChangeDebt('debt_manage_status', e.target?.value)}>
-                              <option value="ปกติ">ปกติ</option>
+                              <option value="ปกติ" >ปกติ</option>
                               <option value="ผิดนัดชำระ" >ผิดนัดชำระ</option>
+                              <option value="ปรับโครงสร้างหนี้" >ปรับโครงสร้างหนี้</option>
+                              <option value="ดำเนินคดี" >ดำเนินคดี</option>
+                              <option value="บังคับคดี" >บังคับคดี</option>
+                              <option value="ปิดบัญชี" >ปิดบัญชี</option>
+                              <option value="พิพากษา" >พิพากษา</option>
+                              <option value="ล้มละลาย" >ล้มละลาย</option>
+                              <option value="NPA" >NPA</option>
+                              <option value="อื่นๆ" >อื่นๆ</option>
                             </select>
                           </div>
                         </div>
