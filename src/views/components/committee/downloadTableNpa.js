@@ -29,6 +29,13 @@ const EditDataTable = (props) => {
       await setBookDate(temp[0]);
     } else await setCommitteeDateOp(null);
   }
+  const onChange = async(key, val) => {
+    if (key == 'bookNo') {
+      await setBookNo(val);
+    } else if (key == 'bookDate') {
+      await setBookDate(val);
+    }
+  }
   useEffect(() => {
     fetchData()
     return cleanData
@@ -43,7 +50,7 @@ const EditDataTable = (props) => {
               <Input type="select" value={bookNo} 
                 className={`form-select`}
                 placeholder={'ครั้งที่เสนอคณะกรรมการ'}
-                onChange={(newval) => setBookNo(newval)} 
+                onChange={(newval) => onChange('bookNo', newval.target.value)} 
               >
                 {committeeNoOp && (
                   committeeNoOp.map((option, index) => (
@@ -61,7 +68,7 @@ const EditDataTable = (props) => {
               <Input type="select" value={bookDate} 
                 className={`form-select`}
                 placeholder={'วันที่เสนอคณะกรรมการ'}
-                onChange={(newval) => setBookDate(newval)} 
+                onChange={(newval) => onChange('bookDate', newval.target.value)} 
               >
                 {committeeDateOp && (
                   committeeDateOp.map((option, index) => (

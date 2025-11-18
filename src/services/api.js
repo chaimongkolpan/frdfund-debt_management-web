@@ -1002,6 +1002,22 @@ export const rejectCommitteeUpdate = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const exportAnnouncement = async (filter) => {
+  const path = '/MakePetition/export-announcement';
+  try {
+    const result = await axios.post(path, { data: filter.data }, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: filter.type });
+      SaveAs(blob, filter.filename);
+      return true
+    }
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 /************************************************************/
 export const searchCommitteePrepareNpa = async (filter) => {
   const path = "/ProposeCommittee/search-prepare-propose-committee-npa";
@@ -1111,6 +1127,22 @@ export const rejectCommitteeUpdateNpa = async (filter) => {
     else return defaultErrorResponse;
   } catch (e) {
     console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const exportAnnouncementNpa = async (filter) => {
+  const path = '/MakePetition/export-announcement-npa';
+  try {
+    const result = await axios.post(path, { data: filter.data }, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: filter.type });
+      SaveAs(blob, filter.filename);
+      return true
+    }
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
     return defaultErrorResponse;
   }
 };
