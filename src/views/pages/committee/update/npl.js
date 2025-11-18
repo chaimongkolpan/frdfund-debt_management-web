@@ -14,6 +14,7 @@ import {
   approveCommitteeUpdate,
   rejectCommitteeUpdate,
   updateNPLstatus,
+  exportAnnouncement,
   cleanData
 } from "@services/api";
 import toast from "react-hot-toast";
@@ -92,6 +93,13 @@ const NPL = () => {
       ));
     }
   };
+  const onSubmitEdit = async () => {
+    const result = await exportAnnouncement({ type: 'application/octet-stream', filename: 'เอกสารประกาศรายชื่อ_' + (new Date().getTime()) + '.zip', data: { book_no: bookNoEdit, book_date: bookDateEdit } });
+    if (result.isSuccess) {
+      await setBookNoEdit(null);
+      await setBookDateEdit(null);
+    }
+  }
   return (
     <>
       <div className="content">
@@ -111,7 +119,7 @@ const NPL = () => {
                 <CustomerModal
                   isOpen={showModal}
                   setModal={setShowModal}
-                  // onOk={onSubmitEdit}
+                  onOk={onSubmitEdit}
                   onClose={() => setShowModal(false)}
                   title={"ดาวน์โหลดเอกสารประกาศรายชื่อ"}
                   okText={"ดาวน์โหลด"}
