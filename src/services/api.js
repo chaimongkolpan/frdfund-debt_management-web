@@ -1440,14 +1440,16 @@ export const insertPetition = async (filter) => {
   }
 };
 export const exportPetition = async (filter) => {
-  const path = '/MakePetition/get-petition-contracts';
+  const path = '/MakePetition/export-petition';
   try {
-    const result = await axios.post(path, filter);
-    if (result.status == 200)
-      return result.data;
+    const result = await axios.post(path, filter, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: filter.type });
+      SaveAs(blob, filter.filename);
+      return true
+    }
     else
       return defaultErrorResponse;
-
   } catch (e) {
     console.error('error: ' + path + ' =>', e);
     return defaultErrorResponse;
@@ -1694,11 +1696,14 @@ export const insertPetitionNpa = async (filter) => {
   }
 };
 export const exportPetitionNpa = async (filter) => {
-  const path = '/MakePetition/get-petition-contracts-npa';
+  const path = '/MakePetition/export-petition-npa';
   try {
-    const result = await axios.post(path, filter);
-    if (result.status == 200)
-      return result.data;
+    const result = await axios.post(path, filter, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: filter.type });
+      SaveAs(blob, filter.filename);
+      return true
+    }
     else
       return defaultErrorResponse;
 
