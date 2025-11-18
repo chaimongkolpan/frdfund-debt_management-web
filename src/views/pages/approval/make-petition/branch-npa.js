@@ -66,12 +66,12 @@ const NPA = () => {
     await setSubmit(true);
   }
   const onSubmitMakelist = async () => {
-    if (addPetition) {
-      const result = await exportPetitionNpa({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: addPetition });
+    if (petition) {
+      const result = await exportPetitionNpa({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: petition });
       if (result.isSuccess) {
       }
     } else {
-      alert('กรุณาบันทึกฎืกาก่อน ดาวน์โหลดเอกสาร');
+      alert('กรุณาบันทึกฎีกาก่อน ดาวน์โหลดเอกสาร');
     }
   }
   const onSearch = async (filter) => {
