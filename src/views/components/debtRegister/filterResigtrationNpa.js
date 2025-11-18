@@ -46,10 +46,10 @@ const DebtRegisterFilterNpa = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
         await setCreditorOp(null);
-        const resultCreditor = await getBigDataCreditors(val, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(val, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
@@ -73,7 +73,7 @@ const DebtRegisterFilterNpa = (props) => {
         await setCreditorOp(temp2);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditor: temp2[0]})
+          ...({creditor: 'all'})
         }))
       } else await setCreditorOp(null);
       setLoading(false);
@@ -96,15 +96,15 @@ const DebtRegisterFilterNpa = (props) => {
         await setCreditorTypeOp(temp1);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({creditorType: temp1[0]})
+          ...({creditorType: 'all'})
         }))
-        const resultCreditor = await getBigDataCreditors(null, temp1[0]);
+        const resultCreditor = await getBigDataCreditors(null, '');
         if (resultCreditor.isSuccess) {
           const temp2 = resultCreditor.data.map(item => item.name);
           await setCreditorOp(temp2);
           await setFilter((prevState) => ({
             ...prevState,
-            ...({creditor: temp2[0]})
+            ...({creditor: 'all'})
           }))
         } else await setCreditorOp(null);
       } else {
@@ -167,30 +167,22 @@ const DebtRegisterFilterNpa = (props) => {
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorTypeOp && (
-            <div className="form-floating form-floating-advance-select">
-              <label htmlFor="Search_province">ประเภทเจ้าหนี้</label>
-              <select className="form-select" value={filter?.creditorType} onChange={(e) => onChange('creditorType', e.target?.value)}>
-                {creditorTypeOp && (
-                  creditorTypeOp.map((option, index) => (
-                    <option key={index} value={option}>{option}</option>
-                  ))
-                )}
-              </select>
-            </div>
+            <Dropdown 
+              title={'ประเภทเจ้าหนี้'} 
+              defaultValue={'all'} 
+              options={creditorTypeOp} hasAll onModal
+              handleChange={(val) => onChange('creditorType', val)}
+            />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
           {creditorOp && (
-            <div className="form-floating form-floating-advance-select">
-              <label htmlFor="Search_province">สถาบันเจ้าหนี้</label>
-              <select className="form-select" value={filter?.creditor} onChange={(e) => onChange('creditor', e.target?.value)}>
-                {creditorOp && (
-                  creditorOp.map((option, index) => (
-                    <option key={index} value={option}>{option}</option>
-                  ))
-                )}
-              </select>
-            </div>
+            <Dropdown 
+              title={'สถาบันเจ้าหนี้'} 
+              defaultValue={'all'} 
+              options={creditorOp} hasAll onModal
+              handleChange={(val) => onChange('creditor', val)}
+            />
           )}
         </div>
         <div className="col-sm-12 col-md-6 col-lg-6">
