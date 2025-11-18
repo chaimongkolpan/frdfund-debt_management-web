@@ -34,6 +34,7 @@ const NPA = () => {
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [petition, setPetition] = useState(null);
+  const [addPetition, setAddPetition] = useState(null);
   const [savePetition, setSavePetition] = useState(null);
   const [loadPetition, setLoadPetition] = useState(false);
   const [data, setData] = useState(null);
@@ -94,8 +95,8 @@ const NPA = () => {
     await setSubmit(true);
   }
   const onSubmitMakelist = async () => {
-    if (addPetition) {
-      const result = await exportPetitionNpa({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: addPetition });
+    if (petition) {
+      const result = await exportPetitionNpa({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: petition });
       if (result.isSuccess) {
       }
     } else {

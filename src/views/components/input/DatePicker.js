@@ -73,7 +73,7 @@ const DatePickerComponent = (props) => {
       date.getFullYear() === today.getFullYear()
     );
   };
-  const years = range(2535, getYear(new Date()) + 543 + 1, 1);
+  const years = range(2475, getYear(new Date()) + 543 + 1, 1);
   const months = [
       "มกราคม",
       "กุมภาพันธ์",
