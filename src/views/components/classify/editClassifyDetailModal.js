@@ -972,10 +972,11 @@ const FullModal = (props) => {
                           </div>
                         </div>
                         {!showLegalList.includes(debts?.debt_manage_status) && (
-                          <div className="col-sm-12 col-md-6 col-lg-4">
-                            <DatePicker title={'วันที่ดำเนินการทางกฎหมาย'}
-                              value={debts?.debt_manage_legal_action_date} 
-                              handleChange={(val) => handleChangeDebt('debt_manage_legal_action_date', val)} 
+                          <div className="col-sm-12 col-md-6 col-lg-8">
+                            <Textbox title={'วันที่ดำเนินการทางกฎหมาย'}
+                              value={debts?.debt_manage_legal_action_date}
+                              handleChange={(val) => handleChangeDebt('debt_manage_legal_action_date', val)}
+                              containerClassname={'mb-3'}
                             />
                           </div>
                         )}

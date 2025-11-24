@@ -957,7 +957,9 @@ export const submitCommitteePrepare = async (params) => {
   try {
     const result = await axios.post(
       path,
-      { data: params.data,status: params.status },
+      { data: params.data,status: params.status
+        , proposal_committee_no: params.proposal_committee_no
+        ,proposal_committee_date: params.proposal_committee_date },
       { responseType: "blob" }
     );
     if (result.status == 200) {
@@ -1085,7 +1087,9 @@ export const submitCommitteePrepareNpa = async (params) => {
   try {
     const result = await axios.post(
       path,
-      { data: params.data,status: params.status },
+      { data: params.data,status: params.status
+        , proposal_committee_no: params.proposal_committee_no
+        ,proposal_committee_date: params.proposal_committee_date },
       { responseType: "blob" }
     );
     if (result.status == 200) {
