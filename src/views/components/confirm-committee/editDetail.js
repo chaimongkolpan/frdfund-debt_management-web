@@ -659,10 +659,11 @@ const FullModal = (props) => {
                             <label htmlFor="floatingSelectPrivacy">ดำเนินการทางกฎหมาย</label>
                           </div>
                         </div>
-                        <div className="col-sm-12 col-md-6 col-lg-4">
-                          <DatePicker title={'วันที่ดำเนินการทางกฎหมาย'} disabled={isView}
-                            value={debts?.debt_manage_legal_action_date_cf} 
-                            handleChange={(val) => handleChangeDebt('debt_manage_legal_action_date_cf', val)} 
+                        <div className="col-sm-12 col-md-6 col-lg-8">
+                          <Textbox title={'วันที่ดำเนินการทางกฎหมาย'} disabled={isView} 
+                            value={debts?.debt_manage_legal_action_date_cf}
+                            handleChange={(val) => handleChangeDebt('debt_manage_legal_action_date_cf', val)}
+                            containerClassname={'mb-3'}
                           />
                         </div>
                         <div className="col-sm-12 col-md-12 col-lg-12">
