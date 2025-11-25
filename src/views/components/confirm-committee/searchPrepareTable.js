@@ -92,7 +92,7 @@ const SearchTable = (props) => {
     const selectedData = data.filter((i, index) => selected[index]);
     const ids = selectedData.map(item => item.id_debt_confirm.toString());
     const result = await updateConfirmCommitteeNo({
-      ids, debt_manage_type: 'NPL', proposal_committee_no: 'กฟก.'+ getBookNo()  + committeeNo, proposal_committee_date: stringToDateTh(committeeDate, false)
+      ids, debt_manage_type: 'NPL', proposal_committee_no: committeeNo, proposal_committee_date: stringToDateTh(committeeDate, false)
     });
     if (result.isSuccess) {
       await getData(filter);
@@ -334,7 +334,7 @@ const SearchTable = (props) => {
           <br />
           <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6">
-              <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
+              <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
             </div>
             <div className="col-sm-12 col-md-12 col-lg-6">
               <DatePicker title={'วันที่เสนอคณะกรรมการ'}
