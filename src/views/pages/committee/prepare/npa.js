@@ -119,7 +119,7 @@ const NPA = () => {
     const ids = requestApproveData.map(item => item.id_debt_management.toString())
     const param = {
       ids,
-      proposal_committee_no: 'กฟก.' + getBookNo() + bookNo,
+      proposal_committee_no: bookNo,
       proposal_committee_date: stringToDateTh(bookDate,false)
     }
     const resultUpdate = await updateNPAstatus(ids, status)
@@ -133,7 +133,7 @@ const NPA = () => {
           type: "application/octet-stream",
           filename: "คณะกรรมการจัดการหนี้อนุมัติรายชื่อ_" + new Date().getTime() + ".zip",
           data: requestApproveData,
-          proposal_committee_no: 'กฟก.' + getBookNo() + bookNo,
+          proposal_committee_no: bookNo,
           proposal_committee_date: stringToDateTh(bookDate,false),
           status
         });
@@ -157,7 +157,7 @@ const NPA = () => {
     const ids = editData.map(item => item.id_debt_management.toString())
     const param = {
       ids,
-      proposal_committee_no: 'กฟก.' + getBookNo() + bookNoEdit,
+      proposal_committee_no: bookNoEdit,
       proposal_committee_date: stringToDateTh(bookDateEdit,false)
     }
     const resultUpdate = await updateCommitteePrepareNpa(param);
@@ -284,7 +284,7 @@ const NPA = () => {
       >
         <div className="row">
           <div className="col-sm-12 col-md-12 col-lg-6">
-            <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} subtitle={'กฟก.'+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+            <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
           </div>
           <div className="col-sm-12 col-md-12 col-lg-6">
             <DatePicker title={'วันที่เสนอคณะกรรมการ'}
