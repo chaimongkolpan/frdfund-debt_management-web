@@ -12,17 +12,17 @@ import {
 } from "@services/api";
 const EditDataTable = (props) => {
   const { bookNo, setBookNo, bookDate, setBookDate } = props;
-  const status = 'รอเสนอคณะกรรมการจัดการหนี้';
+  const status = 'คณะกรรมการจัดการหนี้อนุมัติ';
   const [committeeNoOp, setCommitteeNoOp] = useState(null);
   const [committeeDateOp, setCommitteeDateOp] = useState(null);
   async function fetchData() {
-    const resultCommitteeNo = await getCommitteeNo("\'รอเสนอคณะกรรมการจัดการหนี้\'");
+    const resultCommitteeNo = await getCommitteeNo("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
       await setBookNo(temp[0]);
 
-      const resultCommitteeDate = await getCommitteeDate("\'รอเสนอคณะกรรมการจัดการหนี้\'", temp[0]);
+      const resultCommitteeDate = await getCommitteeDate("\'คณะกรรมการจัดการหนี้อนุมัติ\'", temp[0]);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
@@ -33,7 +33,7 @@ const EditDataTable = (props) => {
   const onChange = async(key, val) => {
     if (key == 'bookNo') {
       await setBookNo(val);
-      const resultCommitteeDate = await getCommitteeDate("\'รอเสนอคณะกรรมการจัดการหนี้\'", val);
+      const resultCommitteeDate = await getCommitteeDate("\'คณะกรรมการจัดการหนี้อนุมัติ\'", val);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
