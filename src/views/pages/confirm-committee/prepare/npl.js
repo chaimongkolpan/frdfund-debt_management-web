@@ -169,7 +169,7 @@ const NPL = () => {
       <tr key={index}>
         <td className="fs-9 align-middle">{index + 1}</td>
         <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_date}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
@@ -194,6 +194,7 @@ const NPL = () => {
         <td>{toCurrency(item.debt_manage_total)}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
+        <td>{item.debt_manage_objective}</td>
         <td>{item.debt_manage_objective_details}</td>
       </tr>
     ))
@@ -291,7 +292,7 @@ const NPL = () => {
                     <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                     <th colSpan="4">เกษตรกร</th>
                     <th colSpan="4">เจ้าหนี้</th>
-                    <th colSpan={coop ? "11" : "13"}>สัญญา</th>
+                    <th colSpan={coop ? "12" : "14"}>สัญญา</th>
                   </tr>
                   <tr>
                     <th>ครั้งที่เสนอคณะกรรมการ</th>
@@ -321,6 +322,7 @@ const NPL = () => {
                     <th>สถานะหนี้</th>
                     <th>ประเภทหลักประกัน</th>
                     <th>วัตถุประสงค์การกู้</th>
+                    <th>รายละเอียดวัตถุประสงค์การกู้</th>
                   </tr>
                 </thead>
                 <tbody className="list text-center align-middle" id="bulk-select-body">

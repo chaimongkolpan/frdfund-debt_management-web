@@ -18,7 +18,7 @@ const SearchTable = (props) => {
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
         <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_date}</td>
         <td>{item.debt_manage_contract_no}</td>
         <td>{toCurrency(item.contract_amount)}</td>
         <td>{item.petition_no_office}</td>

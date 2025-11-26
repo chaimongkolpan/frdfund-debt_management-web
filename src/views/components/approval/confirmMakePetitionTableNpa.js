@@ -120,7 +120,7 @@ const ConfirmTable = (props) => {
       <tr key={index}>
         <td>{index + 1}</td>
         <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_date}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
