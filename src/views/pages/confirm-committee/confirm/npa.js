@@ -117,7 +117,7 @@ const NPA = () => {
       <tr key={index}>
         <td className="fs-9 align-middle">{index + 1}</td>
         <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_date}</td>
         <td>{item.branch_correspondence_no}</td>
         <td>{item.branch_correspondence_date ? stringToDateTh(item.branch_correspondence_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.id_card}</td>
@@ -139,6 +139,7 @@ const NPA = () => {
         <td>{toCurrency(item.total_xpenses)}</td>
         <td>{toCurrency(item.frD_total_payment)}</td>
         <td>{item.debt_manage_status}</td>
+        <td>{item.debt_manage_objective}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
@@ -220,7 +221,7 @@ const NPA = () => {
                     <th colSpan="2">สาขายืนยันยอด</th>
                     <th colSpan="4">เกษตรกร</th>
                     <th colSpan="4">เจ้าหนี้</th>
-                    <th colSpan={"14"}>สัญญา</th>
+                    <th colSpan={"15"}>สัญญา</th>
                   </tr>
                   <tr>
                     <th>ครั้งที่เสนอคณะกรรมการ</th>
@@ -246,7 +247,8 @@ const NPA = () => {
                     <th>รวมค่าใช้จ่าย</th>
                     <th>รวมทั้งสิ้น</th>
                     <th>สถานะหนี้</th>
-                    <th>วัตถุประสงค์การกู้</th>        
+                    <th>วัตถุประสงค์การกู้</th>    
+                    <th>รายละเอียดวัตถุประสงค์การกู้</th>    
                     <th>ซื้อทรัพย์ตามระเบียบฯ</th>                  
                     <th>ประเภทหลักประกัน</th>
                   </tr>

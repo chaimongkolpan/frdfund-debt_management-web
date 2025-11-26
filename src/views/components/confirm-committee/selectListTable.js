@@ -63,7 +63,7 @@ const SelectedTable = (props) => {
           </div>
         </td>
         <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_date}</td>
         <td>{item.branch_correspondence_no}</td>
         <td>{item.branch_correspondence_date ? stringToDateTh(item.branch_correspondence_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.id_card}</td>
@@ -90,6 +90,7 @@ const SelectedTable = (props) => {
         <td>{toCurrency(item.debt_manage_total)}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
+        <td>{item.debt_manage_objective}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{toCurrency(item.debt_manage_outstanding_principal_cf)}</td>
         <td>{toCurrency(item.debt_manage_accrued_interest_cf)}</td>
@@ -150,7 +151,7 @@ const SelectedTable = (props) => {
                 <th colSpan="2">สาขายืนยันยอด</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={coop ? "11" : "13"}>สัญญา</th>
+                <th colSpan={coop ? "12" : "14"}>สัญญา</th>
                 <th colSpan={coop ? "10" : "12"}>ยืนยันยอด</th>
               </tr>
               <tr>
@@ -183,6 +184,7 @@ const SelectedTable = (props) => {
                 <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
                 <th>วัตถุประสงค์การกู้</th>
+                <th>รายละเอียดวัตถุประสงค์การกู้</th>
                 <th>เงินต้น</th>
                 <th>ดอกเบี้ย</th>
                 <th>ค่าปรับ</th>

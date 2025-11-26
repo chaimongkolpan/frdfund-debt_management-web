@@ -116,7 +116,7 @@ const SearchTable = (props) => {
           </div>
         </td>
         <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_date}</td>
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
         <td>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
@@ -136,6 +136,7 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.total_xpenses)}</td>
         <td>{toCurrency(item.frD_total_payment)}</td>
         <td>{item.debt_manage_status}</td>
+        <td>{item.debt_manage_objective}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
@@ -202,7 +203,7 @@ const SearchTable = (props) => {
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={"14"}>สัญญา</th>
+                <th colSpan={"15"}>สัญญา</th>
                 <th colSpan="9">ยืนยันยอด</th>
               </tr>
               <tr>
@@ -227,7 +228,8 @@ const SearchTable = (props) => {
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
                 <th>สถานะหนี้</th>
-                <th>วัตถุประสงค์การกู้</th>        
+                <th>วัตถุประสงค์การกู้</th>       
+                <th>รายละเอียดวัตถุประสงค์การกู้</th> 
                 <th>ซื้อทรัพย์ตามระเบียบฯ</th>                  
                 <th>ประเภทหลักประกัน</th>
                 <th>ราคาขายทรัพย์ NPA</th>

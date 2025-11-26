@@ -47,7 +47,7 @@ const DataTable = (props) => {
           (<i className="fas fa-check text-success fs-7"></i>))}
         </td>
         <td>{item.proposal_committee_no}</td>
-        <td>{item.proposal_committee_date ? stringToDateTh(item.proposal_committee_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.proposal_committee_date}</td>
         {coop && (
           <td>{item.proposal_type ? 'ชำระหนี้แทน' : 'วางเงินชำระหนี้'}</td>
         )}

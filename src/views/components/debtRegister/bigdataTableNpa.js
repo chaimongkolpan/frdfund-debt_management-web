@@ -29,7 +29,7 @@ const DebtNPABigDataTable = (props) => {
         <td className="fs-9 align-middle">
           {can_action ? (
             <div className="form-check ms-2 mb-0 fs-8">
-              <input className="form-check-input" disabled={disabled_status.includes(item.debt_management_audit_status)} type="checkbox" checked={checked} onChange={() => onChange(index)} />
+              <input className="form-check-input" disabled={item.debt_management_audit_status != 'ทะเบียนหนี้รอสอบยอด'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
           ) : (index + 1)}
         </td>
