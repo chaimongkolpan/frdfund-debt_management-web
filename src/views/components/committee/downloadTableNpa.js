@@ -12,12 +12,12 @@ import {
 } from "@services/api";
 const EditDataTable = (props) => {
   const { bookNo, setBookNo, bookDate, setBookDate } = props;
-  const status = 'รอเสนอคณะกรรมการจัดการหนี้';
+  const status = 'คณะกรรมการจัดการหนี้อนุมัติ';
   const [committeeNoOp, setCommitteeNoOp] = useState(null);
   const [committeeDateOp, setCommitteeDateOp] = useState(null);
   async function fetchData() {
-    const resultCommitteeNo = await getCommitteeNoNpa("\'รอเสนอคณะกรรมการจัดการหนี้\'");
-    const resultCommitteeDate = await getCommitteeDateNpa("\'รอเสนอคณะกรรมการจัดการหนี้\'");
+    const resultCommitteeNo = await getCommitteeNoNpa("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
+    const resultCommitteeDate = await getCommitteeDateNpa("\'คณะกรรมการจัดการหนี้อนุมัติ\'");
     if (resultCommitteeNo.isSuccess) {
       const temp = resultCommitteeNo.data.map(item => item.name);
       await setCommitteeNoOp(temp);
