@@ -971,7 +971,7 @@ const FullModal = (props) => {
                             <label htmlFor="floatingSelectPrivacy">ดำเนินการทางกฎหมาย</label>
                           </div>
                         </div>
-                        {!showLegalList.includes(debts?.debt_manage_status) && (
+                        {!showLegalList.includes(debts?.debt_manage_status ?? 'ปกติ') && (
                           <div className="col-sm-12 col-md-6 col-lg-8">
                             <Textbox title={'วันที่ดำเนินการทางกฎหมาย'}
                               value={debts?.debt_manage_legal_action_date}
@@ -1220,9 +1220,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -1230,9 +1230,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
@@ -1381,9 +1381,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -1391,9 +1391,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
@@ -1536,9 +1536,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -1546,9 +1546,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
@@ -1709,9 +1709,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -1719,9 +1719,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
@@ -1864,9 +1864,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -1874,9 +1874,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
@@ -2031,9 +2031,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -2041,9 +2041,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
@@ -2448,9 +2448,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -2458,9 +2458,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
@@ -2698,9 +2698,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อที่ตามสัญญา'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('contract_area_rai', val)} 
-                                                rai={collateralDetail?.contract_area_rai}
+                                                rai={collateralDetail?.contract_area_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('contract_area_ngan', val)} 
-                                                ngan={collateralDetail?.contract_area_ngan}
+                                                ngan={collateralDetail?.contract_area_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('contract_area_sqaure_wa', val)} 
                                                 wa={collateralDetail?.contract_area_sqaure_wa}
                                               />
@@ -2708,9 +2708,9 @@ const FullModal = (props) => {
                                             <div className="col-sm-12 col-md-12 col-lg-12">
                                               <AreaTextbox title={'เนื้อทีดินที่โอน(จำนองเฉพาะส่วน)'} containerClassname={'mb-3'}
                                                 handleChangeRai={(val) => handleChangeCollateral('area_transfer_rai', val)} 
-                                                rai={collateralDetail?.area_transfer_rai}
+                                                rai={collateralDetail?.area_transfer_rai ?? '0'}
                                                 handleChangeNgan={(val) => handleChangeCollateral('area_transfer_ngan', val)} 
-                                                ngan={collateralDetail?.area_transfer_ngan}
+                                                ngan={collateralDetail?.area_transfer_ngan ?? '0'}
                                                 handleChangeWa={(val) => handleChangeCollateral('area_transfer_sqaure_wa', val)} 
                                                 wa={collateralDetail?.area_transfer_sqaure_wa}
                                               />
