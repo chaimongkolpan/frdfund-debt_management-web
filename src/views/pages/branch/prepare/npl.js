@@ -161,6 +161,7 @@ const NPL = () => {
         onChange={(e) => onCheckChange(index, 8, e.target.checked)} /><br />{item.debt_manage_status}</td>
         <td><input className="form-check-input" type="checkbox" checked={item.incorrect[9]} 
         onChange={(e) => onCheckChange(index, 9, e.target.checked)} /><br />{item.debt_manage_objective}</td>
+        <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_payment_default_date ? stringToDateTh(item.debt_manage_payment_default_date, false) : '-'}</td>
         {creditorType == "สหกรณ์" ? (
           <td>{item.debt_manage_calculate_ondate ? stringToDateTh(item.debt_manage_calculate_ondate, false) : '-'}</td>
@@ -241,7 +242,7 @@ const NPL = () => {
                         <th colSpan="1">องค์กร</th>
                         <th colSpan="4">ทะเบียนหนี้</th>
                         <th colSpan="4">เจ้าหนี้</th>
-                        <th colSpan={creditorType == "สหกรณ์" ? "13" : "15"}>สัญญา</th>
+                        <th colSpan={creditorType == "สหกรณ์" ? "14" : "16"}>สัญญา</th>
                         <th colSpan="3">หลักทรัพย์ค้ำประกัน</th>
                       </tr>
                       <tr>
@@ -274,6 +275,7 @@ const NPL = () => {
                         <th>รวมทั้งสิ้น</th>
                         <th>สถานะหนี้</th>
                         <th>วัตถุประสงค์การกู้</th>
+                        <th>รายละเอียดวัตถุประสงค์การกู้</th>
                         <th>วันที่ผิดนัดชำระ</th>
                         {creditorType == "สหกรณ์" ? (
                           <th>คำนวณดอกเบี้ยถึงวันที่</th>
