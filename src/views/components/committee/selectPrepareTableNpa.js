@@ -87,6 +87,7 @@ const SelectedTable = (props) => {
         <td>{toCurrency(item.total_xpenses)}</td>
         <td>{toCurrency(item.frD_total_payment)}</td>
         <td>{item.debt_manage_status}</td>
+        <td>{item.debt_manage_objective}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
@@ -136,7 +137,7 @@ const SelectedTable = (props) => {
                 <th colSpan="1">องค์กร</th>
                 <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={"14"}>สัญญา</th>
+                <th colSpan={"15"}>สัญญา</th>
                 <th colSpan="4">หลักทรัพย์ค้ำประกัน</th>
               </tr>
               <tr>
@@ -167,6 +168,7 @@ const SelectedTable = (props) => {
                 <th>รวมทั้งสิ้น</th>
                 <th>สถานะหนี้</th>
                 <th>วัตถุประสงค์การกู้</th>
+                <th>รายละเอียดวัตถุประสงค์การกู้</th>
                 <th>ซื้อทรัพย์ตามระเบียบฯ</th>                               
                 <th>ประเภทหลักประกัน</th>
                 <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
