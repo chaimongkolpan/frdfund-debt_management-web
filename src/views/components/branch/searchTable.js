@@ -75,6 +75,7 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.debt_manage_total)}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.debt_manage_objective}</td>
+        <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_payment_default_date ? stringToDateTh(item.debt_manage_payment_default_date, false) : '-'}</td>
         {coop ? (
           <td>{item.debt_manage_calculate_ondate ? stringToDateTh(item.debt_manage_calculate_ondate, false) : '-'}</td>
@@ -169,6 +170,7 @@ const SearchTable = (props) => {
                 <th>รวมทั้งสิ้น</th>
                 <th>สถานะหนี้</th>
                 <th>วัตถุประสงค์การกู้</th>
+                <th>รายละเอียดวัตถุประสงค์การกู้</th>
                 <th>วันที่ผิดนัดชำระ</th>
                 {coop ? (
                   <th>คำนวณดอกเบี้ยถึงวันที่</th>
