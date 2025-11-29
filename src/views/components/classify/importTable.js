@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { stringToDateTh } from "@utils";
+import { stringToDateTh, toCurrency } from "@utils";
 const ClassifyImportTable = (props) => {
   const { data } = props;
   const [isMounted, setIsMounted] = useState(false);
@@ -46,7 +46,7 @@ const ClassifyImportTable = (props) => {
         <td className="align-middle">{item.creditor_province}</td>
         <td className="align-middle">{item.creditor_branch}</td>
         <td className="align-middle">{item.debt_manage_contract_no}</td>
-        <td className="align-middle">{item.debt_manage_outstanding_principal}</td>
+        <td className="align-middle">{toCurrency(item.debt_manage_outstanding_principal)}</td>
         <td className="align-middle">{item.dept_status}</td>
         <td className="align-middle">{item.collateral_type}</td>
         <td className="align-middle">{item.purpose_loan_contract}</td>
