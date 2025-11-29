@@ -120,7 +120,7 @@ const SearchTable = (props) => {
                 <th colSpan="1">องค์กร</th>
                 <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={"14"}>สัญญา</th>
+                <th colSpan={"15"}>สัญญา</th>
                 <th colSpan="4">หลักทรัพย์ค้ำประกัน</th>
               </tr>
               <tr>

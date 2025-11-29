@@ -137,7 +137,7 @@ const SearchTable = (props) => {
                 <th colSpan="1">องค์กร</th>
                 <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={coop ? "13" : "15"}>สัญญา</th>
+                <th colSpan={coop ? "14" : "16"}>สัญญา</th>
                 <th colSpan="3">หลักทรัพย์ค้ำประกัน</th>
               </tr>
               <tr>
