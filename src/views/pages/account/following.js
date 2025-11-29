@@ -65,17 +65,17 @@ const PageContent = () => {
       const result = await saveIsLoss(form);
       if (result.isSuccess) {
         toast((t) => (
-          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
         ));
       } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
       }
     } else {
       console.error('no file upload');
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }

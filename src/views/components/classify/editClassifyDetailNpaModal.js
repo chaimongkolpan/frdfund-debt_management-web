@@ -44,11 +44,11 @@ const FullModal = (props) => {
     if (result.isSuccess) {
       await fetchData();
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -80,11 +80,11 @@ const FullModal = (props) => {
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -95,11 +95,11 @@ const FullModal = (props) => {
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }

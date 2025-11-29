@@ -67,14 +67,14 @@ const NPA = () => {
     const result = await updateNPAstatus(selected,status);
     if (result) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await approveCommitteeUpdateNpa({ ids: selected });
       await onSearchTop(filter);
       await setSubmit(false);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -82,14 +82,14 @@ const NPA = () => {
     const result = await updateNPAstatus(selected,"คณะกรรมการจัดการหนี้ไม่อนุมัติ");
     if (result) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await rejectCommitteeUpdateNpa({ ids: selected, remark });
       await onSearchTop(filter);
       await setReject(false);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };

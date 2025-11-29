@@ -62,12 +62,12 @@ const BranchOfferNPL = () => {
     const result = await uploadBranchOffer(form)
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       setUploadSuccess(true);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -90,14 +90,15 @@ const BranchOfferNPL = () => {
   const onAddBigData = async (selected) => {
     const result = await addBranchOffer(selected);
     if (result.isSuccess) {
-      toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
-      ));
-      await onSearchTop({ ...filter, currentPage: 1});
+      // toast((t) => (
+      //   <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      // ));
+      await setLoadBigData(true);
       await fetchData(filterAdded);
+      await onSearchTop({ ...filter, currentPage: 1});
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -110,19 +111,21 @@ const BranchOfferNPL = () => {
     } else {
       setAddedData(null);
     }
+    await setLoadBigData(false);
   };
 
   const onRemoveMakelist = async (selected) => {
     const result = await removeBranchOffer(selected);
     if (result.isSuccess) {
-      toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
-      ));
-      await onSearchTop({ ...filter, currentPage: 1});
+      // toast((t) => (
+      //   <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      // ));
+      await setLoadBigData(true);
       await fetchData(filterAdded);
+      await onSearchTop({ ...filter, currentPage: 1});
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -137,7 +140,7 @@ const BranchOfferNPL = () => {
     const resultUpdate = await updateBranchOffer(param)
     if (resultUpdate.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       const result = await submitBranchOffer({
         type: "application/octet-stream",
@@ -151,7 +154,7 @@ const BranchOfferNPL = () => {
       }
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
