@@ -58,6 +58,7 @@ const SearchTable = (props) => {
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
         <td>{item.debt_manage_objective}</td>
+        <td>{item.debt_manage_objective_details}</td>
         <td>{item.regulation_no}</td>
       </tr>
     ))
@@ -126,6 +127,7 @@ const SearchTable = (props) => {
                 <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
                 <th>วัตถุประสงค์การกู้</th>
+                <th>รายละเอียดวัตถุประสงค์การกู้</th>
                 <th>ซื้อทรัพย์ตามระเบียบฯ</th>
               </tr>
             </thead>

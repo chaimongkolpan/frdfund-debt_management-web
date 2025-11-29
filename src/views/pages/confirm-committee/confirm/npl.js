@@ -48,18 +48,18 @@ const NPL = () => {
       const ids = requestApproveData.map(item => item.id_debt_management)
       if (await updateNPLstatus(ids, "ยืนยันยอดสำเร็จ")) {
         toast((t) => (
-          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
         ));
         await onSearchTop({ ...filter, currentPage: 1});
         await fetchData(filterAdded);
       } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
       }
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -68,13 +68,13 @@ const NPL = () => {
     const result = await notConfirmCommittee({ ids, status: "แก้ไขยืนยันยอด", debt_manage_type: 'NPL'});
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -109,13 +109,13 @@ const NPL = () => {
     const result = await updateNPLstatus(ids, "เตรียมยืนยันยอด");
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -124,13 +124,13 @@ const NPL = () => {
     const result = await updateNPLstatus(ids, "สาขายืนยันยอด");
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };

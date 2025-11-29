@@ -61,12 +61,12 @@ const BranchOfferNPA = () => {
     const result = await uploadBranchOfferNpa(form)
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       setUploadSuccess(true);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -84,14 +84,15 @@ const BranchOfferNPA = () => {
   const onAddBigData = async (selected) => {
     const result = await addBranchOfferNpa(selected);
     if (result.isSuccess) {
-      toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
-      ));
-      await onSearch(filter);
+      // toast((t) => (
+      //   <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      // ));
+      await setLoadBigData(true);
       await fetchData(filterAdded);
+      await onSearch(filter);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -103,17 +104,19 @@ const BranchOfferNPA = () => {
     } else {
       setAddedData(null);
     }
+    await setLoadBigData(false);
   };
   const onRemoveMakelist = async (selected) => {
     const result = await removeBranchOfferNpa(selected);
     if (result.isSuccess) {
-      toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
-      ));
+      // toast((t) => (
+      //   <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      // ));
+      await setLoadBigData(true);
       await fetchData(filterAdded);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -127,7 +130,7 @@ const BranchOfferNPA = () => {
     const resultUpdate = await updateBranchOfferNpa(param)
     if (resultUpdate.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       const result = await submitBranchOfferNpa({
         type: "application/octet-stream",
@@ -141,7 +144,7 @@ const BranchOfferNPA = () => {
       }
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
