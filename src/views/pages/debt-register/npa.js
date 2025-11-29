@@ -55,7 +55,7 @@ const DebtRegisterNpa = () => {
     const result = await addRegistrationNPA(debt);
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       // await setEditDebt(null)
       // const result1 = await searchRegisteredNPA(filter);

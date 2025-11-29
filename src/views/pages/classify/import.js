@@ -37,19 +37,19 @@ const ImportClassify = () => {
         setSuceed(result.succeed);
         if (!result.hasFail) {
           toast((t) => (
-            <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+            <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
           ));
           setData(result.contracts);
           return true
         } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'มีข้อมูลไม่ถูกต้อง'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'มีข้อมูลไม่ถูกต้อง'} />
         ));
           return false
         }
       } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
         setData(null)
         return false

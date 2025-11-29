@@ -57,14 +57,14 @@ const SearchClassifyNPADetail = () => {
     const result = await combineClassify(param);
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await fetchData();
       await setOpenCombine(false);
       await setCombine(null);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -78,7 +78,7 @@ const SearchClassifyNPADetail = () => {
     const result = await createNplClassify({ id_debt_management: id });
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await fetchData();
       await setOpenCreateNPL(false);
@@ -86,7 +86,7 @@ const SearchClassifyNPADetail = () => {
       await setCreate(null);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -100,7 +100,7 @@ const SearchClassifyNPADetail = () => {
     const result = await splitClassify({ id_debt_management: id });
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await fetchData();
       await setOpenSplitNPL(false);
@@ -108,7 +108,7 @@ const SearchClassifyNPADetail = () => {
       await setSplit(null);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -138,7 +138,7 @@ const SearchClassifyNPADetail = () => {
     const result = await cancelSplitClassify({ id_separate: id });
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await fetchData();
       await setOpenCancelSplit(false);
@@ -146,7 +146,7 @@ const SearchClassifyNPADetail = () => {
       await setCancelSplit(null);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -167,7 +167,7 @@ const SearchClassifyNPADetail = () => {
   }
   const handleSubmitDocument = async () => {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
     setDebt(null)
     await fetchData();

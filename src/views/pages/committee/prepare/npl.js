@@ -81,13 +81,13 @@ const NPL = () => {
     const result = await addCommitteePrepare(selectId);
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -96,13 +96,13 @@ const NPL = () => {
     const result = await removeCommitteePrepare(selectId);
     if (result.isSuccess) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -127,7 +127,7 @@ const NPL = () => {
       const resultUpdate = await updateCommitteePrepare(param);
       if (resultUpdate) {
         toast((t) => (
-          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
         ));
         const result = await submitCommitteePrepare({
           type: "application/octet-stream",
@@ -144,12 +144,12 @@ const NPL = () => {
         }
       } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
       }
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };
@@ -163,7 +163,7 @@ const NPL = () => {
     const resultUpdate = await updateCommitteePrepare(param);
     if (resultUpdate) {
       toast((t) => (
-        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       const result = await submitCommitteePrepare({
         type: "application/octet-stream",
@@ -177,7 +177,7 @@ const NPL = () => {
       }
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   };

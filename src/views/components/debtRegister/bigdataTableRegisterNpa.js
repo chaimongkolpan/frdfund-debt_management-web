@@ -33,7 +33,7 @@ const DebtRegisterBigDataTable = (props) => {
       await setDebt(null)
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'ข้อมูลไม่ครบถ้วน'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'ข้อมูลไม่ครบถ้วน'} />
       ));
     }
   }

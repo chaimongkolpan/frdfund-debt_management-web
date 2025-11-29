@@ -68,6 +68,7 @@ const CommercialBanksOrLegalEntitiesTable = ({
           <td className="align-middle">{item.debt_manage_status}</td>
           <td className="align-middle">{item.collateral_type}</td>
           <td className="align-middle">{item.debt_manage_objective}</td>
+          <td className="align-middle">{item.debt_manage_objective_details}</td>
         </tr>
       )
     );
@@ -172,6 +173,9 @@ const CommercialBanksOrLegalEntitiesTable = ({
               </th>
               <th className="align-middle text-center">
                 วัตถุประสงค์การกู้
+              </th>
+              <th className="align-middle text-center">
+                รายละเอียดวัตถุประสงค์การกู้
               </th>
             </tr>
           </thead>

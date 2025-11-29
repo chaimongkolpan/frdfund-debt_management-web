@@ -63,6 +63,7 @@ const CooperativeTable = ({
           <td className="align-middle">{item.debt_manage_status}</td>
           <td className="align-middle">{item.collateral_type}</td>
           <td className="align-middle">{item.debt_manage_objective}</td>
+          <td className="align-middle">{item.debt_manage_objective_details}</td>
         </tr>
       )
     );
@@ -164,6 +165,9 @@ const CooperativeTable = ({
               </th>
               <th className="align-middle text-center" data-sort="age">
                 วัตถุประสงค์การกู้
+              </th>
+              <th className="align-middle text-center" data-sort="age">
+                รายละเอียดวัตถุประสงค์การกู้
               </th>
             </tr>
           </thead>

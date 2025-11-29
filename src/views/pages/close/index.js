@@ -80,17 +80,17 @@ const Close = () => {
       const result = await requestClose(form);
       if (result.isSuccess) {
         toast((t) => (
-          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
         ));
       } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
       }
     } else {
       console.error('no file upload');
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -106,17 +106,17 @@ const Close = () => {
       const result = await redeemClose(form);
       if (result.isSuccess) {
         toast((t) => (
-          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
         ));
       } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
       }
     } else {
       console.error('no file upload');
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -137,17 +137,17 @@ const Close = () => {
       const result = await refundClose(form);
       if (result.isSuccess) {
         toast((t) => (
-          <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
         ));
       } else {
         toast((t) => (
-          <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
       }
     } else {
       console.error('no file upload');
       toast((t) => (
-        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
     }
   }
@@ -406,7 +406,7 @@ const Close = () => {
       )}
       {openRequestClose && (
         <Modal isOpen={openRequestClose} setModal={setOpenRequestClose} onClose={() => setOpenRequestClose(false)} title={'ยื่นคำร้องปิดสัญญา'} closeText={'ปิด'} scrollable fullscreen
-          onOk={() => onSubmitRequest()} okText={'บันทีก'}>
+          onOk={() => onSubmitRequest()} okText={'บันทึก'}>
           <form>
             <br />
             <div className="row">
@@ -426,7 +426,7 @@ const Close = () => {
       )}
       {openRedeemAsset && (
         <Modal isOpen={openRedeemAsset} setModal={setOpenRedeemAsset} onClose={() => setOpenRedeemAsset(false)} title={'โอนคืนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen
-          onOk={() => onSubmitRedeem()} okText={'บันทีก'}>
+          onOk={() => onSubmitRedeem()} okText={'บันทึก'}>
           <form>
             <br />
             <div className="row">
@@ -462,7 +462,7 @@ const Close = () => {
       )}
       {openRequestRefund && (
         <Modal isOpen={openRequestRefund} setModal={setOpenRequestRefund} onClose={() => setOpenRequestRefund(false)}  title={'ทำเรื่องคืนเงิน'} closeText={'ปิด'} scrollable fullscreen
-          onOk={() => onSubmitRefund()} okText={'บันทีก'}>
+          onOk={() => onSubmitRefund()} okText={'บันทึก'}>
           <form>
             <br />
             <div className="row">
