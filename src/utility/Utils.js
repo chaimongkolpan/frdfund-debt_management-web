@@ -37,10 +37,15 @@ export const formatDate = (
   return new Intl.DateTimeFormat("en-US", formatting).format(new Date(value));
 };
 export const toCurrency = (value, digit = 0) => {
-
   if (!value) return '0.00';
-  if (typeof value == 'number')
-    return value.toLocaleString();
+  if (typeof value == 'number') {
+    // let result = value.toFixed(digit);
+    let result = value.toLocaleString();
+    if (result.split('.').length == 1) {
+      result = result + '.00';
+    }
+    return result;
+  }
   if (!isNaN(parseFloat(value)))
     return parseFloat(value).toLocaleString()
   return value;
