@@ -1347,6 +1347,17 @@ export const completeConfirmCommittee = async (param) => {
     return defaultErrorResponse;
   }
 };
+export const notConfirmCommittee = async (param) => {
+  const path = "/ConfirmCommittee/not-confirm-committee";
+  try {
+    const result = await axios.post(path, param);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 // #endregion
 //#region Approval
 export const getCommitteeNo = async (status) => {

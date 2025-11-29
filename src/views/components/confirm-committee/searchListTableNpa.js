@@ -3,7 +3,7 @@ import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 import EditDetail from "@views/components/confirm-committee/editDetailNpa";
 const SearchTable = (props) => {
-  const { result, handleSubmit, filter, getData, can_action } = props;
+  const { result, handleSubmit, handleSubmitNotConfirm, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
@@ -15,6 +15,12 @@ const SearchTable = (props) => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleSubmit(selectedData)
+    }
+  }
+  const onSubmitNotConfirm = () => {
+    if (handleSubmitNotConfirm) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      handleSubmitNotConfirm(selectedData)
     }
   }
   const onChange = async (id) => {
@@ -199,7 +205,9 @@ const SearchTable = (props) => {
         <div className="d-flex align-items-center justify-content-center my-3">
           <div className={`${isSome ? '' : 'd-none'}`}>
             <div className="d-flex">
-              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญายืนยันยอด</button>
+              {' '}
+              <button className="btn btn-subtle-danger btn-sm ms-2" type="button" onClick={() => onSubmitNotConfirm()}>ยืนยันไม่ถูกต้อง</button>
             </div>
           </div>
         </div>
