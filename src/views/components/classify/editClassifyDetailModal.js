@@ -971,7 +971,7 @@ const FullModal = (props) => {
                             <label htmlFor="floatingSelectPrivacy">ดำเนินการทางกฎหมาย</label>
                           </div>
                         </div>
-                        {!showLegalList.includes(debts?.debt_manage_status ?? 'ปกติ') && (
+                        {(!showLegalList.includes(debts?.debt_manage_status ?? 'ปกติ') && debts?.debt_manage_status != '') && (
                           <div className="col-sm-12 col-md-6 col-lg-8">
                             <Textbox title={'วันที่ดำเนินการทางกฎหมาย'}
                               value={debts?.debt_manage_legal_action_date}
