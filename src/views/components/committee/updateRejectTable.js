@@ -104,7 +104,7 @@ const DataTable = (props) => {
         <Remark
           value={remark}
           title={'หมายเหตุ'}
-          subtitle={'กฟก.'+ getBookNo() }
+          subtitle={'กฟก '+ getBookNo() }
           containerClassname={''}
           handleChange={setRemark}
         />

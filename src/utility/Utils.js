@@ -210,7 +210,7 @@ export const saveDate = (value) => {
 
 export const getBookNo = () => {
   const user = JSON.parse(localStorage.getItem("userData"));
-  if (user?.role == 4) return user?.short_th + '/';
+  if (user?.role == 4) return user?.short_th + ' ';
   if (user?.role == 2) return '0600/';
   if (user?.role == 7) return '0610/';
   if (user?.role == 8) return '0620/';
