@@ -13,7 +13,7 @@ import {
   cleanData
 } from "@services/api";
 const SearchTable = (props) => {
-  const { result, handleSubmit, filter, getData, can_action } = props;
+  const { result, handleSubmit, handleSubmitNotConfirm, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
@@ -26,6 +26,12 @@ const SearchTable = (props) => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleSubmit(selectedData)
+    }
+  }
+  const onSubmitNotConfirm = () => {
+    if (handleSubmitNotConfirm) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      handleSubmitNotConfirm(selectedData)
     }
   }
   const onChange = async (id) => {
@@ -242,6 +248,8 @@ const SearchTable = (props) => {
           <div className={`${isSome ? '' : 'd-none'}`}>
             <div className="d-flex">
               <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญายืนยันยอด</button>
+              {' '}
+              <button className="btn btn-subtle-danger btn-sm ms-2" type="button" onClick={() => onSubmitNotConfirm()}>ยืนยันไม่ถูกต้อง</button>
             </div>
           </div>
         </div>

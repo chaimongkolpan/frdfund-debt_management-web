@@ -14,6 +14,7 @@ import SelectDataTable from "@views/components/confirm-committee/selectListTable
 import { 
   searchConfirmCommitteePrepare,
   completeConfirmCommittee,
+  notConfirmCommittee,
   updateNPLstatus,
   cleanData
 } from "@services/api";
@@ -56,6 +57,21 @@ const NPL = () => {
           <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
         ));
       }
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+  }
+  const onSubmitNotConfirm = async (selected) => {
+    const ids = selected.map(item => item.id_debt_confirm.toString())
+    const result = await notConfirmCommittee({ ids, status: "แก้ไขยืนยันยอด", debt_manage_type: 'NPL'});
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await onSearchTop({ ...filter, currentPage: 1});
+      await fetchData(filterAdded);
     } else {
       toast((t) => (
         <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
@@ -197,6 +213,7 @@ const NPL = () => {
                       <SearchDataTable
                         result={data}
                         handleSubmit={onAddBigData}
+                        handleSubmitNotConfirm={onSubmitNotConfirm}
                         filter={filter}
                         getData={onSearchTop}
                         can_action={can_action}

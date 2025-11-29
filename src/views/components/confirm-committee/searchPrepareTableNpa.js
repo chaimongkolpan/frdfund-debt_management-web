@@ -41,7 +41,7 @@ const SearchTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map(() => checked));
+    await setSelected(result.data.map((x) => x.status_confirm == "แก้ไขยืนยันยอด" ? checked : false));
     await setIsAll(checked)
   }
   const handleShowDetail = async (item) => {
@@ -106,7 +106,7 @@ const SearchTable = (props) => {
         <td className="fs-9 align-middle">
           {can_action ? (
             <div className="form-check ms-2 mb-0 fs-8">
-              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+              <input className="form-check-input" type="checkbox" checked={checked} disabled={item.status_confirm != "แก้ไขยืนยันยอด"} onChange={() => onChange(index)} />
             </div>
           ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
