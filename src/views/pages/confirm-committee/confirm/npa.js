@@ -11,6 +11,7 @@ import SelectDataTable from "@views/components/confirm-committee/selectListTable
 import { 
   searchConfirmCommitteePrepareNpa,
   completeConfirmCommittee,
+  notConfirmCommittee,
   updateNPAstatus,
   cleanData
 } from "@services/api";
@@ -49,6 +50,21 @@ const NPA = () => {
         await onSearchTop({ ...filter, currentPage: 1});
         await fetchData(filterAdded);
       }
+    }
+  }
+  const onSubmitNotConfirm = async (selected) => {
+    const ids = selected.map(item => item.id_debt_confirm.toString())
+    const result = await notConfirmCommittee({ ids, status: "แก้ไขยืนยันยอด", debt_manage_type: 'NPA'});
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทีกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await onSearchTop({ ...filter, currentPage: 1});
+      await fetchData(filterAdded);
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทีกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const onSearchTop = async (filter) => {
@@ -174,6 +190,7 @@ const NPA = () => {
                       <SearchDataTable
                         result={data}
                         handleSubmit={onAddBigData}
+                        handleSubmitNotConfirm={onSubmitNotConfirm}
                         filter={filter}
                         getData={onSearchTop}
                         can_action={can_action}
