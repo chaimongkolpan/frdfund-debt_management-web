@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router"
 import { useNavigate } from "react-router-dom";
-import { getUserData } from "@utils";
+import { getUserData, toCurrency } from "@utils";
 import { 
   getDebtManagementDetailClassifyNpa,
   combineClassify,
@@ -259,7 +259,7 @@ const SearchClassifyNPADetail = () => {
                       {(debts && debts.length > 0) && (
                         <h6>
                           <div className="d-flex">
-                            <div className="flex-grow-1 ">รวม {debts.length} บัญชี จำนวนเงินกู้ {debts.reduce((sum,{frD_paymen_amount}) => sum + frD_paymen_amount,0)} บาท</div>
+                            <div className="flex-grow-1 ">รวม {debts.length} บัญชี จำนวนเงินกู้ {toCurrency(debts.reduce((sum,{frD_paymen_amount}) => sum + frD_paymen_amount,0),2)} บาท</div>
                             <div className="ms-3 square border border-1" style={{background: '#ddefff'}}></div>
                             <div className="ms-1">รวมสัญญา</div>
                             <div className="ms-3 square border border-1" style={{background: '#fdeae7'}}></div>
