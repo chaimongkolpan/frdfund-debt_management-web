@@ -109,8 +109,8 @@ const NPL = () => {
   const handleSubmit = async(selected) => {
     const custs = selected.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
     const sum = selected.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
-    await setCount(toCurrency(custs.length));
-    await setContracts(toCurrency(selected.length));
+    await setCount(custs.length.toLocaleString());
+    await setContracts(selected.length.toLocaleString());
     await setSumTotal(toCurrency(sum,2));
     await setRequestApproveData(selected);
     await setSubmit(true);

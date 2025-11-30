@@ -99,6 +99,7 @@ const EditDataTable = (props) => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
+        <td>{item.debt_manage_objective}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
@@ -198,7 +199,7 @@ const EditDataTable = (props) => {
                   <th colspan="2">สาขาเสนอขออนุมัติ</th>
                   <th colSpan="4">เกษตรกร</th>
                   <th colSpan="4">เจ้าหนี้</th>
-                  <th colSpan={coop ? "11" : "13"}>สัญญา</th>
+                  <th colSpan={coop ? "12" : "14"}>สัญญา</th>
                   <th>หลักทรัพย์ค้ำประกัน</th>
                 </tr>
                 <tr>
@@ -227,6 +228,7 @@ const EditDataTable = (props) => {
                   <th>รวมค่าใช้จ่าย</th>
                   <th>รวมทั้งสิ้น</th>
                   <th>วัตถุประสงค์การกู้</th>
+                  <th>รายละเอียดวัตถุประสงค์การกู้</th>
                   <th>สถานะหนี้</th>
                   <th>ประเภทหลักประกัน</th>
                   <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>

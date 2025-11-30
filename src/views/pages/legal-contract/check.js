@@ -137,7 +137,7 @@ const LegalContractSend = () => {
         policyNO: item.policyNO,
         policyStatus: "จัดส่งนิติกรรมสัญญา",
         sendStatus: "จัดส่งนิติกรรมสัญญา",
-        branch_policy_no: 'กฟก.' + getBookNo() + bookNo,
+        branch_policy_no: 'กฟก ' + getBookNo() + bookNo,
         branch_policy_date: ToDateDb(bookDate),
       }
     });
@@ -407,7 +407,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก ' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} handleChange={(val) => setBookDate(val)} />
@@ -578,7 +578,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <BookNo title={'เลขที่หนังสือนำส่งจัดการหนี้'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือนำส่งจัดการหนี้'} subtitle={'กฟก ' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือนำส่งจัดการหนี้'} value={bookDate} handleChange={(val) => setBookDate(val)} />

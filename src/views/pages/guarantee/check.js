@@ -114,7 +114,7 @@ const LegalContractSend = () => {
     const param = selectedData.map(item => {
       return {
         id_AssetPolicy: item.id_AssetPolicy,
-        debt_management_asset_no: 'กฟก.' + getBookNo() + bookNo,
+        debt_management_asset_no: 'กฟก ' + getBookNo() + bookNo,
         debt_management_asset_date: ToDateDb(bookDate),
       }
     });
@@ -176,7 +176,7 @@ const LegalContractSend = () => {
       const param = selectedData.map(item => {
         return {
           id_AssetPolicy: item.id_AssetPolicy,
-          return_asset_no: 'กฟก.' + getBookNo() + bookNo,
+          return_asset_no: 'กฟก ' + getBookNo() + bookNo,
           return_asset_date: ToDateDb(bookDate),
           return_asset_reason: remark,
         }
@@ -452,7 +452,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก ' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} handleChange={(val) => setBookDate(val)} />
@@ -628,7 +628,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <BookNo title={'เลขที่หนังสือนำส่งจัดการหนี้'} subtitle={'กฟก.' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือนำส่งจัดการหนี้'} subtitle={'กฟก ' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือนำส่งจัดการหนี้'} value={bookDate} handleChange={(val) => setBookDate(val)} />

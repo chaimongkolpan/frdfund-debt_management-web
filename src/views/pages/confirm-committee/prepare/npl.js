@@ -64,7 +64,7 @@ const NPL = () => {
       });
       files.forEach((item) => form.append("files", item));
       form.append("debt_manage_type", 'NPL')
-      form.append("branch_correspondence_no", 'กฟก.'+ getBookNo()  + branchNo)
+      form.append("branch_correspondence_no", 'กฟก '+ getBookNo()  + branchNo)
       form.append("branch_correspondencel_date", stringToDateTh(branchDate, false))
       const result = await submitConfirmCommitteePrepare(form);
       if (result.isSuccess) {
@@ -265,7 +265,7 @@ const NPL = () => {
       >
         <div className="row">
           <div className="col-sm-12 col-md-12 col-lg-6">
-            <BookNo title={'เลขหนังสือนำส่งสาขา'} subtitle={'กฟก.'+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setBranchNo(val)} value={branchNo} />
+            <BookNo title={'เลขหนังสือนำส่งสาขา'} subtitle={'กฟก '+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setBranchNo(val)} value={branchNo} />
           </div>
           <div className="col-sm-12 col-md-12 col-lg-6">
             <DatePicker title={'วันที่หนังสือนำส่งสาขา'}
