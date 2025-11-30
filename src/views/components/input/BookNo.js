@@ -16,7 +16,7 @@ const BookNo = (props) => {
   return (
     <div className={`input-group ${containerClassname ?? ''}`}>
       <span className="input-group-text">{title}</span>
-      <span className="input-group-text">{subtitle}</span>
+      {subtitle && <span className="input-group-text">{subtitle}</span>}
       <Input onChange={(newval) => setValue(newval.target?.value)} value={val ?? ''} onBlur={() => onBlur()}/>
     </div>
   )
