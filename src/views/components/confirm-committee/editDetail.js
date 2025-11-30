@@ -318,16 +318,16 @@ const FullModal = (props) => {
                         </div>
                         {(creditor_type == 'สหกรณ์') ? (
                           <>
-                            {/* <div className="col-sm-12 col-md-6 col-lg-6">
+                            <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_agreement', e.target?.value)}>
+                                <select className="form-select" value={debts?.debt_repayment_type ?? 'ชำระหนี้แทน'} onChange={(e) => handleChangeDebt('debt_repayment_type', e.target?.value)}>
                                   <option value="ชำระหนี้แทน">ชำระหนี้แทน</option>
                                   <option value="วางเงินชำระหนี้แทน-บังคับคดี">วางเงินชำระหนี้แทน-บังคับคดี</option>
                                 </select>
                                 <label htmlFor="floatingSelectPrivacy">ประเภทการชำระหนี้</label>
                               </div>
                             </div>
-                            <div className="col-sm-12 col-md-6 col-lg-6"></div> */}
+                            <div className="col-sm-12 col-md-6 col-lg-6"></div> 
 
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
@@ -631,7 +631,7 @@ const FullModal = (props) => {
                           />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <DatePicker title={'คำนวนเงิน ณ วันที่'} disabled
+                          <DatePicker title={'คำนวนเงิน ณ วันที่'}
                             value={debts?.debt_manage_calculate_ondate} 
                             handleChange={(val) => handleChangeDebt('debt_manage_calculate_ondate', val)} 
                           />
