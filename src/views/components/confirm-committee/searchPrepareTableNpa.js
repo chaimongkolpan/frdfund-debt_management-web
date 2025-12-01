@@ -282,7 +282,7 @@ const SearchTable = (props) => {
           <br />
           <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6">
-              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} subtitle={'กฟก '+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
+              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
             </div>
             <div className="col-sm-12 col-md-12 col-lg-6">
               <DatePicker title={'วันที่หนังสือเจ้าหนี้ยืนยันยอด'}
