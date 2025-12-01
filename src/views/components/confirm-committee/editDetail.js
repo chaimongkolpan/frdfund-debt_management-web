@@ -4,6 +4,7 @@ import Textbox from "@views/components/input/Textbox";
 import Textarea from "@views/components/input/Textarea";
 import DatePicker from "@views/components/input/DatePicker";
 import According from "@views/components/panel/according";
+import { ToDateDb } from "@utils";
 import { 
   getProvinces,
   getBigDataCreditorTypes,
@@ -49,6 +50,7 @@ const FullModal = (props) => {
     const status_confirm = 'แก้ไขยืนยันยอด';
     const param = {
       ...debts,
+      debt_manage_calculate_ondate : debts?.debt_manage_calculate_ondate ? ToDateDb(debts?.debt_manage_calculate_ondate) : null,
       contract_debt_manage_outstanding_principal_cf: (debts?.debt_manage_outstanding_principal_cf * rate),
       contract_debt_manage_accrued_interest_cf: (debts?.debt_manage_accrued_interest_cf * rate),
       contract_debt_manage_fine_cf: (debts?.debt_manage_fine_cf * rate),
