@@ -55,8 +55,8 @@ const SearchTable = (props) => {
     const selectedData = data.filter((i, index) => selected[index]);
     const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
     const sum = selectedData.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
-    await setCount(toCurrency(custs.length));
-    await setContracts(toCurrency(selectedData.length));
+    await setCount(custs.length.toLocaleString());
+    await setContracts(selectedData.length.toLocaleString());
     await setSumTotal(toCurrency(sum,2));
     await setOpenCreditor(true);
   }
@@ -68,8 +68,8 @@ const SearchTable = (props) => {
     const selectedData = data.filter((i, index) => selected[index]);
     const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
     const sum = selectedData.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
-    await setCount(toCurrency(custs.length));
-    await setContracts(toCurrency(selectedData.length));
+    await setCount(custs.length.toLocaleString());
+    await setContracts(selectedData.length.toLocaleString());
     await setSumTotal(toCurrency(sum,2));
     await setOpenCommittee(true);
   }
@@ -81,7 +81,7 @@ const SearchTable = (props) => {
     const selectedData = data.filter((i, index) => selected[index]);
     const ids = selectedData.map(item => item.id_debt_confirm.toString());
     const result = await updateConfirmCommitteeCreditor({
-      ids, creditor_confirm_no: 'กฟก '+ getBookNo()  + creditorNo, creditor_confirm_date: stringToDateTh(creditorDate, false)
+      ids, creditor_confirm_no: creditorNo, creditor_confirm_date: stringToDateTh(creditorDate, false)
     });
     if (result.isSuccess) {
       await getData(filter);
@@ -311,7 +311,7 @@ const SearchTable = (props) => {
           <br />
           <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6">
-              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} subtitle={'กฟก '+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
+              <BookNo title={'เลขที่หนังสือเจ้าหนี้ยืนยันยอด'} containerClassname={'mb-3'} handleChange={(val) => setCreditorNo(val)} value={creditorNo} />
             </div>
             <div className="col-sm-12 col-md-12 col-lg-6">
               <DatePicker title={'วันที่หนังสือเจ้าหนี้ยืนยันยอด'}
