@@ -35,6 +35,7 @@ const FullModal = (props) => {
     else if (debts?.debt_repayment_conditions_cf == 'ต้นเงิน40%+ค่าใช้จ่าย') { rate = 0.4; expense = debts?.debt_manage_total_expenses_cf;}
     else if (debts?.debt_repayment_conditions_cf == 'ต้นเงิน30%+ค่าใช้จ่าย') { rate = 0.3; expense = debts?.debt_manage_total_expenses_cf;}
     else if (debts?.debt_repayment_conditions_cf == 'ต้นเงิน50%') { rate = 0.5; expense = 0;}
+    console.log('submit', debts?.debt_manage_total_cf, debts?.debt_manage_total, debts?.debt_manage_total_cf > debts?.debt_manage_total, debts?.debt_manage_total_cf < debts?.debt_manage_total);
     let result_confirm = 'เท่าเดิม';
     if (debts?.debt_management_audit_status != 'คณะกรรมการจัดการหนี้อนุมัติ') {
       result_confirm = 'ยกเลิกการชำระหนี้แทน';
