@@ -124,30 +124,16 @@ const NPL = () => {
     const ids = selected.map(item => item.id_debt_management)
     const result = await updateNPLstatus(ids, "สาขาเตรียมยืนยันยอด");
     if (result.isSuccess) {
-      toast((t) => (
-        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
-      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
-    } else {
-      toast((t) => (
-        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
-      ));
     }
   };
   const onRemoveMakelist = async (selected) => {
     const ids = selected.map(item => item.id_debt_management)
     const result = await updateNPLstatus(ids, "คณะกรรมการจัดการหนี้อนุมัติ");
     if (result.isSuccess) {
-      toast((t) => (
-        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
-      ));
       await onSearchTop({ ...filter, currentPage: 1});
       await fetchData(filterAdded);
-    } else {
-      toast((t) => (
-        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
-      ));
     }
   };
   const handleSubmit = async(selected) => {
