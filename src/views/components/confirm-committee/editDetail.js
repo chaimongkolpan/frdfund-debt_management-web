@@ -35,7 +35,6 @@ const FullModal = (props) => {
     else if (debts?.debt_repayment_conditions_cf == 'ต้นเงิน40%+ค่าใช้จ่าย') { rate = 0.4; expense = debts?.debt_manage_total_expenses_cf;}
     else if (debts?.debt_repayment_conditions_cf == 'ต้นเงิน30%+ค่าใช้จ่าย') { rate = 0.3; expense = debts?.debt_manage_total_expenses_cf;}
     else if (debts?.debt_repayment_conditions_cf == 'ต้นเงิน50%') { rate = 0.5; expense = 0;}
-    console.log('submit', debts?.debt_manage_total_cf, debts?.debt_manage_total, debts?.debt_manage_total_cf > debts?.debt_manage_total, debts?.debt_manage_total_cf < debts?.debt_manage_total);
     let result_confirm = 'เท่าเดิม';
     if (debts?.debt_management_audit_status != 'คณะกรรมการจัดการหนี้อนุมัติ') {
       result_confirm = 'ยกเลิกการชำระหนี้แทน';
@@ -63,7 +62,7 @@ const FullModal = (props) => {
       contract_debt_manage_insurance_premium_cf: debts?.debt_repayment_conditions_cf == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_insurance_premium_cf,
       contract_debt_manage_other_expenses_cf: debts?.debt_repayment_conditions_cf == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_other_expenses_cf,
       contract_debt_manage_total_expenses_cf: debts?.debt_repayment_conditions_cf == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_total_expenses_cf,
-      contract_debt_manage_total_cf: ((debts?.debt_manage_outstanding_principal_cf + debts?.debt_manage_accrued_interest_cf + debts?.debt_manage_fine_cf) * rate) + expense,
+      contract_debt_manage_total_cf: parseFloat((((debts?.debt_manage_outstanding_principal_cf + debts?.debt_manage_accrued_interest_cf + debts?.debt_manage_fine_cf) * rate) + expense).toFixed(2)),
       status_confirm_cf: status_confirm,
       results_confirm_cf: result_confirm,
     }
@@ -117,21 +116,21 @@ const FullModal = (props) => {
     }))
     setDebts((prevState) => ({
       ...prevState,
-      ...({debt_manage_total_cf: debts?.debt_manage_outstanding_principal_cf + debts?.debt_manage_accrued_interest_cf + debts?.debt_manage_fine_cf 
-        + debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf })
+      ...({debt_manage_total_cf: parseFloat((debts?.debt_manage_outstanding_principal_cf + debts?.debt_manage_accrued_interest_cf + debts?.debt_manage_fine_cf 
+        + debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf).toFixed(2)) })
     }))
   },[debts?.debt_manage_outstanding_principal_cf,debts?.debt_manage_accrued_interest_cf,debts?.debt_manage_fine_cf 
   ,debts?.debt_manage_litigation_expenses_cf,debts?.debt_manage_forfeiture_withdrawal_fee_cf,debts?.debt_manage_insurance_premium_cf,debts?.debt_manage_other_expenses_cf])
   useEffect(() => {
     setDebts((prevState) => ({
       ...prevState,
-      ...({debt_manage_total_expenses_cf: debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf })
+      ...({debt_manage_total_expenses_cf: parseFloat((debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf).toFixed(2)) })
     }))
   },[debts?.debt_manage_litigation_expenses_cf,debts?.debt_manage_forfeiture_withdrawal_fee_cf,debts?.debt_manage_insurance_premium_cf,debts?.debt_manage_other_expenses_cf])
   useEffect(() => {
     setDebts((prevState) => ({
       ...prevState,
-      ...({debt_manage_total_expenses_cf: debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf })
+      ...({debt_manage_total_expenses_cf: parseFloat((debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf).toFixed(2)) })
     }))
   },[debts?.debt_manage_total_cf,debts?.debt_manage_total_expenses_cf])
   useEffect(() => {
