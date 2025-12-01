@@ -64,6 +64,13 @@ const FullModal = (props) => {
     const result = await updateConfirmCommitteePrepare(param);
     if (result.isSuccess) {
       await fetchData();
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeDebt = async (key, val) => {
@@ -77,7 +84,7 @@ const FullModal = (props) => {
   }
   useEffect(() => {
     const total = debts?.debt_manage_outstanding_principal_cf + debts?.debt_manage_accrued_interest_cf + debts?.debt_manage_fine_cf;
-    const expense = debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses;
+    const expense = debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf;
     let frd = debts?.frD_paymen_amount_cf;
     let ex = 0;
     if (debts?.debt_repayment_conditions_cf == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
@@ -105,25 +112,25 @@ const FullModal = (props) => {
     setDebts((prevState) => ({
       ...prevState,
       ...({debt_manage_total_cf: debts?.debt_manage_outstanding_principal_cf + debts?.debt_manage_accrued_interest_cf + debts?.debt_manage_fine_cf 
-        + debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses })
+        + debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf })
     }))
   },[debts?.debt_manage_outstanding_principal_cf,debts?.debt_manage_accrued_interest_cf,debts?.debt_manage_fine_cf 
-  ,debts?.debt_manage_litigation_expenses,debts?.debt_manage_forfeiture_withdrawal_fee,debts?.debt_manage_insurance_premium,debts?.debt_manage_other_expenses])
+  ,debts?.debt_manage_litigation_expenses_cf,debts?.debt_manage_forfeiture_withdrawal_fee_cf,debts?.debt_manage_insurance_premium_cf,debts?.debt_manage_other_expenses_cf])
   useEffect(() => {
     setDebts((prevState) => ({
       ...prevState,
-      ...({debt_manage_total_expenses_cf: debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses })
+      ...({debt_manage_total_expenses_cf: debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf })
     }))
-  },[debts?.debt_manage_litigation_expenses,debts?.debt_manage_forfeiture_withdrawal_fee,debts?.debt_manage_insurance_premium,debts?.debt_manage_other_expenses])
+  },[debts?.debt_manage_litigation_expenses_cf,debts?.debt_manage_forfeiture_withdrawal_fee_cf,debts?.debt_manage_insurance_premium_cf,debts?.debt_manage_other_expenses_cf])
   useEffect(() => {
     setDebts((prevState) => ({
       ...prevState,
-      ...({debt_manage_total_expenses_cf: debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses })
+      ...({debt_manage_total_expenses_cf: debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf })
     }))
   },[debts?.debt_manage_total_cf,debts?.debt_manage_total_expenses_cf])
   useEffect(() => {
     const total = debts?.debt_manage_outstanding_principal_cf + debts?.debt_manage_accrued_interest_cf + debts?.debt_manage_fine_cf;
-    const expense = debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses;
+    const expense = debts?.debt_manage_litigation_expenses_cf + debts?.debt_manage_forfeiture_withdrawal_fee_cf + debts?.debt_manage_insurance_premium_cf + debts?.debt_manage_other_expenses_cf;
     let frd = debts?.frD_paymen_amount_cf;
     let ex = 0;
     if (debts?.debt_repayment_conditions_cf == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
@@ -149,6 +156,7 @@ const FullModal = (props) => {
       ...({contract_amount_cf: pri + ex1})
     }))
   },[debts?.debt_repayment_conditions_cf,debts?.contract_conditions_cf])
+  
   const getProvince = async () => {
     const resultProv = await getProvinces();
     if (resultProv.isSuccess) {
