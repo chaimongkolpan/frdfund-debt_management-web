@@ -35,8 +35,8 @@ const SelectedTable = (props) => {
     const selectedData = data.filter((i, index) => newSelected[index]);
     const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
     const sum = selectedData.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
-    await setCount(toCurrency(custs.length));
-    await setContracts(toCurrency(selectedData.length));
+    await setCount(custs.length.toLocaleString());
+    await setContracts(selectedData.length.toLocaleString());
     await setSumTotal(toCurrency(sum,2));
   }
   const onHeaderChange = async (checked) => {
@@ -45,8 +45,8 @@ const SelectedTable = (props) => {
     if (checked) {
       const custs = result.data.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
       const sum = result.data.reduce((prev, item) => { return prev + (item.debt_manage_total_cf ?? item.debt_manage_total); }, 0)
-      await setCount(toCurrency(custs.length));
-      await setContracts(toCurrency(result.data.length));
+      await setCount(custs.length.toLocaleString());
+      await setContracts(result.data.length.toLocaleString());
       await setSumTotal(toCurrency(sum,2));
     } else {
       await setCount(0);

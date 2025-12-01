@@ -67,19 +67,19 @@ const FullModal = (props) => {
   useEffect(() => {
     setDebts((prevState) => ({
       ...prevState,
-      ...({total_xpenses_cf: debts?.litigation_expenses_cf + debts?.insurance_premium_cf })
+      ...({total_xpenses_cf: parseFloat((debts?.litigation_expenses_cf + debts?.insurance_premium_cf).toFixed(2)) })
     }))
   },[debts?.litigation_expenses_cf,debts?.insurance_premium_cf])
   useEffect(() => {
     setDebts((prevState) => ({
       ...prevState,
-      ...({frD_total_payment_cf: debts?.npA_property_sales_price_cf + debts?.npL_creditors_receive_cf + debts?.litigation_expenses_cf + debts?.insurance_premium_cf })
+      ...({frD_total_payment_cf: parseFloat((debts?.npA_property_sales_price_cf + debts?.npL_creditors_receive_cf + debts?.litigation_expenses_cf + debts?.insurance_premium_cf).toFixed(2)) })
     }))
   },[debts?.npA_property_sales_price_cf,debts?.npL_creditors_receive_cf,debts?.litigation_expenses_cf,debts?.insurance_premium_cf])
   useEffect(() => {
     setDebts((prevState) => ({
       ...prevState,
-      ...({frD_total_payment_cf: debts?.npA_property_sales_price_cf + debts?.npL_creditors_receive_cf + debts?.litigation_expenses_cf + debts?.insurance_premium_cf })
+      ...({frD_total_payment_cf: parseFloat((debts?.npA_property_sales_price_cf + debts?.npL_creditors_receive_cf + debts?.litigation_expenses_cf + debts?.insurance_premium_cf).toFixed(2)) })
     }))
   },[debts?.frD_total_payment_cf,debts?.total_xpenses_cf])
   const getProvince = async () => {
