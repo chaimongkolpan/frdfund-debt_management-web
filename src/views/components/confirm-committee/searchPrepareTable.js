@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency, getBookNo } from "@utils";
 import DatePicker from "@views/components/input/DatePicker";
+import Textbox from "@views/components/input/Textbox";
 import BookNo from "@views/components/input/BookNo";
 import EditDetail from "@views/components/confirm-committee/editDetail";
 import CustomerModal from "@views/components/modal/customModal";
@@ -339,9 +340,9 @@ const SearchTable = (props) => {
               <BookNo title={'ครั้งที่เสนอคณะกรรมการ'} containerClassname={'mb-3'} handleChange={(val) => setCommitteeNo(val)} value={committeeNo} />
             </div>
             <div className="col-sm-12 col-md-12 col-lg-6">
-              <DatePicker title={'วันที่เสนอคณะกรรมการ'}
-                value={committeeDate} 
+              <Textbox title={'วันที่เสนอคณะกรรมการ'} 
                 handleChange={(val) => setCommitteeDate(val)} 
+                containerClassname={'mb-3'} value={committeeDate} 
               />
             </div>
             <div className="d-flex">
