@@ -49,21 +49,21 @@ const NPL = () => {
   const onSubmit = async () => {
     const form = new FormData();
     if (files && files.length > 0) {
-      await new Promise((resolve, reject) => {
-        try {
-          const param = requestApproveData.map((item,index) => {
-            form.append('ids[' + index + ']', item.id_debt_confirm.toString());
-            return {
-              id_debt_confirm: item.id_debt_confirm
-            }
-          });
-          resolve(param);
-        } catch {
-          reject(null);
-        }
-      });
       files.forEach((item) => form.append("files", item));
     }
+    await new Promise((resolve, reject) => {
+      try {
+        const param = requestApproveData.map((item,index) => {
+          form.append('ids[' + index + ']', item.id_debt_confirm.toString());
+          return {
+            id_debt_confirm: item.id_debt_confirm
+          }
+        });
+        resolve(param);
+      } catch {
+        reject(null);
+      }
+    });
     form.append("debt_manage_type", 'NPL')
     form.append("branch_correspondence_no", 'กฟก '+ getBookNo()  + branchNo)
     form.append("branch_correspondencel_date", stringToDateTh(branchDate, false))
