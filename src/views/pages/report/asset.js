@@ -69,7 +69,7 @@ const Report = () => {
       startDate: startDate ? saveDate(startDate) : null, 
       endDate: endDate ? saveDate(endDate) : null, 
       year, 
-      province: prov ? prov?.id : 0, 
+      province: prov ? prov?.id.toString() : "0", 
       creditorType, creditor, debtType, debtStatus ,
       type: 'application/octet-stream', filename: filenames[id - 1],
       firstname: user?.firstname,

@@ -3299,7 +3299,7 @@ export const downloadReport = async (filter, filename) => {
       path, filter, { responseType: "blob" }
     );
     if (result.status == 200) {
-      const blob = new Blob([result.data], { type: params.type });
+      const blob = new Blob([result.data], { type: filter.type });
       SaveAs(blob, filename);
       return true
     }
