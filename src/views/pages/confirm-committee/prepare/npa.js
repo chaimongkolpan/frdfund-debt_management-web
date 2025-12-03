@@ -48,8 +48,8 @@ const NPA = () => {
   const [requestApproveData, setRequestApproveData] = useState([]);
   const [files, setFiles] = useState(null);
   const onSubmit = async () => {
+    const form = new FormData();
     if (files && files.length > 0) {
-      const form = new FormData();
       await new Promise((resolve, reject) => {
         try {
           const param = requestApproveData.map((item,index) => {
@@ -64,29 +64,30 @@ const NPA = () => {
         }
       });
       files.forEach((item) => form.append("files", item));
-      form.append("debt_manage_type", 'NPA')
-      form.append("branch_correspondence_no", 'กฟก '+ getBookNo()  + branchNo)
-      form.append("branch_correspondencel_date", stringToDateTh(branchDate, false))
-      const result = await submitConfirmCommitteePrepare(form);
-      if (result.isSuccess) {
-        toast((t) => (
-          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
-        ));
-        await setCount(toCurrency(0));
-        await setContracts(toCurrency(0));
-        await setSumTotal(toCurrency(0,2));
-        await fetchData(filterAdded);
-      } else {
-        toast((t) => (
-          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
-        ));
-      }
+    }
+    form.append("debt_manage_type", 'NPA')
+    form.append("branch_correspondence_no", 'กฟก '+ getBookNo()  + branchNo)
+    form.append("branch_correspondencel_date", stringToDateTh(branchDate, false))
+    const result = await submitConfirmCommitteePrepare(form);
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await setCount(toCurrency(0));
+      await setContracts(toCurrency(0));
+      await setSumTotal(toCurrency(0,2));
+      await fetchData(filterAdded);
     } else {
       toast((t) => (
-        <ToastError t={t} title={'บันทึกข้อมูล'} message={'กรุณาอัปโหลดไฟล์'} />
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
       ));
-      console.error('no file upload');
     }
+    // } else {
+    //   toast((t) => (
+    //     <ToastError t={t} title={'บันทึกข้อมูล'} message={'กรุณาอัปโหลดไฟล์'} />
+    //   ));
+    //   console.error('no file upload');
+    // }
   }
   const onFileChange = async (files) => {
     if (files.length > 0) {
