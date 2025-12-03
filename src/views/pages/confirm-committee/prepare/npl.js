@@ -296,6 +296,7 @@ const NPL = () => {
                     <th colSpan="4">เกษตรกร</th>
                     <th colSpan="4">เจ้าหนี้</th>
                     <th colSpan={coop ? "12" : "14"}>สัญญา</th>
+                    <th colSpan={coop ? "10" : "12"}>ยืนยันยอด</th>
                   </tr>
                   <tr>
                     <th>ครั้งที่เสนอคณะกรรมการ</th>

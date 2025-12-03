@@ -287,6 +287,7 @@ const NPA = () => {
                     <th colSpan="4">เกษตรกร</th>
                     <th colSpan="4">เจ้าหนี้</th>
                     <th colSpan={"15"}>สัญญา</th>
+                    <th colSpan="9">ยืนยันยอด</th>
                   </tr>
                   <tr>
                     <th>ครั้งที่เสนอคณะกรรมการ</th>
