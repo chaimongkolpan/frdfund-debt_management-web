@@ -181,6 +181,15 @@ const NPA = () => {
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
+        <td>{toCurrency(item.npA_property_sales_price_cf)}</td>
+        <td>{toCurrency(item.npL_creditors_receive_cf)}</td>
+        <td>{toCurrency(item.litigation_expenses_cf)}</td>
+        <td>{toCurrency(item.insurance_premium_cf)}</td>
+        <td>{toCurrency(item.total_xpenses_cf)}</td>
+        <td>{toCurrency(item.frD_total_payment_cf)}</td>
+        <td>{item.debt_manage_status_cf}</td>
+        <td>{item.status_confirm}</td>
+        <td>{item.results_confirm}</td>
       </tr>
     ))
   }
@@ -305,6 +314,15 @@ const NPA = () => {
                     <th>รายละเอียดวัตถุประสงค์การกู้</th>        
                     <th>ซื้อทรัพย์ตามระเบียบฯ</th>                  
                     <th>ประเภทหลักประกัน</th>
+                    <th>ราคาขายทรัพย์ NPA</th>
+                    <th>เจ้าหนี้รับชำระต้นเงินคงเหลือ (NPL)</th>
+                    <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                    <th>ค่าเบี้ยประกัน</th>
+                    <th>รวมค่าใช้จ่าย</th>
+                    <th>รวมทั้งสิ้น</th>
+                    <th>สถานะหนี้</th>
+                    <th>สถานะยืนยันยอด</th>
+                    <th>ผลการยืนยันยอด</th>
                   </tr>
                 </thead>
                 <tbody className="list text-center align-middle" id="bulk-select-body">

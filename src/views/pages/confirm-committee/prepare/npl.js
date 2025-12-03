@@ -183,6 +183,22 @@ const NPL = () => {
         <td>{item.collateral_type}</td>
         <td>{item.debt_manage_objective}</td>
         <td>{item.debt_manage_objective_details}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal_cf)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_cf)}</td>
+        <td>{toCurrency(item.debt_manage_fine_cf)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_cf)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_cf)}</td>
+        {!coop && (
+          <>
+            <td>{toCurrency(item.debt_manage_insurance_premium_cf)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_cf)}</td>
+          </>
+        )}
+        <td>{toCurrency(item.debt_manage_total_expenses_cf)}</td>
+        <td>{toCurrency(item.debt_manage_total_cf)}</td>
+        <td>{item.debt_manage_status_cf}</td>
+        <td>{item.status_confirm}</td>
+        <td>{item.results_confirm}</td>
       </tr>
     ))
   }
@@ -310,6 +326,22 @@ const NPL = () => {
                     <th>ประเภทหลักประกัน</th>
                     <th>วัตถุประสงค์การกู้</th>
                     <th>รายละเอียดวัตถุประสงค์การกู้</th>
+                    <th>เงินต้น</th>
+                    <th>ดอกเบี้ย</th>
+                    <th>ค่าปรับ</th>
+                    <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                    <th>ค่าถอนการยึดทรัพย์</th>
+                    {!coop && (
+                      <>
+                        <th>ค่าเบี้ยประกัน</th>
+                        <th>ค่าใช้จ่ายอื่นๆ</th>
+                      </>
+                    )}
+                    <th>รวมค่าใช้จ่าย</th>
+                    <th>รวมทั้งสิ้น</th>
+                    <th>สถานะหนี้</th>
+                    <th>สถานะยืนยันยอด</th>
+                    <th>ผลการยืนยันยอด</th>
                   </tr>
                 </thead>
                 <tbody className="list text-center align-middle" id="bulk-select-body">
