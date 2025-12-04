@@ -239,12 +239,14 @@ const SearchClassifyNPADetail = () => {
                   className={"my-4"}
                   children={(
                     <>
-                      <div className="d-flex mb-3 flex-row-reverse">
-                        {/* {can_action && (
-                          <button type="button" className="btn btn-info btn-sm ms-2" onClick={() => handleDocument()}><span className="far fa-file-alt"></span> เอกสารประกอบ</button>
-                        )} */}
-                        <button type="button" className="btn btn-warning btn-sm ms-2" onClick={() => handleBorrow()}><span className="fas fa-users"></span> ผู้รับสภาพหนี้แทน</button>
-                      </div>
+                      {(debts && debts.length > 0) && (
+                        <div className="d-flex mb-3 flex-row-reverse">
+                          {/* {can_action && (
+                            <button type="button" className="btn btn-info btn-sm ms-2" onClick={() => handleDocument()}><span className="far fa-file-alt"></span> เอกสารประกอบ</button>
+                          )} */}
+                          <button type="button" className="btn btn-warning btn-sm ms-2" onClick={() => handleBorrow()}><span className="fas fa-users"></span> ผู้รับสภาพหนี้แทน</button>
+                        </div>
+                      )}
                       <DebtManageTable data={debts} 
                         handleCombine={handleCombine} 
                         handleSplit={handleSplit} 
