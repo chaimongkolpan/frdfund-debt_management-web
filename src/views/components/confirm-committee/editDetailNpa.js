@@ -158,12 +158,12 @@ const FullModal = (props) => {
                     {(isMounted && debts) && (
                       <div className="row g-3">
                         <div className={`col-sm-12 col-md-6 col-lg-${isView ? '5' : '4'}`}>
-                          {isView ? (
+                          {/* {isView ? ( */}
                             <Textbox title={'สถานะสัญญาจำแนกมูลหนี้'}
                               handleChange={(val) => handleChangeDebt('debt_management_audit_status', val)} disabled
                               containerClassname={'mb-3'} value={debts?.debt_management_audit_status}
                             />
-                          ):(
+                          {/* ):(
                             <div className="form-floating form-floating-advance-select mb-3">
                               <label htmlFor="AutoNPLDetail">สถานะสัญญาจำแนกมูลหนี้</label>
                               <select className="form-select" value={debts?.debt_management_audit_status ?? 'อยู่ระหว่างการสอบยอด'} 
@@ -191,7 +191,7 @@ const FullModal = (props) => {
                               </select>
                             </div>
 
-                          )}
+                          )} */}
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <Textbox title={'เลขที่สัญญา'}

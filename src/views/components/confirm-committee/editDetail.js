@@ -246,40 +246,40 @@ const FullModal = (props) => {
                     {(isMounted && debts) && (
                       <div className="row g-3">
                         <div className={`col-sm-12 col-md-6 col-lg-${isView ? '5' : '4'}`}>
-                          {isView ? (
+                           {/* {isView ? ( */}
                             <Textbox title={'สถานะสัญญาจำแนกมูลหนี้'}
                               handleChange={(val) => handleChangeDebt('debt_management_audit_status', val)} disabled
                               containerClassname={'mb-3'} value={debts?.debt_management_audit_status}
                             />
-                          ):(
-                            <div className="form-floating form-floating-advance-select mb-3">
-                              <label htmlFor="AutoNPLDetail">สถานะสัญญาจำแนกมูลหนี้</label>
-                              <select className="form-select" value={debts?.debt_management_audit_status ?? 'อยู่ระหว่างการสอบยอด'} 
-                                onChange={(e) => handleChangeDebt('debt_management_audit_status', e.target?.value)} disabled={isView}>
-                                <option value="ทะเบียนหนี้รอสอบยอด">ทะเบียนหนี้รอสอบยอด</option>
-                                <option value="อยู่ระหว่างการสอบยอด">อยู่ระหว่างการสอบยอด</option>
-                                <option value="จำแนกมูลหนี้แล้ว">จำแนกมูลหนี้แล้ว</option>
-                                <option value="หนี้ไม่เข้าหลักเกณฑ์">หนี้ไม่เข้าหลักเกณฑ์</option>
-                                <option value="คณะกรรมการจัดการหนี้ไม่อนุมัติ">คณะกรรมการจัดการหนี้ไม่อนุมัติ</option>
-                                <option value="ทะเบียนหนี้ซ้ำซ้อน">ทะเบียนหนี้ซ้ำซ้อน</option>
-                                <option value="ปิดบัญชีกับกฟก.แล้ว">ปิดบัญชีกับกฟก.แล้ว</option>
-                                <option value="เกษตรกรไม่ประสงค์ชำระหนี้แทน">เกษตรกรไม่ประสงค์ชำระหนี้แทน</option>
-                                <option value="คุณสมบัติเกษตรกรไม่ถูกต้อง">คุณสมบัติเกษตรกรไม่ถูกต้อง</option>
-                                <option value="ทะเบียนหนี้ไม่ถูกต้อง">ทะเบียนหนี้ไม่ถูกต้อง</option>
-                                <option value="คณะกรรมการจัดการหนี้อนุมัติ">คณะกรรมการจัดการหนี้อนุมัติ</option>
-                                <option value="ชำระหนี้แทนแล้ว">ชำระหนี้แทนแล้ว</option>
-                                <option value="เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง">เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง</option>
-                                <option value="ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)">ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)</option>
-                                <option value="รวมสัญญากับสัญญาอื่น">รวมสัญญากับสัญญาอื่น</option>
-                                <option value="เจ้าหนี้ปิดกิจการ/ล้มละลาย">เจ้าหนี้ปิดกิจการ/ล้มละลาย</option>
-                                <option value="ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด">ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด</option>
-                                <option value="เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ">เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ</option>
-                                <option value="เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร">เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร</option>
-                                <option value="ติดต่อเกษตรกรไม่ได้">ติดต่อเกษตรกรไม่ได้</option>
-                              </select>
-                            </div>
+                          {/* ):(
+                             <div className="form-floating form-floating-advance-select mb-3">
+                               <label htmlFor="AutoNPLDetail">สถานะสัญญาจำแนกมูลหนี้</label>
+                               <select className="form-select" value={debts?.debt_management_audit_status ?? 'อยู่ระหว่างการสอบยอด'} 
+                                 onChange={(e) => handleChangeDebt('debt_management_audit_status', e.target?.value)} disabled={isView}>
+                                 <option value="ทะเบียนหนี้รอสอบยอด">ทะเบียนหนี้รอสอบยอด</option>
+                                 <option value="อยู่ระหว่างการสอบยอด">อยู่ระหว่างการสอบยอด</option>
+                                 <option value="จำแนกมูลหนี้แล้ว">จำแนกมูลหนี้แล้ว</option>
+                                 <option value="หนี้ไม่เข้าหลักเกณฑ์">หนี้ไม่เข้าหลักเกณฑ์</option>
+                                 <option value="คณะกรรมการจัดการหนี้ไม่อนุมัติ">คณะกรรมการจัดการหนี้ไม่อนุมัติ</option>
+                                 <option value="ทะเบียนหนี้ซ้ำซ้อน">ทะเบียนหนี้ซ้ำซ้อน</option>
+                                 <option value="ปิดบัญชีกับกฟก.แล้ว">ปิดบัญชีกับกฟก.แล้ว</option>
+                                 <option value="เกษตรกรไม่ประสงค์ชำระหนี้แทน">เกษตรกรไม่ประสงค์ชำระหนี้แทน</option>
+                                 <option value="คุณสมบัติเกษตรกรไม่ถูกต้อง">คุณสมบัติเกษตรกรไม่ถูกต้อง</option>
+                                 <option value="ทะเบียนหนี้ไม่ถูกต้อง">ทะเบียนหนี้ไม่ถูกต้อง</option>
+                                 <option value="คณะกรรมการจัดการหนี้อนุมัติ">คณะกรรมการจัดการหนี้อนุมัติ</option>
+                                 <option value="ชำระหนี้แทนแล้ว">ชำระหนี้แทนแล้ว</option>
+                                 <option value="เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง">เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง</option>
+                                 <option value="ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)">ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)</option>
+                                 <option value="รวมสัญญากับสัญญาอื่น">รวมสัญญากับสัญญาอื่น</option>
+                                 <option value="เจ้าหนี้ปิดกิจการ/ล้มละลาย">เจ้าหนี้ปิดกิจการ/ล้มละลาย</option>
+                                 <option value="ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด">ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด</option>
+                                 <option value="เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ">เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ</option>
+                                 <option value="เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร">เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร</option>
+                                 <option value="ติดต่อเกษตรกรไม่ได้">ติดต่อเกษตรกรไม่ได้</option>
+                               </select>
+                             </div>
 
-                          )}
+                           )} */}
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
                           <Textbox title={'เลขที่สัญญา'}
