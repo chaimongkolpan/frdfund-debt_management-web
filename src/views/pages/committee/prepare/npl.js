@@ -249,6 +249,7 @@ const NPL = () => {
                         result={data}
                         handleSubmit={onAddBigData}
                         can_action={can_action}
+                        getData={onSearchTop} filter={filter} 
                       />
                     )}
                   </>
