@@ -1803,6 +1803,20 @@ export const searchLegalPrepare = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const updateLegalPolicyNoPrepare = async (filter) => {
+  const path = '/LegalContract/update-policy-no-prepare';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchOperationLand = async (filter) => {
   const path = '/operationLand/search-operationland';
   try {

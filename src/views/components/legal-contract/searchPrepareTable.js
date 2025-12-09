@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
+import Textbox from "@views/components/input/Textbox";
+import CustomerModal from "@views/components/modal/customModal";
+import { 
+  updateLegalPolicyNoPrepare,
+} from "@services/api";
 const SearchTable = (props) => {
+  const [isOpenPolicyNo, setOpenPolicyNo] = useState(false);
+  const [policyNo, setPolicyNo] = useState('');
+  const [policy, setPolicy] = useState(null);
   const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handlePrint, can_action } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -9,6 +17,11 @@ const SearchTable = (props) => {
     return (item && (
       <tr key={index}>
         <td className="fs-9 align-middle">{index + 1}</td>
+        <td>
+          <div className="d-flex justify-content-center"> 
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" disabled={!can_action} onClick={() => handleShowPolicyNo(item)}><i className="far fa-edit "></i></button>
+          </div>
+        </td>
         <td>{item.k_idcard}</td>
         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
@@ -43,6 +56,19 @@ const SearchTable = (props) => {
       </tr>
     ))
   }
+  const handleShowPolicyNo = async(item) => {
+    await setPolicy(item);
+    await setOpenPolicyNo(true);
+  }
+  const submitPolicyNo = async() => {
+    const result = await updateLegalPolicyNoPrepare({
+      id_KFKPolicy: policy?.id_KFKPolicy, policyNo
+    });
+    if (result.isSuccess) {
+      await getData(filter);
+      await setOpenPolicyNo(false);
+    }
+  }
   useEffect(() => {
     if(result) {
       setData(result.data);
@@ -59,6 +85,7 @@ const SearchTable = (props) => {
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
                 <th rowSpan="2" style={{ minWidth: 30 }}>#</th>
+                <th rowSpan="2">ดำเนินการ</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan="8">นิติกรรมสัญญา</th>
@@ -102,6 +129,25 @@ const SearchTable = (props) => {
             setPage={(page) => getData({ ...filter, currentPage: page })} 
           />
         )}
+        <CustomerModal isOpen={isOpenPolicyNo} setModal={setOpenPolicyNo} 
+          onOk={() => submitPolicyNo()} 
+          title={'แก้ไขเลขที่นิติกรรมสัญญา'} 
+          okText={'บันทึก'} size={'lg'}
+          onClose={() => setPolicyNo('')}
+          closeText={'ปิด'} centered
+        >
+          <form>
+            <br />
+            <div className="row">
+              <div className="col-sm-12 col-md-12 col-lg-12">
+                <Textbox title={'เลขที่นิติกรรมสัญญา'} 
+                  handleChange={(val) => setPolicyNo(val)} 
+                  containerClassname={'mb-3'} value={policyNo} 
+                />
+              </div>
+            </div>
+          </form>
+        </CustomerModal>
       </div>
     </>
   );
