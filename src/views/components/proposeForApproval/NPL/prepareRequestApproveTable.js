@@ -43,8 +43,8 @@ const PrepareRequestApproveTable = (props) => {
 
   const onSubmit = () => {
     handleSubmit([
-      ...(data.filter((i) => cooperativeSelected.includes(i.id_debt_register))),
-      ...(data.filter((i) => commercialBanksOrLegalEntitiesSelected.includes(i.id_debt_register))),
+      ...(data.filter((i) => cooperativeSelected.includes(i.id_debt_management))),
+      ...(data.filter((i) => commercialBanksOrLegalEntitiesSelected.includes(i.id_debt_management))),
     ]);
   };
 
@@ -68,14 +68,14 @@ const PrepareRequestApproveTable = (props) => {
       ? setCommercialBanksOrLegalEntitiesSelected([])
       : setCommercialBanksOrLegalEntitiesSelected(
           commercialBanksOrLegalEntitiesData.map(
-            (item) => item.id_debt_register
+            (item) => item.id_debt_management
           )
         );
 
   const onSelectAllCooperative = () =>
     cooperativeSelected.length === cooperativeData.length
       ? setCooperativeSelected([])
-      : setCooperativeSelected(cooperativeData.map((item) => item.id_debt_register)
+      : setCooperativeSelected(cooperativeData.map((item) => item.id_debt_management)
   );
 
   return (

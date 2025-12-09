@@ -35,7 +35,7 @@ const CooperativeTable = ({
                   className="form-check-input"
                   type="checkbox"
                   checked={checked}
-                  onChange={() => handleSelect(item.id_debt_register, index)}
+                  onChange={() => handleSelect(item.id_debt_management, index)}
                 />
               </div>
             </td>
