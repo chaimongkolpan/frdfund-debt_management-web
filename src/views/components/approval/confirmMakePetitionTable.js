@@ -8,6 +8,7 @@ const ConfirmTable = (props) => {
   const [paymentType, setPaymentType] = useState("เบิกจ่ายเต็มจำนวน");
   const [sumTotal, setSumTotal] = useState(0);
   const [amountCheck, setAmountCheck] = useState([0, 0, 0, 0, 0, 0, 0]);
+  const [branchAmountCheck, setBranchAmountCheck] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [branchCheck, setBranchCheck] = useState([false, false, false, false, false, false, false]);
   const [branchTotal, setBranchTotal] = useState(0);
   const [cheques, setCheques] = useState([]);
@@ -74,7 +75,14 @@ const ConfirmTable = (props) => {
   const SaveCheque = () => {
     onSave()
   }
-  const SaveBranch = () => {
+  const SaveBranch = async () => {
+    await setCheques([
+      {
+        total: branchTotal,
+        checked: branchCheck,
+        amount: branchAmountCheck,
+      }
+    ])
     onSave()
   }
   const ChequeChange = (index, key) => {
@@ -90,7 +98,7 @@ const ConfirmTable = (props) => {
         ] 
       };
     setAmountCheck((prev) => {
-      prev[key] = newSelected[key] ? 0 : cheques[index]?.amount[key];
+      prev[key] = newSelected[key] ? cheques[index]?.amount[key] : 0;
       return [...prev]
     })
     setCheques((prev) => {
@@ -104,6 +112,18 @@ const ConfirmTable = (props) => {
     ]
     setBranchCheck((prev) => {
       prev[index] = !prev[index];
+      return [...prev]
+    })
+    setBranchAmountCheck((prev) => {
+      prev[index] = newSelected[index] ? data.reduce((prev, item) => {
+        return prev + index == 0 ? item.debt_manage_outstanding_principal_remain
+        : index == 1 ? item.debt_manage_accrued_interest_remain
+        : index == 2 ? item.debt_manage_fine_remain
+        : index == 3 ? item.debt_manage_litigation_expenses_remain
+        : index == 4 ? item.debt_manage_forfeiture_withdrawal_fee_remain
+        : index == 5 ? item.debt_manage_insurance_premium_remain
+        : item.debt_manage_other_expenses_remain;
+      }, 0) : 0;
       return [...prev]
     })
     const sum = data.reduce((prev, item) => { 
