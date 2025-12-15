@@ -89,7 +89,7 @@ const Filter = (props) => {
         await setCommitteeDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({proposal_committee_date: temp[0]})
+          ...({proposal_committee_date: 'all'})
         }))
       } else await setCommitteeDateOp(null);
       setLoading(false);
@@ -103,7 +103,7 @@ const Filter = (props) => {
         await setPetitionDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({petition_date: temp[0]})
+          ...({petition_date: 'all'})
         }))
       } else await setPetitionDateOp(null);
       setLoading(false);
@@ -119,7 +119,7 @@ const Filter = (props) => {
     const resultPetitionNo = await getPetitionNo();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
-      await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
+      await setProvOp(temp);if (temp.length == 1) onChange('province', 'all');
       const resultCreditorType = await getBigDataCreditorTypes(null);
       if (resultCreditorType.isSuccess) {
         const temp1 = resultCreditorType.data.map(item => item.name);
@@ -160,13 +160,13 @@ const Filter = (props) => {
         ...({proposal_committee_no: 'all'})
       }))
       
-      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", temp[0]);
+      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", 'all');
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({proposal_committee_date: temp[0]})
+          ...({proposal_committee_date: 'all'})
         }))
       } else await setCommitteeDateOp(null);
     } else await setCommitteeNoOp(null);
@@ -179,13 +179,13 @@ const Filter = (props) => {
         ...({petition_no: 'all'})
       }))
       
-      const resultPetitionDate = await getPetitionDate(temp[0]);
+      const resultPetitionDate = await getPetitionDate('all');
       if (resultPetitionDate.isSuccess) {
         const temp = resultPetitionDate.data.map(item => item.name);
         await setPetitionDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({petition_date: temp[0]})
+          ...({petition_date: 'all'})
         }))
       } else await setPetitionDateOp(null);
     } else await setPetitionNoOp(null);
