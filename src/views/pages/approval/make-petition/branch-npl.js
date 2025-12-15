@@ -69,6 +69,14 @@ const NPL = () => {
     if (addPetition) {
       const result = await exportPetition({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: addPetition });
       if (result.isSuccess) {
+        toast((t) => (
+          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+        ));
+      }
+      else {
+        toast((t) => (
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+        ));
       }
     } else {
       alert('กรุณาบันทึกฎืกาก่อน ดาวน์โหลดเอกสาร');

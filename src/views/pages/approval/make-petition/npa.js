@@ -66,7 +66,15 @@ const NPA = () => {
   const handleSavePetition = async (pet) => {
     const result = await savePetitionBook({ ...pet,debt_management_type: 'NPA',petition_date_office: ToDateDb(pet.petition_date_office) });
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await setLoadPetition(true);
+    }
+    else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   
@@ -79,10 +87,18 @@ const NPA = () => {
     const result = await insertPetitionNpa(pet);
     if (result.isSuccess) {
       await updateNPAstatus(pet.ids, pet.debt_management_audit_status);
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await setPetition({
         ...pet,
         id_petition: result.data.id,
       });
+    }
+    else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const onCloseMakelist = async () => {
