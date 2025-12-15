@@ -95,6 +95,7 @@ const NPL = () => {
     await setSubmit(true);
   }
   const onSubmitMakelist = async () => {
+    setLoadBigData(true);
     if (petition) {
       const result = await exportPetition({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: petition });
       if (result.isSuccess) {
@@ -102,6 +103,7 @@ const NPL = () => {
     } else {
       alert('กรุณาบันทึกฎืกาก่อน ดาวน์โหลดเอกสาร');
     }
+    setLoadBigData(false);
   }
   const onSearch = async (filter) => {
     setLoadBigData(true);
