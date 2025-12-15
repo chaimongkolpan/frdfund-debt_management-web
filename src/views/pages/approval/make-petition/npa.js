@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { getUserData, ToDateDb } from "@utils";
+import { getUserData, ToDateDb, getBookNo } from "@utils";
 import According from "@views/components/panel/according";
 import AddModal from "@views/components/modal/customModal";
 import Modal from "@views/components/modal/fullModal";
@@ -64,7 +64,9 @@ const NPA = () => {
     }
   }
   const handleSavePetition = async (pet) => {
-    const result = await savePetitionBook({ ...pet,debt_management_type: 'NPA',petition_date_office: ToDateDb(pet.petition_date_office) });
+    const result = await savePetitionBook({ ...pet,debt_management_type: 'NPA',
+      petition_no_office: 'กฟก '+ getBookNo() + pet.petition_no_office,
+      petition_date_office: stringToDateTh(pet.petition_date_office, false) });
     if (result.isSuccess) {
       toast((t) => (
         <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
