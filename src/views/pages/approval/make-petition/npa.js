@@ -66,7 +66,7 @@ const NPA = () => {
   const handleSavePetition = async (pet) => {
     const result = await savePetitionBook({ ...pet,debt_management_type: 'NPA',
       petition_no_office: 'กฟก '+ getBookNo() + pet.petition_no_office,
-      petition_date_office: stringToDateTh(pet.petition_date_office, false) });
+      petition_date_office: ToDateDb(pet.petition_date_office) });
     if (result.isSuccess) {
       toast((t) => (
         <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
