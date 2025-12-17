@@ -207,17 +207,17 @@ const FullModal = (props) => {
                           <div className="form-floating form-floating-advance-select mb-3">
                             <label htmlFor="AutoNPLDetail">สถานะสัญญาจำแนกมูลหนี้</label>
                             <select className="form-select" value={debts?.debt_management_audit_status ?? 'อยู่ระหว่างการสอบยอด'} onChange={(e) => handleChangeDebt('debt_management_audit_status', e.target?.value)}>
-                              <option value="ทะเบียนหนี้รอสอบยอด">ทะเบียนหนี้รอสอบยอด</option>
+                              {/* <option value="ทะเบียนหนี้รอสอบยอด">ทะเบียนหนี้รอสอบยอด</option> */}
                               <option value="อยู่ระหว่างการสอบยอด">อยู่ระหว่างการสอบยอด</option>
                               <option value="จำแนกมูลหนี้แล้ว">จำแนกมูลหนี้แล้ว</option>
                               <option value="หนี้ไม่เข้าหลักเกณฑ์">หนี้ไม่เข้าหลักเกณฑ์</option>
-                              <option value="คณะกรรมการจัดการหนี้ไม่อนุมัติ">คณะกรรมการจัดการหนี้ไม่อนุมัติ</option>
+                              {/* <option value="คณะกรรมการจัดการหนี้ไม่อนุมัติ">คณะกรรมการจัดการหนี้ไม่อนุมัติ</option> */}
                               <option value="ทะเบียนหนี้ซ้ำซ้อน">ทะเบียนหนี้ซ้ำซ้อน</option>
                               <option value="ปิดบัญชีกับกฟก.แล้ว">ปิดบัญชีกับกฟก.แล้ว</option>
                               <option value="เกษตรกรไม่ประสงค์ชำระหนี้แทน">เกษตรกรไม่ประสงค์ชำระหนี้แทน</option>
                               <option value="คุณสมบัติเกษตรกรไม่ถูกต้อง">คุณสมบัติเกษตรกรไม่ถูกต้อง</option>
                               <option value="ทะเบียนหนี้ไม่ถูกต้อง">ทะเบียนหนี้ไม่ถูกต้อง</option>
-                              <option value="ชำระหนี้แทนแล้ว">ชำระหนี้แทนแล้ว</option>
+                              {/* <option value="ชำระหนี้แทนแล้ว">ชำระหนี้แทนแล้ว</option> */}
                               <option value="เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง">เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง</option>
                               <option value="ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)">ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)</option>
                               <option value="รวมสัญญากับสัญญาอื่น">รวมสัญญากับสัญญาอื่น</option>
