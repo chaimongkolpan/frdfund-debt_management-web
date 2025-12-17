@@ -20,7 +20,7 @@ const NPL = () => {
   const [data, setData] = useState(null);
   const onSearch = async (filter) => {
     setLoadBigData(true);
-    setFilter({ ...filter, DebtClassifyStatus: 'ยืนยันยอดสำเร็จ' })
+    setFilter({ ...filter }) // , DebtClassifyStatus: 'ยืนยันยอดสำเร็จ'
     const result = await searchDisbursementStatus(filter);
     if (result.isSuccess) {
       setData(result)
