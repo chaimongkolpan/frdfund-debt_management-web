@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
+import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const DataTable = (props) => {
   const { result, handleSubmit, handleReject, can_action } = props;
+  const [paging, setPaging] = useState(null);
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
+  const [count, setCount] = useState(0);
+  const [contracts, setContracts] = useState(0);
+  const [sumTotal, setSumTotal] = useState(0);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -20,14 +25,34 @@ const DataTable = (props) => {
     }
   }
   const onChange = async (id) => {
+    const newSelected = [
+      ...(selected.map((item, index) => (id == index ? !item : item))),
+    ]
     await setSelected((prev) => {
       prev[id] = !prev[id];
       return [...prev]
     })
+    const selectedData = data.filter((i, index) => newSelected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+    await setCount(custs.length.toLocaleString());
+    await setContracts(selectedData.length.toLocaleString());
+    await setSumTotal(toCurrency(sum,2));
   }
   const onHeaderChange = async (checked) => {
     await setSelected(result.data.map(() => checked));
     await setIsAll(checked)
+    if (checked) {
+      const custs = result.data.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+      const sum = result.data.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+      await setCount(custs.length.toLocaleString());
+      await setContracts(result.data.length.toLocaleString());
+      await setSumTotal(toCurrency(sum,2));
+    } else {
+      await setCount(0);
+      await setContracts(0);
+      await setSumTotal(0);
+    }
   }
   const RenderData = (item, index, checked) => {
     return (item && (
@@ -110,6 +135,7 @@ const DataTable = (props) => {
       setData(result.data);
       setCoop(result.data && result.data[0]?.debt_manage_creditor_type == 'สหกรณ์')
       setSelected(result.data.map(() => false));
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
     return () => { setData([]) }
   },[result])
@@ -191,6 +217,12 @@ const DataTable = (props) => {
             </tbody>
           </table>
         </div>
+        {paging?.total > 0 && (
+          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
+            setPage={(page) => getData({ ...filter, currentPage: page })}  pageSize={0}
+            count={count} contracts={contracts} sumTotal={sumTotal}
+          />
+        )}
       </div>
       {can_action && (
         <div className="d-flex align-items-center justify-content-center my-3">
