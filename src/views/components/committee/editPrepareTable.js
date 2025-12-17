@@ -9,6 +9,7 @@ import {
   getCommitteeDate,
   getBigDataCreditorTypes,
   searchCommitteePrepare,
+  exportCommitteePrepare,
   cleanData
 } from "@services/api";
 const EditDataTable = (props) => {
@@ -20,6 +21,15 @@ const EditDataTable = (props) => {
   const [committeeDateOp, setCommitteeDateOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [coop, setCoop] = useState(true);
+  const onExport = async () => {
+    setLoadBigData(true);
+    if (data && data.length > 0) {
+      const result = await exportCommitteePrepare({ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', filename: 'รายชื่อประกอบการสรุปเข้าเสนอคณะกรรมการหนี้_' + (new Date().getTime()) + '.xlsx', data: data });
+      if (result.isSuccess) {
+      }
+    }
+    setLoadBigData(false);
+  }
   const onSubmit = async () => {
     await setFilter(filter);
     const result = await searchCommitteePrepare({
@@ -189,6 +199,13 @@ const EditDataTable = (props) => {
               value={bookDate} 
               handleChange={(val) => setBookDate(val)} 
             />
+          </div>
+          <div className="col-12">
+            <div className="row g-3 justify-content-end">
+              <div className="col-auto">
+                <button className="btn btn-success me-1 mb-1" type="button" onClick={() => onExport()}>ดาวน์โหลดเอกสารรายชื่อเสนอคณะกรรมการหนี้</button>
+              </div>
+            </div>
           </div>
           <div data-list='{"valueNames":["id","name","province"]}'>
             <div className="table-responsive mx-n1 px-1">
