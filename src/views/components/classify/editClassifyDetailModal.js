@@ -25,6 +25,7 @@ const FullModal = (props) => {
   const collateralRef = useRef(null);
   const {isOpen, setModal, onClose, data} = props;
   const [isMounted, setMounted] = useState(false);
+  const [disabledEdit, setDisabledEdit] = useState(false);
   const [collateral_type, setCollateralType] = useState(null);
   const [collateralDetail, setCollateralDetail] = useState(null);
   const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(false);
@@ -46,6 +47,9 @@ const FullModal = (props) => {
   const [not_correct_list, setNotCorrectList] = useState(null);
   const toggle = () => setModal(!isOpen);
   const showLegalList = ['ปกติ','ผิดนัดชำระ','ปรับโครงสร้างหนี้'];
+  const editStatus = ['อยู่ระหว่างการสอบยอด','จำแนกมูลหนี้แล้ว','หนี้ไม่เข้าหลักเกณฑ์','ทะเบียนหนี้ซ้ำซ้อน','ปิดบัญชีกับกฟก.แล้ว','เกษตรกรไม่ประสงค์ชำระหนี้แทน'
+    ,'คุณสมบัติเกษตรกรไม่ถูกต้อง','ทะเบียนหนี้ไม่ถูกต้อง','เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง','ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)','รวมสัญญากับสัญญาอื่น'
+    ,'เจ้าหนี้ปิดกิจการ/ล้มละลาย','ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด','เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ','เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร','ติดต่อเกษตรกรไม่ได้'];
 
   const submitDebt = async () => {
     let rate = 1;
@@ -494,6 +498,7 @@ const FullModal = (props) => {
     const result = await getDebtManagementDetailClassify(data.id_card, data.province, data.creditor_type);
     if (result.isSuccess) {
       const debt = result.contracts.find(x => x.id_debt_management == data.id_debt_management)
+      await setDisabledEdit(!editStatus.includes(debt.debt_management_audit_status));
       await setDebts({
         ...debt,
         debt_management_audit_status: (debt.debt_management_audit_status ?? 'อยู่ระหว่างการสอบยอด'),
@@ -987,9 +992,11 @@ const FullModal = (props) => {
                           />
                         </div>
                         <br />
-                        <div className="d-flex justify-content-center ">
-                          <button className="btn btn-success" type="button" onClick={() => submitDebt()}>บันทึก</button>
-                        </div>
+                        {!disabledEdit && (
+                          <div className="d-flex justify-content-center ">
+                            <button className="btn btn-success" type="button" onClick={() => submitDebt()}>บันทึก</button>
+                          </div>
+                        )}
                       </div>
                     )}
                   </>
@@ -1004,9 +1011,11 @@ const FullModal = (props) => {
                 title={'หลักทรัพย์ค้ำประกัน'}
                 children={(
                   <>
-                    <div className="d-flex mb-3 flex-row-reverse">
-                      <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addCollateral()}><span className="fas fa-plus fs-8"></span> เพิ่มหลักประกัน</button>
-                    </div>
+                    {!disabledEdit && (
+                      <div className="d-flex mb-3 flex-row-reverse">
+                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addCollateral()}><span className="fas fa-plus fs-8"></span> เพิ่มหลักประกัน</button>
+                      </div>
+                    )}
                     <div id="tableExample" data-list='{"valueNames":["id","name","province"],"page":10,"pagination":true}'>
                       <div className="table-responsive mx-n1 px-1">
                         <table className="table table-sm table-bordered fs-9 mb-0">
@@ -2757,9 +2766,11 @@ const FullModal = (props) => {
                 title={'บุคคลค้ำประกัน'}
                 children={(
                   <>
-                    <div className="d-flex mb-3 flex-row-reverse">
-                      <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addGuarantor()}><span className="fas fa-plus fs-8"></span> เพิ่มบุคคลค้ำประกัน</button>
-                    </div>
+                    {!disabledEdit && (
+                      <div className="d-flex mb-3 flex-row-reverse">
+                        <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addGuarantor()}><span className="fas fa-plus fs-8"></span> เพิ่มบุคคลค้ำประกัน</button>
+                      </div>
+                    )}
                     <div id="tableExample" data-list='{"valueNames":["id","name","province"],"page":10,"pagination":true}'>
                       <div className="table-responsive mx-n1 px-1">
                         <table className="table table-sm table-bordered fs-9 mb-0">
