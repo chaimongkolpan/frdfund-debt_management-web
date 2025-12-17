@@ -22,13 +22,11 @@ const EditDataTable = (props) => {
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [coop, setCoop] = useState(true);
   const onExport = async () => {
-    setLoadBigData(true);
     if (data && data.length > 0) {
       const result = await exportCommitteePrepare({ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', filename: 'รายชื่อประกอบการสรุปเข้าเสนอคณะกรรมการหนี้_' + (new Date().getTime()) + '.xlsx', data: data });
       if (result.isSuccess) {
       }
     }
-    setLoadBigData(false);
   }
   const onSubmit = async () => {
     await setFilter(filter);
