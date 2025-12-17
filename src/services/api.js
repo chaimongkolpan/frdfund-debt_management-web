@@ -891,6 +891,22 @@ export const updateIncorrectNpa = async (selected) => {
 };
 //#endregion
 //#region Committee
+export const exportCommitteePrepare = async (filter) => {
+  const path = '/ProposeCommittee/export-committee-list';
+  try {
+    const result = await axios.post(path, filter, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: filter.type });
+      SaveAs(blob, filter.filename);
+      return true
+    }
+    else
+      return defaultErrorResponse;
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchCommitteePrepare = async (filter) => {
   const path = "/ProposeCommittee/search-prepare-propose-committee";
   try {
