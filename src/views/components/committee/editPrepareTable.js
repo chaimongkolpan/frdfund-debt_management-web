@@ -32,6 +32,8 @@ const EditDataTable = (props) => {
     await setFilter(filter);
     const result = await searchCommitteePrepare({
       ...filter,
+      currentPage: 1,
+      pageSize: 0,
       debtClassifyStatus: status,
     });
     if (result.isSuccess) {
