@@ -7,7 +7,7 @@ import AddModal from "@views/components/modal/customModal";
 import Modal from "@views/components/modal/fullModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
-import Filter from "@views/components/approval/filterMakePetitionNpa";
+import Filter from "@views/components/approval/filterMakePetitionNpaBranch";
 import SearchTable from "@views/components/approval/searchMakePetitionTableNpa";
 import SelectedTable from "@views/components/approval/selectMakePetitionTableNpa";
 import ConfirmTable from "@views/components/approval/confirmMakePetitionBranchTableNpa";
