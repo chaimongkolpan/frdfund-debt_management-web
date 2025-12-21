@@ -80,7 +80,7 @@ const Filter = (props) => {
     }
     if (key == 'proposal_committee_no') {
       await setCommitteeDateOp(null);
-      const resultCommitteeDate = await getCommitteeDate("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'", val);
+      const resultCommitteeDate = await getCommitteeDate("\'โอนเงินให้สาขาแล้ว\'", val);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
@@ -98,7 +98,7 @@ const Filter = (props) => {
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
     const resultDebtSt = await getDebtStatuses();
-    const resultCommitteeNo = await getCommitteeNo("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'");
+    const resultCommitteeNo = await getCommitteeNo("\'โอนเงินให้สาขาแล้ว\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
@@ -141,7 +141,7 @@ const Filter = (props) => {
         ...({proposal_committee_no: temp[0]})
       }))
       
-      const resultCommitteeDate = await getCommitteeDate("\'ยืนยันยอดสำเร็จ\',\'อยู่ระหว่างการชำระหนี้แทน\'", temp[0]);
+      const resultCommitteeDate = await getCommitteeDate("\'โอนเงินให้สาขาแล้ว\'", temp[0]);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
