@@ -30,7 +30,7 @@ const ConfirmTable = (props) => {
       id: petition ? petition.id_petition : 0,
       disbursement: receiverType,
       petition_amount: sumTotal,
-      debt_payment_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'ชำระหนี้แทนแล้ว' : 'รอชำระหนี้แทน'),
+      debt_payment_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'อยู่ระหว่างการชำระหนี้แทน' : 'รอชำระหนี้แทน'), // 'ชำระหนี้แทนแล้ว'
       contract_status: 'ปกติ',
     };
     const map_petitions = data.map(item => {
@@ -59,7 +59,7 @@ const ConfirmTable = (props) => {
     });
     const param = {
       ids,
-      debt_management_audit_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'ชำระหนี้แทนแล้ว' : 'อยู่ระหว่างการชำระหนี้แทน'),
+      debt_management_audit_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'อยู่ระหว่างการชำระหนี้แทน' : 'อยู่ระหว่างการชำระหนี้แทน'), // 'ชำระหนี้แทนแล้ว'
       petition: pet,
       cheques: t_cheque,
       map_petitions,
