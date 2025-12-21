@@ -31,7 +31,7 @@ const Filter = (props) => {
         province: "",
         creditorType: "",
         creditor: "",
-        DebtClassifyStatusList: ['อยู่ระหว่างการโอนเงินให้สาขา','อยู่ระหว่างการชำระหนี้แทน','ชำระหนี้แทนแล้ว'],
+        DebtClassifyStatusList: ['อยู่ระหว่างการโอนเงินให้สาขา', 'โอนเงินให้สาขาแล้ว', 'รอชำระหนี้แทน','อยู่ระหว่างการชำระหนี้แทน','ชำระหนี้แทนแล้ว'],
         ...filter,
         currentPage: 1,
         pageSize: process.env.VITE_PAGESIZE
@@ -83,7 +83,7 @@ const Filter = (props) => {
     if (key == 'proposal_committee_no') {
       setLoading(true);
       await setCommitteeDateOp(null);
-      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", val);
+      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'รอชำระหนี้แทน\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", val);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
@@ -94,7 +94,7 @@ const Filter = (props) => {
       } else await setCommitteeDateOp(null);
       setLoading(false);
     }
-    if (key == 'petition_no') {
+    if (key == 'petition_no_office') {
       setLoading(true);
       await setPetitionDateOp(null);
       const resultPetitionDate = await getPetitionDate(val);
@@ -103,7 +103,7 @@ const Filter = (props) => {
         await setPetitionDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({petition_date: 'all'})
+          ...({petition_date_office: 'all'})
         }))
       } else await setPetitionDateOp(null);
       setLoading(false);
@@ -115,7 +115,7 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultCommitteeNo = await getCommitteeNo("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
+    const resultCommitteeNo = await getCommitteeNo("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'รอชำระหนี้แทน\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
     const resultPetitionNo = await getPetitionNo();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
@@ -160,7 +160,7 @@ const Filter = (props) => {
         ...({proposal_committee_no: 'all'})
       }))
       
-      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", 'all');
+      const resultCommitteeDate = await getCommitteeDate("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'รอชำระหนี้แทน\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", 'all');
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
@@ -176,7 +176,7 @@ const Filter = (props) => {
       await setPetitionNoOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({petition_no: 'all'})
+        ...({petition_no_office: 'all'})
       }))
       
       const resultPetitionDate = await getPetitionDate('all');
@@ -185,7 +185,7 @@ const Filter = (props) => {
         await setPetitionDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({petition_date: 'all'})
+          ...({petition_date_office: 'all'})
         }))
       } else await setPetitionDateOp(null);
     } else await setPetitionNoOp(null);
@@ -241,7 +241,7 @@ const Filter = (props) => {
               title={'เลขที่หนังสือฎีกาจัดการหนี้'} 
               defaultValue={'all'} 
               options={petitionNoOp} hasAll
-              handleChange={(val) => onChange('petition_no', val)}
+              handleChange={(val) => onChange('petition_no_office', val)}
             />
           )}
         </div>
@@ -251,7 +251,7 @@ const Filter = (props) => {
               title={'วันที่หนังสือฎีกาจัดการหนี้'} 
               defaultValue={'all'} 
               options={petitionDateOp} hasAll
-              handleChange={(val) => onChange('petition_date', val)}
+              handleChange={(val) => onChange('petition_date_office', val)}
             />
           )}
         </div>
