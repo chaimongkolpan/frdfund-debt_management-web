@@ -290,7 +290,7 @@ const Filter = (props) => {
               title={'สถานะการชำระหนี้แทน'} 
               defaultValue={'all'} 
               options={statusDebtOp}
-              handleChange={(val) => onChange('debtStatus', val)}
+              handleChange={(val) => onChange('debtPaymentStatus', val)}
               hasAll />
           )}
         </div>
