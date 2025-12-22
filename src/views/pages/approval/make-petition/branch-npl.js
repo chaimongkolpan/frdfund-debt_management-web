@@ -132,7 +132,7 @@ const NPL = () => {
                     <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                     <br />
                     {data && (
-                      <SearchTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} />
+                      <SearchTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} can_action />
                     )}
                   </>
                 )}
