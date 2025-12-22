@@ -18,6 +18,7 @@ import {
   getMakePetitionAddedListNpa,
   addMakePetitionBranchListNpa,
   removeMakePetitionBranchListNpa,
+  savePetitionBook,
   exportPetitionNpa,
 } from "@services/api";
 import toast from "react-hot-toast";
@@ -30,6 +31,8 @@ const NPA = () => {
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [petition, setPetition] = useState(null);
   const [data, setData] = useState(null);
+  const [savePetition, setSavePetition] = useState(null);
+  const [loadPetition, setLoadPetition] = useState(false);
   const [addedData, setAddedData] = useState(null);
   const [makelistSelected, setMakeList] = useState(null);
   const [isSubmit, setSubmit] = useState(false);
@@ -41,6 +44,23 @@ const NPA = () => {
     pageSize: 0
   });
   
+  const handleSavePetition = async (pet) => {
+    const result = await savePetitionBook({ ...pet,debt_management_type: 'NPA',
+      petition_no_branch: 'กฟก '+ getBookNo() + pet.petition_no_branch,
+      petition_date_branch: ToDateDb(pet.petition_date_branch) 
+    });
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await setLoadPetition(true);
+    }
+    else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+  }
   const onAddBigData = async (selected) => {
     const ids = selected.map((item) => item.id_debt_management);
     const result = await addMakePetitionBranchListNpa(ids);
@@ -156,10 +176,10 @@ const NPA = () => {
         <AddModal isOpen={isOpenAdd} setModal={setOpenAdd} 
           title={'เพิ่มเลขที่/วันที่หนังสือฎีกา'} 
           onClose={() => setOpenAdd(false)} closeText={'ปิด'} 
-          onOk={() => console.log('submit')} okText={'บันทึก'}
+          onOk={() => handleSavePetition(savePetition)} okText={'บันทึก'}
           size={'xl'}
         >
-          <BookDateTable />
+          <BookDateTable savePetition={savePetition} setSavePetition={setSavePetition} loadPetition={loadPetition} setLoadPetition={setLoadPetition} />
         </AddModal>
       )}
       <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPA'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
