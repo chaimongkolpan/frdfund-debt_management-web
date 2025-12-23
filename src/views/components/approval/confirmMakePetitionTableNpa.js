@@ -32,7 +32,7 @@ const ConfirmTable = (props) => {
       id: petition ? petition.id_petition : 0,
       disbursement: receiverType,
       petition_amount: sumTotal,
-      debt_payment_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'อยู่ระหว่างการชำระหนี้แทน' : 'รอชำระหนี้แทน'),
+      debt_payment_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'รอชำระหนี้แทน' : 'รอชำระหนี้แทน'),
       contract_status: 'ปกติ',
     };
     const map_petitions = data.map(item => {
