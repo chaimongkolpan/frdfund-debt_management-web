@@ -18,8 +18,10 @@ import {
   getMakePetitionAddedList,
   addMakePetitionBranchList,
   removeMakePetitionBranchList,
+  insertPetition,
   savePetitionBook,
   exportPetition,
+  updateNPLstatus,
 } from "@services/api";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
@@ -29,6 +31,7 @@ const user = getUserData();
 const NPL = () => {
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
+  const [petition, setPetition] = useState(null);
   const [addPetition, setAddPetition] = useState(null);
   const [data, setData] = useState(null);
   const [savePetition, setSavePetition] = useState(null);
@@ -86,22 +89,31 @@ const NPL = () => {
   }
   const onSubmitMakelist = async () => {
     setLoadBigData(true);
-    if (addPetition) {
-      const result = await exportPetition({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: addPetition });
+    if (petition) {
+      const result = await exportPetition({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: petition });
       if (result.isSuccess) {
-        toast((t) => (
-          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
-        ));
-      }
-      else {
-        toast((t) => (
-          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
-        ));
       }
     } else {
-      alert('กรุณาบันทึกฎืกาก่อน ดาวน์โหลดเอกสาร');
+      alert('กรุณาบันทึกฎีกา่อน ดาวน์โหลดเอกสาร');
     }
     setLoadBigData(false);
+  }
+  const onSaveMakelist = async (pet) => {
+    const result = await insertPetition(pet);
+    if (result.isSuccess) {
+      await updateNPLstatus(pet.ids, pet.debt_management_audit_status);
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await setPetition({
+        ...pet,
+        id_petition: result.data.id,
+      });
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
   }
   const onSearch = async (filter) => {
     setLoadBigData(true);
@@ -181,8 +193,8 @@ const NPL = () => {
           <BookDateTable savePetition={savePetition} setSavePetition={setSavePetition} loadPetition={loadPetition} setLoadPetition={setLoadPetition} />
         </AddModal>
       )}
-      <Modal isOpen={isSubmit} setModal={setSubmit} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPL'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
-        <ConfirmTable data={makelistSelected} setAddPetition={setAddPetition} />
+      <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPL'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
+        <ConfirmTable data={makelistSelected} setAddPetition={onSaveMakelist} petition={petition} />
       </Modal>
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
         <div className="d-flex flex-column align-items-center justify-content-center">

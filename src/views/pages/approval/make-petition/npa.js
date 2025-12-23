@@ -119,7 +119,7 @@ const NPA = () => {
       if (result.isSuccess) {
       }
     } else {
-      alert('กรุณาบันทึกฎืกาก่อน ดาวน์โหลดเอกสาร');
+      alert('กรุณาบันทึกฎีกาก่อน ดาวน์โหลดเอกสาร');
     }
     setLoadBigData(false);
   }

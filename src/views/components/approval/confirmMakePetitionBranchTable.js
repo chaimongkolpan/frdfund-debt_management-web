@@ -24,14 +24,53 @@ const ConfirmTable = (props) => {
       setCheques(cheques.slice(0, cheques.length - 1))
     }
   }
+  const onSave = () => {
+    const ids = data.map(item => item.id_debt_management.toString());
+    const pet = {
+      id: petition ? petition.id_petition : 0,
+      disbursement: 'เจ้าหนี้',
+      petition_amount: sumTotal,
+      debt_payment_status: 'รอชำระหนี้แทน',
+      contract_status: 'ปกติ',
+    };
+    const map_petitions = data.map(item => {
+      return {
+        id_debt_management: item.id_debt_management.toString(),
+        province: item.province,
+      }
+    })
+    const t_cheque = cheques.map(item => {
+      return {
+        debt_management_type,
+        cheques_no: '',
+        cashier_check_amount: item.total,
+        principle_flag: item.checked[0] ? '1' : '0',
+        interest_flag: item.checked[1] ? '1' : '0',
+        fine_flag: item.checked[2] ? '1' : '0',
+        litigation_expenses_flag: item.checked[3] ? '1' : '0',
+        forfeiture_withdrawal_fee_flag: item.checked[4] ? '1' : '0',
+        insurance_premium_flag: item.checked[5] ? '1' : '0',
+        other_expenses_flag: item.checked[6] ? '1' : '0',
+        NPA_property_sales_price_flag: '0',
+        NPA_NPL_creditors_receive_flag: '0',
+        NPA_litigation_expenses_flag: '0',
+        NPA_insurance_premium_flag: '0',
+      }
+    });
+    const param = {
+      ids,
+      debt_management_audit_status: 'อยู่ระหว่างการชำระหนี้แทน(สาขา)',
+      petition: pet,
+      cheques: t_cheque,
+      map_petitions,
+    }
+    setAddPetition(param)
+  }
   const SaveOffice = () => {
-    setAddPetition(1)
+    onSave()
   }
   const SaveCheque = () => {
-    setAddPetition(1)
-  }
-  const SaveBranch = () => {
-    setAddPetition(1)
+    onSave()
   }
   const ChequeChange = (index, key) => {
     const newSelected = [
@@ -53,27 +92,6 @@ const ConfirmTable = (props) => {
       prev[index] = che;
       return [...prev]
     })
-  }
-  const BranchChange = (index) => {
-    const newSelected = [
-      ...(branchCheck.map((item, ind) => (index == ind ? !item : item))),
-    ]
-    setBranchCheck((prev) => {
-      prev[index] = !prev[index];
-      return [...prev]
-    })
-    const sum = data.reduce((prev, item) => { 
-      var total = 0;
-      if (newSelected[0]) total += item.debt_manage_outstanding_principal_remain;
-      if (newSelected[1]) total += item.debt_manage_accrued_interest_remain;
-      if (newSelected[2]) total += item.debt_manage_fine_remain;
-      if (newSelected[3]) total += item.debt_manage_litigation_expenses_remain;
-      if (newSelected[4]) total += item.debt_manage_forfeiture_withdrawal_fee_remain;
-      if (newSelected[5]) total += item.debt_manage_insurance_premium_remain;
-      if (newSelected[6]) total += item.debt_manage_other_expenses_remain;
-      return prev + total; 
-    }, 0)
-    setBranchTotal(sum)
   }
   const RenderData = (item, index) => {
     return (item && (
