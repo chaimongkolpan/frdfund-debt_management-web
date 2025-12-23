@@ -1477,7 +1477,7 @@ export const addMakePetitionBranchList = async (selected) => {
 export const removeMakePetitionBranchList = async (selected) => {
   const path = '/share/update-statusnpl';
   try {
-    const result = await axios.post(path,{ ids: selected, status: 'อยู่ระหว่างการโอนเงินให้สาขา' });
+    const result = await axios.post(path,{ ids: selected, status: 'โอนเงินให้สาขาแล้ว' });
     if (result.status == 200)
       return result.data;
     else
@@ -1733,7 +1733,7 @@ export const addMakePetitionBranchListNpa = async (selected) => {
 export const removeMakePetitionBranchListNpa = async (selected) => {
   const path = '/share/update-statusnpa';
   try {
-    const result = await axios.post(path,{ ids: selected, status: 'อยู่ระหว่างการโอนเงินให้สาขา' });
+    const result = await axios.post(path,{ ids: selected, status: 'โอนเงินให้สาขาแล้ว' });
     if (result.status == 200)
       return result.data;
     else
