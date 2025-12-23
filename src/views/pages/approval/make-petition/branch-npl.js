@@ -105,7 +105,7 @@ const NPL = () => {
   }
   const onSearch = async (filter) => {
     setLoadBigData(true);
-    setFilter({ ...filter, DebtClassifyStatus: 'อยู่ระหว่างการโอนเงินให้สาขา' })
+    setFilter({ ...filter, DebtClassifyStatus: 'โอนเงินให้สาขาแล้ว' })
     const result = await searchMakePetition(filter);
     if (result.isSuccess) {
       setData(result)
