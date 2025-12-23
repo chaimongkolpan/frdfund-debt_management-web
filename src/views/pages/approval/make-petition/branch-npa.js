@@ -106,7 +106,7 @@ const NPA = () => {
   }
   const onSearch = async (filter) => {
     setLoadBigData(true);
-    setFilter({ ...filter, DebtClassifyStatus: 'อยู่ระหว่างการโอนเงินให้สาขา' })
+    setFilter({ ...filter, DebtClassifyStatus: 'โอนเงินให้สาขาแล้ว' })
     const result = await searchMakePetitionNpa(filter);
     if (result.isSuccess) {
       setData(result)
