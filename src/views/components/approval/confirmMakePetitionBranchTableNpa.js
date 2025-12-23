@@ -28,9 +28,9 @@ const ConfirmTable = (props) => {
     const ids = data.map(item => item.id_debt_management.toString());
     const pet = {
       id: petition ? petition.id_petition : 0,
-      disbursement: receiverType,
+      disbursement: 'เจ้าหนี้',
       petition_amount: sumTotal,
-      debt_payment_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'อยู่ระหว่างการชำระหนี้แทน' : 'รอชำระหนี้แทน'), // 'ชำระหนี้แทนแล้ว'
+      debt_payment_status: 'รอชำระหนี้แทน',
       contract_status: 'ปกติ',
     };
     const map_petitions = data.map(item => {
@@ -59,7 +59,7 @@ const ConfirmTable = (props) => {
     });
     const param = {
       ids,
-      debt_management_audit_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'อยู่ระหว่างการชำระหนี้แทน' : 'อยู่ระหว่างการชำระหนี้แทน'), // 'ชำระหนี้แทนแล้ว'
+      debt_management_audit_status: 'อยู่ระหว่างการชำระหนี้แทน(สาขา)',
       petition: pet,
       cheques: t_cheque,
       map_petitions,
@@ -70,9 +70,6 @@ const ConfirmTable = (props) => {
     onSave()
   }
   const SaveCheque = () => {
-    onSave()
-  }
-  const SaveBranch = () => {
     onSave()
   }
   const ChequeChange = (index, key) => {
@@ -95,24 +92,6 @@ const ConfirmTable = (props) => {
       prev[index] = che;
       return [...prev]
     })
-  }
-  const BranchChange = (index) => {
-    const newSelected = [
-      ...(branchCheck.map((item, ind) => (index == ind ? !item : item))),
-    ]
-    setBranchCheck((prev) => {
-      prev[index] = !prev[index];
-      return [...prev]
-    })
-    const sum = data.reduce((prev, item) => { 
-      var total = 0;
-      if (newSelected[0]) total += item.npA_property_sales_price;
-      if (newSelected[1]) total += item.npL_creditors_receive;
-      if (newSelected[2]) total += item.litigation_expenses;
-      if (newSelected[3]) total += item.insurance_premium;
-      return prev + total; 
-    }, 0)
-    setBranchTotal(sum)
   }
   const RenderData = (item, index) => {
     return (item && (

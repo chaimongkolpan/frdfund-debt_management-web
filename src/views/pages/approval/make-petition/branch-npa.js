@@ -20,6 +20,8 @@ import {
   removeMakePetitionBranchListNpa,
   savePetitionBook,
   exportPetitionNpa,
+  insertPetitionNpa,
+  updateNPAstatus,
 } from "@services/api";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
@@ -44,6 +46,11 @@ const NPA = () => {
     pageSize: 0
   });
   
+  const handleOpenAdd = async () => {
+    await setSavePetition(null);
+    await setLoadPetition(true);
+    await setOpenAdd(true);
+  }
   const handleSavePetition = async (pet) => {
     const result = await savePetitionBook({ ...pet,debt_management_type: 'NPA',
       petition_no_branch: 'กฟก '+ getBookNo() + pet.petition_no_branch,
@@ -85,19 +92,29 @@ const NPA = () => {
     await setMakeList(selected);
     await setSubmit(true);
   }
+  const onSaveMakelist = async (pet) => {
+    const result = await insertPetitionNpa(pet);
+    if (result.isSuccess) {
+      await updateNPAstatus(pet.ids, pet.debt_management_audit_status);
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await setPetition({
+        ...pet,
+        id_petition: result.data.id,
+      });
+    }
+    else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+  }
   const onSubmitMakelist = async () => {
     setLoadBigData(true);
     if (petition) {
       const result = await exportPetitionNpa({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: petition });
       if (result.isSuccess) {
-        toast((t) => (
-          <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
-        ));
-      }
-      else {
-        toast((t) => (
-          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
-        ));
       }
     } else {
       alert('กรุณาบันทึกฎีกาก่อน ดาวน์โหลดเอกสาร');
@@ -137,7 +154,7 @@ const NPA = () => {
         <h4 className="mb-3">ขออนุมัติชำระหนี้แทน NPA</h4>
         <div className="d-flex flex-row-reverse">
           <div>
-            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => setOpenAdd(true)}>
+            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
               <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
             </button>
           </div>
@@ -183,7 +200,7 @@ const NPA = () => {
         </AddModal>
       )}
       <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPA'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
-        <ConfirmTable data={makelistSelected} setAddPetition={setPetition} />
+        <ConfirmTable data={makelistSelected} setAddPetition={onSaveMakelist} petition={petition} />
       </Modal>
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
         <div className="d-flex flex-column align-items-center justify-content-center">
