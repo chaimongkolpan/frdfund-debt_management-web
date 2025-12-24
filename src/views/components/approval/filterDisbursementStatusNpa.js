@@ -31,7 +31,7 @@ const Filter = (props) => {
         province: "",
         creditorType: "",
         creditor: "",
-        DebtClassifyStatusList: ['อยู่ระหว่างการโอนเงินให้สาขา', 'โอนเงินให้สาขาแล้ว', 'รอชำระหนี้แทน', 'อยู่ระหว่างการชำระหนี้แทน', 'ชำระหนี้แทนแล้ว'],
+        DebtClassifyStatusList: ['อยู่ระหว่างการโอนเงินให้สาขา', 'โอนเงินให้สาขาแล้ว', 'อยู่ระหว่างการชำระหนี้แทน(สาขา)', 'อยู่ระหว่างการชำระหนี้แทน', 'ชำระหนี้แทนแล้ว'],
         ...filter,
         currentPage: 1,
         pageSize: process.env.VITE_PAGESIZE
@@ -83,7 +83,7 @@ const Filter = (props) => {
     if (key == 'proposal_committee_no') {
       setLoading(true);
       await setCommitteeDateOp(null);
-      const resultCommitteeDate = await getCommitteeDateNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'รอชำระหนี้แทน\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", val);
+      const resultCommitteeDate = await getCommitteeDateNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'อยู่ระหว่างการชำระหนี้แทน(สาขา)\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", val);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
@@ -116,7 +116,7 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultCommitteeNo = await getCommitteeNoNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'รอชำระหนี้แทน\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
+    const resultCommitteeNo = await getCommitteeNoNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'อยู่ระหว่างการชำระหนี้แทน(สาขา)\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'");
     const resultPetitionNo = await getPetitionNo();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
@@ -161,7 +161,7 @@ const Filter = (props) => {
         ...({proposal_committee_no: 'all'})
       }))
       
-      const resultCommitteeDate = await getCommitteeDateNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'รอชำระหนี้แทน\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", 'all');
+      const resultCommitteeDate = await getCommitteeDateNpa("\'อยู่ระหว่างการโอนเงินให้สาขา\',\'โอนเงินให้สาขาแล้ว\',\'อยู่ระหว่างการชำระหนี้แทน(สาขา)\',\'อยู่ระหว่างการชำระหนี้แทน\',\'ชำระหนี้แทนแล้ว\'", 'all');
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
