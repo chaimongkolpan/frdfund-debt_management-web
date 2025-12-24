@@ -1802,6 +1802,20 @@ export const getPetitionListNpa = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getPetitionBranchListNpa = async (filter) => {
+  const path = '/MakePetition/get-branch-petition-contracts-npa';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchDisbursementStatusNpa = async (filter) => {
   const path = '/MakePetition/search-disbursement-status-npa';
   try {
