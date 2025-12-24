@@ -1531,6 +1531,19 @@ export const getPetitionList = async (filter) => {
     console.error('error: ' + path + ' =>', e);
     return defaultErrorResponse;
   }
+};export const getPetitionBranchList = async (filter) => {
+  const path = '/MakePetition/get-branch-petition-contracts';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
 };
 export const getPetitionById = async (id_petition) => {
   const path = '/MakePetition/get-petition-contracts';

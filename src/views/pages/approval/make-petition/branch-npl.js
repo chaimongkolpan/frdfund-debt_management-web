@@ -11,7 +11,7 @@ import Filter from "@views/components/approval/filterMakePetitionBranch";
 import SearchTable from "@views/components/approval/searchMakePetitionTable";
 import SelectedTable from "@views/components/approval/selectMakePetitionTable";
 import ConfirmTable from "@views/components/approval/confirmMakePetitionBranchTable";
-import BookDateTable from "@views/components/approval/addBookDateTable";
+import BookDateTable from "@views/components/approval/addBookDateTableBranch";
 import { 
   cleanData,
   searchMakePetition,
@@ -47,6 +47,11 @@ const NPL = () => {
     pageSize: 0
   });
   
+  const handleOpenAdd = async () => {
+    await setSavePetition(null);
+    await setLoadPetition(true);
+    await setOpenAdd(true);
+  }
   const handleSavePetition = async (pet) => {
     const result = await savePetitionBook({ ...pet,debt_management_type: 'NPL',
       petition_no_branch: 'กฟก '+ getBookNo() + pet.petition_no_branch,
@@ -148,7 +153,7 @@ const NPL = () => {
         <h4 className="mb-3">ขออนุมัติชำระหนี้แทน NPL</h4>
         <div className="d-flex flex-row-reverse">
           <div>
-            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => setOpenAdd(true)}>
+            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
               <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
             </button>
           </div>
