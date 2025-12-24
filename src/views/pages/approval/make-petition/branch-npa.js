@@ -11,7 +11,7 @@ import Filter from "@views/components/approval/filterMakePetitionNpaBranch";
 import SearchTable from "@views/components/approval/searchMakePetitionTableNpa";
 import SelectedTable from "@views/components/approval/selectMakePetitionTableNpa";
 import ConfirmTable from "@views/components/approval/confirmMakePetitionBranchTableNpa";
-import BookDateTable from "@views/components/approval/addBookDateTableNpa";
+import BookDateTable from "@views/components/approval/addBookDateTableNpaBranch";
 import { 
   cleanData,
   searchMakePetitionNpa,
