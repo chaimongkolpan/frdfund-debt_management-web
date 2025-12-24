@@ -4,7 +4,7 @@ import DatePicker from "@views/components/input/DatePicker";
 import BookNo from "@views/components/input/BookNo";
 import { 
   cleanData,
-  getPetitionList,
+  getPetitionBranchList,
   getPetitionById,
 } from "@services/api";
 const BookDateTable = (props) => {
@@ -62,7 +62,7 @@ const BookDateTable = (props) => {
     ))
   }
   const fetchData = async () => {
-    const result = await getPetitionList(filter);
+    const result = await getPetitionBranchList(filter);
     if (result.isSuccess) {
       await setLoadPetition(false);
       await setShowDetail(false);
