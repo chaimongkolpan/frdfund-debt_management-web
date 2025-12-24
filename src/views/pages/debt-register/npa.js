@@ -138,12 +138,15 @@ const DebtRegisterNpa = () => {
   const onRemoveMakelist = async (selected) => {
     const result = await removeContractNPAToList(selected);
     if (result.isSuccess) {
+      await onSearch(filter);
       await fetchData(filterAdded)
     }
   }
   const onSubmitMakelist = async () => {
     const result = await submitListNPA({ type: 'application/octet-stream', filename: 'จัดทำรายชื่อเกษตรกร_' + (new Date().getTime()) + '.zip', data: makelistSelected });
     if (result.isSuccess) {
+      await onSearch(filter);
+      await fetchData(filterAdded)
     }
   }
   const onCloseMakelist = async () => {
