@@ -50,7 +50,7 @@ const FullModal = (props) => {
   const editStatus = ['อยู่ระหว่างการสอบยอด','จำแนกมูลหนี้แล้ว','หนี้ไม่เข้าหลักเกณฑ์','ทะเบียนหนี้ซ้ำซ้อน','ปิดบัญชีกับกฟก.แล้ว','เกษตรกรไม่ประสงค์ชำระหนี้แทน'
     ,'คุณสมบัติเกษตรกรไม่ถูกต้อง','ทะเบียนหนี้ไม่ถูกต้อง','เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง','ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)','รวมสัญญากับสัญญาอื่น'
     ,'เจ้าหนี้ปิดกิจการ/ล้มละลาย','ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด','เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ','เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร','ติดต่อเกษตรกรไม่ได้'];
-
+  const objective = ['เพื่อการเกษตร','ไม่เพื่อการเกษตร','เพื่อการเกษตรและไม่เพื่อการเกษตร'];
   const submitDebt = async () => {
     let rate = 1;
     let expense = 0;
@@ -507,7 +507,7 @@ const FullModal = (props) => {
         debt_repayment_conditions: (debt.debt_repayment_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน'),
         contract_conditions: (debt.contract_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน'),
         compensation_conditions: (debt.compensation_conditions ?? 'ไม่มีการชดเชย'),
-        debt_manage_objective: (debt.debt_manage_objective ?? 'เพื่อการเกษตร'),
+        debt_manage_objective: (objective.includes(debt.debt_manage_objective) ? debt.debt_manage_objective : 'เพื่อการเกษตร'),
         debt_manage_legal_action: (debt.debt_manage_legal_action ?? 'ไม่มี'),
         debt_agreement: (debt?.debt_agreement ?? 'ตามข้อตกลง'),
         debt_repayment_type: (debt?.debt_repayment_type ?? 'ชำระหนี้แทน'),
