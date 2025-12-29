@@ -37,7 +37,7 @@ const FullModal = (props) => {
   const editStatus = ['อยู่ระหว่างการสอบยอด','จำแนกมูลหนี้แล้ว','หนี้ไม่เข้าหลักเกณฑ์','ทะเบียนหนี้ซ้ำซ้อน','ปิดบัญชีกับกฟก.แล้ว','เกษตรกรไม่ประสงค์ชำระหนี้แทน'
     ,'คุณสมบัติเกษตรกรไม่ถูกต้อง','ทะเบียนหนี้ไม่ถูกต้อง','เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง','ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)','รวมสัญญากับสัญญาอื่น'
     ,'เจ้าหนี้ปิดกิจการ/ล้มละลาย','ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด','เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ','เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร','ติดต่อเกษตรกรไม่ได้'];
-
+  const objective = ['เพื่อการเกษตร','ไม่เพื่อการเกษตร','เพื่อการเกษตรและไม่เพื่อการเกษตร'];
   const toggle = () => setModal(!isOpen);
   const submitDebt = async () => {
     const result = await updateDebtManagementDetailClassifyNpa({ 
@@ -163,7 +163,7 @@ const FullModal = (props) => {
         debt_manage_creditor_name: (debt.debt_manage_creditor_name ?? (creditors ? creditors[0] : '')),
         contract_conditions: (debt.contract_conditions ?? 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน'),
         compensation_conditions: (debt.compensation_conditions ?? 'ไม่มีการชดเชย'),
-        debt_manage_objective: (debt.debt_manage_objective ?? 'เพื่อการเกษตร'),
+        debt_manage_objective: (objective.includes(debt.debt_manage_objective) ? debt.debt_manage_objective : 'เพื่อการเกษตร'),
       });
       await setNotCorrectList((debt?.not_correct_list ? debt?.not_correct_list.split(',') : ['0','0','0','0','0','0','0','0','0']))
       await setCreditorType(debt.debt_manage_creditor_type);
