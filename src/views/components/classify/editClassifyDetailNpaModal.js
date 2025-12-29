@@ -37,7 +37,7 @@ const FullModal = (props) => {
   const editStatus = ['อยู่ระหว่างการสอบยอด','จำแนกมูลหนี้แล้ว','หนี้ไม่เข้าหลักเกณฑ์','ทะเบียนหนี้ซ้ำซ้อน','ปิดบัญชีกับกฟก.แล้ว','เกษตรกรไม่ประสงค์ชำระหนี้แทน'
     ,'คุณสมบัติเกษตรกรไม่ถูกต้อง','ทะเบียนหนี้ไม่ถูกต้อง','เจ้าหนี้ไม่พบภาระหนี้/เกษตรกรปิดบัญชีเอง','ข้อมูลไม่ถูกต้องครบถ้วน(สาขาเสนอขออนุมัติ)','รวมสัญญากับสัญญาอื่น'
     ,'เจ้าหนี้ปิดกิจการ/ล้มละลาย','ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด','เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ','เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร','ติดต่อเกษตรกรไม่ได้'];
-  const objective = ['เพื่อการเกษตร','ไม่เพื่อการเกษตร','เพื่อการเกษตรและไม่เพื่อการเกษตร'];
+  const objective = ['เพื่อการเกษตร','ไม่ใช่เพื่อการเกษตร','เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร'];
   const toggle = () => setModal(!isOpen);
   const submitDebt = async () => {
     const result = await updateDebtManagementDetailClassifyNpa({ 
@@ -304,8 +304,8 @@ const FullModal = (props) => {
                           <div className="form-floating">
                             <select className={`form-select ${(not_correct_list && not_correct_list[7] == '1') ? 'border-danger' : ''}`} value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
                               <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
-                              <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
-                              <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
+                                  <option value="ไม่ใช่เพื่อการเกษตร">ไม่ใช่เพื่อการเกษตร</option>
+                                  <option value="เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร">เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร</option>
                             </select>
                             <label htmlFor="floatingSelectPrivacy">วัตถุประสงค์</label>
                           </div>
