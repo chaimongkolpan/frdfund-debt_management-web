@@ -125,6 +125,18 @@ export const getYears = async () => {
     return defaultErrorResponse;
   }
 };
+export const getAllProvinces = async () => {
+  const path = "/common/provinces-all";
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    window.location.href = (process.env.VITE_ENVIRONMENT == 'uat' ? '/uat' : '') + '/login';
+    return defaultErrorResponse;
+  }
+};
 export const getProvinces = async () => {
   const path = "/common/provinces";
   try {
@@ -1559,7 +1571,20 @@ export const getPetitionById = async (id_petition) => {
     return defaultErrorResponse;
   }
 };
+export const deletePetition = async (id) => {
+  const path = '/MakePetition/delete-petition';
+  try {
+    const result = await axios.post(path, { id_petition: id });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
 
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const savePetitionBook = async (filter) => {
   const path = '/MakePetition/save-petition';
   try {
@@ -1747,6 +1772,20 @@ export const removeMakePetitionBranchListNpa = async (selected) => {
   const path = '/share/update-statusnpa';
   try {
     const result = await axios.post(path,{ ids: selected, status: 'โอนเงินให้สาขาแล้ว' });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const deletePetitionNpa = async (id) => {
+  const path = '/MakePetition/delete-petition-npa';
+  try {
+    const result = await axios.post(path, { id_petition: id });
     if (result.status == 200)
       return result.data;
     else
