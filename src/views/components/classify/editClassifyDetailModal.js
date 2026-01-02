@@ -6,7 +6,7 @@ import Textarea from "@views/components/input/Textarea";
 import DatePicker from "@views/components/input/DatePicker";
 import According from "@views/components/panel/according";
 import { 
-  getProvinces,
+  getAllProvinces,
   getBigDataCreditorTypes,
   getBigDataCreditors,
   upsertGuarantorClassify,
@@ -465,7 +465,7 @@ const FullModal = (props) => {
     }))
   }
   const getProvince = async () => {
-    const resultProv = await getProvinces();
+    const resultProv = await getAllProvinces();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
