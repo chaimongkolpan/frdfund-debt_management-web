@@ -191,11 +191,11 @@ const NPL = () => {
       {isOpenAdd && (
         <AddModal isOpen={isOpenAdd} setModal={setOpenAdd} 
           title={'เพิ่มเลขที่/วันที่หนังสือฎีกา'} 
-          onClose={() => setOpenAdd(false)} closeText={'ปิด'} 
-          onOk={() => handleSavePetition(savePetition)} okText={'บันทึก'}
+          onClose={() => setOpenAdd(false)} closeText={'ปิด'} hideOk 
+          // onOk={() => handleSavePetition(savePetition)} okText={'บันทึก'}
           size={'xl'}
         >
-          <BookDateTable savePetition={savePetition} setSavePetition={setSavePetition} loadPetition={loadPetition} setLoadPetition={setLoadPetition} />
+          <BookDateTable savePetition={savePetition} setSavePetition={setSavePetition} loadPetition={loadPetition} setLoadPetition={setLoadPetition} handleSavePetition={handleSavePetition} />
         </AddModal>
       )}
       <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPL'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
