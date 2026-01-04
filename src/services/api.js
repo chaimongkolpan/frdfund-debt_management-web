@@ -1430,6 +1430,62 @@ export const searchMakePetition = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getMakePetition = async (id) => {
+  const path = '/MakePetition/get-make-petition';
+  try {
+    const result = await axios.get(path, { params: { id } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const makeAdditionalPetition = async (filter) => {
+  const path = '/MakePetition/make-additional-petition';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getRefundPetition = async () => {
+  const path = '/MakePetition/get-refund-petition';
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateRefundPetition = async (filter) => {
+  const path = '/MakePetition/refund-additional-petition';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getMakePetitionAddedList = async (filter) => {
   const path = '/MakePetition/search-make-petition';
   try {

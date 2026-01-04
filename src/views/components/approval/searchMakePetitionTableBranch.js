@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
-import EditDetail from "@views/components/approval/editDetailNpa";
+import EditDetail from "@views/components/approval/editDetailBranch";
 const SearchTable = (props) => {
   const { result, handleSubmit, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
+  const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
@@ -60,19 +61,22 @@ const SearchTable = (props) => {
         <td>{item.debt_manage_creditor_name}</td>
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
-        <td>{item.npA_round}</td>
-        <td>{item.title_document_no}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{toCurrency(item.estimated_price_creditors)}</td>
-        <td>{toCurrency(item.npA_property_sales_price)}</td>
-        <td>{toCurrency(item.npL_creditors_receive)}</td>
-        <td>{toCurrency(item.litigation_expenses)}</td>
-        <td>{toCurrency(item.insurance_premium)}</td>
-        <td>{toCurrency(item.total_xpenses)}</td>
-        <td>{toCurrency(item.frD_total_payment)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest)}</td>
+        <td>{toCurrency(item.debt_manage_fine)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
+        {!coop && (
+          <>
+            <td>{toCurrency(item.debt_manage_insurance_premium)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses)}</td>
+          </>
+        )}
+        <td>{toCurrency(item.debt_manage_total_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_total)}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
-        <td>{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
         <td>{item.collateral_no}</td>
         <td>{item.debt_management_audit_status}</td>
@@ -97,6 +101,7 @@ const SearchTable = (props) => {
   useEffect(() => {
     if(result) {
       setData(result.data);
+      setCoop(result.data && result.data[0]?.debt_manage_creditor_type == 'สหกรณ์')
       setSelected(result.data.map(() => false));
       setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
@@ -118,16 +123,18 @@ const SearchTable = (props) => {
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
-                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
-                  <div className="form-check ms-2 me-0 mb-0 fs-8">
-                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
-                  </div>
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>
+                  {can_action ? (
+                    <div className="form-check ms-2 me-0 mb-0 fs-8">
+                      <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                    </div>
+                  ) : '#'}
                 </th>
                 <th rowSpan="2">ดำเนินการ</th>
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan={"14"}>สัญญา</th>
+                <th colSpan={coop ? "11" : "13"}>สัญญา</th>
                 <th>หลักทรัพย์ค้ำประกัน</th>
                 <th rowSpan="2">สถานะสัญญา</th>
               </tr>
@@ -142,19 +149,22 @@ const SearchTable = (props) => {
                 <th>สถาบันเจ้าหนี้</th>
                 <th>จังหวัดเจ้าหนี้</th>
                 <th>สาขาเจ้าหนี้</th>
-                <th>รอบ NPA</th>
-                <th>เอกสารสิทธิ์</th>
                 <th>เลขที่สัญญา</th>
-                <th>ราคาประเมินของเจ้าหนี้</th>
-                <th>ราคาขายทรัพย์ NPA</th>
-                <th>เจ้าหนี้รับชำระต้นเงินคงเหลือ (NPL)</th>
+                <th>เงินต้น</th>
+                <th>ดอกเบี้ย</th>
+                <th>ค่าปรับ</th>
                 <th>ค่าใช้จ่ายในการดำเนินคดี</th>
-                <th>ค่าเบี้ยประกัน</th>
+                <th>ค่าถอนการยึดทรัพย์</th>
+                {!coop && (
+                  <>
+                    <th>ค่าเบี้ยประกัน</th>
+                    <th>ค่าใช้จ่ายอื่นๆ</th>
+                  </>
+                )}
                 <th>รวมค่าใช้จ่าย</th>
                 <th>รวมทั้งสิ้น</th>
                 <th>วัตถุประสงค์การกู้</th>
-                <th>สถานะหนี้</th>   
-                <th>ซื้อทรัพย์ตามระเบียบฯ</th> 
+                <th>สถานะหนี้</th>
                 <th>ประเภทหลักประกัน</th>
                 <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
               </tr>
@@ -162,7 +172,7 @@ const SearchTable = (props) => {
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={29}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -176,13 +186,15 @@ const SearchTable = (props) => {
           />
         )}
       </div>
-      <div className="d-flex align-items-center justify-content-center my-3">
-        <div className={`${isSome ? '' : 'd-none'}`}>
-          <div className="d-flex">
-            <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+      {can_action && (
+        <div className="d-flex align-items-center justify-content-center my-3">
+          <div className={`${isSome ? '' : 'd-none'}`}>
+            <div className="d-flex">
+              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       {isOpenDetail && (
         <EditDetail isOpen={isOpenDetail} setModal={setOpenDetail} onClose={() => handleCloseDetail()} data={editData} />
       )}

@@ -8,10 +8,11 @@ import Modal from "@views/components/modal/fullModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/approval/filterMakePetitionNpaBranch";
-import SearchTable from "@views/components/approval/searchMakePetitionTableNpa";
+import SearchTable from "@views/components/approval/searchMakePetitionTableNpaBranch";
 import SelectedTable from "@views/components/approval/selectMakePetitionTableNpa";
 import ConfirmTable from "@views/components/approval/confirmMakePetitionBranchTableNpa";
 import BookDateTable from "@views/components/approval/addBookDateTableNpaBranch";
+import RefundTable from "@views/components/approval/refundTableNpaBranch";
 import { 
   cleanData,
   searchMakePetitionNpa,

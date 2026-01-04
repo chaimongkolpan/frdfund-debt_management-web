@@ -56,7 +56,7 @@ const SelectedTable = (props) => {
   }
   const RenderData = (item, index, checked) => {
     return (item && (
-      <tr key={index}>
+      <tr key={index} style={{ background: item.result_additional === 'เพิ่มเงิน' ? 'rgb(255, 242, 205)' : item.result_additional === 'ลดเงิน' ? '#fdeae7' : '#fff' }}>
         <td className="fs-9 align-middle">
           <div className="form-check ms-2 mb-0 fs-8">
             <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
@@ -125,6 +125,8 @@ const SelectedTable = (props) => {
         <div className="ms-1">ปกติ</div>
         <div className="ms-2 square border border-1"  style={{ background: "rgb(255, 242, 205)", height: 20, width: 30 }}></div>
         <div className="ms-1">เพิ่มเงิน</div>
+        <div className="ms-2 square border border-1"  style={{ background: "#fdeae7", height: 20, width: 30 }}></div>
+        <div className="ms-1">ลดเงิน</div>
       </div>
       <div id="tableExample1" data-list='{"valueNames":["name","email","age"]'>
         <div className="table-responsive mx-n1 px-1">

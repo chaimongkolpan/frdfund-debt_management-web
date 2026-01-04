@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
+import EditDetail from "@views/components/approval/editDetail";
 const SearchTable = (props) => {
   const { result, handleSubmit, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
@@ -9,6 +10,8 @@ const SearchTable = (props) => {
   const [isSome, setIsSome] = useState(false);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
+  const [editData, setEditData] = useState(null);
+  const [isOpenDetail, setOpenDetail] = useState(false);
   const onSubmit = () => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
@@ -25,15 +28,28 @@ const SearchTable = (props) => {
     await setSelected(result.data.map(() => checked));
     await setIsAll(checked)
   }
+  const handleShowDetail = async(item) => {
+    await setEditData(item);
+    await setOpenDetail(true);
+  }
+  const handleCloseDetail = async() => {
+    await getData(filter);
+    await setOpenDetail(false);
+  }
   const RenderData = (item, index, checked) => {
     return (item && (
-      <tr key={index}>
+      <tr key={index} style={{ background: item.result_additional === 'เพิ่มเงิน' ? 'rgb(255, 242, 205)' : item.result_additional === 'ลดเงิน' ? '#fdeae7' : '#fff' }}>
         <td className="fs-9 align-middle">
           {can_action ? (
             <div className="form-check ms-2 mb-0 fs-8">
               <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
           ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
+        </td>
+        <td>
+          <div className="d-flex justify-content-center"> 
+            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" disabled={!can_action} onClick={() => handleShowDetail(item)}><i className="far fa-edit"></i></button>
+          </div>
         </td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date}</td>
@@ -99,6 +115,8 @@ const SearchTable = (props) => {
         <div className="ms-1">ปกติ</div>
         <div className="ms-2 square border border-1"  style={{ background: "rgb(255, 242, 205)", height: 20, width: 30 }}></div>
         <div className="ms-1">เพิ่มเงิน</div>
+        <div className="ms-2 square border border-1"  style={{ background: "#fdeae7", height: 20, width: 30 }}></div>
+        <div className="ms-1">ลดเงิน</div>
       </div>
       <div data-list='{"valueNames":["name","email","age"]}'>
         <div className="table-responsive mx-n1 px-1">
@@ -112,6 +130,7 @@ const SearchTable = (props) => {
                     </div>
                   ) : '#'}
                 </th>
+                <th rowSpan="2">ดำเนินการ</th>
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
@@ -175,6 +194,9 @@ const SearchTable = (props) => {
             </div>
           </div>
         </div>
+      )}
+      {isOpenDetail && (
+        <EditDetail isOpen={isOpenDetail} setModal={setOpenDetail} onClose={() => handleCloseDetail()} data={editData} />
       )}
     </>
   );

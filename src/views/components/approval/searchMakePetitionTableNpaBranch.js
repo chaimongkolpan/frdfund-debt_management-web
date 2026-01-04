@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
-import EditDetail from "@views/components/approval/editDetailNpa";
+import EditDetail from "@views/components/approval/editDetailNpaBranch";
 const SearchTable = (props) => {
   const { result, handleSubmit, filter, getData, can_action } = props;
   const [data, setData] = useState([]);
