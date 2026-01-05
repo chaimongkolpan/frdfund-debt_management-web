@@ -22,7 +22,7 @@ const DebtRegisterBigDataTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map(() => checked));
+    await setSelected(result.data.map((item) => item.debt_management_audit_status === 'ทะเบียนหนี้รอสอบยอด' && checked));
     await setIsAll(checked)
   }
   const RenderData = (item, index, checked) => {
