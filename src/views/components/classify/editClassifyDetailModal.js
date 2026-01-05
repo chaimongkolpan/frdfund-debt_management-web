@@ -62,6 +62,10 @@ const FullModal = (props) => {
     else if (repayment == 'ต้นเงิน50%') { rate = 0.5; expense = 0;}
     const param = {
       ...debts,
+      debt_manage_total_expenses: (debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses),
+      debt_manage_total: (debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine 
+        + debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses
+      ),
       contract_debt_manage_outstanding_principal: (debts?.debt_manage_outstanding_principal * rate),
       contract_debt_manage_accrued_interest: (debts?.debt_manage_accrued_interest * rate),
       contract_debt_manage_fine: (debts?.debt_manage_fine * rate),
