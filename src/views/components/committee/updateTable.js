@@ -74,7 +74,7 @@ const DataTable = (props) => {
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date}</td>
         {coop && (
-          <td>{item.proposal_type ? 'ชำระหนี้แทน' : 'วางเงินชำระหนี้'}</td>
+          <td>{item.debt_repayment_type}</td>
         )}
         <td>{item.id_card}</td>
         <td>{item.name_prefix}</td>
