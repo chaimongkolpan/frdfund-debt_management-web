@@ -456,7 +456,7 @@ const editLandLeaseModal = (props) => {
                                         <div className="col-sm-12 col-md-6 col-lg-4">
                                             <div className="form-floating needs-validation">
                                                 <select className="form-select" value={formData.changeCollateral?.conditions_cannot_transferred} onChange={(e) => handleChangeChangeCollateral('conditions_cannot_transferred', e.target?.value)} >
-                                                    <option value="ติดอายัติ(เจ้าหนี้อื่น)">โอนติดอายัติ(เจ้าหนี้อื่น)</option>
+                                                    <option value="ติดอายัติ(เจ้าหนี้อื่น)">ติดอายัติ(เจ้าหนี้อื่น)</option>
                                                     <option value="เจ้าของหลักประกันเสียชีวิต">เจ้าของหลักประกันเสียชีวิต</option>
                                                     <option value="ติดข้อกฎหมาย">ติดข้อกฎหมาย</option>
                                                     <option value="ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น">ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น</option>
