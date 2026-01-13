@@ -1,6 +1,7 @@
 import { toCurrency } from "@utils";
 const ClassifyDebtManageTable = (props) => {
   const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleCreateNPL, handleDocument, can_action } = props;
+  const allow_statuses = ['ทะเบียนหนี้รอสอบยอด','อยู่ระหว่างการสอบยอด','จำแนกมูลหนี้แล้ว'];
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index} style={{
@@ -40,21 +41,21 @@ const ClassifyDebtManageTable = (props) => {
         <td className="align-middle white-space-nowrap text-center pe-0">
           {item.isCombine ? (
             <div className="btn-reveal-trigger position-static">
-              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action || !allow_statuses.includes(item.checking_management_status)} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
                 <button className="dropdown-item text-danger" onClick={() => handleCancelCombine(item.id_combining)}>ยกเลิกรวมสัญญา</button>
               </div>
             </div>
           ) : (item.isSplit ? (
             <div className="btn-reveal-trigger position-static">
-              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action || !allow_statuses.includes(item.checking_management_status)} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
                 <button className="dropdown-item text-danger" type="button" onClick={() => handleCancelSplit(item.id_separate)}>ยกเลิกแยกสัญญา</button>
               </div>
             </div>
           ) : (
             <div className="btn-reveal-trigger position-static">
-              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
+              <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" disabled={!can_action || !allow_statuses.includes(item.checking_management_status)} type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
               <div className="dropdown-menu dropdown-menu-end py-2">
                 {!item.hasNPL && (
                   <button className="dropdown-item" type="button" onClick={() => handleCreateNPL(item.id_debt_management)}>สร้างสัญญา NPL</button>
