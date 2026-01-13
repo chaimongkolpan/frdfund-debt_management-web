@@ -55,6 +55,7 @@ const Report = () => {
     "รายงานการ์ดลูกหนี้รัฐบาล.zip",
     "รายงานการชำระหนี้แทนเกษตรกร.zip",
   ];
+  const new_api_list = process.env.VITE_REPORT_NEW_LIST ? process.env.VITE_REPORT_NEW_REPORT_LIST.split(',').map(i => parseInt(i)) : [];
   const download = async (id) => {
     await setStartDownload(new Date());
     await setNow(null);
@@ -79,7 +80,7 @@ const Report = () => {
       await setNow(new Date());
     }, 1000);
 
-    if (process.env.VITE_REPORT_NEW == "1") {
+    if (new_api_list.includes(id)) {
       if (await downloadReport(param, filenames[id - 1])) {
         toast((t) => (
           <ToastContent t={t} title={'ดาวน์โหลดรายงาน'} message={'ดาวน์โหลดรายงานสำเร็จ'} />
