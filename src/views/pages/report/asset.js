@@ -55,7 +55,7 @@ const Report = () => {
     "รายงานการ์ดลูกหนี้รัฐบาล.zip",
     "รายงานการชำระหนี้แทนเกษตรกร.zip",
   ];
-  const new_api_list = process.env.VITE_REPORT_NEW_LIST ? process.env.VITE_REPORT_NEW_REPORT_LIST.split(',').map(i => parseInt(i)) : [];
+  const new_api_list = process.env.VITE_REPORT_NEW_LIST ? process.env.VITE_REPORT_NEW_LIST.split(',').map(i => parseInt(i)) : [];
   const download = async (id) => {
     await setStartDownload(new Date());
     await setNow(null);
