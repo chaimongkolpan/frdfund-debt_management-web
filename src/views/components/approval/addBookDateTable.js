@@ -52,6 +52,16 @@ const BookDateTable = (props) => {
       await setShowDetail(true);
     }
   }
+  const handleSavePetitionSubmit = async (savePetition) => {
+    if (savePetition.petition_date_office && savePetition.petition_no_office) {
+      await handleSavePetition(savePetition)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'กรุณากรอกข้อมูลให้ครบถ้วน'} />
+      ));
+      return;
+    }
+  }
   const handleDeletePetitionSubmit = async () => {
     const result = await deletePetition(id_petition);
     if (result.isSuccess) {
@@ -289,7 +299,7 @@ const BookDateTable = (props) => {
                 </div>
                 <div className="row">
                   <div className="col-12 pt-3 d-flex justify-content-center">
-                    <Button color="success" onClick={() => handleSavePetition(savePetition)}>{'บันทึก'}</Button>
+                    <Button color="success" onClick={() => handleSavePetitionSubmit(savePetition)}>{'บันทึก'}</Button>
                     &nbsp;&nbsp;
                     <Button color="danger" onClick={() => handleDeletePetition()}>{'ลบ'}</Button>
                   </div>
