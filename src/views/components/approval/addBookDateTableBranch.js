@@ -33,6 +33,16 @@ const BookDateTable = (props) => {
       ...({[key]: val})
     }))
   }
+  const handleSavePetitionSubmit = async (savePetition) => {
+    if (savePetition.petition_date_branch && savePetition.petition_no_branch) {
+      await handleSavePetition(savePetition)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'กรุณากรอกข้อมูลให้ครบถ้วน'} />
+      ));
+      return;
+    }
+  }
   const GetDetail = async (item) => {
     await setShowDetail(false);
     await setDetail(null);
@@ -289,7 +299,7 @@ const BookDateTable = (props) => {
                 </div>
                 <div className="row">
                   <div className="col-12 pt-3 d-flex justify-content-center">
-                    <Button color="success" onClick={() => handleSavePetition(savePetition)}>{'บันทึก'}</Button>
+                    <Button color="success" onClick={() => handleSavePetitionSubmit(savePetition)}>{'บันทึก'}</Button>
                     &nbsp;&nbsp;
                     <Button color="danger" onClick={() => handleDeletePetition()}>{'ลบ'}</Button>
                   </div>
