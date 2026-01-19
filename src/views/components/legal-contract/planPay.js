@@ -51,7 +51,7 @@ const PlanPay = (props) => {
     }
   }
   const save = async () => {
-    const result = await savePlanPay({ installment, year, data: plans });
+    const result = await savePlanPay({ installment, year, data: plans, id: policy.id_KFKPolicy });
     if (result.isSuccess) {
       await fetchData();
     } 
