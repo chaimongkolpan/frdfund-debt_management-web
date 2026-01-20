@@ -217,44 +217,46 @@ const Sidebar = props => {
                           </ul>
                         </div>
                       </li>
-                      <li className="nav-item">
-                        <a className={`nav-link dropdown-indicator ${path.includes('/branch/prepare') ? 'active' : ''}`} href="#nv-PrepareForPresent" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-PrepareForPresent">
-                          <div className="d-flex align-items-center">
-                            <div className="dropdown-indicator-icon-wrapper">
-                              <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                      {(user && officeList.includes(user.role)) && (
+                        <li className="nav-item">
+                          <a className={`nav-link dropdown-indicator ${path.includes('/branch/prepare') ? 'active' : ''}`} href="#nv-PrepareForPresent" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-PrepareForPresent">
+                            <div className="d-flex align-items-center">
+                              <div className="dropdown-indicator-icon-wrapper">
+                                <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                              </div>
+                              <span className="nav-link-text">รวบรวมเตรียมนำเสนอ</span>
+                              {(alert && alert?.branch && alert.branch.prepare?.total > 0) && (
+                                <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.total)}</span>
+                              )}
                             </div>
-                            <span className="nav-link-text">รวบรวมเตรียมนำเสนอ</span>
-                            {(alert && alert?.branch && alert.branch.prepare?.total > 0) && (
-                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.total)}</span>
-                            )}
+                          </a>
+                          {/* more inner pages*/}
+                          <div className="parent-wrapper">
+                            <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-PrepareForPresent">
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/branch/prepare/npl') ? 'active' : ''}`} to={`${prefix_url + "/branch/prepare/npl"}`}>
+                                  <div className="d-flex align-items-center">
+                                    <span className="nav-link-text">NPL</span>
+                                    {(alert && alert?.branch && alert.branch.prepare?.npl > 0) && (
+                                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.npl)}</span>
+                                    )}
+                                  </div>
+                                </Link>
+                              </li>
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/branch/prepare/npa') ? 'active' : ''}`} to={`${prefix_url + "/branch/prepare/npa"}`}>
+                                  <div className="d-flex align-items-center">
+                                    <span className="nav-link-text">NPA</span>
+                                    {(alert && alert?.branch && alert.branch.prepare?.npa > 0) && (
+                                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.npa)}</span>
+                                    )}
+                                  </div>
+                                </Link>
+                              </li>
+                            </ul>
                           </div>
-                        </a>
-                        {/* more inner pages*/}
-                        <div className="parent-wrapper">
-                          <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-PrepareForPresent">
-                            <li className="nav-item">
-                              <Link className={`nav-link ${path.includes('/branch/prepare/npl') ? 'active' : ''}`} to={`${prefix_url + "/branch/prepare/npl"}`}>
-                                <div className="d-flex align-items-center">
-                                  <span className="nav-link-text">NPL</span>
-                                  {(alert && alert?.branch && alert.branch.prepare?.npl > 0) && (
-                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.npl)}</span>
-                                  )}
-                                </div>
-                              </Link>
-                            </li>
-                            <li className="nav-item">
-                              <Link className={`nav-link ${path.includes('/branch/prepare/npa') ? 'active' : ''}`} to={`${prefix_url + "/branch/prepare/npa"}`}>
-                                <div className="d-flex align-items-center">
-                                  <span className="nav-link-text">NPA</span>
-                                  {(alert && alert?.branch && alert.branch.prepare?.npa > 0) && (
-                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.branch.prepare?.npa)}</span>
-                                  )}
-                                </div>
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                      </li>
+                        </li>
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -399,44 +401,46 @@ const Sidebar = props => {
                           </ul>
                         </div>
                       </li>
-                      <li className="nav-item">
-                        <a className={`nav-link dropdown-indicator ${path.includes('/confirm-committee/confirm-list') ? 'active' : ''}`} href="#nv-ConfirmCommitteeConfirmList" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-ConfirmCommitteeConfirmList">
-                          <div className="d-flex align-items-center">
-                            <div className="dropdown-indicator-icon-wrapper">
-                              <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                      {(user && officeList.includes(user.role)) && (
+                        <li className="nav-item">
+                          <a className={`nav-link dropdown-indicator ${path.includes('/confirm-committee/confirm-list') ? 'active' : ''}`} href="#nv-ConfirmCommitteeConfirmList" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-ConfirmCommitteeConfirmList">
+                            <div className="d-flex align-items-center">
+                              <div className="dropdown-indicator-icon-wrapper">
+                                <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                              </div>
+                              <span className="nav-link-text">รวบรวมยืนยันยอด</span>
+                              {(alert && alert?.confirm && alert.confirm.list?.total > 0) && (
+                                <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.total)}</span>
+                              )}
                             </div>
-                            <span className="nav-link-text">รวบรวมยืนยันยอด</span>
-                            {(alert && alert?.confirm && alert.confirm.list?.total > 0) && (
-                              <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.total)}</span>
-                            )}
+                          </a>
+                          {/* more inner pages*/}
+                          <div className="parent-wrapper">
+                            <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-ConfirmCommitteeConfirmList">
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/confirm-committee/confirm-list/npl') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/confirm-list/npl"}`}>
+                                  <div className="d-flex align-items-center">
+                                    <span className="nav-link-text">NPL</span>
+                                    {(alert && alert?.confirm && alert.confirm.list?.npl > 0) && (
+                                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.npl)}</span>
+                                    )}
+                                  </div>
+                                </Link>
+                              </li>
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/confirm-committee/confirm-list/npa') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/confirm-list/npa"}`}>
+                                  <div className="d-flex align-items-center">
+                                    <span className="nav-link-text">NPA</span>
+                                    {(alert && alert?.confirm && alert.confirm.list?.npa > 0) && (
+                                      <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.npa)}</span>
+                                    )}
+                                  </div>
+                                </Link>
+                              </li>
+                            </ul>
                           </div>
-                        </a>
-                        {/* more inner pages*/}
-                        <div className="parent-wrapper">
-                          <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-ConfirmCommitteeConfirmList">
-                            <li className="nav-item">
-                              <Link className={`nav-link ${path.includes('/confirm-committee/confirm-list/npl') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/confirm-list/npl"}`}>
-                                <div className="d-flex align-items-center">
-                                  <span className="nav-link-text">NPL</span>
-                                  {(alert && alert?.confirm && alert.confirm.list?.npl > 0) && (
-                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.npl)}</span>
-                                  )}
-                                </div>
-                              </Link>
-                            </li>
-                            <li className="nav-item">
-                              <Link className={`nav-link ${path.includes('/confirm-committee/confirm-list/npa') ? 'active' : ''}`} to={`${prefix_url + "/confirm-committee/confirm-list/npa"}`}>
-                                <div className="d-flex align-items-center">
-                                  <span className="nav-link-text">NPA</span>
-                                  {(alert && alert?.confirm && alert.confirm.list?.npa > 0) && (
-                                    <span className="badge ms-2 badge badge-phoenix badge-phoenix-warning nav-link-badge">{numberWithCommas(alert.confirm.list?.npa)}</span>
-                                  )}
-                                </div>
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                      </li>
+                        </li>
+                      )}
                     </ul>
                   </div>
                 </div>
