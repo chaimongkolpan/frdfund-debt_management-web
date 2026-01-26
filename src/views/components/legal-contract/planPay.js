@@ -53,8 +53,15 @@ const PlanPay = (props) => {
   const save = async () => {
     const result = await savePlanPay({ installment, year, data: plans, id: policy.id_KFKPolicy });
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
-    } 
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
   }
   const print = async () => {
     const result = await printPlanPay({ type: 'application/octet-stream', filename: 'แผนการชำระเงินคืน_' + (new Date().getTime()) + '.xlsx', data: { id_KFKPolicy: policy.id_KFKPolicy, policyNo: policy.policyNO }});
