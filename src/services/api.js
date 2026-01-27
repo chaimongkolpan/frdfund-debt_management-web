@@ -1927,6 +1927,20 @@ export const searchDisbursementStatusNpa = async (filter) => {
 };
 //#endregion
 //#region Legal Contract
+export const updateFarmer = async (filter) => {
+  const path = '/LegalContract/update-borrower';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchLegalPrepare = async (filter) => {
   const path = '/LegalContract/search-prepare-legal-contract';
   try {

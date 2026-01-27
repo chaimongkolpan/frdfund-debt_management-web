@@ -7,6 +7,9 @@ import {
 } from "@services/api";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const Guarantor = (props) => {
   const { policy, isView } = props;
@@ -31,9 +34,16 @@ const Guarantor = (props) => {
       guarantor_birthday: ToDateDb(guarantorDetail.guarantor_birthday)
     });
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
       await setOpenGuarantorEdit(false)
       await setGuarantorDetail(null)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeGuarantor = async (key, val) => {

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 import { 
   getProvinces,
   getBorrowerClassify,
@@ -65,7 +68,14 @@ const FullModal = (props) => {
   const submitBorrower = async() => {
     const result = await updateBorrowerClassify({ ...editDetail, ids: [policy?.id_debt_management ?? 0] });
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const RenderData = (item, index) => {

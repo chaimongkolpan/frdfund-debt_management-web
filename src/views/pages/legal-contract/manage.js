@@ -13,6 +13,7 @@ import PlanPay from "@views/components/legal-contract/planPay";
 import Asset from "@views/components/legal-contract/assetModal";
 import Guarantor from "@views/components/legal-contract/guarantorModal";
 import BorrowModal from "@views/components/legal-contract/borrowModal";
+import FarmerModal from "@views/components/legal-contract/farmerModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
@@ -45,6 +46,7 @@ const LegalContractSend = () => {
   const [openViewEditAsset, setOpenViewEditAsset] = useState(false);
   const [openViewReturn, setOpenViewReturn] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDetailFarmer, setOpenDetailFarmer] = useState(false);
   const [bookNo, setBookNo] = useState(null);
   const [bookDate, setBookDate] = useState(null);
   const [oldfiles, setOldFiles] = useState(null);
@@ -143,6 +145,10 @@ const LegalContractSend = () => {
     await setPolicy(item);
     await setOpenSpouse(true);
   }
+  const handleShowFarmerDetail = async (item) => {
+    await setPolicy(item);
+    await setOpenDetailFarmer(true);
+  }
   useEffect(() => {
     setLoadBigData(true);
     return cleanData
@@ -175,6 +181,7 @@ const LegalContractSend = () => {
                         handleViewEdit={handleViewEdit}
                         handleViewEditAsset={handleViewEditAsset}
                         handleViewReturn={handleViewReturn}
+                        handleShowFarmerDetail={handleShowFarmerDetail}
                         can_action={can_action}
                       />
                     )}
@@ -199,6 +206,9 @@ const LegalContractSend = () => {
         <Modal isOpen={openAsset} setModal={setOpenAsset} hideOk onClose={() => setOpenAsset(false)}  title={'ข้อมูลหลักทรัพย์ค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
           <Asset policy={policy} isView /> 
         </Modal> 
+      )}
+      {openDetailFarmer && (
+        <FarmerModal isOpen={openDetailFarmer} setModal={setOpenDetailFarmer} onClose={() => setOpenDetailFarmer(false)} policy={policy} />
       )}
       {openGuarantor && (
         <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลบุคคลค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
