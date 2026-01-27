@@ -9,6 +9,9 @@ import {
 import Textbox from "@views/components/input/Textbox";
 import AreaTextbox from "@views/components/input/AreaTextbox";
 import Textarea from "@views/components/input/Textarea";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const Asset = (props) => {
   const { policy, isView } = props;
@@ -41,10 +44,17 @@ const Asset = (props) => {
   const saveCollateral = async() => {
     const result = await updateLegalAsset(collateralDetail);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
       await setOpenCollateralAdd(false)
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
   const removeCollateral = async(item) => {
