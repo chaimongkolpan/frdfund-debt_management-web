@@ -17,18 +17,17 @@ const SearchTable = (props) => {
         <td>{item.debt_manage_creditor_name}</td>
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
+
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date}</td>
         <td>{item.debt_manage_contract_no}</td>
         <td>{toCurrency(item.contract_amount)}</td>
+
         <td>{item.petition_no_office}</td>
         <td>{item.petition_date_office ?? '-'}</td>
         <td>{item.disbursement}</td>
         <td>{toCurrency(item.petition_amount)}</td>
-        <td>{item.petition_no_branch}</td>
-        <td>{item.petition_date_branch ?? '-'}</td>
-        <td>{item.disbursement_branch}</td>
-        <td>{toCurrency(item.petition_amount_branch)}</td>
+
         <td>{item.wp_transfer_date ? stringToDateTh(item.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.wp_Cheque_no}</td>
         <td>{item.wp_Cheque_date ? stringToDateTh(item.wp_Cheque_date, false, 'DD/MM/YYYY') : '-'}</td>
@@ -37,6 +36,20 @@ const SearchTable = (props) => {
         <td>{item.wp_transfer_docuno}</td>
         <td>{item.wp_transfer_docudate ? stringToDateTh(item.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.debt_payment_status}</td>
+
+        <td>{item.petition_no_branch}</td>
+        <td>{item.petition_date_branch ?? '-'}</td>
+        <td>{item.disbursement_branch}</td>
+        <td>{toCurrency(item.petition_amount_branch)}</td>
+
+        <td>{item.wp_transfer_date_branch ? stringToDateTh(item.wp_transfer_date_branch, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.wp_Cheque_no_branch}</td>
+        <td>{item.wp_Cheque_date_branch ? stringToDateTh(item.wp_Cheque_date_branch, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.wp_pay_docuno_branch}</td>
+        <td>{item.wp_pay_docudate_branch ? stringToDateTh(item.wp_pay_docudate_branch, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.wp_transfer_docuno_branch}</td>
+        <td>{item.wp_transfer_docudate_branch ? stringToDateTh(item.wp_transfer_docudate_branch, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.debt_payment_status_branch}</td>
       </tr>
     ))
   }
@@ -61,9 +74,9 @@ const SearchTable = (props) => {
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="2">สัญญา</th> 
                 <th colSpan="4">ชำระหนี้แทน (จัดการหนี้)</th>
+                <th colSpan="8">ข้อมูลจาก WinSpeed (จัดการหนี้)</th> 
                 <th colSpan="4">ชำระหนี้แทน (สาขา)</th>
-                <th colSpan="7">ข้อมูลจาก WinSpeed</th> 
-                <th rowSpan="2">สถานะการชำระหนี้แทน</th>
+                <th colSpan="8">ข้อมูลจาก WinSpeed (สาขา)</th> 
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -78,10 +91,20 @@ const SearchTable = (props) => {
                 <th>วันที่เสนอคณะกรรมการ</th>
                 <th>เลขที่สัญญา</th>
                 <th>เงินต้นตามสัญญา</th>
+
                 <th>เลขที่หนังสือฎีกาจัดการหนี้</th>
                 <th>วันที่หนังสือฎีกาจัดการหนี้</th>
                 <th>เบิกจ่ายให้</th>
                 <th>จำนวนเงินเบิกจ่าย</th>
+                <th>วันที่โอนเงิน</th>
+                <th>เลขที่เช็ค</th>
+                <th>วันที่เช็ค</th>
+                <th>เลขที่ใบสำคัญจ่ายทางบัญชี</th>
+                <th>วันที่ใบสำคัญจ่ายทางบัญชี</th>
+                <th>เลขที่โอนลูกหนี้</th>
+                <th>วันที่โอนลูกหนี้</th>
+                <th>สถานะการชำระหนี้แทน</th>
+
                 <th>เลขที่หนังสือฎีกาสาขา</th>
                 <th>วันที่หนังสือฎีกาสาขา</th>
                 <th>เบิกจ่ายให้</th>
@@ -93,6 +116,7 @@ const SearchTable = (props) => {
                 <th>วันที่ใบสำคัญจ่ายทางบัญชี</th>
                 <th>เลขที่โอนลูกหนี้</th>
                 <th>วันที่โอนลูกหนี้</th>
+                <th>สถานะการชำระหนี้แทน</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
