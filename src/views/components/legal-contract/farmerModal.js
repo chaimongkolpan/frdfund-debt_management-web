@@ -60,7 +60,7 @@ const FullModal = (props) => {
                       <div className="col-sm-12 col-md-6 col-lg-4">
                         <Textbox title={'เลขบัตรประชาชน'} 
                           handleChange={(val) => handleChange('k_idcard', val)} 
-                          containerClassname={'mb-3'} value={editDetail.k_idcard}
+                          containerClassname={'mb-3'} value={editDetail.k_idcard} disabled
                         />
                       </div>
                       <div className="col-sm-12 col-md-6 col-lg-4">
