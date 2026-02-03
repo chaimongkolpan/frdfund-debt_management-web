@@ -70,9 +70,9 @@ const SearchTable = (props) => {
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.regulation_no}</td>
         <td>{item.collateral_type}</td>
-        <td>{item.collateral_no}</td>
-        <td>{item.collateral_count}</td>
-        <td>{item.collateral_status}</td>
+        <td>{item.collateral_no ?? ''}</td>
+        <td>{item.collateral_count && item.collateral_type != 'หุ้นค้ำประกัน' ? item.collateral_count : 0}</td>
+        <td>{item.collateral_status && item.collateral_type != 'หุ้นค้ำประกัน' ? item.collateral_status : ''}</td>
       </tr>
     ))
   }
