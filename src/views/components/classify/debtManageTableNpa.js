@@ -1,7 +1,7 @@
 import { toCurrency } from "@utils";
 const ClassifyDebtManageTable = (props) => {
   const { data, handleCombine, handleSplit, handleShowDetail, handleCancelCombine, handleCancelSplit, handleCreateNPL, handleDocument, can_action } = props;
-  const allow_statuses = ['ทะเบียนหนี้รอสอบยอด','อยู่ระหว่างการสอบยอด','จำแนกมูลหนี้แล้ว'];
+  const allow_statuses = ['ทะเบียนหนี้รอสอบยอด','อยู่ระหว่างการสอบยอด'];
   const RenderData = (item, index) => {
     return (item && (
       <tr key={index} style={{
