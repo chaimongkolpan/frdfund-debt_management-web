@@ -40,6 +40,15 @@ const SearchTable = (props) => {
         <td>{item.petition_no_branch}</td>
         <td>{item.petition_date_branch ?? '-'}</td>
         <td>{item.disbursement_branch}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest)}</td>
+        <td>{toCurrency(item.debt_manage_fine)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
+        <td>{toCurrency(item.debt_manage_insurance_premium)}</td>
+        <td>{toCurrency(item.debt_manage_other_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses)}</td>
+        <td>{toCurrency(item.debt_manage_total)}</td>
         <td>{toCurrency(item.petition_amount_branch)}</td>
 
         <td>{item.wp_transfer_date_branch ? stringToDateTh(item.wp_transfer_date_branch, false, 'DD/MM/YYYY') : '-'}</td>
@@ -104,10 +113,18 @@ const SearchTable = (props) => {
                 <th>เลขที่โอนลูกหนี้</th>
                 <th>วันที่โอนลูกหนี้</th>
                 <th>สถานะการชำระหนี้แทน</th>
-
                 <th>เลขที่หนังสือฎีกาสาขา</th>
                 <th>วันที่หนังสือฎีกาสาขา</th>
                 <th>เบิกจ่ายให้</th>
+                <th>เงินต้น</th>
+                <th>ดอกเบี้ย</th>
+                <th>ค่าปรับ</th>
+                <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                <th>ค่าถอนการยึดทรัพย์</th>
+                <th>ค่าเบี้ยประกัน</th>
+                <th>ค่าใช้จ่ายอื่นๆ</th>
+                <th>รวมค่าใช้จ่าย</th>
+                <th>รวมเบิกจ่ายทั้งสิ้น</th>
                 <th>จำนวนเงินเบิกจ่าย</th>
                 <th>วันที่โอนเงิน</th>
                 <th>เลขที่เช็ค</th>
