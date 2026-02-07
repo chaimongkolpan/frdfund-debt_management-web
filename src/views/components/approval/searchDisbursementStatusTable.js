@@ -84,7 +84,7 @@ const SearchTable = (props) => {
                 <th colSpan="2">สัญญา</th> 
                 <th colSpan="4">ชำระหนี้แทน (จัดการหนี้)</th>
                 <th colSpan="8">ข้อมูลจาก WinSpeed (จัดการหนี้)</th> 
-                <th colSpan="4">ชำระหนี้แทน (สาขา)</th>
+                <th colSpan="13">ชำระหนี้แทน (สาขา)</th>
                 <th colSpan="8">ข้อมูลจาก WinSpeed (สาขา)</th> 
               </tr>
               <tr>
