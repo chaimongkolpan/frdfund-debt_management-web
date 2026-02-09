@@ -252,6 +252,7 @@ const LegalContractSend = () => {
                         handleViewEditAsset={handleViewEditAsset}
                         handleViewReturn={handleViewReturn}
                         handleShowFarmerDetail={handleShowFarmerDetail}
+                        handleShowCard={handleShowCard}
                         can_action={can_action}
                       />
                     )}
