@@ -217,6 +217,7 @@ const LegalContractSend = () => {
                         handleSubmit={handleSubmit} 
                         handleUpload={handleUpload}
                         handleShowFarmerDetail={handleShowFarmerDetail}
+                        handleShowCard={handleShowCard}
                         can_action={can_action}
                       />
                     )}
