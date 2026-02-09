@@ -3,7 +3,7 @@ import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
   const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit, handleUpload, handleEdit, handleReturn, can_action
-    , handleViewEdit, handleViewEditAsset, handleViewReturn, handleShowFarmerDetail
+    , handleViewEdit, handleViewEditAsset, handleViewReturn, handleShowFarmerDetail, handleShowCard
   } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
@@ -97,6 +97,7 @@ const SearchTable = (props) => {
               <button className="dropdown-item" type="button" onClick={() => handleViewEdit(item)}>ข้อมูลแก้ไขนิติกรรมสัญญา</button>
               <button className="dropdown-item" type="button" onClick={() => handleViewEditAsset(item)}>ข้อมูลแก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)</button>
               <button className="dropdown-item" type="button" onClick={() => handleViewReturn(item)}>ข้อมูลส่งคืนนิติกรรมสัญญา</button>
+              <button className="dropdown-item" type="button" onClick={() => handleShowCard(item)}>การ์ดลูกหนี้</button>
             </div>
           </div>
         </td>

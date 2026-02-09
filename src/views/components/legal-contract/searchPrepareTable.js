@@ -12,7 +12,7 @@ const SearchTable = (props) => {
   const [policyNo, setPolicyNo] = useState('');
   const [policyDate, setPolicyDate] = useState('');
   const [policy, setPolicy] = useState(null);
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handlePrint, can_action, handleShowFarmerDetail } = props;
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handlePrint, can_action, handleShowFarmerDetail, handleShowCard } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const RenderData = (item, index) => {
@@ -53,6 +53,7 @@ const SearchTable = (props) => {
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>บุคคลค้ำประกัน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลคู่สมรส</button>)}
               <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ดาวน์โหลดนิติกรรมสัญญา</button>
+              <button className="dropdown-item" type="button" onClick={() => handleShowCard(item)}>การ์ดลูกหนี้</button>
             </div>
           </div>
         </td>
