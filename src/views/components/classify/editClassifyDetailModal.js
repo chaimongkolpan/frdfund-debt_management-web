@@ -2869,7 +2869,7 @@ const FullModal = (props) => {
                                   />
                                 </div>
                                 <div className="col-sm-12 col-md-6 col-lg-6">
-                                  <Textbox title={'บ้าน/ชุมชน'} 
+                                  <Textbox title={'หมู่ที่'} 
                                     handleChange={(val) => handleChangeGuarantor('guarantor_village_name', val)} 
                                     containerClassname={'mb-3'} value={guarantorDetail.guarantor_village_name}
                                   />

@@ -13,6 +13,7 @@ import PlanPay from "@views/components/legal-contract/planPay";
 import Asset from "@views/components/legal-contract/assetModal";
 import Guarantor from "@views/components/legal-contract/guarantorModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
+import FarmerModal from "@views/components/legal-contract/farmerModal";
 import { 
   cleanData,
   searchLegalPrepare,
@@ -23,6 +24,7 @@ const user = getUserData();
 const LegalContractPrepare = () => {
   const allow_roles = [1,2,4,7,8,9];
   const can_action = allow_roles.includes(user?.role)
+  console.log('user', user);
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
@@ -34,6 +36,7 @@ const LegalContractPrepare = () => {
   const [openGuarantor, setOpenGuarantor] = useState(false);
   const [openSpouse, setOpenSpouse] = useState(false);
   const [openPrint, setOpenPrint] = useState(false);
+  const [openDetailFarmer, setOpenDetailFarmer] = useState(false);
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
@@ -69,6 +72,10 @@ const LegalContractPrepare = () => {
     await setPolicy(item);
     await setOpenPrint(true);
   }
+  const handleShowFarmerDetail = async (item) => {
+    await setPolicy(item);
+    await setOpenDetailFarmer(true);
+  }
   const onPrint = async () => {
     const id = policy.id_KFKPolicy
     const param = { type: 'application/octet-stream', filename: 'เอกสารนิติกรรมสัญญา_' + (new Date().getTime()) + '.zip', data: { id } };
@@ -103,6 +110,7 @@ const LegalContractPrepare = () => {
                         handleGuarantor={handleGuarantor} 
                         handleSpouse={handleSpouse} 
                         handlePrint={handlePrint} 
+                        handleShowFarmerDetail={handleShowFarmerDetail}
                         can_action={can_action}
                       />
                     )}
@@ -128,6 +136,9 @@ const LegalContractPrepare = () => {
           <Asset policy={policy} /> 
         </Modal> 
       )}
+      {openDetailFarmer && (
+        <FarmerModal isOpen={openDetailFarmer} setModal={setOpenDetailFarmer} onClose={() => setOpenDetailFarmer(false)} policy={policy} />
+      )}
       {openGuarantor && (
         <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลบุคคลค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
           <Guarantor policy={policy} /> 
@@ -140,9 +151,9 @@ const LegalContractPrepare = () => {
       )}
       {openPrint && (
         <Modal isOpen={openPrint} setModal={setOpenPrint} onClose={() => setOpenPrint(false)}  
-          title={'ปริ้นนิติกรรมสัญญา'} okText={'ปริ้น'} centered onOk={onPrint}
+          title={'ดาวน์โหลดนิติกรรมสัญญา'} okText={'ปริ้น'} centered onOk={onPrint}
           closeText={'ยกเลิก'}>
-          <p className="text-body-tertiary lh-lg mb-0">ต้องการปริ้นนิติกรรมสัญญา</p>
+          <p className="text-body-tertiary lh-lg mb-0">ต้องการดาวน์โหลดนิติกรรมสัญญา</p>
         </Modal> 
       )}
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>

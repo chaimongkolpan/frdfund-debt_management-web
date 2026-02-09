@@ -164,7 +164,7 @@ const Spouse = (props) => {
                 <tr key={index}>
                   <td className="align-middle">{index + 1}</td>
                   <td>{item.p_spouses}</td>
-                  <td>{item.p_spouses_name}</td>
+                  <td>{item.p_spouses == 'ผู้กู้' ? debtor : item.p_spouses_name}</td>
                   <td>{item.marital_status}</td>
                   <td>{item.spouses_idcard}</td>
                   <td>{item.spouses_name_prefix}</td>
@@ -314,7 +314,7 @@ const Spouse = (props) => {
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-4">
-                              <Textbox title={'บ้าน/ชุมชน'}  disabled={isView}
+                              <Textbox title={'หมู่ที่'}  disabled={isView}
                                 handleChange={(val) => handleChangeSpouse('spouses_village_name', val)} 
                                 containerClassname={'mb-3'} value={spouseDetail?.spouses_village_name}
                               />
