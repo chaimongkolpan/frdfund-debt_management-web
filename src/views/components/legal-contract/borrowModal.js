@@ -230,7 +230,7 @@ const FullModal = (props) => {
                           />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <Textbox title={'บ้าน/ชุมชน'} 
+                          <Textbox title={'หมู่ที่'} 
                             handleChange={(val) => handleChange('borrower_village_name', editDetail.borrower_village_name)} 
                             containerClassname={'mb-3'} value={editDetail.borrower_village_name}
                             disabled 
@@ -369,7 +369,7 @@ const FullModal = (props) => {
                           />
                         </div>
                         <div className="col-sm-12 col-md-6 col-lg-4">
-                          <Textbox title={'บ้าน/ชุมชน'} 
+                          <Textbox title={'หมู่ที่'} 
                             handleChange={(val) => handleChange('borrower_village_name', val)} 
                             containerClassname={'mb-3'} value={editDetail.borrower_village_name}
                           />

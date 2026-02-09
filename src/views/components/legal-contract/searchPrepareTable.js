@@ -12,7 +12,7 @@ const SearchTable = (props) => {
   const [policyNo, setPolicyNo] = useState('');
   const [policyDate, setPolicyDate] = useState('');
   const [policy, setPolicy] = useState(null);
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handlePrint, can_action } = props;
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handlePrint, can_action, handleShowFarmerDetail } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const RenderData = (item, index) => {
@@ -47,11 +47,12 @@ const SearchTable = (props) => {
             <button className="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span className="fas fa-ellipsis-h fs-10"></span></button>
             <div className="dropdown-menu dropdown-menu-end py-2">
               <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>รายละเอียดจัดการหนี้</button>
+              <button className="dropdown-item" type="button" onClick={() => handleShowFarmerDetail(item)}>รายละเอียดเกษตรกร</button>
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handlePlan(item)}>แผนการชำระเงินคืน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>หลักทรัพย์ค้ำประกัน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>บุคคลค้ำประกัน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลคู่สมรส</button>)}
-              <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ปริ้นนิติกรรมสัญญา</button>
+              <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ดาวน์โหลดนิติกรรมสัญญา</button>
             </div>
           </div>
         </td>
