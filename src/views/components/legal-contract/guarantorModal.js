@@ -141,10 +141,13 @@ const Guarantor = (props) => {
                 <br />
                 <div className="row g-3">
                   <div className="col-sm-12 col-md-6 col-lg-6">
-                    <Textbox title={'ประเภทบุคคลค้ำประกัน'} disabled
-                      handleChange={(val) => handleChangeGuarantor('guarantor_type', val)} 
-                      containerClassname={'mb-3'} value={guarantorDetail.guarantor_type}
-                    />
+                    <div className="form-floating needs-validation">
+                      <select className="form-select" disabled={isView} value={guarantorDetail.guarantor_type ?? 'สมาชิกองค์กรเกษตรกร'} onChange={(e) => handleChangeGuarantor('guarantor_type', e.target?.value)}>
+                        <option value="สมาชิกองค์กรเกษตรกร" selected>สมาชิกองค์กรเกษตรกร</option>
+                        <option value="ทายาท">ทายาท</option>
+                      </select>
+                      <label htmlFor="floatingSelectTeam">ประเภทบุคคลค้ำประกัน</label>
+                    </div>
                   </div>
                   <div className="col-sm-12 col-md-6 col-lg-6">
                     <Textbox title={'เลขบัตรประชาชน'} disabled={isView}
@@ -183,7 +186,7 @@ const Guarantor = (props) => {
                     />
                   </div>
                   <div className="col-sm-12 col-md-6 col-lg-6">
-                    <Textbox title={'บ้าน/ชุมชน'}  disabled={isView}
+                    <Textbox title={'หมู่ที่'}  disabled={isView}
                       handleChange={(val) => handleChangeGuarantor('guarantor_village_name', val)} 
                       containerClassname={'mb-3'} value={guarantorDetail.guarantor_village_name}
                     />
