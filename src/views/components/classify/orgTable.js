@@ -15,7 +15,7 @@ const ClassifyOrgTable = (props) => {
         <td className="align-middle">{(item.fullname ?? '')}</td>
         <td className="align-middle">{item.province}</td>
         <td>{item.date_member_first_time ? stringToDateTh(item.date_member_first_time, false, 'DD/MM/YYYY') : '-'}</td>
-        <td>{item.date_submit_debt_register ? stringToDateTh(item.date_submit_debt_register, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{item.organization_register_date ? stringToDateTh(item.organization_register_date, false, 'DD/MM/YYYY') : '-'}</td>
         <td>{item.organization_register_round}</td>
         <td>{item.organization_name}</td>
         <td>{item.organization_no}</td>
