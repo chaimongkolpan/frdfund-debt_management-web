@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Nav, NavItem, NavLink, TabContent, TabPane, Spinner } from 'reactstrap'
 import { getUserData } from "@utils";
 import According from "@views/components/panel/according";
+import Dropdown from "@views/components/input/DropdownSearch";
 import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
@@ -121,12 +122,14 @@ const LegalContractPrepare = () => {
     await setOpenDetailFarmer(true);
   }
   const onPrint = async () => {
+    await setLoadBigData(true);
     const id = policy.id_KFKPolicy
     const param = { type: 'application/octet-stream', filename: 'เอกสารนิติกรรมสัญญา_' + (new Date().getTime()) + '.zip', data: { id } };
     const result = await printLegalContract(param);
     if (result.isSuccess) {
       await setOpenPrint(false);
     }
+    await setLoadBigData(false);
   }
   useEffect(() => {
     setLoadBigData(true);
@@ -178,6 +181,13 @@ const LegalContractPrepare = () => {
       )}
       {openAsset && (
         <Modal isOpen={openAsset} setModal={setOpenAsset} hideOk onClose={() => setOpenAsset(false)}  title={'ข้อมูลหลักทรัพย์ค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
+          {/* <div className="col-sm-12 col-md-6 col-lg-6">
+            <Dropdown 
+              title={'สถาบันเจ้าหนี้'} 
+              defaultValue={'all'} 
+              options={['all','กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)','ธนาคารกรุงไทย','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร']} hasAll
+            />
+          </div> */}
           <Asset policy={policy} /> 
         </Modal> 
       )}
@@ -196,7 +206,7 @@ const LegalContractPrepare = () => {
       )}
       {openPrint && (
         <Modal isOpen={openPrint} setModal={setOpenPrint} onClose={() => setOpenPrint(false)}  
-          title={'ดาวน์โหลดนิติกรรมสัญญา'} okText={'ปริ้น'} centered onOk={onPrint}
+          title={'ดาวน์โหลดนิติกรรมสัญญา'} okText={'ดาวน์โหลด'} centered onOk={onPrint}
           closeText={'ยกเลิก'}>
           <p className="text-body-tertiary lh-lg mb-0">ต้องการดาวน์โหลดนิติกรรมสัญญา</p>
         </Modal> 
