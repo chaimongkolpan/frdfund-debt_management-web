@@ -2586,7 +2586,7 @@ export const printLegalContract = async (params) => {
   } catch (e) {
     console.error("error: " + path + " =>", e);
   }
-  return;
+  return {isSuccess: true, message: 'success'};
 };
 //#endregion
 //#region Guarantee
