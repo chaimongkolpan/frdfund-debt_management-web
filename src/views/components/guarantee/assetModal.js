@@ -39,7 +39,10 @@ const Asset = (props) => {
     }
   }
   const saveCollateral = async() => {
-    const result = await updateLegalAsset(collateralDetail);
+    const result = await updateLegalAsset({
+      ...collateralDetail,
+      contract_recipient: 'กองทุนฟื้นฟูและพัฒนาเกษตรกร'
+    });
     if (result.isSuccess) {
       await fetchData();
       await setOpenCollateralAdd(false)
@@ -331,9 +334,8 @@ const Asset = (props) => {
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
-                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled={isView}
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient}
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">
@@ -492,9 +494,8 @@ const Asset = (props) => {
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
-                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient}
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} disabled
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">
@@ -647,9 +648,8 @@ const Asset = (props) => {
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
-                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient}
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} disabled
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">
@@ -821,8 +821,7 @@ const Asset = (props) => {
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
                                 <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient} disabled={isView}
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'} disabled
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">
@@ -975,9 +974,8 @@ const Asset = (props) => {
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
-                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled={isView}
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient}
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1142,9 +1140,8 @@ const Asset = (props) => {
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
-                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled={isView}
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient}
+                                <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1318,8 +1315,7 @@ const Asset = (props) => {
                                   </div>
                                   <div className="col-sm-12 col-md-12 col-lg-6">
                                     <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                      handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                      value={collateralDetail?.contract_recipient} disabled={isView}
+                                      value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'} disabled
                                     />
                                   </div>
                                   <div className="col-sm-12 col-md-12 col-lg-6">
@@ -1560,8 +1556,7 @@ const Asset = (props) => {
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
                                 <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient} disabled={isView}
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'} disabled
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1810,8 +1805,7 @@ const Asset = (props) => {
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-6">
                                 <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                  handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                  value={collateralDetail?.contract_recipient} disabled={isView}
+                                  value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'} disabled
                                 />
                               </div>
                               <div className="col-sm-12 col-md-12 col-lg-12">

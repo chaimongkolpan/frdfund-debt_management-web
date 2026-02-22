@@ -373,7 +373,10 @@ const FullModal = (props) => {
     }
   }
   const saveCollateral = async() => {
-    const result = await upsertCollateralClassify(collateralDetail);
+    const result = await upsertCollateralClassify({
+      ...collateralDetail,
+      contract_recipient: 'กองทุนฟื้นฟูและพัฒนาเกษตรกร'
+    });
     if (result.isSuccess) {
       await fetchData();
       await setOpenCollateralEdit(false)
@@ -1225,9 +1228,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1386,9 +1388,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1541,9 +1542,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1714,9 +1714,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
@@ -1869,9 +1868,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
@@ -2036,9 +2034,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
@@ -2211,9 +2208,8 @@ const FullModal = (props) => {
                                                   />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
-                                                  <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                    handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                    value={collateralDetail?.contract_recipient}
+                                                  <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                                   />
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-6">
@@ -2453,9 +2449,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'}  disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
@@ -2703,9 +2698,8 @@ const FullModal = (props) => {
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-6">
-                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} 
-                                                handleChange={(val) => handleChangeCollateral('contract_recipient', val)} 
-                                                value={collateralDetail?.contract_recipient}
+                                              <Textarea title={'ผู้รับสัญญา'} containerClassname={'mb-3'} disabled
+                                                value={'กองทุนฟื้นฟูและพัฒนาเกษตรกร'}
                                               />
                                             </div>
                                             <div className="col-sm-12 col-md-12 col-lg-12">
