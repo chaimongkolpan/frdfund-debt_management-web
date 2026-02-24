@@ -52,8 +52,8 @@ const SearchTable = (props) => {
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>หลักทรัพย์ค้ำประกัน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>บุคคลค้ำประกัน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลคู่สมรส</button>)}
-              <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ดาวน์โหลดนิติกรรมสัญญา</button>
               <button className="dropdown-item" type="button" onClick={() => handleShowCard(item)}>การ์ดลูกหนี้</button>
+              <button className="dropdown-item" type="button" onClick={() => handlePrint(item)}>ดาวน์โหลดนิติกรรมสัญญา</button>
             </div>
           </div>
         </td>
