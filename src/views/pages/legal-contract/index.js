@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Nav, NavItem, NavLink, TabContent, TabPane, Spinner } from 'reactstrap'
-import { getUserData } from "@utils";
+import { getUserData, toCurrency } from "@utils";
 import According from "@views/components/panel/according";
 import Dropdown from "@views/components/input/DropdownSearch";
 import Modal from "@views/components/modal/customModal";
