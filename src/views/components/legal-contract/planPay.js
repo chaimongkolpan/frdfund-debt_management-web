@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { stringToDateTh, spDate, toCurrency } from "@utils";
+import { stringToDateTh, spDate, toCurrency, ToDateDb } from "@utils";
 import Textbox from "@views/components/input/Textbox";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
@@ -54,7 +54,14 @@ const PlanPay = (props) => {
     }
   }
   const save = async () => {
-    const result = await savePlanPay({ installment, year, data: plans, id: policy.id_KFKPolicy });
+    const newplans = plans.map((plan) => {
+      return {
+        ...plan,
+        pDate: ToDateDb(plan.pDate),
+      }
+    });
+    console.log('newplans', newplans);
+    const result = await savePlanPay({ installment, year, data: newplans, id: policy.id_KFKPolicy });
     if (result.isSuccess) {
       toast((t) => (
         <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
