@@ -24,7 +24,7 @@ const PlanPay = (props) => {
       let total = policy?.loan_amount;
       const ins = Math.round((policy?.loan_amount / installment) * 100.0) / 100.0;
       const monthPerInstall = 12 * year / installment;
-      const now = new Date();
+      const now = policy?.policyStartDate ? new Date(policy?.policyStartDate) : new Date();
       let y = now.getFullYear();
       let m = now.getMonth() + 1;
       let d = now.getDate();
