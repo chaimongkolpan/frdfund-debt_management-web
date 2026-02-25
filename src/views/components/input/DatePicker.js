@@ -48,7 +48,9 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder, disable
 )});
 const DatePickerComponent = (props) => {
   const { title, handleChange, containerClassname, value, onBlur, disabled = false } = props;
-  const [val, setValue] = useState(ToDateDb(value, false, 'DD/MM/YYYY') ?? '');
+  const isFormat108 = typeof value == 'string' && value[4] == '-' && value[7] == '-';
+  const isDateNull = value === null || value === undefined || value.slice(4) === '1900';
+  const [val, setValue] = useState(isDateNull ? null : (isFormat108 ? ToDateEn(value) : ToDateDb(value, false, 'DD/MM/YYYY') ?? ''));
   const [showM, setShowM] = useState(true);
   const [showY, setShowY] = useState(true);
   const ToDate = (date) => {
@@ -72,7 +74,7 @@ const DatePickerComponent = (props) => {
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
     );
-  };
+  }; 
   const years = range(2475, getYear(new Date()) + 543 + 1, 1);
   const months = [
       "มกราคม",
@@ -95,7 +97,7 @@ const DatePickerComponent = (props) => {
     },
   };
   useEffect(() => {
-    setValue(ToDateDb(value, false, 'DD/MM/YYYY'))
+    setValue(isDateNull ? null : (isFormat108 ? ToDateEn(value) : ToDateDb(value, false, 'DD/MM/YYYY')))
   },[value])
   return (
     <div className={`form-floating form-floating-advance-select ${containerClassname ?? ''}`}>
