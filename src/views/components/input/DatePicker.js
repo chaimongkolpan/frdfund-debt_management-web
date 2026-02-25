@@ -49,7 +49,7 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder, disable
 const DatePickerComponent = (props) => {
   const { title, handleChange, containerClassname, value, onBlur, disabled = false } = props;
   const isFormat108 = typeof value == 'string' && value[4] == '-' && value[7] == '-';
-  const isDateNull = value === null || value === undefined || value.slice(4) === '1900';
+  const isDateNull = value === null || value === undefined || (typeof value == 'string' && value.slice(4) === '1900');
   const [val, setValue] = useState(isDateNull ? null : (isFormat108 ? ToDateEn(value) : ToDateDb(value, false, 'DD/MM/YYYY') ?? ''));
   const [showM, setShowM] = useState(true);
   const [showY, setShowY] = useState(true);
