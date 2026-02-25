@@ -34,7 +34,7 @@ const SearchTable = (props) => {
         <td>{item.loan_creditor_branch}</td>
         <td>{item.policyNO}</td>
         <td>{item.loan_debt_type}</td>
-        <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '-'}</td>
+        <td>{item.policyStartDate ? stringToDateTh(item.policyStartDate, false, 'YYYY-MM-DD') : '-'}</td>
         <td>{item.numberOfPeriodPayback}</td>
         <td>{item.numberOfYearPayback}</td>
         <td>{toCurrency(item.loan_amount)}</td>
@@ -63,7 +63,7 @@ const SearchTable = (props) => {
   const handleShowPolicyNo = async(item) => {
     await setPolicy(item);
     await setPolicyNo(item.policyNO);
-    await setPolicyDate(item.policyStartDate ? stringToDateTh(item.policyStartDate, false) : '');
+    await setPolicyDate(item.policyStartDate ? stringToDateTh(item.policyStartDate, false, 'YYYY-MM-DD') : '');
     await setOpenPolicyNo(true);
   }
   const submitPolicyNo = async() => {
