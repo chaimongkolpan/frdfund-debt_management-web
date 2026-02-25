@@ -4,7 +4,7 @@ import th from 'date-fns/locale/th';
 import { getMonth, getYear } from "date-fns";
 import range from "lodash/range";
 import "react-datepicker/dist/react-datepicker.css";
-import { stringToDateTh, ToDateEn } from "@utils";
+import { stringToDateTh, ToDateEn, ToDateDb } from "@utils";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "react-feather";
 const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder, disabled }, ref) => {
   const [val, setValue] = useState(value ?? '');
@@ -48,7 +48,7 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, placeholder, disable
 )});
 const DatePickerComponent = (props) => {
   const { title, handleChange, containerClassname, value, onBlur, disabled = false } = props;
-  const [val, setValue] = useState(value ?? '');
+  const [val, setValue] = useState(ToDateDb(value, false, 'DD/MM/YYYY') ?? '');
   const [showM, setShowM] = useState(true);
   const [showY, setShowY] = useState(true);
   const ToDate = (date) => {
@@ -95,7 +95,7 @@ const DatePickerComponent = (props) => {
     },
   };
   useEffect(() => {
-    setValue(ToDateEn(value))
+    setValue(ToDateDb(value, false, 'DD/MM/YYYY'))
   },[value])
   return (
     <div className={`form-floating form-floating-advance-select ${containerClassname ?? ''}`}>
