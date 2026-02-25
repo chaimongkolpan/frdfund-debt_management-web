@@ -48,7 +48,7 @@ const SearchTable = (props) => {
             <div className="dropdown-menu dropdown-menu-end py-2">
               <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>รายละเอียดจัดการหนี้</button>
               <button className="dropdown-item" type="button" onClick={() => handleShowFarmerDetail(item)}>รายละเอียดเกษตรกร</button>
-              {can_action && (<button className="dropdown-item" disabled={!item?.policyNo || !item?.policyStartDate} type="button" onClick={() => handlePlan(item)}>แผนการชำระเงินคืน</button>)}
+              {can_action && (<button className="dropdown-item" disabled={!item?.policyNO || !item?.policyStartDate} type="button" onClick={() => handlePlan(item)}>แผนการชำระเงินคืน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>หลักทรัพย์ค้ำประกัน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>บุคคลค้ำประกัน</button>)}
               {can_action && (<button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลคู่สมรส</button>)}
