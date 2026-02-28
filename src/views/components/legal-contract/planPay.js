@@ -30,8 +30,9 @@ const PlanPay = (props) => {
       let d = now.getDate();
       for(let i = 0;i < installment;i++) {
         m += monthPerInstall;
-        if (m > 12) y += 1;
-        m %= 12;
+        if (m > 12) 
+          y += 1;
+        m %= 12; if (m == 0) m = 12;
         if (i == installment - 1) {
           let inte = (total * interest / 100.0);
           let deduc = ins - inte;
