@@ -35,8 +35,9 @@ const SearchTable = (props) => {
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{toCurrency(item.office[0].petition_amount)}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].no ?? 1}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_transfer_date ? stringToDateTh(item.office[0].wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_Cheque_no}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_Cheque_date ? stringToDateTh(item.office[0].wp_Cheque_date, false, 'DD/MM/YYYY') : '-'}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].cashier_check_no}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].cashier_check_date ? stringToDateTh(item.office[0].cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td> 
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{toCurrency(item.office[0].cashier_check_amount)}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_pay_docuno}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_pay_docudate ? stringToDateTh(item.office[0].wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_transfer_docuno}</td>
@@ -63,8 +64,9 @@ const SearchTable = (props) => {
                 <td>{toCurrency(item.branch[0].petition_amount)}</td>
                 <td>{item.branch[0].no ?? 1}</td>
                 <td>{item.branch[0].wp_transfer_date ? stringToDateTh(item.branch[0].wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
-                <td>{item.branch[0].wp_Cheque_no}</td>
-                <td>{item.branch[0].wp_Cheque_date ? stringToDateTh(item.branch[0].wp_Cheque_date, false, 'DD/MM/YYYY') : '-'}</td>
+                <td>{item.branch[0].cashier_check_no}</td>
+                <td>{item.branch[0].cashier_check_date ? stringToDateTh(item.branch[0].cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
+                <td>{toCurrency(item.branch[0].cashier_check_amount)}</td>
                 <td>{item.branch[0].wp_pay_docuno}</td>
                 <td>{item.branch[0].wp_pay_docudate ? stringToDateTh(item.branch[0].wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
                 <td>{item.branch[0].wp_transfer_docuno}</td>
@@ -96,8 +98,9 @@ const SearchTable = (props) => {
               <td>{toCurrency(subitem.petition_amount)}</td>
               <td>{subitem.no ?? 1}</td>
               <td>{subitem.wp_transfer_date ? stringToDateTh(subitem.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.wp_Cheque_no}</td>
-              <td>{subitem.wp_Cheque_date ? stringToDateTh(subitem.wp_Cheque_date, false, 'DD/MM/YYYY') : '-'}</td>
+              <td>{subitem.cashier_check_no}</td>
+              <td>{subitem.cashier_check_date ? stringToDateTh(subitem.cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
+              <td>{toCurrency(subitem.cashier_check_amount)}</td>
               <td>{subitem.wp_pay_docuno}</td>
               <td>{subitem.wp_pay_docudate ? stringToDateTh(subitem.wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
               <td>{subitem.wp_transfer_docuno}</td>
@@ -115,8 +118,9 @@ const SearchTable = (props) => {
               <td>{toCurrency(subitem.petition_amount)}</td>
               <td>{subitem.no ?? 1}</td>
               <td>{subitem.wp_transfer_date ? stringToDateTh(subitem.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.wp_Cheque_no}</td>
-              <td>{subitem.wp_Cheque_date ? stringToDateTh(subitem.wp_Cheque_date, false, 'DD/MM/YYYY') : '-'}</td>
+              <td>{subitem.cashier_check_no}</td>
+              <td>{subitem.cashier_check_date ? stringToDateTh(subitem.cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
+              <td>{toCurrency(subitem.cashier_check_amount)}</td>
               <td>{subitem.wp_pay_docuno}</td>
               <td>{subitem.wp_pay_docudate ? stringToDateTh(subitem.wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
               <td>{subitem.wp_transfer_docuno}</td>
@@ -152,9 +156,9 @@ const SearchTable = (props) => {
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="2">สัญญา</th> 
                 <th colSpan="4">ชำระหนี้แทน (จัดการหนี้)</th>
-                <th colSpan="8">ข้อมูลจาก WinSpeed (จัดการหนี้)</th> 
+                <th colSpan="9">ข้อมูลจาก WinSpeed (จัดการหนี้)</th> 
                 <th colSpan="4">ชำระหนี้แทน (สาขา)</th>
-                <th colSpan="8">ข้อมูลจาก WinSpeed (สาขา)</th> 
+                <th colSpan="9">ข้อมูลจาก WinSpeed (สาขา)</th> 
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -177,6 +181,7 @@ const SearchTable = (props) => {
                 <th>วันที่โอนเงิน</th>
                 <th>เลขที่เช็ค</th>
                 <th>วันที่เช็ค</th>
+                <th>จำนวนเงินเบิกจ่ายเช็ค</th>
                 <th>เลขที่ใบสำคัญจ่ายทางบัญชี</th>
                 <th>วันที่ใบสำคัญจ่ายทางบัญชี</th>
                 <th>เลขที่โอนลูกหนี้</th>
@@ -191,6 +196,7 @@ const SearchTable = (props) => {
                 <th>วันที่โอนเงิน</th>
                 <th>เลขที่เช็ค</th>
                 <th>วันที่เช็ค</th>
+                <th>จำนวนเงินเบิกจ่ายเช็ค</th>
                 <th>เลขที่ใบสำคัญจ่ายทางบัญชี</th>
                 <th>วันที่ใบสำคัญจ่ายทางบัญชี</th>
                 <th>เลขที่โอนลูกหนี้</th>
