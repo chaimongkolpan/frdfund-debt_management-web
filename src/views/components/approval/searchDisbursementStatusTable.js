@@ -13,7 +13,7 @@ const SearchTable = (props) => {
     return (item && (
       <>
         <tr key={index + '-1'}>
-          <td rowSpan={maxrow > 0 ? maxrow : 1}>{(paging?.currentPage - 1) * paging?.pageSize + index + 1}</td>
+          <td rowSpan={maxrow > 0 ? maxrow : 1}>{(paging?.currentPage - 1) * filter?.pageSize + index + 1}</td>
           <td rowSpan={maxrow > 0 ? maxrow : 1}>{item.id_card}</td>
           <td rowSpan={maxrow > 0 ? maxrow : 1}>{item.name_prefix}</td>
           <td rowSpan={maxrow > 0 ? maxrow : 1}>{(item.firstname ?? '') + ' ' + (item.lastname ?? '')}</td>
@@ -209,7 +209,7 @@ const SearchTable = (props) => {
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
-              {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+              {(data && data.length > 0 && paging?.total > 0) ? (data.map((item,index) => RenderData(item, index))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={29}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
