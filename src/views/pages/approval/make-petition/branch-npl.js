@@ -112,7 +112,7 @@ const NPL = () => {
     setLoadBigData(false);
   }
   const onSaveMakelist = async (pet) => {
-    const result = await insertPetition(pet);
+    const result = await insertPetition({ ...pet, is_office: 0 });
     if (result.isSuccess) {
       await updateNPLstatus(pet.ids, pet.debt_management_audit_status);
       toast((t) => (
