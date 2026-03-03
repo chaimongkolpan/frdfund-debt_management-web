@@ -40,6 +40,7 @@ const SearchTable = (props) => {
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].cashier_check_no}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].cashier_check_date ? stringToDateTh(item.office[0].cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{toCurrency(item.office[0].cashier_check_amount)}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_pay_docuno}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_pay_docudate ? stringToDateTh(item.office[0].wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_transfer_docuno}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_transfer_docudate ? stringToDateTh(item.office[0].wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
@@ -76,7 +77,7 @@ const SearchTable = (props) => {
               </>
             ) : (
               <>
-                <td colSpan={22}>-</td>
+                <td colSpan={23}>-</td>
               </>
             )}
           </>
@@ -129,7 +130,7 @@ const SearchTable = (props) => {
               <td>{subitem.wp_transfer_docuno}</td>
               <td>{subitem.wp_transfer_docudate ? stringToDateTh(subitem.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
               <td>{subitem.debt_payment_status}</td>
-              <td colSpan={22}>-</td>
+              <td colSpan={23}>-</td>
             </tr>
           ))
         ) : (
