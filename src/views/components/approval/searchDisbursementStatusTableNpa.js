@@ -199,7 +199,7 @@ const SearchTable = (props) => {
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
-              {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+              {(data && data.length > 0 && paging?.total > 0) ? (data.map((item,index) => RenderData(item, index))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={29}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
