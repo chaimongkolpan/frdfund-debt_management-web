@@ -86,7 +86,7 @@ const NPA = () => {
     await setOpenAdd(true);
   }
   const onSaveMakelist = async (pet) => {
-    const result = await insertPetitionNpa(pet);
+    const result = await insertPetitionNpa({ ...pet, is_office: 1 });
     if (result.isSuccess) {
       await updateNPAstatus(pet.ids, pet.debt_management_audit_status);
       toast((t) => (
