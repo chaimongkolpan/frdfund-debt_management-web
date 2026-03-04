@@ -192,7 +192,7 @@ const LegalContractPrepare = () => {
         </Modal> 
       )}
       {openDetailFarmer && (
-        <FarmerModal isOpen={openDetailFarmer} setModal={setOpenDetailFarmer} onClose={() => setOpenDetailFarmer(false)} policy={policy} />
+        <FarmerModal isOpen={openDetailFarmer} setModal={setOpenDetailFarmer} onClose={() => {onSearch(filter); setOpenDetailFarmer(false);}} policy={policy} />
       )}
       {openGuarantor && (
         <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลบุคคลค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>

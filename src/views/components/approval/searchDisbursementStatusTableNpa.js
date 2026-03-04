@@ -6,10 +6,10 @@ const SearchTable = (props) => {
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const RenderData = (item, index) => {
-    const maxbranch = item.branch?.length ?? 1;
-    const maxoffice = item.office?.length ?? 0;
+    const maxbranch = item.branch?.length > 0 ? item.branch?.length : 1;
+    const maxoffice = item.office?.length > 0 ? item.office?.length : 0;
     const obranch = item.office.find(x => x.disbursement == 'สาขา');
-    const maxrow = obranch ? (maxbranch > 1 ? maxbranch - 1 : 1 + maxoffice - 1) : maxoffice;
+    const maxrow = obranch ? (maxbranch > 1 ? maxbranch + maxoffice - 1 : maxoffice) : maxoffice;
     return (item && (
       <>
         <tr key={index + '-1'}>
@@ -29,22 +29,22 @@ const SearchTable = (props) => {
           <>
             {item.office?.length > 0 && (
               <>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].petition_no_office}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].petition_date_office ?? '-'}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].disbursement}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{toCurrency(item.office[0].debt_manage_total)}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{toCurrency(item.office[0].cashier_check_amount)}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{toCurrency(item.office[0].petition_amount)}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].no ?? 1}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_transfer_date ? stringToDateTh(item.office[0].wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].cashier_check_no}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].cashier_check_date ? stringToDateTh(item.office[0].cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td> 
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{toCurrency(item.office[0].cashier_check_amount)}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_pay_docuno}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_pay_docudate ? stringToDateTh(item.office[0].wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_transfer_docuno}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].wp_transfer_docudate ? stringToDateTh(item.office[0].wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch - 1 : 1}>{item.office[0].debt_payment_status}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].petition_no_office}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].petition_date_office ?? '-'}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].disbursement}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].debt_manage_total)}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].cashier_check_amount)}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].petition_amount)}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].no ?? 1}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].wp_transfer_date ? stringToDateTh(item.office[0].wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].cashier_check_no}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].cashier_check_date ? stringToDateTh(item.office[0].cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td> 
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].cashier_check_amount)}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].wp_pay_docuno}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].wp_pay_docudate ? stringToDateTh(item.office[0].wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].wp_transfer_docuno}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].wp_transfer_docudate ? stringToDateTh(item.office[0].wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].debt_payment_status}</td>
               </>
             )}
           </>
@@ -77,7 +77,7 @@ const SearchTable = (props) => {
               </>
             ) : (
               <>
-                <td colSpan={22}>-</td>
+                <td colSpan={23}>-</td>
               </>
             )}
           </>
@@ -111,7 +111,7 @@ const SearchTable = (props) => {
             </tr>
           ))
         )}
-        {(item.office?.length > 1 && item.office[0].disbursement != 'สาขา') ? (
+        {(item.office?.length > 1) ? (
           item.office.slice(1).map((subitem, subindex) => (
             <tr key={index + '-3-' + (subindex + 1)}>
               <td>{subitem.petition_no_office}</td> 
@@ -130,7 +130,7 @@ const SearchTable = (props) => {
               <td>{subitem.wp_transfer_docuno}</td>
               <td>{subitem.wp_transfer_docudate ? stringToDateTh(subitem.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
               <td>{subitem.debt_payment_status}</td>
-              <td colSpan={22}>-</td>
+              <td colSpan={23}>-</td>
             </tr>
           ))
         ) : (
