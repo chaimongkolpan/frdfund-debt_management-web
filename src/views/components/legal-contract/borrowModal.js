@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
 import ToastError from "@views/components/toast/error";
 import { 
-  getProvinces,
+  getAllProvinces,
   getBorrowerClassify,
   updateBorrowerClassify,
 } from "@services/api";
@@ -100,7 +100,7 @@ const FullModal = (props) => {
     ))
   }
   const getProvince = async () => {
-    const resultProv = await getProvinces();
+    const resultProv = await getAllProvinces();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
