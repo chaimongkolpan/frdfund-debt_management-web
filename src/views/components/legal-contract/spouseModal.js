@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { ToDateDb } from "@utils";
 import { 
-  getProvinces,
+  getAllProvinces,
   getLegalSpouses,
   saveLegalSpouses,
   removeLegalSpouses,
@@ -106,7 +106,7 @@ const Spouse = (props) => {
     }
   }
   const getProvince = async () => {
-    const resultProv = await getProvinces();
+    const resultProv = await getAllProvinces();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);
