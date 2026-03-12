@@ -93,15 +93,15 @@ const Spouse = (props) => {
     }
   }
   const getSpouseName = async () => {
-    if (spouseDetail?.p_spouses != 'ผู้กู้' && debtor && debtor?.length > 0) {
+    if (spouseDetail?.p_spouses == 'ผู้กู้' && debtor && debtor?.length > 0) {
       await setSpouseDetail((prevState) => ({
         ...prevState,
-      ...({p_spouses_name: debtor[0]})
+        ...({p_spouses_name: debtor[0]})
       }))
     } else if(guarantors && guarantors?.length > 0) {
       await setSpouseDetail((prevState) => ({
         ...prevState,
-      ...({p_spouses_name: guarantors[0]})
+        ...({p_spouses_name: guarantors[0]})
       }))
     }
   }
