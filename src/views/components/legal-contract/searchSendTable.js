@@ -63,6 +63,7 @@ const SearchTable = (props) => {
         <td>{item.numberOfYearPayback}</td>
         <td>{toCurrency(item.loan_amount)}</td>
         <td>{toCurrency(item.compensation_amount)}</td>
+        <td>{toCurrency(item.frD_paymen_amount ?? item.loan_amount)}</td>
         <td>{item.policyStatus}</td>
         <td>{`${item.assetCount ? item.assetCount : 0} แปลง`}</td>
         <td>{`${item.guarantorCount ? item.guarantorCount : 0} คน`}</td>
@@ -124,7 +125,7 @@ const SearchTable = (props) => {
                 <th rowSpan="2">อัพโหลดเอกสารนิติกรรมสัญญา</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="8">นิติกรรมสัญญา</th>
+                <th colSpan="9">นิติกรรมสัญญา</th>
                 <th colSpan="2">หลักประกัน</th>
                 <th rowSpan="2">ดำเนินการ</th>
               </tr>
@@ -144,6 +145,7 @@ const SearchTable = (props) => {
                 <th>จำนวนปี</th>
                 <th>ยอดเงินตามสัญญา</th>
                 <th>จำนวนเงินที่ชดเชย</th>
+                <th>จำนวนเงินที่เบิกจ่าย</th>
                 <th>สถานะนิติกรรมสัญญา</th>
                 <th>หลักทรัพย์ค้ำประกัน</th>
                 <th>บุคคลค้ำประกัน</th>
