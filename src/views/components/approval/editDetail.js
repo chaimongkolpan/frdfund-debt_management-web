@@ -412,8 +412,8 @@ const FullModal = (props) => {
                               <div className="form-floating">
                                 <select className={`form-select`} disabled value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
                                   <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
-                                  <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
-                                  <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
+                                  <option value="ไม่ใช่เพื่อการเกษตร">ไม่ใช่เพื่อการเกษตร</option>
+                                  <option value="เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร">เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร</option>
                                 </select>
                                 <label htmlFor="floatingSelectPrivacy">วัตถุประสงค์</label>
                               </div>
@@ -553,8 +553,8 @@ const FullModal = (props) => {
                               <div className="form-floating">
                                 <select className={`form-select`} disabled value={debts?.debt_manage_objective ?? ''} onChange={(e) => handleChangeDebt('debt_manage_objective', e.target?.value)}>
                                   <option value="เพื่อการเกษตร">เพื่อการเกษตร</option>
-                                  <option value="ไม่เพื่อการเกษตร">ไม่เพื่อการเกษตร</option>
-                                  <option value="เพื่อการเกษตรและไม่เพื่อการเกษตร">เพื่อการเกษตรและไม่เพื่อการเกษตร</option>
+                                  <option value="ไม่ใช่เพื่อการเกษตร">ไม่ใช่เพื่อการเกษตร</option>
+                                  <option value="เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร">เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร</option>
                                 </select>
                                 <label htmlFor="floatingSelectPrivacy">วัตถุประสงค์</label>
                               </div>
