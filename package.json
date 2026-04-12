@@ -16,7 +16,7 @@
     "@casl/react": "^5.0.0",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@reduxjs/toolkit": "^2.6.1",
-    "axios": "^1.8.4",
+    "axios": "^1.15.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "http": "^0.0.1-security",
