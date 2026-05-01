@@ -22,6 +22,7 @@ import {
   cleanData,
   searchLegalCheck,
   saveDocumentPolicy,
+  getReimbursementCard,
   submitSendLegal,
 } from "@services/api";
 
