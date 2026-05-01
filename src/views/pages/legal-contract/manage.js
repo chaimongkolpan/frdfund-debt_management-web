@@ -22,6 +22,8 @@ import {
   searchLegalCheck,
   saveDocumentPolicy,
   getReimbursementCard,
+  printPlanRe,
+  printCardRe,
   submitSendLegal,
 } from "@services/api";
 

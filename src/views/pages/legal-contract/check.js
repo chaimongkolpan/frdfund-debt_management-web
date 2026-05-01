@@ -24,6 +24,8 @@ import {
   saveDocumentPolicy,
   getReimbursementCard,
   submitSendLegal,
+  printPlanRe,
+  printCardRe,
 } from "@services/api";
 
 const user = getUserData();
