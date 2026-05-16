@@ -59,6 +59,7 @@ const DebtRegisterBigDataTable = (props) => {
         <td>{item.purpose_loan_contract}</td>
         <td>{item.purpose_type_loan_contract}</td>
         <td>{item.debt_management_audit_status}</td>
+        <td>{item.user_updated}</td>
       </tr>
     ))
   }
@@ -104,7 +105,7 @@ const DebtRegisterBigDataTable = (props) => {
                 <th colSpan="2">องค์กร</th>
                 <th colSpan="4">ทะเบียนหนี้</th>
                 <th colSpan="4">เจ้าหนี้</th>
-                <th colSpan="7">สัญญา</th>
+                <th colSpan="8">สัญญา</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -131,6 +132,7 @@ const DebtRegisterBigDataTable = (props) => {
                 <th>วัตถุประสงค์การกู้ตามสัญญา</th>
                 <th>ประเภทวัตถุประสงค์การกู้ตามสัญญา</th>
                 <th>สถานะการตรวจสอบจัดการหนี้</th>
+                <th>ผู้แก้ไขล่าสุด</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle" id="bulk-select-body">
