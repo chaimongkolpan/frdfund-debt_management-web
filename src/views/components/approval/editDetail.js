@@ -26,14 +26,11 @@ const FullModal = (props) => {
   const [creditor_type, setCreditorType] = useState(null);
   const toggle = () => setModal(!isOpen);
   const allDecrease = (debts) => {
-    return (debts?.debt_manage_outstanding_principal_add <= debts?.debt_manage_outstanding_principal &&
-      debts?.debt_manage_accrued_interest_add <= debts?.debt_manage_accrued_interest &&
-      debts?.debt_manage_fine_add <= debts?.debt_manage_fine &&
-      debts?.debt_manage_litigation_expenses_add <= debts?.debt_manage_litigation_expenses &&
-      debts?.debt_manage_forfeiture_withdrawal_fee_add <= debts?.debt_manage_forfeiture_withdrawal_fee &&
-      debts?.debt_manage_insurance_premium_add <= debts?.debt_manage_insurance_premium &&
-      debts?.debt_manage_other_expenses_add <= debts?.debt_manage_other_expenses &&
-      debts?.debt_manage_total_add <= debts?.debt_manage_total);
+    return debts?.debt_manage_outstanding_principal_add + debts?.debt_manage_accrued_interest_add 
+      + debts?.debt_manage_fine_add + debts?.debt_manage_litigation_expenses_add + debts?.debt_manage_forfeiture_withdrawal_fee_add 
+      + debts?.debt_manage_insurance_premium_add + debts?.debt_manage_other_expenses_add <= debts?.debt_manage_outstanding_principal 
+      + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine + debts?.debt_manage_litigation_expenses 
+      + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses;
   }
   const submitDebt = async () => {
     let rate = 1;
@@ -51,7 +48,7 @@ const FullModal = (props) => {
       result_additional = 'ลดเงิน';
       if (!allDecrease(debts)) {
         toast((t) => (
-          <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+          <ToastError t={t} title={'บันทึกข้อมูล'} message={'ยอดเงินที่ลดต้องไม่เกินยอดเงินเดิม'} />
         ));
         return;
       }
