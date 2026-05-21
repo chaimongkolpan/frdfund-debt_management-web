@@ -115,10 +115,14 @@ const LegalContractSend = () => {
     await setOpenViewReturn(true);
   }
   const downloadReturn = (file) => {
-    console.log('download', file)
+    await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารส่งคืนนิติกรรมสัญญา' }, file).then((res) => {
+      console.log('download', file)
+    });
   }
   const download = (file) => {
-    console.log('download', file)
+    await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
+      console.log('download', file)
+    });
   }
   const onFileChange = async (files) => {
     if (files.length > 0) {

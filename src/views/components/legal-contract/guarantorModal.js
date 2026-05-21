@@ -4,6 +4,7 @@ import {
   getAllProvinces,
   getLegalGuarantor,
   updateLegalGuarantor,
+  deleteLegalGuarantor,
 } from "@services/api";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
@@ -19,6 +20,13 @@ const Guarantor = (props) => {
   const [guarantorDetail, setGuarantorDetail] = useState(null);
   const [isOpenGuarantorEdit, setOpenGuarantorEdit] = useState(false);
   const [provinces, setProvOp] = useState(null);
+  const addGuarantor = async() => {
+    await setGuarantorDetail({})
+    await setOpenGuarantorEdit(true)
+    if (guarantorRef.current) {
+      guarantorRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
   const editGuarantor = async(item) => {
     await setGuarantorDetail(item)
     await setOpenGuarantorEdit(true)
@@ -26,12 +34,28 @@ const Guarantor = (props) => {
       guarantorRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }
+  const removeGuarantor = async(item) => {
+    const result = await deleteLegalGuarantor(item);
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await fetchData();
+      await setOpenGuarantorEdit(false)
+      await setGuarantorDetail(null)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+  }
   const saveGuarantor = async() => {
     const result = await updateLegalGuarantor({ 
       ...guarantorDetail, 
       id_KFKPolicy: policy.id_KFKPolicy,
       policyNO: policy.policyNO,
-      guarantor_birthday: ToDateDb(guarantorDetail.guarantor_birthday)
+      guarantor_birthday: ToDateDb(guarantorDetail.guarantor_birthday),
+      guarantor_type: guarantorDetail.guarantor_type || 'สมาชิกองค์กรเกษตรกร'
     });
     if (result.isSuccess) {
       toast((t) => (
@@ -88,6 +112,13 @@ const Guarantor = (props) => {
   return (
     <>
       <div id="tableExample" data-list='{"valueNames":["id","name","province"],"page":10,"pagination":true}'>
+        <div className="d-flex flex-row-reverse mb-2">
+          <div>
+            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => addGuarantor()}>
+              <span className="fas fa-plus"></span> เพิ่มบุคคลค้ำประกัน
+            </button>
+          </div>
+        </div>
         <div className="table-responsive mx-n1 px-1">
           <table className="table table-sm table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: "#d9fbd0", border: "#cdd0c7" }}>
@@ -102,6 +133,7 @@ const Guarantor = (props) => {
                 ) : (
                   <th>แก้ไขข้อมูล</th>
                 )}
+                <th>ลบข้อมูล</th>
               </tr>
             </thead>
             <tbody className="list text-center align-middle">
@@ -119,10 +151,17 @@ const Guarantor = (props) => {
                       </button>
                     </div>
                   </td>
+                  <td>
+                    <div className='d-flex justify-content-center'>
+                      <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger px-0" type='button' onClick={() => removeGuarantor(item)} disabled={!guarantors[0].guarantor_idcard && index > 0 && !isView}>
+                        <i className="far fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={6}>
+                  <td className="fs-9 text-center align-middle" colSpan={7}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>

@@ -24,6 +24,7 @@ import {
   submitSendLegal,
   getReimbursementCard,
   printCardRe,
+  downloadLegalDocument,
 } from "@services/api";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
@@ -103,7 +104,9 @@ const LegalContractSend = () => {
       else return '';
     }
   const download = (file) => {
-    console.log('download', file)
+    await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
+      console.log('download', file)
+    });
   }
   const RemoveFile = (index) => {
     oldfiles.splice(index, 1);
