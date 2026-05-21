@@ -2349,6 +2349,37 @@ export const updateLegalGuarantor = async (params) => {
     return defaultErrorResponse;
   }
 };
+export const deleteLegalGuarantor = async (params) => {
+  const path = '/LegalContract/remove-guarantor';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+
+export const downloadLegalDocument = async (filter, filename) => {
+  const path = "/LegalContract/download";
+  try {
+    const result = await axios.post(
+      path, filter, { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: filter.type });
+      SaveAs(blob, filename);
+      return true
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return false;
+};
 export const getLegalSpouses = async (id) => {
   const path = '/LegalContract/getspouses';
   try {

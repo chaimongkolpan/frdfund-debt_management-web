@@ -63,9 +63,16 @@ const Asset = (props) => {
   const removeCollateral = async(item) => {
     const result = await deleteLegalAsset(item);
     if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
       await fetchData();
       await setOpenCollateralEdit(false)
       await setCollateralDetail(null)
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'ลบข้อมูล'} message={'ลบไม่สำเร็จ'} />
+      ));
     }
   }
   const handleChangeCollateral = async (key, val) => {
@@ -158,7 +165,7 @@ const Asset = (props) => {
                       </td>
                       <td>
                         <div className='d-flex justify-content-center'>
-                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger px-0" type='button' onClick={() => editCollateral(item)}>
+                          <button className="btn btn-phoenix-secondary btn-icon fs-7 text-danger px-0" type='button' onClick={() => removeCollateral(item)}>
                             <i className="fas fa-trash-alt"></i>
                           </button>
                         </div>
