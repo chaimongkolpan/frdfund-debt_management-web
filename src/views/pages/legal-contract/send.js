@@ -103,7 +103,7 @@ const LegalContractSend = () => {
       else if (trc == 'SPN') return 'จ่าย';
       else return '';
     }
-  const download = (file) => {
+  const download = async (file) => {
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
     });
