@@ -2366,6 +2366,7 @@ export const deleteLegalGuarantor = async (params) => {
 
 export const downloadLegalDocument = async (filter, filename) => {
   const path = "/LegalContract/download";
+  filename = filename.replaceAll('\\', '').replaceAll('"', '');
   try {
     const result = await axios.post(
       path, filter, { responseType: "blob" }
