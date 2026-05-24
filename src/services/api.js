@@ -1416,6 +1416,48 @@ export const getCommitteeDate = async (status, proposal_committee_no) => {
     return defaultErrorResponse;
   }
 };
+export const getReturnPetitionNo = async (status) => {
+  const path = '/common/return-petition-no';
+  try {
+    const result = await axios.get(path, { params: {status} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getReturnPetitionDate = async (status, proposal_committee_no) => {
+  const path = '/common/return-petition-date';
+  try {
+    const result = await axios.get(path, { params: {status, proposal_committee_no} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const searchReturnPetition = async (filter) => {
+  const path = '/MakePetition/get-refund-petition';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchMakePetition = async (filter) => {
   const path = '/MakePetition/search-make-petition';
   try {
@@ -1462,6 +1504,34 @@ export const getRefundPetition = async () => {
   const path = '/MakePetition/get-refund-petition';
   try {
     const result = await axios.get(path);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateApproveRefundPetition = async (filter) => {
+  const path = '/MakePetition/approve-refund-petition';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateRejectRefundPetition = async (filter) => {
+  const path = '/MakePetition/reject-refund-petition';
+  try {
+    const result = await axios.post(path, filter);
     if (result.status == 200)
       return result.data;
     else
