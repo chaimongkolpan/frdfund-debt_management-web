@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from 'reactstrap';
 import { stringToDateTh, toCurrency, getBookNo, ToDateDb } from "@utils";
 import DatePicker from "@views/components/input/DatePicker";
+import Textbox from "@views/components/input/Textbox";
 import BookNo from "@views/components/input/BookNo";
 import DeleteModal from "@views/components/modal/customModal";
 import toast from "react-hot-toast";
@@ -18,6 +19,8 @@ const RefundTable = () => {
   const [isAll, setIsAll] = useState(false);
   const [book_no, setBookNo] = useState(null);
   const [book_date, setBookDate] = useState(null);
+  const [return_date, setReturnDate] = useState(null);
+  const [reason, setReason] = useState(null);
   const [coop, setCoop] = useState(true);
   
   const handleSubmit = async () => {
@@ -25,6 +28,8 @@ const RefundTable = () => {
     const params = {
       book_no: book_no,
       book_date: ToDateDb(book_date),
+      return_date: ToDateDb(return_date),
+      reason: reason,
       debt_management_type: 'NPL',
       ids: ids
     }
@@ -86,10 +91,35 @@ const RefundTable = () => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses)}</td>
         <td>{toCurrency(item.debt_manage_total)}</td>
-        <td>{item.debt_manage_objective_details}</td>
-        <td>{item.debt_manage_status}</td>
-        <td>{item.collateral_type}</td>
-        <td>{item.collateral_no}</td>
+
+        <td>{toCurrency(item.debt_manage_outstanding_principal_pay)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_pay)}</td>
+        <td>{toCurrency(item.debt_manage_fine_pay)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_pay)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_pay)}</td>
+        {!coop && (
+          <>
+            <td>{toCurrency(item.debt_manage_insurance_premium_pay)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_pay)}</td>
+          </>
+        )}
+        <td>{toCurrency(item.debt_manage_total_expenses_pay)}</td>
+        <td>{toCurrency(item.debt_manage_total_pay)}</td>
+
+        <td>{toCurrency(item.debt_manage_outstanding_principal_return)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_return)}</td>
+        <td>{toCurrency(item.debt_manage_fine_return)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_return)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_return)}</td>
+        {!coop && (
+          <>
+            <td>{toCurrency(item.debt_manage_insurance_premium_return)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_return)}</td>
+          </>
+        )}
+        <td>{toCurrency(item.debt_manage_total_expenses_return)}</td>
+        <td>{toCurrency(item.debt_manage_total_return)}</td>
+
         <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
@@ -97,7 +127,7 @@ const RefundTable = () => {
   const RenderAll = () => {
     return (data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index] ?? false))) : (
       <tr>
-        <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
+        <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 40}>
           <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
         </td>
       </tr>
@@ -112,6 +142,10 @@ const RefundTable = () => {
     } else {
       await setData(null);
     }
+    await setBookNo(null);
+    await setBookDate(null);
+    await setReturnDate(null);
+    await setReason('');
   }
   useEffect(() => {
     setIsSome(selected.some(i => i))
@@ -142,8 +176,9 @@ const RefundTable = () => {
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>
-                          <th colSpan={coop ? "11" : "13"}>สัญญา</th>
-                          <th>หลักทรัพย์ค้ำประกัน</th>
+                          <th colSpan={coop ? "8" : "10"}>โอนเงินให้สาขา</th>
+                          <th colSpan={coop ? "7" : "9"}>ชำระหนี้แทน</th>
+                          <th colSpan={coop ? "7" : "9"}>คืนเงินชำระหนี้คงเหลือ</th>
                           <th rowSpan="2">สถานะสัญญา</th>
                         </tr>
                         <tr>
@@ -171,10 +206,32 @@ const RefundTable = () => {
                           )}
                           <th>รวมค่าใช้จ่าย</th>
                           <th>รวมทั้งสิ้น</th>
-                          <th>วัตถุประสงค์การกู้</th>
-                          <th>สถานะหนี้</th>
-                          <th>ประเภทหลักประกัน</th>
-                          <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
+                          <th>เงินต้น</th>
+                          <th>ดอกเบี้ย</th>
+                          <th>ค่าปรับ</th>
+                          <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                          <th>ค่าถอนการยึดทรัพย์</th>
+                          {!coop && (
+                            <>
+                              <th>ค่าเบี้ยประกัน</th>
+                              <th>ค่าใช้จ่ายอื่นๆ</th>
+                            </>
+                          )}
+                          <th>รวมค่าใช้จ่าย</th>
+                          <th>รวมทั้งสิ้น</th>
+                          <th>เงินต้น</th>
+                          <th>ดอกเบี้ย</th>
+                          <th>ค่าปรับ</th>
+                          <th>ค่าใช้จ่ายในการดำเนินคดี</th>
+                          <th>ค่าถอนการยึดทรัพย์</th>
+                          {!coop && (
+                            <>
+                              <th>ค่าเบี้ยประกัน</th>
+                              <th>ค่าใช้จ่ายอื่นๆ</th>
+                            </>
+                          )}
+                          <th>รวมค่าใช้จ่าย</th>
+                          <th>รวมทั้งสิ้น</th>
                         </tr>
                       </thead>
                       <tbody className="list text-center align-middle" id="bulk-select-body">
@@ -196,6 +253,18 @@ const RefundTable = () => {
                   <DatePicker title={'วันที่หนังสือ'}
                     value={book_date} 
                     handleChange={(val) => setBookDate(val)} 
+                  />
+                </div>
+                <div className="col-sm-12 col-md-12 col-lg-6">
+                  <DatePicker title={'วันที่คืนเงิน'}
+                    value={return_date} 
+                    handleChange={(val) => setReturnDate(val)} 
+                  />
+                </div>
+                <div className="col-sm-12 col-md-12 col-lg-6">
+                  <Textbox title={'สาเหตุการคืนเงินชำระหนี้คงเหลือ'}
+                    handleChange={(val) => setReason(val)}
+                    containerClassname={'mb-3'} value={reason}
                   />
                 </div>
               </div>
