@@ -153,16 +153,7 @@ const NPA = () => {
   return (
     <>
       <div className="content">
-        <h4 className="mb-3">ขออนุมัติชำระหนี้แทน NPA</h4>
-        {can_action && (
-          <div className="d-flex flex-row-reverse">
-            <div>
-              <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
-                <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
-              </button>
-            </div>
-          </div>
-        )}
+        <h4 className="mb-3">รับคืนเงินชำระหนี้คงเหลือ NPA</h4>
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -179,32 +170,10 @@ const NPA = () => {
                   </>
                 )}
               />
-              {can_action && (
-                <According 
-                  title={'จัดทำฎีกา'}
-                  className={"mb-3"}
-                  children={(
-                    <>
-                      <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
-                    </>
-                  )}
-                />
-              )}
             </div>
           </div>
         </div>
       </div>
-      
-      {isOpenAdd && (
-        <AddModal isOpen={isOpenAdd} setModal={setOpenAdd} 
-          title={'เพิ่มเลขที่/วันที่หนังสือฎีกา'} 
-          onClose={() => setOpenAdd(false)} closeText={'ปิด'} hideOk 
-          // onOk={() => handleSavePetition(savePetition)} okText={'บันทึก'}
-          size={'xl'}
-        >
-          <BookDateTable savePetition={savePetition} setSavePetition={setSavePetition} loadPetition={loadPetition} setLoadPetition={setLoadPetition} handleSavePetition={handleSavePetition} />
-        </AddModal>
-      )}
       <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPA'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
         <ConfirmTable data={makelistSelected} setAddPetition={onSaveMakelist} petition={petition}/>
       </Modal>
