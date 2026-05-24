@@ -10,6 +10,7 @@ import Filter from "@views/components/legal-contract/filterSend";
 import SearchTable from "@views/components/legal-contract/searchSendTable";
 import Detail from "@views/components/legal-contract/detail";
 import PlanPay from "@views/components/legal-contract/planPay";
+import Borrower from "@views/components/legal-contract/borrowPolicyModal";
 import Asset from "@views/components/legal-contract/assetModal";
 import Guarantor from "@views/components/legal-contract/guarantorModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
@@ -48,6 +49,7 @@ const LegalContractSend = () => {
   const [openDetail, setOpenDetail] = useState(false);
   const [openPlan, setOpenPlan] = useState(false);
   const [openAsset, setOpenAsset] = useState(false);
+  const [openBorrower, setOpenBorrower] = useState(false);
   const [openGuarantor, setOpenGuarantor] = useState(false);
   const [openSpouse, setOpenSpouse] = useState(false);
   const [openSubmit, setOpenSubmit] = useState(false);
@@ -189,6 +191,10 @@ const LegalContractSend = () => {
     await setPolicy(item);
     await setOpenPlan(true);
   }
+  const handleBorrower = async (item) => {
+    await setPolicy(item);
+    await setOpenBorrower(true);
+  }
   const handleAsset = async (item) => {
     await setPolicy(item);
     await setOpenAsset(true);
@@ -234,6 +240,7 @@ const LegalContractSend = () => {
                         handleUpload={handleUpload}
                         handleShowFarmerDetail={handleShowFarmerDetail}
                         handleShowCard={handleShowCard}
+                        handleBorrower={handleBorrower}
                         can_action={can_action}
                       />
                     )}
@@ -270,6 +277,11 @@ const LegalContractSend = () => {
       {openSpouse && (
         <Modal isOpen={openSpouse} setModal={setOpenSpouse} hideOk onClose={() => setOpenSpouse(false)}  title={'ข้อมูลคู่สมรส'} closeText={'ปิด'} scrollable fullscreen>
           <Spouse policy={policy} isView /> 
+        </Modal> 
+      )}
+      {openBorrower && (
+        <Modal isOpen={openBorrower} setModal={setOpenBorrower} hideOk onClose={() => setOpenBorrower(false)}  title={'ข้อมูลบุคคลรับสภาพหนี้แทน (ชั่วคราว)'} closeText={'ปิด'} scrollable fullscreen>
+          <Borrower policy={policy} onClose={() => setOpenBorrower(false)} /> 
         </Modal> 
       )}
       {openUpload && (

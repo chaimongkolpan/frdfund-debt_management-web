@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit, handleUpload, can_action, handleShowFarmerDetail, handleShowCard } = props;
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleSpouse, handleSubmit, handleUpload
+    , can_action, handleShowFarmerDetail, handleShowCard, handleBorrower } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
@@ -52,6 +53,7 @@ const SearchTable = (props) => {
         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
         <td>{item.loan_province}</td>
+        <td>{item.borrower_policy ?? '-'}</td>
         <td>{item.loan_creditor_type}</td>
         <td>{item.loan_creditor_name}</td>
         <td>{item.loan_creditor_province}</td>
@@ -77,6 +79,7 @@ const SearchTable = (props) => {
               <button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>หลักทรัพย์ค้ำประกัน</button>
               <button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>บุคคลค้ำประกัน</button>
               <button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลคู่สมรส</button>
+              <button className="dropdown-item" type="button" onClick={() => handleBorrower(item)}>เพิ่มบุคคลรับสภาพหนี้แทน (ชั่วคราว)</button>
               <button className="dropdown-item" type="button" onClick={() => handleShowCard(item)}>การ์ดลูกหนี้</button>
             </div>
           </div>
@@ -124,6 +127,7 @@ const SearchTable = (props) => {
                 </th>
                 <th rowSpan="2">อัพโหลดเอกสารนิติกรรมสัญญา</th>
                 <th colSpan="4">เกษตรกร</th>
+                <th rowSpan="2" style={{ minWidth: 130 }}>ผู้รับสภาพหนี้แทน</th>
                 <th colSpan="4">เจ้าหนี้</th>
                 <th colSpan="9">นิติกรรมสัญญา</th>
                 <th colSpan="2">หลักประกัน</th>

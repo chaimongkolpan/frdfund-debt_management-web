@@ -2321,6 +2321,34 @@ export const deleteLegalAsset = async (params) => {
     return defaultErrorResponse;
   }
 };
+export const getLegalBorrowerPolicy = async (id) => {
+  const path = '/LegalContract/borrower';
+  try {
+    const result = await axios.get(path, { params: {id_KFKPolicy: id} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const updateLegalBorrowerPolicy = async (params) => {
+  const path = '/LegalContract/borrower';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getLegalGuarantor = async (id) => {
   const path = '/LegalContract/guarantor';
   try {
