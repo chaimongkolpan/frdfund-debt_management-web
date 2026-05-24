@@ -31,7 +31,7 @@ const SearchTable = (props) => {
     })
   }
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map(() => checked));
+    await setSelected(result.data.map((item) => item.status_refund != 'รับคืนเงินแล้ว' && checked));
     await setIsAll(checked)
   }
   const RenderData = (item, index, checked) => {
@@ -40,7 +40,7 @@ const SearchTable = (props) => {
         <td className="fs-9 align-middle">
           {can_action ? (
             <div className="form-check ms-2 mb-0 fs-8">
-              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+              <input className="form-check-input" disabled={item.status_refund == 'รับคืนเงินแล้ว'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
           ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
