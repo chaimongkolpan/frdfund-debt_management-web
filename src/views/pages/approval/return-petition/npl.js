@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'reactstrap'
-import { getUserData, ToDateDb, getBookNo } from "@utils";
+import { getUserData, ToDateDb, getBookNo, stringToDateTh } from "@utils";
 import According from "@views/components/panel/according";
 import AddModal from "@views/components/modal/customModal";
-import RefundModal from "@views/components/modal/customModal";
 import Modal from "@views/components/modal/fullModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
-import Filter from "@views/components/approval/filterMakePetitionBranch";
-import SearchTable from "@views/components/approval/searchMakePetitionTableBranch";
+import Filter from "@views/components/approval/filterMakePetition";
+import SearchTable from "@views/components/approval/searchMakePetitionTable";
 import SelectedTable from "@views/components/approval/selectMakePetitionTable";
-import ConfirmTable from "@views/components/approval/confirmMakePetitionBranchTable";
-import BookDateTable from "@views/components/approval/addBookDateTableBranch";
-import RefundTable from "@views/components/approval/refundTableBranch";
+import ConfirmTable from "@views/components/approval/confirmMakePetitionTable";
+import BookDateTable from "@views/components/approval/addBookDateTable";
 import { 
   cleanData,
   searchMakePetition,
   getMakePetitionAddedList,
-  addMakePetitionBranchList,
-  removeMakePetitionBranchList,
+  addMakePetitionList,
+  removeMakePetitionList,
+  exportPetition,
   insertPetition,
   savePetitionBook,
-  exportPetition,
   updateNPLstatus,
 } from "@services/api";
 import toast from "react-hot-toast";
@@ -31,39 +29,44 @@ import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const NPL = () => {
+  const allow_roles = [1,2,7,8,9];
+  const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [petition, setPetition] = useState(null);
   const [addPetition, setAddPetition] = useState(null);
-  const [data, setData] = useState(null);
   const [savePetition, setSavePetition] = useState(null);
   const [loadPetition, setLoadPetition] = useState(false);
+  const [data, setData] = useState(null);
   const [addedData, setAddedData] = useState(null);
   const [makelistSelected, setMakeList] = useState(null);
   const [isSubmit, setSubmit] = useState(false);
   const [isOpenAdd, setOpenAdd] = useState(false);
-  const [isOpenRefund, setOpenRefund] = useState(false);
   const [filter, setFilter] = useState(null);
   const [filterAdded, setFilterAdded] = useState({
-    DebtClassifyStatus: 'เตรียมการชำระหนี้แทน(สาขา)',
+    DebtClassifyStatus: 'เตรียมการชำระหนี้แทน',
     currentPage: 1,
     pageSize: 0
   });
-  const handleOpenRefund = async () => {
-    await setSavePetition(null);
-    await setLoadPetition(true);
-    await setOpenRefund(true);
+  const onAddBigData = async (selected) => {
+    const ids = selected.map((item) => item.id_debt_management);
+    const result = await addMakePetitionList(ids);
+    if (result.isSuccess) {
+      await onSearch(filter);
+      await fetchData({ ...filterAdded, currentPage: 1 });
+    }
   }
-
-  const handleOpenAdd = async () => {
-    await setSavePetition(null);
-    await setLoadPetition(true);
-    await setOpenAdd(true);
+  const onRemoveMakelist = async (selected) => {
+    const ids = selected.map((item) => item.id_debt_management);
+    const result = await removeMakePetitionList(ids);
+    if (result.isSuccess) {
+      await fetchData(filterAdded)
+    }
   }
   const handleSavePetition = async (pet) => {
     const result = await savePetitionBook({ ...pet,debt_management_type: 'NPL',
-      petition_no_branch: 'กฟก '+ getBookNo() + pet.petition_no_branch,
-      petition_date_branch: ToDateDb(pet.petition_date_branch) 
+      petition_no_office: 'กฟก '+ getBookNo() + pet.petition_no_office,
+      petition_date_office: ToDateDb(pet.petition_date_office) 
     });
     if (result.isSuccess) {
       toast((t) => (
@@ -77,42 +80,14 @@ const NPL = () => {
       ));
     }
   }
-  const onAddBigData = async (selected) => {
-    const ids = selected.map((item) => item.id_debt_management);
-    const result = await addMakePetitionBranchList(ids);
-    if (result.isSuccess) {
-      await onSearch(filter);
-      await fetchData({ ...filterAdded, currentPage: 1 });
-    }
-  }
-  const onRemoveMakelist = async (selected) => {
-    const ids = selected.map((item) => item.id_debt_management);
-    const result = await removeMakePetitionBranchList(ids);
-    if (result.isSuccess) {
-      await fetchData(filterAdded)
-    }
-  }
-  const onCloseMakelist = async () => {
-    await setSubmit(false);
-    await fetchData({ ...filterAdded, currentPage: 1 });
-  }
-  const handleSubmit = async(selected) => {
-    await setMakeList(selected);
-    await setSubmit(true);
-  }
-  const onSubmitMakelist = async () => {
-    setLoadBigData(true);
-    if (petition) {
-      const result = await exportPetition({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: petition });
-      if (result.isSuccess) {
-      }
-    } else {
-      alert('กรุณาบันทึกฎีกา่อน ดาวน์โหลดเอกสาร');
-    }
-    setLoadBigData(false);
+  
+  const handleOpenAdd = async () => {
+    await setSavePetition(null);
+    await setLoadPetition(true);
+    await setOpenAdd(true);
   }
   const onSaveMakelist = async (pet) => {
-    const result = await insertPetition({ ...pet, is_office: 0 });
+    const result = await insertPetition({ ...pet, is_office: 1 });
     if (result.isSuccess) {
       await updateNPLstatus(pet.ids, pet.debt_management_audit_status);
       toast((t) => (
@@ -128,9 +103,29 @@ const NPL = () => {
       ));
     }
   }
+  const onCloseMakelist = async () => {
+    await setSubmit(false);
+    await setPetition(null);
+    await fetchData({ ...filterAdded, currentPage: 1 });
+  }
+  const handleSubmit = async(selected) => {
+    await setMakeList(selected);
+    await setSubmit(true);
+  }
+  const onSubmitMakelist = async () => {
+    setLoadBigData(true);
+    if (petition) {
+      const result = await exportPetition({ type: 'application/octet-stream', filename: 'จัดทำฎีกา_' + (new Date().getTime()) + '.zip', data: petition });
+      if (result.isSuccess) {
+      }
+    } else {
+      alert('กรุณาบันทึกฎีกาก่อน ดาวน์โหลดเอกสาร');
+    }
+    setLoadBigData(false);
+  }
   const onSearch = async (filter) => {
     setLoadBigData(true);
-    setFilter({ ...filter, DebtClassifyStatus: 'โอนเงินให้สาขาแล้ว' })
+    setFilter({ ...filter, DebtClassifyStatusList: ['ยืนยันยอดสำเร็จ','อยู่ระหว่างการโอนเงินให้สาขา','อยู่ระหว่างการชำระหนี้แทน','เตรียมการชำระหนี้แทน(สาขา)'], })
     const result = await searchMakePetition(filter);
     if (result.isSuccess) {
       setData(result)
@@ -159,18 +154,15 @@ const NPL = () => {
     <>
       <div className="content">
         <h4 className="mb-3">ขออนุมัติชำระหนี้แทน NPL</h4>
-        <div className="d-flex flex-row-reverse">
-          <div>
-            <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
-              <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
-            </button>
+        {can_action && (
+          <div className="d-flex flex-row-reverse">
+            <div>
+              <button type="button" className="btn btn-primary btn-sm ms-2" onClick={() => handleOpenAdd()}>
+                <span className="fas fa-plus"></span> เพิ่มเลขที่/วันที่หนังสือ
+              </button>
+            </div>
           </div>
-          <div>
-            <button type="button" className="btn btn-subtle-success btn-sm ms-2" onClick={() => handleOpenRefund()}>
-              <span className="fas fa-circle-dollar-to-slot"></span> คืนเงินชำระหนี้คงเหลือ
-            </button>
-          </div>
-        </div>
+        )}
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
             <div className="mb-9">
@@ -182,20 +174,22 @@ const NPL = () => {
                     <Filter handleSubmit={onSearch} setLoading={setLoadBigData} />
                     <br />
                     {data && (
-                      <SearchTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} can_action />
+                      <SearchTable result={data} handleSubmit={onAddBigData} filter={filter} getData={onSearch} can_action={can_action} />
                     )}
                   </>
                 )}
               />
-              <According 
-                title={'จัดทำฎีกา'}
-                className={"mb-3"}
-                children={(
-                  <>
-                    <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
-                  </>
-                )}
-              />
+              {can_action && (
+                <According 
+                  title={'จัดทำฎีกา'}
+                  className={"mb-3"}
+                  children={(
+                    <>
+                      <SelectedTable result={addedData} handleSubmit={handleSubmit} handleRemove={onRemoveMakelist} filter={filterAdded} getData={fetchData}/>
+                    </>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -204,24 +198,15 @@ const NPL = () => {
       {isOpenAdd && (
         <AddModal isOpen={isOpenAdd} setModal={setOpenAdd} 
           title={'เพิ่มเลขที่/วันที่หนังสือฎีกา'} 
-          onClose={() => setOpenAdd(false)} closeText={'ปิด'} hideOk 
+          onClose={() => setOpenAdd(false)} closeText={'ปิด'} hideOk
           // onOk={() => handleSavePetition(savePetition)} okText={'บันทึก'}
           size={'xl'}
         >
           <BookDateTable savePetition={savePetition} setSavePetition={setSavePetition} loadPetition={loadPetition} setLoadPetition={setLoadPetition} handleSavePetition={handleSavePetition} />
         </AddModal>
       )}
-      {isOpenRefund && (
-        <RefundModal isOpen={isOpenRefund} setModal={setOpenRefund} 
-          title={'คืนเงินเกษตรกร'}
-          onClose={() => setOpenRefund(false)} closeText={'ปิด'} hideOk 
-          size={'xl'}
-        >
-          <RefundTable />
-        </RefundModal>
-      )}
       <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPL'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
-        <ConfirmTable data={makelistSelected} setAddPetition={onSaveMakelist} petition={petition} />
+        <ConfirmTable data={makelistSelected} setAddPetition={onSaveMakelist} petition={petition}/>
       </Modal>
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
         <div className="d-flex flex-column align-items-center justify-content-center">
