@@ -213,9 +213,8 @@ const NPL = () => {
       )}
       {isOpenRefund && (
         <RefundModal isOpen={isOpenRefund} setModal={setOpenRefund} 
-          title={'คืนเงินเกษตรกร'}
+          title={'คืนเงินเกษตรกร'} fullscreen
           onClose={() => setOpenRefund(false)} closeText={'ปิด'} hideOk 
-          size={'xl'}
         >
           <RefundTable />
         </RefundModal>
