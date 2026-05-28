@@ -1430,10 +1430,10 @@ export const getReturnPetitionNo = async (status) => {
     return defaultErrorResponse;
   }
 };
-export const getReturnPetitionDate = async (status, proposal_committee_no) => {
+export const getReturnPetitionDate = async (status, book_no) => {
   const path = '/common/return-petition-date';
   try {
-    const result = await axios.get(path, { params: {status, proposal_committee_no} });
+    const result = await axios.get(path, { params: {status, book_no} });
     if (result.status == 200)
       return result.data;
     else
