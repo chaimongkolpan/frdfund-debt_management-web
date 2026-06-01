@@ -26,6 +26,7 @@ const RefundTable = (props) => {
         <td className="fs-9 align-middle">{index + 1}</td>
         <td>{item.book_no}</td>
         <td>{item.book_date}</td>
+        <td>{item.return_date}</td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date}</td>
         <td>{item.id_card}</td>
@@ -79,6 +80,7 @@ const RefundTable = (props) => {
         <td>{toCurrency(item.debt_manage_total_expenses_return)}</td>
         <td>{toCurrency(item.debt_manage_total_return)}</td>
 
+        <td>{item.reason}</td>
         <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
@@ -115,18 +117,20 @@ const RefundTable = (props) => {
                       <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
                         <tr>
                           <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">#</th>
-                          <th colSpan="2">รับคืนเงินชำระหนี้</th>
+                          <th colSpan="3">รับคืนเงินชำระหนี้</th>
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>
                           <th colSpan={coop ? "8" : "10"}>โอนเงินให้สาขา</th>
                           <th colSpan={coop ? "7" : "9"}>ชำระหนี้แทน</th>
                           <th colSpan={coop ? "7" : "9"}>คืนเงินชำระหนี้คงเหลือ</th>
+                          <th rowSpan="2">หมายเหตุ</th>
                           <th rowSpan="2">สถานะสัญญา</th>
                         </tr>
                         <tr>
                 <th>เลขที่หนังสือสาขา</th>
                 <th>วันที่หนังสือสาขา</th>
+                <th>วันที่คืนเงิน</th>
                           <th>ครั้งที่เสนอคณะกรรมการ</th>
                           <th>วันที่เสนอคณะกรรมการ</th>
                           <th>เลขบัตรประชาชน</th>

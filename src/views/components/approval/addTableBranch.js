@@ -9,27 +9,67 @@ import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
 import ToastError from "@views/components/toast/error";
 import { 
-  getRefundPetition,
-  updateRefundPetition,
+  getAdditionalPetition,
+  updateAdditionalPetition,
 } from "@services/api";
-const RefundTable = (props) => {
+const AdditionalTable = () => {
+  const [data, setData] = useState(null);
+  const [selected, setSelected] = useState([]);
+  const [isSome, setIsSome] = useState(false);
+  const [isAll, setIsAll] = useState(false);
   const [book_no, setBookNo] = useState(null);
   const [book_date, setBookDate] = useState(null);
+  const [add_amount, setAddAmount] = useState(null);
   const [reason, setReason] = useState(null);
-  const { data, onSave } = props;
   const [coop, setCoop] = useState(true);
+  
   const handleSubmit = async () => {
-    if(onSave) {
-      await onSave(book_no, book_date, reason);
+    const ids = data.filter((i, index) => selected[index]).map(i => i.id_debt_management);
+    const params = {
+      book_no: book_no,
+      book_date: ToDateDb(book_date),
+      add_amount: add_amount,
+      reason: reason,
+      debt_management_type: 'NPL',
+      ids: ids
+    }
+    const result = await updateAdditionalPetition(params);
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await setLoadPetition(true);
+    }
+    else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
     }
   }
-  const RenderData = (item, index) => {
+  const onChange = async (id) => {
+    const newSelected = [
+      ...(selected.map((item, index) => (id == index ? !item : item))),
+    ]
+    const selectedData = data.filter((i, index) => newSelected[index]);
+    const sum = selectedData.reduce((prev, item) => { return prev + item.debt_manage_total_additional; }, 0)
+    await setAddAmount(toCurrency(sum));
+    await setSelected((prev) => {
+      prev[id] = !prev[id];
+      return [...prev]
+    })
+  }
+  const onHeaderChange = async (checked) => {
+    await setSelected(data.map(() => checked));
+    await setIsAll(checked)
+  }
+  const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index}>
-        <td className="fs-9 align-middle">{index + 1}</td>
-        <td>{item.book_no}</td>
-        <td>{item.book_date}</td>
-        <td>{item.return_date}</td>
+        <td className="fs-9 align-middle">
+          <div className="form-check ms-2 mb-0 fs-8">
+            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
+          </div>
+        </td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date}</td>
         <td>{item.id_card}</td>
@@ -69,41 +109,53 @@ const RefundTable = (props) => {
         <td>{toCurrency(item.debt_manage_total_expenses_pay)}</td>
         <td>{toCurrency(item.debt_manage_total_pay)}</td>
 
-        <td>{toCurrency(item.debt_manage_outstanding_principal_return)}</td>
-        <td>{toCurrency(item.debt_manage_accrued_interest_return)}</td>
-        <td>{toCurrency(item.debt_manage_fine_return)}</td>
-        <td>{toCurrency(item.debt_manage_litigation_expenses_return)}</td>
-        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_return)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal_additional)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_additional)}</td>
+        <td>{toCurrency(item.debt_manage_fine_additional)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_additional)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_additional)}</td>
         {!coop && (
           <>
-            <td>{toCurrency(item.debt_manage_insurance_premium_return)}</td>
-            <td>{toCurrency(item.debt_manage_other_expenses_return)}</td>
+            <td>{toCurrency(item.debt_manage_insurance_premium_additional)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_additional)}</td>
           </>
         )}
-        <td>{toCurrency(item.debt_manage_total_expenses_return)}</td>
-        <td>{toCurrency(item.debt_manage_total_return)}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses_additional)}</td>
+        <td>{toCurrency(item.debt_manage_total_additional)}</td>
 
-        <td>{item.reason}</td>
         <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
   }
   const RenderAll = () => {
-    return (data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+    return (data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index] ?? false))) : (
       <tr>
-        <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 40}>
+        <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 36}>
           <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
         </td>
       </tr>
     )
   }
   const fetchData = async () => {
-    await setCoop(data && data[0]?.debt_manage_creditor_type == 'สหกรณ์')
+    const result = await getAdditionalPetition();
+    if (result.isSuccess) {
+      await setCoop(result.data && result.data[0]?.debt_manage_creditor_type == 'สหกรณ์')
+      await setData(result.data);
+      await setSelected(result.data.map(() => false));
+    } else {
+      await setData(null);
+    }
+    await setBookNo(null);
+    await setBookDate(null);
+    await setAddAmount(null);
+    await setReason('');
   }
   useEffect(() => {
+    setIsSome(selected.some(i => i))
+    setIsAll(selected.every(i => i) && selected.length > 0)
     RenderAll();
     return () => { console.log('Clear data.') }
-  },[data])
+  },[selected])
   useEffect(() => {
     fetchData();
   },[])
@@ -119,21 +171,20 @@ const RefundTable = (props) => {
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                       <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
                         <tr>
-                          <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">#</th>
-                          <th colSpan="3">รับคืนเงินชำระหนี้</th>
+                          <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
+                            <div className="form-check ms-2 mb-0 fs-8">
+                              <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                            </div>
+                          </th>
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>
                           <th colSpan={coop ? "8" : "10"}>โอนเงินให้สาขา</th>
                           <th colSpan={coop ? "7" : "9"}>ชำระหนี้แทน</th>
-                          <th colSpan={coop ? "7" : "9"}>คืนเงินชำระหนี้คงเหลือ</th>
-                          <th rowSpan="2">หมายเหตุ</th>
+                          <th colSpan={coop ? "7" : "9"}>เพิ่มเงินชำระหนี้เกษตรกร</th>
                           <th rowSpan="2">สถานะสัญญา</th>
                         </tr>
                         <tr>
-                <th>เลขที่หนังสือสาขา</th>
-                <th>วันที่หนังสือสาขา</th>
-                <th>วันที่คืนเงิน</th>
                           <th>ครั้งที่เสนอคณะกรรมการ</th>
                           <th>วันที่เสนอคณะกรรมการ</th>
                           <th>เลขบัตรประชาชน</th>
@@ -187,9 +238,9 @@ const RefundTable = (props) => {
                         </tr>
                       </thead>
                       <tbody className="list text-center align-middle" id="bulk-select-body">
-                        {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+                        {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                           <tr>
-                            <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
+                            <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 36}>
                               <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                             </td>
                           </tr>
@@ -199,16 +250,22 @@ const RefundTable = (props) => {
                   </div>
                 </div>
                 <div className="col-sm-12 col-md-12 col-lg-6">
-                  <BookNo title={'เลขที่หนังสือจัดการหนี้'} subtitle={'กฟก '+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={book_no} />
+                  <BookNo title={'เลขที่หนังสือ'} subtitle={'กฟก '+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={book_no} />
                 </div>
                 <div className="col-sm-12 col-md-12 col-lg-6">
-                  <DatePicker title={'วันที่หนังสือจัดการหนี้'}
+                  <DatePicker title={'วันที่หนังสือ'}
                     value={book_date} 
                     handleChange={(val) => setBookDate(val)} 
                   />
                 </div>
-                <div className="col-sm-12 col-md-12 col-lg-12">
-                  <Textbox title={'หมายเหตุ'}
+                <div className="col-sm-12 col-md-12 col-lg-6">
+                  <Textbox title={'จำนวนเงินที่เพิ่ม'} disabled 
+                    handleChange={(val) => setAddAmount(val)}
+                    containerClassname={'mb-3'} value={add_amount}
+                  />
+                </div>
+                <div className="col-sm-12 col-md-12 col-lg-6">
+                  <Textbox title={'สาเหตุการเพิ่มเงิน'}
                     handleChange={(val) => setReason(val)}
                     containerClassname={'mb-3'} value={reason}
                   />
@@ -226,4 +283,4 @@ const RefundTable = (props) => {
     </>
   );
 };
-export default RefundTable;
+export default AdditionalTable;

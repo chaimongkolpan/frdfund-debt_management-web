@@ -5,6 +5,7 @@ import { getUserData, ToDateDb, getBookNo } from "@utils";
 import According from "@views/components/panel/according";
 import AddModal from "@views/components/modal/customModal";
 import RefundModal from "@views/components/modal/customModal";
+import AdditionalModal from "@views/components/modal/customModal";
 import Modal from "@views/components/modal/fullModal";
 import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
@@ -14,6 +15,7 @@ import SelectedTable from "@views/components/approval/selectMakePetitionTable";
 import ConfirmTable from "@views/components/approval/confirmMakePetitionBranchTable";
 import BookDateTable from "@views/components/approval/addBookDateTableBranch";
 import RefundTable from "@views/components/approval/refundTableBranch";
+import AdditionalTable from "@views/components/approval/addTableBranch";
 import { 
   cleanData,
   searchMakePetition,
@@ -42,6 +44,7 @@ const NPL = () => {
   const [makelistSelected, setMakeList] = useState(null);
   const [isSubmit, setSubmit] = useState(false);
   const [isOpenAdd, setOpenAdd] = useState(false);
+  const [isOpenAdditional, setOpenAdditional] = useState(false);
   const [isOpenRefund, setOpenRefund] = useState(false);
   const [filter, setFilter] = useState(null);
   const [filterAdded, setFilterAdded] = useState({
@@ -53,6 +56,11 @@ const NPL = () => {
     await setSavePetition(null);
     await setLoadPetition(true);
     await setOpenRefund(true);
+  }
+  const handleOpenAdditional = async () => {
+    await setSavePetition(null);
+    await setLoadPetition(true);
+    await setOpenAdditional(true);
   }
 
   const handleOpenAdd = async () => {
@@ -170,6 +178,11 @@ const NPL = () => {
               <span className="fas fa-circle-dollar-to-slot"></span> คืนเงินชำระหนี้คงเหลือ
             </button>
           </div>
+          <div>
+            <button type="button" className="btn btn-subtle-warning btn-sm ms-2" onClick={() => handleOpenAdditional()}>
+              <span className="fas fa-circle-dollar-to-slot"></span> เพิ่มเงินชำระหนี้เกษตรกร
+            </button>
+          </div>
         </div>
         <div className="row g-4">
           <div className="col-12 col-xl-12 order-1 order-xl-0">
@@ -218,6 +231,14 @@ const NPL = () => {
         >
           <RefundTable />
         </RefundModal>
+      )}
+      {isOpenAdditional && (
+        <AdditionalModal isOpen={isOpenAdditional} setModal={setOpenAdditional} 
+          title={'เพิ่มเงินชำระหนี้เกษตรกร'} fullscreen
+          onClose={() => setOpenAdditional(false)} closeText={'ปิด'} hideOk 
+        >
+          <AdditionalTable />
+        </AdditionalModal>
       )}
       <Modal isOpen={isSubmit} setModal={setSubmit} hideOk={petition == null} onOk={() => onSubmitMakelist()} onClose={onCloseMakelist}  title={'จัดทำฎีกา NPL'} okText={'ดาวน์โหลดเอกสาร'} closeText={'ปิด'} scrollable>
         <ConfirmTable data={makelistSelected} setAddPetition={onSaveMakelist} petition={petition} />
