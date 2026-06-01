@@ -516,6 +516,33 @@ const Sidebar = props => {
                           </div>
                         </li>
                       )}
+                      {(user && officeList.includes(user.role)) && (
+                        <li className="nav-item">
+                          <a className={`nav-link dropdown-indicator ${path.includes('/approval/add-petition') ? 'active' : ''}`} href="#nv-RequestApprovalPayAddPetition" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayAddPetition">
+                            <div className="d-flex align-items-center">
+                              <div className="dropdown-indicator-icon-wrapper">
+                                <span className="fas fa-caret-right dropdown-indicator-icon"></span>
+                              </div>
+                              <span className="nav-link-text">เพิ่มเงินชำระหนี้เกษตรกร</span>
+                            </div>
+                          </a>
+                          {/* more inner pages*/}
+                          <div className="parent-wrapper">
+                            <ul className="nav collapse parent" data-bs-parent="#e-commerce" id="nv-RequestApprovalPayAddPetition">
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/approval/add-petition/npl') ? 'active' : ''}`} to={`${prefix_url + "/approval/add-petition/npl"}`}>
+                                  <div className="d-flex align-items-center"><span className="nav-link-text">NPL</span></div>
+                                </Link>
+                              </li>
+                              <li className="nav-item">
+                                <Link className={`nav-link ${path.includes('/approval/add-petition/npa') ? 'active' : ''}`} to={`${prefix_url + "/approval/add-petition/npa"}`}>
+                                  <div className="d-flex align-items-center"><span className="nav-link-text">NPA</span></div>
+                                </Link>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      )}
                       {(user && branchList.includes(user.role)) && (
                         <li className="nav-item">
                           <a className={`nav-link dropdown-indicator ${path.includes('/approval/make-branch-petition') ? 'active' : ''}`} href="#nv-RequestApprovalPayMakePetitionBranch" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-RequestApprovalPayMakePetitionBranch">

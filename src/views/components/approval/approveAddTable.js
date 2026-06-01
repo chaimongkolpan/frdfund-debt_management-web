@@ -8,10 +8,6 @@ import DeleteModal from "@views/components/modal/customModal";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
 import ToastError from "@views/components/toast/error";
-import { 
-  getRefundPetition,
-  updateRefundPetition,
-} from "@services/api";
 const RefundTable = (props) => {
   const [book_no, setBookNo] = useState(null);
   const [book_date, setBookDate] = useState(null);
@@ -29,7 +25,6 @@ const RefundTable = (props) => {
         <td className="fs-9 align-middle">{index + 1}</td>
         <td>{item.book_no}</td>
         <td>{item.book_date}</td>
-        <td>{item.return_date}</td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date}</td>
         <td>{item.id_card}</td>
@@ -69,19 +64,19 @@ const RefundTable = (props) => {
         <td>{toCurrency(item.debt_manage_total_expenses_pay)}</td>
         <td>{toCurrency(item.debt_manage_total_pay)}</td>
 
-        <td>{toCurrency(item.debt_manage_outstanding_principal_return)}</td>
-        <td>{toCurrency(item.debt_manage_accrued_interest_return)}</td>
-        <td>{toCurrency(item.debt_manage_fine_return)}</td>
-        <td>{toCurrency(item.debt_manage_litigation_expenses_return)}</td>
-        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_return)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal_additional)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_additional)}</td>
+        <td>{toCurrency(item.debt_manage_fine_additional)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_additional)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_additional)}</td>
         {!coop && (
           <>
-            <td>{toCurrency(item.debt_manage_insurance_premium_return)}</td>
-            <td>{toCurrency(item.debt_manage_other_expenses_return)}</td>
+            <td>{toCurrency(item.debt_manage_insurance_premium_additional)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_additional)}</td>
           </>
         )}
-        <td>{toCurrency(item.debt_manage_total_expenses_return)}</td>
-        <td>{toCurrency(item.debt_manage_total_return)}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses_additional)}</td>
+        <td>{toCurrency(item.debt_manage_total_additional)}</td>
 
         <td>{item.reason}</td>
         <td>{item.debt_management_audit_status}</td>
@@ -120,20 +115,19 @@ const RefundTable = (props) => {
                       <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
                         <tr>
                           <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">#</th>
-                          <th colSpan="3">รับคืนเงินชำระหนี้</th>
+                          <th colSpan="2">รับคืนเงินชำระหนี้</th>
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>
                           <th colSpan={coop ? "8" : "10"}>โอนเงินให้สาขา</th>
                           <th colSpan={coop ? "7" : "9"}>ชำระหนี้แทน</th>
-                          <th colSpan={coop ? "7" : "9"}>คืนเงินชำระหนี้คงเหลือ</th>
+                          <th colSpan={coop ? "7" : "9"}>เพิ่มเงินชำระหนี้เกษตรกร</th>
                           <th rowSpan="2">หมายเหตุ</th>
                           <th rowSpan="2">สถานะสัญญา</th>
                         </tr>
                         <tr>
                 <th>เลขที่หนังสือสาขา</th>
                 <th>วันที่หนังสือสาขา</th>
-                <th>วันที่คืนเงิน</th>
                           <th>ครั้งที่เสนอคณะกรรมการ</th>
                           <th>วันที่เสนอคณะกรรมการ</th>
                           <th>เลขบัตรประชาชน</th>

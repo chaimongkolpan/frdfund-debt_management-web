@@ -1,35 +1,51 @@
 import { useEffect, useState } from "react";
-import { Button } from 'reactstrap';
-import { stringToDateTh, toCurrency, getBookNo, ToDateDb } from "@utils";
-import DatePicker from "@views/components/input/DatePicker";
-import Textbox from "@views/components/input/Textbox";
-import BookNo from "@views/components/input/BookNo";
-import DeleteModal from "@views/components/modal/customModal";
-import toast from "react-hot-toast";
-import ToastContent from "@views/components/toast/success";
-import ToastError from "@views/components/toast/error";
-import { 
-  getRefundPetition,
-  updateRefundPetition,
-} from "@services/api";
-const RefundTable = (props) => {
-  const [book_no, setBookNo] = useState(null);
-  const [book_date, setBookDate] = useState(null);
-  const [reason, setReason] = useState(null);
-  const { data, onSave } = props;
+import Paging from "@views/components/Paging";
+import { stringToDateTh, toCurrency } from "@utils";
+import EditDetail from "@views/components/approval/editDetail";
+const SearchTable = (props) => {
+  const { result, handleSubmit, handleReject, filter, getData, can_action } = props;
+  const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
-  const handleSubmit = async () => {
-    if(onSave) {
-      await onSave(book_no, book_date, reason);
+  const [paging, setPaging] = useState(null);
+  const [isSome, setIsSome] = useState(false);
+  const [isAll, setIsAll] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const [editData, setEditData] = useState(null);
+  const [isOpenDetail, setOpenDetail] = useState(false);
+  const onSubmit = () => {
+    if (handleSubmit) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      handleSubmit(selectedData)
     }
   }
-  const RenderData = (item, index) => {
+  const onReject = () => {
+    if (handleReject) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      handleReject(selectedData)
+    }
+  }
+  const onChange = async (id) => {
+    await setSelected((prev) => {
+      prev[id] = !prev[id];
+      return [...prev]
+    })
+  }
+  const onHeaderChange = async (checked) => {
+    await setSelected(result.data.map((item) => item.status_refund != 'อนุมัติเพิ่มเงินแล้ว' && checked));
+    await setIsAll(checked)
+  }
+  const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index}>
-        <td className="fs-9 align-middle">{index + 1}</td>
+        <td className="fs-9 align-middle">
+          {can_action ? (
+            <div className="form-check ms-2 mb-0 fs-8">
+              <input className="form-check-input" disabled={item.status_refund == 'อนุมัติเพิ่มเงินแล้ว'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
+            </div>
+          ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
+        </td>
         <td>{item.book_no}</td>
         <td>{item.book_date}</td>
-        <td>{item.return_date}</td>
         <td>{item.proposal_committee_no}</td>
         <td>{item.proposal_committee_date}</td>
         <td>{item.id_card}</td>
@@ -69,73 +85,77 @@ const RefundTable = (props) => {
         <td>{toCurrency(item.debt_manage_total_expenses_pay)}</td>
         <td>{toCurrency(item.debt_manage_total_pay)}</td>
 
-        <td>{toCurrency(item.debt_manage_outstanding_principal_return)}</td>
-        <td>{toCurrency(item.debt_manage_accrued_interest_return)}</td>
-        <td>{toCurrency(item.debt_manage_fine_return)}</td>
-        <td>{toCurrency(item.debt_manage_litigation_expenses_return)}</td>
-        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_return)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal_additional)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_additional)}</td>
+        <td>{toCurrency(item.debt_manage_fine_additional)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_additional)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_additional)}</td>
         {!coop && (
           <>
-            <td>{toCurrency(item.debt_manage_insurance_premium_return)}</td>
-            <td>{toCurrency(item.debt_manage_other_expenses_return)}</td>
+            <td>{toCurrency(item.debt_manage_insurance_premium_additional)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_additional)}</td>
           </>
         )}
-        <td>{toCurrency(item.debt_manage_total_expenses_return)}</td>
-        <td>{toCurrency(item.debt_manage_total_return)}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses_additional)}</td>
+        <td>{toCurrency(item.debt_manage_total_additional)}</td>
 
-        <td>{item.reason}</td>
         <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
   }
   const RenderAll = () => {
-    return (data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
+    return (data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index] ?? false))) : (
       <tr>
-        <td className="fs-9 text-center align-middle" colSpan={coop ? 34 : 40}>
+        <td className="fs-9 text-center align-middle" colSpan={26}>
           <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
         </td>
       </tr>
     )
   }
-  const fetchData = async () => {
-    await setCoop(data && data[0]?.debt_manage_creditor_type == 'สหกรณ์')
-  }
   useEffect(() => {
+    setIsSome(selected.some(i => i))
+    setIsAll(selected.every(i => i) && selected.length > 0)
     RenderAll();
     return () => { console.log('Clear data.') }
-  },[data])
+  },[selected])
   useEffect(() => {
-    fetchData();
-  },[])
+    if(result) {
+      setData(result.data);
+      setCoop(result.data && result.data[0]?.debt_manage_creditor_type == 'สหกรณ์')
+      setSelected(result.data.map(() => false));
+      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
+    }
+    return () => { setData([]) }
+  },[result])
+
   return (
     <>
-      <form>
-        <div className="row">
-          <div className="col-12">
-            <div className="card p-3">
-              <div className="row">
-                <div className="col-12 p-3">
-                  <div className="table-responsive mx-n1 px-1">
-                    <table className="table table-sm table-striped table-bordered fs-9 mb-0">
-                      <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
-                        <tr>
-                          <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">#</th>
-                          <th colSpan="3">รับคืนเงินชำระหนี้</th>
+      <div data-list='{"valueNames":["name","email","age"]}'>
+        <div className="table-responsive mx-n1 px-1">
+          <table className="table table-sm table-striped table-bordered fs-9 mb-0">
+            <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
+              <tr>
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>
+                  {can_action ? (
+                    <div className="form-check ms-2 me-0 mb-0 fs-8">
+                      <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                    </div>
+                  ) : '#'}
+                </th>
+                          <th colSpan="2">รับคืนเงินชำระหนี้</th>
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>
                           <th colSpan={coop ? "8" : "10"}>โอนเงินให้สาขา</th>
                           <th colSpan={coop ? "7" : "9"}>ชำระหนี้แทน</th>
-                          <th colSpan={coop ? "7" : "9"}>คืนเงินชำระหนี้คงเหลือ</th>
-                          <th rowSpan="2">หมายเหตุ</th>
+                          <th colSpan={coop ? "7" : "9"}>เพิ่มเงินชำระหนี้เกษตรกร</th>
                           <th rowSpan="2">สถานะสัญญา</th>
-                        </tr>
-                        <tr>
+              </tr>
+              <tr>
                 <th>เลขที่หนังสือสาขา</th>
                 <th>วันที่หนังสือสาขา</th>
-                <th>วันที่คืนเงิน</th>
-                          <th>ครั้งที่เสนอคณะกรรมการ</th>
-                          <th>วันที่เสนอคณะกรรมการ</th>
+                <th>ครั้งที่เสนอคณะกรรมการ</th>
+                <th>วันที่เสนอคณะกรรมการ</th>
                           <th>เลขบัตรประชาชน</th>
                           <th>คำนำหน้า</th>
                           <th>ชื่อ-นามสกุล</th>
@@ -184,46 +204,36 @@ const RefundTable = (props) => {
                           )}
                           <th>รวมค่าใช้จ่าย</th>
                           <th>รวมทั้งสิ้น</th>
-                        </tr>
-                      </thead>
-                      <tbody className="list text-center align-middle" id="bulk-select-body">
-                        {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
-                          <tr>
-                            <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
-                              <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div className="col-sm-12 col-md-12 col-lg-6">
-                  <BookNo title={'เลขที่หนังสือจัดการหนี้'} subtitle={'กฟก '+ getBookNo() } containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={book_no} />
-                </div>
-                <div className="col-sm-12 col-md-12 col-lg-6">
-                  <DatePicker title={'วันที่หนังสือจัดการหนี้'}
-                    value={book_date} 
-                    handleChange={(val) => setBookDate(val)} 
-                  />
-                </div>
-                <div className="col-sm-12 col-md-12 col-lg-12">
-                  <Textbox title={'หมายเหตุ'}
-                    handleChange={(val) => setReason(val)}
-                    containerClassname={'mb-3'} value={reason}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-12 pt-3 d-flex justify-content-center">
-                  <Button color="success" onClick={() => handleSubmit()}>{'บันทึก'}</Button>
-                </div>
-              </div>
+              </tr>
+            </thead>
+            <tbody className="list text-center align-middle" id="bulk-select-body">
+              {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
+                <tr>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
+                    <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {paging?.total > 0 && (
+          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
+            setPage={(page) => getData({ ...filter, currentPage: page })} 
+          />
+        )}
+      </div>
+      {can_action && (
+        <div className="d-flex align-items-center justify-content-center my-3">
+          <div className={`${isSome ? '' : 'd-none'}`}>
+            <div className="d-flex">
+              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เพิ่มเงินชำระหนี้เกษตรกร</button>
+              <button className="btn btn-subtle-danger btn-sm ms-2" type="button" onClick={() => onReject()}>ส่งคืนสาขา</button>
             </div>
           </div>
         </div>
-      </form>
+      )}
     </>
   );
 };
-export default RefundTable;
+export default SearchTable;
