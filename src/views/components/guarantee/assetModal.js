@@ -61,9 +61,6 @@ const Asset = (props) => {
         <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
       ));
       await fetchData();
-      await setOpenCollateralAdd(false)
-      await setOpenCollateralEdit(false)
-      await setCollateralDetail(null)
     } else {
       toast((t) => (
         <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
