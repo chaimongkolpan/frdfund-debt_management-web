@@ -26,6 +26,7 @@ import {
   printPlanRe,
   printCardRe,
   submitSendLegal,
+  downloadLegalDocument,
 } from "@services/api";
 
 const user = getUserData();
