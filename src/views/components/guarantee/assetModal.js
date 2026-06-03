@@ -48,7 +48,10 @@ const Asset = (props) => {
   const saveCollateral = async() => {
     const result = await updateLegalAsset({
       ...collateralDetail,
-      contract_recipient: 'กองทุนฟื้นฟูและพัฒนาเกษตรกร'
+      contract_recipient: 'กองทุนฟื้นฟูและพัฒนาเกษตรกร',
+      collateral_status: collateralDetail.collateral_status ?? 'โอนได้',
+      conditions_cannot_transferred: collateralDetail.conditions_cannot_transferred ?? 
+        (collateralDetail.collateral_status === 'โอนไม่ได้' ? 'ติดอายัติ(เจ้าหนี้อื่น)' : collateralDetail.collateral_status === 'ไม่ต้องติดตาม' ? 'เนื่องจากไม่มีหลักประกันนี้ สาขาบันทึกข้อมูลเสนอขออนุมัติผิดพลาด' : ''),
     });
     if (result.isSuccess) {
       await fetchData();
