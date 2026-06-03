@@ -38,6 +38,7 @@ const LegalContractSend = () => {
   const can_action = allow_roles.includes(user?.role)
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
+  const [isDownloading, setDownloading] = useState(false);
   const [data, setData] = useState(null);
   const [selectedData, setSelectedData] = useState([]);
   const [policy, setPolicy] = useState(null);
@@ -106,11 +107,11 @@ const LegalContractSend = () => {
       else return '';
     }
   const download = async (file) => {
-    await setLoadBigData(true);
+    await setDownloading(true);
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
     });
-    await setLoadBigData(false);
+    await setDownloading(false);
   }
   const RemoveFile = (index) => {
     oldfiles.splice(index, 1);
@@ -535,6 +536,12 @@ const LegalContractSend = () => {
           </form>
         </Modal>
       )}
+      <Loading isOpen={isDownloading} setModal={setDownloading} centered scrollable size={'lg'} title={'กำลังดาวน์โหลดเอกสาร...'} hideFooter>
+        <div className="d-flex flex-column align-items-center justify-content-center">
+          <img className='mb-5' src={logo} alt='logo' width={150} height={150} />
+          <Spinner className='mb-3' style={{ height: '3rem', width: '3rem' }} />
+        </div>
+      </Loading>
       <Loading isOpen={isLoadBigData} setModal={setLoadBigData} centered scrollable size={'lg'} title={'เรียกข้อมูลทะเบียนหนี้จาก BigData'} hideFooter>
         <div className="d-flex flex-column align-items-center justify-content-center">
           <img className='mb-5' src={logo} alt='logo' width={150} height={150} />
