@@ -49,6 +49,7 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.transferStatus}</td>
         <td>{item.numberOfDay}</td>
+        <td>{item.collateral_status}</td>
         <td>{item.assetType}</td>
         <td>{item.collateral_no}</td>
         <td>{item.collateral_province}</td>
@@ -112,7 +113,7 @@ const SearchTable = (props) => {
                 </th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="5">นิติกรรมสัญญา</th>
-                <th colSpan="10">หลักทรัพย์</th>
+                <th colSpan="11">หลักทรัพย์</th>
                 <th rowSpan="2">รายละเอียดหลักทรัพย์</th>
               </tr>
               <tr>
@@ -127,6 +128,7 @@ const SearchTable = (props) => {
                 <th>จำนวนเงินที่ชดเชย</th>
                 <th>สถานะการโอนหลักทรัพย์</th>
                 <th>จำนวนวัน</th>
+                <th>สถานะหลักทรัพย์</th>
                 <th>ประเภทหลักทรัพย์</th>
                 <th>หลักทรัพย์เลขที่</th>
                 <th>จังหวัด</th>
@@ -140,7 +142,7 @@ const SearchTable = (props) => {
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={20}>
+                  <td className="fs-9 text-center align-middle" colSpan={21}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
