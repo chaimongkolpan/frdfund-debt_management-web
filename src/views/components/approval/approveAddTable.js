@@ -115,7 +115,7 @@ const RefundTable = (props) => {
                       <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
                         <tr>
                           <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">#</th>
-                          <th colSpan="2">รับคืนเงินชำระหนี้</th>
+                          <th colSpan="2">เพิ่มเงินชำระหนี้เกษตรกร</th>
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>

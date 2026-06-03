@@ -26,8 +26,8 @@ const AdditionalTable = () => {
   const handleSubmit = async () => {
     const ids = data.filter((i, index) => selected[index]).map(i => i.id_debt_management);
     const params = {
-      book_no: book_no,
-      book_date: ToDateDb(book_date),
+      book_no: 'กฟก '+ getBookNo() + book_no,
+      book_date: ToDateDb(book_date, true),
       add_amount: add_amount,
       reason: reason,
       debt_management_type: 'NPL',
