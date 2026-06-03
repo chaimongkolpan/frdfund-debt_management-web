@@ -105,6 +105,10 @@ const LegalContractPrepare = () => {
     await setPolicy(item);
     await setOpenAsset(true);
   }
+  const handleCloseAsset = async () => {
+    await onSearch(filter);
+    await setOpenAsset(false);
+  }
   const handleGuarantor = async (item) => {
     await setPolicy(item);
     await setOpenGuarantor(true);
@@ -170,7 +174,7 @@ const LegalContractPrepare = () => {
         </Modal>
       )}
       {openAsset && (
-        <Modal isOpen={openAsset} setModal={setOpenAsset} hideOk onClose={() => setOpenAsset(false)}  title={'ข้อมูลหลักทรัพย์ค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
+        <Modal isOpen={openAsset} setModal={handleCloseAsset} hideOk onClose={handleCloseAsset}  title={'ข้อมูลหลักทรัพย์ค้ำประกัน'} closeText={'ปิด'} scrollable fullscreen>
           <Asset policy={policy} /> 
         </Modal> 
       )}
