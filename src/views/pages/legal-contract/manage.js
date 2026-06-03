@@ -115,14 +115,22 @@ const LegalContractSend = () => {
     await setOpenViewReturn(true);
   }
   const downloadReturn = async (file) => {
+    await setLoadBigData(true);
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารส่งคืนนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
+    }).error((err) => {
+      console.error('Error downloading file:', err);
     });
+    await setLoadBigData(false);
   }
   const download = async (file) => {
+    await setLoadBigData(true);
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
+    }).error((err) => {
+      console.error('Error downloading file:', err);
     });
+    await setLoadBigData(false);
   }
   const handleEdit = async (selected) => {
     await setBookNo(null);
@@ -159,6 +167,36 @@ const LegalContractSend = () => {
         policyNO: item.policyNO,
         policyStatus: "นิติกรรมสัญญาสมบูรณ์",
         sendStatus: "นิติกรรมสัญญาสมบูรณ์",
+        branch_policy_no: bookNo,
+        branch_policy_date: ToDateDb(bookDate),
+      }
+    });
+    const result = await submitSendLegal(param);
+    if (result.isSuccess) {
+    } 
+  }
+  const onSubmitReturn = async () => {
+    const param = selectedData.map(item => {
+      return {
+        id_KFKPolicy: item.id_KFKPolicy,
+        policyNO: item.policyNO,
+        policyStatus: "ส่งคืนนิติกรรมสัญญา",
+        sendStatus: "ส่งคืนนิติกรรมสัญญา",
+        branch_policy_no: bookNo,
+        branch_policy_date: ToDateDb(bookDate),
+      }
+    });
+    const result = await submitSendLegal(param);
+    if (result.isSuccess) {
+    } 
+  }
+  const onSubmitEdit = async () => {
+    const param = selectedData.map(item => {
+      return {
+        id_KFKPolicy: item.id_KFKPolicy,
+        policyNO: item.policyNO,
+        policyStatus: "สาขาแก้ไขนิติกรรมสัญญา",
+        sendStatus: "สาขาแก้ไขนิติกรรมสัญญา",
         branch_policy_no: bookNo,
         branch_policy_date: ToDateDb(bookDate),
       }
@@ -353,7 +391,7 @@ const LegalContractSend = () => {
         <Modal isOpen={openUpload} setModal={setOpenUpload} hideOk onClose={() => handleCloseUpload()}  title={`อัพโหลดเอกสารนิติกรรมสัญญาเลขที่ ${policy?.policyNO}`} closeText={'ปิด'} scrollable size={'xl'}>
           <form>
             <br />
-            <div className="row">
+            <div className="row mb-8">
               {oldfiles && (
                 <div className="col-12">
                   {oldfiles.map((file, index) => (

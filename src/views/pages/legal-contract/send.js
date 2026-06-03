@@ -106,9 +106,13 @@ const LegalContractSend = () => {
       else return '';
     }
   const download = async (file) => {
+    await setLoadBigData(true);
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
+    }).error((err) => {
+      console.error('Error downloading file:', err);
     });
+    await setLoadBigData(false);
   }
   const RemoveFile = (index) => {
     oldfiles.splice(index, 1);
@@ -288,7 +292,7 @@ const LegalContractSend = () => {
         <Modal isOpen={openUpload} setModal={setOpenUpload} hideOk onClose={() => handleCloseUpload()}  title={`อัพโหลดเอกสารนิติกรรมสัญญาเลขที่ ${policy?.policyNO}`} closeText={'ปิด'} scrollable size={'xl'}>
           <form>
             <br />
-            <div className="row">
+            <div className="row mb-8">
               {oldfiles && (
                 <div className="col-12">
                   {oldfiles.map((file, index) => (
