@@ -193,8 +193,8 @@ const LegalContractSend = () => {
       return {
         id_KFKPolicy: item.id_KFKPolicy,
         policyNO: item.policyNO,
-        policyStatus: "จัดส่งนิติกรรมสัญญา",
-        sendStatus: "จัดส่งนิติกรรมสัญญา",
+        policyStatus: "ตรวจสอบนิติกรรมสัญญา",
+        sendStatus: "ตรวจสอบนิติกรรมสัญญา",
         branch_policy_no: 'กฟก ' + getBookNo() + bookNo,
         branch_policy_date: ToDateDb(bookDate),
       }
