@@ -109,8 +109,6 @@ const LegalContractSend = () => {
     await setLoadBigData(true);
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
-    }).error((err) => {
-      console.error('Error downloading file:', err);
     });
     await setLoadBigData(false);
   }
