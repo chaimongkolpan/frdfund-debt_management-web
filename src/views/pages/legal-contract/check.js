@@ -118,14 +118,22 @@ const LegalContractSend = () => {
     await setOpenViewReturn(true);
   }
   const downloadReturn = async (file) => {
+    await setLoadBigData(true);
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารส่งคืนนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
+    }).error((err) => {
+      console.error('Error downloading file:', err);
     });
+    await setLoadBigData(false);
   }
   const download = async (file) => {
+    await setLoadBigData(true);
     await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'เอกสารนิติกรรมสัญญา' }, file).then((res) => {
       console.log('download', file)
+    }).error((err) => {
+      console.error('Error downloading file:', err);
     });
+    await setLoadBigData(false);
   }
   const onFileChange = async (files) => {
     if (files.length > 0) {
@@ -195,6 +203,36 @@ const LegalContractSend = () => {
         policyNO: item.policyNO,
         policyStatus: "ตรวจสอบนิติกรรมสัญญา",
         sendStatus: "ตรวจสอบนิติกรรมสัญญา",
+        branch_policy_no: 'กฟก ' + getBookNo() + bookNo,
+        branch_policy_date: ToDateDb(bookDate),
+      }
+    });
+    const result = await submitSendLegal(param);
+    if (result.isSuccess) {
+    } 
+  }
+  const onSubmitEdit = async () => {
+    const param = selectedData.map(item => {
+      return {
+        id_KFKPolicy: item.id_KFKPolicy,
+        policyNO: item.policyNO,
+        policyStatus: "สาขาแก้ไขนิติกรรมสัญญา",
+        sendStatus: "สาขาแก้ไขนิติกรรมสัญญา",
+        branch_policy_no: 'กฟก ' + getBookNo() + bookNo,
+        branch_policy_date: ToDateDb(bookDate),
+      }
+    });
+    const result = await submitSendLegal(param);
+    if (result.isSuccess) {
+    } 
+  }
+  const onSubmitReturn = async () => {
+    const param = selectedData.map(item => {
+      return {
+        id_KFKPolicy: item.id_KFKPolicy,
+        policyNO: item.policyNO,
+        policyStatus: "ส่งคืนนิติกรรมสัญญา",
+        sendStatus: "ส่งคืนนิติกรรมสัญญา",
         branch_policy_no: 'กฟก ' + getBookNo() + bookNo,
         branch_policy_date: ToDateDb(bookDate),
       }
@@ -378,7 +416,7 @@ const LegalContractSend = () => {
         <Modal isOpen={openUpload} setModal={setOpenUpload} hideOk onClose={() => handleCloseUpload()}  title={`อัพโหลดเอกสารนิติกรรมสัญญาเลขที่ ${policy?.policyNO}`} closeText={'ปิด'} scrollable size={'xl'}>
           <form>
             <br />
-            <div className="row">
+            <div className="row mb-8">
               {oldfiles && (
                 <div className="col-12">
                   {oldfiles.map((file, index) => (
@@ -409,7 +447,7 @@ const LegalContractSend = () => {
       )}
       {openReturn && (
         <Modal isOpen={openReturn} setModal={setOpenReturn} onClose={() => setOpenReturn(false)}  title={`ส่งคืนนิติกรรมสัญญา`} closeText={'ปิด'} 
-          scrollable fullscreen okText={'ส่งคืนนิติกรรมสัญญา'} onOk={onSubmit} okColor={"danger"}>
+          scrollable fullscreen okText={'ส่งคืนนิติกรรมสัญญา'} onOk={onSubmitReturn} okColor={"danger"}>
           <form>
             <br />
             <div className="row">
@@ -499,7 +537,7 @@ const LegalContractSend = () => {
       )}
       {openEdit && (
         <Modal isOpen={openEdit} setModal={setOpenEdit} onClose={() => setOpenEdit(false)}  
-          title={'แก้ไขนิติกรรมสัญญา'} closeText={'ปิด'} scrollable fullscreen okText={'แก้ไขนิติกรรมสัญญา'} onOk={onSubmit} okColor={"warning"}
+          title={'แก้ไขนิติกรรมสัญญา'} closeText={'ปิด'} scrollable fullscreen okText={'แก้ไขนิติกรรมสัญญา'} onOk={onSubmitEdit} okColor={"warning"}
         >
           <form>
             <br />
