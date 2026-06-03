@@ -49,7 +49,7 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.compensation_amount)}</td>
         <td>{item.transferStatus}</td>
         <td>{item.numberOfDay}</td>
-        <td>{item.collateral_status}</td>
+        <td>{item.collateral_status ?? 'โอนได้'}</td>
         <td>{item.assetType}</td>
         <td>{item.collateral_no}</td>
         <td>{item.collateral_province}</td>
