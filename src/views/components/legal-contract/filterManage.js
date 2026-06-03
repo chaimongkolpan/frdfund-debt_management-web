@@ -29,6 +29,7 @@ const Filter = (props) => {
         loan_creditor_type: "",
         loan_creditor_name: "",
         debtStatus: "",
+        sendStatus: "ตรวจสอบนิติกรรมสัญญา",
         ...filter,
         currentPage: 1,
         pageSize: process.env.VITE_PAGESIZE,
