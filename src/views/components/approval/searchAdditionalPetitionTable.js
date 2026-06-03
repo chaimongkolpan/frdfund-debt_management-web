@@ -142,7 +142,7 @@ const SearchTable = (props) => {
                     </div>
                   ) : '#'}
                 </th>
-                          <th colSpan="2">รับคืนเงินชำระหนี้</th>
+                          <th colSpan="2">เพิ่มเงินชำระหนี้เกษตรกร</th>
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>
