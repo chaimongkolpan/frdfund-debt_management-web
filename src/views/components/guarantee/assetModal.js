@@ -20,6 +20,13 @@ const Asset = (props) => {
   const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(false);
   const [isOpenCollateralEdit, setOpenCollateralEdit] = useState(false);
   const [provinces, setProvOp] = useState(null);
+  const not_follow = ['เนื่องจากไม่มีหลักประกันนี้ สาขาบันทึกข้อมูลเสนอขออนุมัติผิดพลาด'
+    ,'เนื่องจากเกษตรกรไถ่ถอนหลักประกันก่อน กฟก.ชำระหนี้แทน'
+    ,'เนื่องจากหลักประกันโดนบังคับจำนองขายทอดตลาดก่อน กฟก.ชำระหนี้แทน'
+    ,'เนื่องจากมีการเปลี่ยนเขตการปกครองของกรมที่ดิน'
+    ,'เนื่องจากมีการเปลี่ยนแปลงหลักประกันก่อน กฟก.ชำระหนี้แทน'
+    ,'เนื่องจากมีการแบ่งแยกหลักประกันก่อน กฟก.ชำระหนี้แทน'
+    ,'เนื่องจากมีการรังวัดหลักประกันใหม่ก่อน กฟก.ชำระหนี้แทน']
   const addCollateral = async() => {
     await setCollateralDetail({ id_KFKPolicy: policy.id_KFKPolicy, policyNO: policy.policyNO, assetType: 'โฉนด', collateral_status: 'โอนได้' });
     await setCollateralType('โฉนด')
@@ -206,21 +213,48 @@ const Asset = (props) => {
               <select className="form-select" disabled={isView} value={collateralDetail?.collateral_status} onChange={(e) => handleChangeCollateral('collateral_status', e.target?.value)}>
                 <option value="โอนได้">โอนได้</option>
                 <option value="โอนไม่ได้">โอนไม่ได้</option>
+                <option value="ไม่ต้องติดตาม">ไม่ต้องติดตาม</option>
               </select>
               <label htmlFor="floatingSelectTeam">สถานะหลักทรัพย์</label>
             </div>
           </div>
-          <div className="col-sm-12 col-md-6 col-lg-4">
-            <div className="form-floating needs-validation">
-              <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} onChange={(e) => handleChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status == 'โอนได้' ||  isView}>
-                <option value="ติดอายัติ(เจ้าหนี้อื่น)">ติดอายัติ(เจ้าหนี้อื่น)</option>
-                <option value="เจ้าของหลักประกันเสียชีวิต">เจ้าของหลักประกันเสียชีวิต</option>
-                <option value="ติดข้อกฎหมาย">ติดข้อกฎหมาย</option>
-                <option value="ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น">ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น</option>
-              </select>
-              <label htmlFor="floatingSelectTeam">เงื่อนไขโอนไม่ได้</label>
+          {collateralDetail?.collateral_status == 'ไม่ต้องติดตาม' ? (
+            <div className="col-sm-12 col-md-6 col-lg-4">
+              <div className="form-floating needs-validation">
+                <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} onChange={(e) => handleChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status != 'ไม่ต้องติดตาม' ||  isView}>
+                  <option value="เนื่องจากไม่มีหลักประกันนี้ สาขาบันทึกข้อมูลเสนอขออนุมัติผิดพลาด">เนื่องจากไม่มีหลักประกันนี้ สาขาบันทึกข้อมูลเสนอขออนุมัติผิดพลาด</option>
+                  <option value="เนื่องจากเกษตรกรไถ่ถอนหลักประกันก่อน กฟก.ชำระหนี้แทน">เนื่องจากเกษตรกรไถ่ถอนหลักประกันก่อน กฟก.ชำระหนี้แทน</option>
+                  <option value="เนื่องจากหลักประกันโดนบังคับจำนองขายทอดตลาดก่อน กฟก.ชำระหนี้แทน">เนื่องจากหลักประกันโดนบังคับจำนองขายทอดตลาดก่อน กฟก.ชำระหนี้แทน</option>
+                  <option value="เนื่องจากมีการเปลี่ยนเขตการปกครองของกรมที่ดิน">เนื่องจากมีการเปลี่ยนเขตการปกครองของกรมที่ดิน</option>
+                  <option value="เนื่องจากมีการเปลี่ยนแปลงหลักประกันก่อน กฟก.ชำระหนี้แทน">เนื่องจากมีการเปลี่ยนแปลงหลักประกันก่อน กฟก.ชำระหนี้แทน</option>
+                  <option value="เนื่องจากมีการแบ่งแยกหลักประกันก่อน กฟก.ชำระหนี้แทน">เนื่องจากมีการแบ่งแยกหลักประกันก่อน กฟก.ชำระหนี้แทน</option>
+                  <option value="เนื่องจากมีการรังวัดหลักประกันใหม่ก่อน กฟก.ชำระหนี้แทน">เนื่องจากมีการรังวัดหลักประกันใหม่ก่อน กฟก.ชำระหนี้แทน</option>
+                  <option value="-">อื่นๆ</option>
+                </select>
+                <label htmlFor="floatingSelectTeam">เงื่อนไขไม่ต้องติดตาม</label>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="col-sm-12 col-md-6 col-lg-4">
+              <div className="form-floating needs-validation">
+                <select className="form-select" value={collateralDetail?.conditions_cannot_transferred} onChange={(e) => handleChangeCollateral('conditions_cannot_transferred', e.target?.value)} disabled={collateralDetail?.collateral_status != 'โอนไม่ได้' ||  isView}>
+                  <option value="ติดอายัติ(เจ้าหนี้อื่น)">ติดอายัติ(เจ้าหนี้อื่น)</option>
+                  <option value="เจ้าของหลักประกันเสียชีวิต">เจ้าของหลักประกันเสียชีวิต</option>
+                  <option value="ติดข้อกฎหมาย">ติดข้อกฎหมาย</option>
+                  <option value="ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น">ติดจำนองเจ้าหนี้ร่วมของบุคคลอื่น</option>
+                </select>
+                <label htmlFor="floatingSelectTeam">เงื่อนไขโอนไม่ได้</label>
+              </div>
+            </div>
+          )}
+          {(collateralDetail?.collateral_status == 'ไม่ต้องติดตาม' && !not_follow.includes(collateralDetail?.conditions_cannot_transferred ?? 'เนื่องจากไม่มีหลักประกันนี้ สาขาบันทึกข้อมูลเสนอขออนุมัติผิดพลาด')) && (
+            <div className="col-sm-12 col-md-12 col-lg-12">
+              <Textbox title={'โปรดระบุสาเหตุ'}  disabled={isView}
+                handleChange={(val) => handleChangeCollateral('conditions_cannot_transferred', val)} 
+                containerClassname={'mb-3'} value={collateralDetail?.conditions_cannot_transferred}
+              />
+            </div>
+          )}
         </div>
         {/* start card รายละเอียดหลักทรัพย์ */}
         <div className="mb-1">
