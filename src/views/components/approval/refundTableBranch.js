@@ -27,8 +27,8 @@ const RefundTable = () => {
     const ids = data.filter((i, index) => selected[index]).map(i => i.id_debt_management);
     const params = {
       book_no: 'กฟก '+ getBookNo() + book_no,
-      book_date: ToDateDb(book_date, true),
-      return_date: ToDateDb(return_date, true),
+      book_date: stringToDateTh(book_date, false),
+      return_date: stringToDateTh(return_date, false),
       reason: reason,
       debt_management_type: 'NPL',
       ids: ids
