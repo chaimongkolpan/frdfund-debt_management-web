@@ -9,7 +9,7 @@ const SearchTable = (props) => {
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const onHeaderChange = async (checked) => {
-    await setSelected(result.data.map((item) => (checked )));
+    await setSelected(result.data.map((item) => (checked && item.k_idcard && item.collateral_status != 'ไม่ต้องติดตาม') ? true : false));
   }
   const onSubmit = () => {
     if (handleSubmit) {
@@ -27,7 +27,7 @@ const SearchTable = (props) => {
               <input
                 className="form-check-input"
                 type="checkbox"
-                disabled={!item.k_idcard}
+                disabled={!item.k_idcard || item.collateral_status == 'ไม่ต้องติดตาม'}
                 checked={selected[index] ?? false}
                 onChange={() => {
                   const updated = [...selected];
