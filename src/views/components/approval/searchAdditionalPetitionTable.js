@@ -99,6 +99,7 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.debt_manage_total_expenses_additional)}</td>
         <td>{toCurrency(item.debt_manage_total_additional)}</td>
 
+        <td>{item.status_additional}</td>
         <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
@@ -149,6 +150,7 @@ const SearchTable = (props) => {
                           <th colSpan={coop ? "8" : "10"}>โอนเงินให้สาขา</th>
                           <th colSpan={coop ? "7" : "9"}>ชำระหนี้แทน</th>
                           <th colSpan={coop ? "7" : "9"}>เพิ่มเงินชำระหนี้เกษตรกร</th>
+                          <th rowSpan="2">สถานะเพิ่มเงิน</th>
                           <th rowSpan="2">สถานะสัญญา</th>
               </tr>
               <tr>

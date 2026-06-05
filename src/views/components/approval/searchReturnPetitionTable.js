@@ -98,7 +98,7 @@ const SearchTable = (props) => {
         )}
         <td>{toCurrency(item.debt_manage_total_expenses_return)}</td>
         <td>{toCurrency(item.debt_manage_total_return)}</td>
-
+        <td>{item.status_refund}</td>
         <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
@@ -149,6 +149,7 @@ const SearchTable = (props) => {
                           <th colSpan={coop ? "8" : "10"}>โอนเงินให้สาขา</th>
                           <th colSpan={coop ? "7" : "9"}>ชำระหนี้แทน</th>
                           <th colSpan={coop ? "7" : "9"}>คืนเงินชำระหนี้คงเหลือ</th>
+                          <th rowSpan="2">สถานะรับคืนเงิน</th>
                           <th rowSpan="2">สถานะสัญญา</th>
               </tr>
               <tr>
