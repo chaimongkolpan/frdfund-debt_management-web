@@ -99,7 +99,7 @@ const SearchTable = (props) => {
         <td>{toCurrency(item.debt_manage_total_expenses_additional)}</td>
         <td>{toCurrency(item.debt_manage_total_additional)}</td>
 
-        <td>{item.status_additional}</td>
+        <td>{item.status_refund}</td>
         <td>{item.debt_management_audit_status}</td>
       </tr>
     ))
