@@ -64,8 +64,8 @@ const SearchTable = (props) => {
             </div>
           )}
         </td>
-        <td>{item.debt_management_policy_no}</td>
-        <td>{item.debt_management_policy_date ? stringToDateTh(item.debt_management_policy_date, false) : '-'}</td>
+        <td>{item.branch_policy_no}</td>
+        <td>{item.branch_policy_date ? stringToDateTh(item.branch_policy_date, false) : '-'}</td>
         <td>{item.k_idcard}</td>
         <td>{item.k_name_prefix}</td>
         <td>{(item.k_firstname ?? '') + ' ' + (item.k_lastname ?? '')}</td>
