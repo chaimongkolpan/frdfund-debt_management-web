@@ -219,3 +219,14 @@ export const getBookNo = () => {
   if (user?.role == 5) return '0650/';
   return ''
 }
+export const getBookNoReturn = () => {
+  const user = JSON.parse(localStorage.getItem("userData"));
+  if (user?.role == 4) return user?.short_th + '/';
+  if (user?.role == 2) return '0100/';
+  if (user?.role == 7) return '0100/';
+  if (user?.role == 8) return '0100/';
+  if (user?.role == 9) return '0100/';
+  if (user?.role == 6) return '0100/';
+  if (user?.role == 5) return '0100/';
+  return ''
+}
