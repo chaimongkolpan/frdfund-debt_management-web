@@ -752,7 +752,7 @@ const LegalContractSend = () => {
                             <td>{item.receiptDate}</td>
                             <td>{item.receiptNo}</td>
                             <td>{item.trc == 'PAYOUT' ? toCurrency(item.balance, 2) : item.trc == 'SPN' ? toCurrency(Math.abs(item.amountPaid), 2) : ''}</td>
-                            <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.planDeduc, 2)}</td>
+                            <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.plubdeduc, 2)}</td>
                             <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.intdeduc, 2)}</td>
                             <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.deduc, 2)}</td>
                             <td>{(item.trc == 'PAYOUT' || item.trc == 'SPN') ? '' : toCurrency(item.amountPaid, 2)}</td>
