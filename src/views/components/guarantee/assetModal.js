@@ -98,7 +98,7 @@ const Asset = (props) => {
   }
   const download = async (file) => {
     await setDownloading(true);
-    await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'หนังสือโอนหลักทรัพย์' }, file).then((res) => {
+    await downloadLegalDocument({ filename: file, id: policy.id_AssetPolicy, document_type: 'หนังสือโอนหลักทรัพย์' }, file).then((res) => {
       console.log('download', file)
     });
     await setDownloading(false);
