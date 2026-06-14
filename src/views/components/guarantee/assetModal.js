@@ -1,17 +1,23 @@
 import { useEffect, useState, useRef } from "react";
 import { stringToDateTh, spDate, toCurrency } from "@utils";
+import { Spinner } from 'reactstrap'
 import { 
   getProvinces,
   getLegalAsset,
   updateLegalAsset,
   deleteLegalAsset,
+  downloadLegalDocument,
 } from "@services/api";
 import Textbox from "@views/components/input/Textbox";
+import DatePicker from "@views/components/input/DatePicker";
+import DropZone from "@views/components/input/DropZone";
 import AreaTextbox from "@views/components/input/AreaTextbox";
 import Textarea from "@views/components/input/Textarea";
 import toast from "react-hot-toast";
 import ToastContent from "@views/components/toast/success";
 import ToastError from "@views/components/toast/error";
+import Loading from "@views/components/modal/loading";
+import logo from '@src/assets/images/icons/logo.png'
 
 const Asset = (props) => {
   const { policy, isView } = props;
@@ -23,6 +29,8 @@ const Asset = (props) => {
   const [isOpenCollateralAdd, setOpenCollateralAdd] = useState(false);
   const [isOpenCollateralEdit, setOpenCollateralEdit] = useState(false);
   const [provinces, setProvOp] = useState(null);
+  const [isDownloading, setDownloading] = useState(false);
+  const [oldfiles, setOldFiles] = useState(null);
   const not_follow = ['เนื่องจากไม่มีหลักประกันนี้ สาขาบันทึกข้อมูลเสนอขออนุมัติผิดพลาด'
     ,'เนื่องจากเกษตรกรไถ่ถอนหลักประกันก่อน กฟก.ชำระหนี้แทน'
     ,'เนื่องจากหลักประกันโดนบังคับจำนองขายทอดตลาดก่อน กฟก.ชำระหนี้แทน'
@@ -88,6 +96,13 @@ const Asset = (props) => {
       ...({[key]: val})
     }))
   }
+  const download = async (file) => {
+    await setDownloading(true);
+    await downloadLegalDocument({ filename: file, id: policy.id_KFKPolicy, document_type: 'หนังสือโอนหลักทรัพย์' }, file).then((res) => {
+      console.log('download', file)
+    });
+    await setDownloading(false);
+  }
   const fetchData = async () => {
     const result = await getLegalAsset(policy.id_KFKPolicy);
     if (result.isSuccess) {
@@ -102,6 +117,9 @@ const Asset = (props) => {
           collateralRef.current.scrollIntoView({ behavior: 'smooth' });
         }
       }
+      if (item.document_name) {
+        await setOldFiles(item.document_name.split(','))
+      } else await setOldFiles(null)
     } else {
       await setCollaterals(null)
     }
@@ -1895,6 +1913,46 @@ const Asset = (props) => {
                     <button className="btn btn-danger" type="button" onClick={() => removeCollateral(collateralDetail)}>ลบหลักทรัพย์</button>
                   )}
                 </div>
+                <div className={`${isView ? 'row' : 'd-none'}`}>
+                  <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
+                    <Textbox title={'เลขที่หนังสือนำส่งสาขา'} value={policy.branch_asset_no} disabled/>
+                  </div>
+                  <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
+                    <DatePicker title={'วันที่หนังสือนำส่งสาขา'} value={policy.branch_asset_date} disabled/>
+                  </div>
+                  <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
+                    <DatePicker title={'วันที่โอนหลักประกัน'} value={policy.transferDateKFK} disabled/>
+                  </div>
+                  <div className="col-sm-12 col-md-12 col-lg-6 mt-3">
+                    <Textbox title={'ประเภทการโอน'} value={policy.transfer_type} disabled/>
+                  </div>
+                  <div className="col-sm-12 col-md-12 col-lg-12 mt-3">
+                    {oldfiles && (
+                      <div className="col-12">
+                        {oldfiles.map((file, index) => (
+                          <div key={index} className="d-flex pb-3 border-bottom border-translucent media px-2">
+                            <div className="border p-2 rounded-2 me-2">
+                              <img className="rounded-2" width={25} src="/assets/img/icons/file.png" alt="..." data-dz-thumbnail="data-dz-thumbnail" />
+                            </div>
+                            <div className="flex-1 d-flex flex-between-center">
+                              <div>
+                                <h6 data-dz-name="data-dz-name">{file}</h6>
+                              </div>
+                              <div className="dropdown">
+                                <button className="btn btn-link text-body-quaternary btn-sm dropdown-toggle btn-reveal dropdown-caret-none" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <span className="fas fa-ellipsis-h"></span>
+                                </button>
+                                <div className="dropdown-menu dropdown-menu-end border border-translucent py-2">
+                                  <button className="dropdown-item" type="button" onClick={() => download(file)}>Download File</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1902,6 +1960,12 @@ const Asset = (props) => {
         {/* end card รายละเอียดหลักทรัพย์ */}
       </>
       )}
+      <Loading isOpen={isDownloading} setModal={setDownloading} centered scrollable size={'lg'} title={'กำลังดาวน์โหลดเอกสาร...'} hideFooter>
+        <div className="d-flex flex-column align-items-center justify-content-center">
+          <img className='mb-5' src={logo} alt='logo' width={150} height={150} />
+          <Spinner className='mb-3' style={{ height: '3rem', width: '3rem' }} />
+        </div>
+      </Loading>
     </>
   );
 };
