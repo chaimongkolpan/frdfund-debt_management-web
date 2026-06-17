@@ -8,6 +8,7 @@ import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/guarantee/filterPrepare";
 import SearchTable from "@views/components/guarantee/searchPrepareTable";
+import SelectTable from "@views/components/guarantee/selectPrepareTable";
 import PostPone from "@views/components/guarantee/postpone";
 import Asset from "@views/components/guarantee/assetModal";
 import Guarantor from "@views/components/guarantee/editGuaranteeModal";
