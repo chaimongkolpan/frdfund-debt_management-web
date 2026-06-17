@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Nav, NavItem, NavLink, TabContent, TabPane, Spinner } from 'reactstrap'
-import { stringToDateTh, toCurrency, getUserData, ToDateDb, getBookNo } from "@utils";
+import { stringToDateTh, toCurrency, getUserData, ToDateDb, getBookNo,getBookNoReturn } from "@utils";
 import According from "@views/components/panel/according";
 import Modal from "@views/components/modal/customModal";
 import Loading from "@views/components/modal/loading";
@@ -230,7 +230,7 @@ const LegalContractSend = () => {
         policyNO: item.policyNO,
         policyStatus: "ส่งคืนนิติกรรมสัญญา",
         sendStatus: "ส่งคืนนิติกรรมสัญญา",
-        branch_policy_no: 'กฟก ' + getBookNo() + bookNo,
+        branch_policy_no: 'กฟก ' + getBookNoReturn() + bookNo,
         branch_policy_date: ToDateDb(bookDate),
       }
     });
@@ -515,7 +515,7 @@ const LegalContractSend = () => {
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก ' + getBookNo()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
+                <BookNo title={'เลขที่หนังสือส่งคืน'} subtitle={'กฟก ' + getBookNoReturn()} containerClassname={'mb-3'} handleChange={(val) => setBookNo(val)} value={bookNo} />
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6 mt-3">
                 <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} handleChange={(val) => setBookDate(val)} />
