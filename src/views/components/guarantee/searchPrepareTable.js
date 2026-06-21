@@ -91,6 +91,7 @@ const SearchTable = (props) => {
   },[selected])
   useEffect(() => {
     if(result) {
+      setSelected(result.data.map(() => false))
       setData(result.data);
       setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
@@ -160,7 +161,7 @@ const SearchTable = (props) => {
         <div className="d-flex align-items-center justify-content-center my-3">
           <div className={`${isSome ? '' : 'd-none'}`}>
             <div className="d-flex">
-              <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => onSubmit()}>โอนหลักทรัพย์</button>
+              <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => onSubmit()}>เตรียมโอนหลักทรัพย์</button>
             </div>
           </div>
         </div>
