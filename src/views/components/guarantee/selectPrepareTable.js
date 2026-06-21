@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
 const SearchTable = (props) => {
-  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleReturnGuarantee,handleSpouse, handleSubmit, can_action } = props;
+  const { result, filter, getData, handleShowDetail, handlePlan, handleAsset, handleGuarantor, handleReturnGuarantee,handleSpouse, handleSubmit, handleRemove, can_action } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
@@ -16,6 +16,13 @@ const SearchTable = (props) => {
       const selectedData = data.filter((i, index) => selected[index]);
       // save session
       handleSubmit(selectedData)
+    }
+  }
+  const onRemove = () => {
+    if (handleRemove) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      // save session
+      handleRemove(selectedData)
     }
   }
   const RenderData = (item, index) => {
@@ -58,19 +65,6 @@ const SearchTable = (props) => {
         <td>{`${item.contract_area_rai ? item.contract_area_rai : 0}`}</td>
         <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
         <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>
-        <td class="align-middle white-space-nowrap text-center pe-0">
-          <div class="btn-reveal-trigger position-static">
-            <button class="btn btn-phoenix-secondary btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-            <div class="dropdown-menu dropdown-menu-end py-2">
-              <button className="dropdown-item" type="button" onClick={() => handleShowDetail(item)}>ข้อมูลหลักทรัพย์ค้ำประกัน</button>
-              {can_action && (<button className="dropdown-item" type="button" onClick={() => handlePlan(item)}>เลื่อนโอนหลักทรัพย์</button>)}
-              {can_action && (<button className="dropdown-item" type="button" onClick={() => handleAsset(item)}>ข้อมูลโอนหลักทรัพย์</button>)}
-              <button className="dropdown-item" type="button" onClick={() => handleGuarantor(item)}>ข้อมูลแก้ไขโอนหลักทรัพย์</button>
-              <button className="dropdown-item" type="button" onClick={() => handleSpouse(item)}>ข้อมูลแก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)</button>
-              <button className="dropdown-item" type="button" onClick={() => handleReturnGuarantee(item)}>ข้อมูลส่งคืนโอนหลักทรัพย์</button>
-            </div>
-          </div>
-        </td>
       </tr>
     ))
   }
@@ -91,8 +85,8 @@ const SearchTable = (props) => {
   },[selected])
   useEffect(() => {
     if(result) {
+      setSelected(result.data.map(() => false))
       setData(result.data);
-      setPaging({ currentPage: result.currentPage, total: result.total, totalPage: result.totalPage })
     }
     return () => { setData([]) }
   },[result])
@@ -114,7 +108,6 @@ const SearchTable = (props) => {
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="5">นิติกรรมสัญญา</th>
                 <th colSpan="11">หลักทรัพย์</th>
-                <th rowSpan="2">รายละเอียดหลักทรัพย์</th>
               </tr>
               <tr>
                 <th>เลขบัตรประชาชน</th>
@@ -150,17 +143,13 @@ const SearchTable = (props) => {
             </tbody>
           </table>
         </div>
-        {paging?.total > 0 && (
-          <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
-            setPage={(page) => getData({ ...filter, currentPage: page })} 
-          />
-        )}
       </div>
       {can_action && (
         <div className="d-flex align-items-center justify-content-center my-3">
           <div className={`${isSome ? '' : 'd-none'}`}>
             <div className="d-flex">
               <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => onSubmit()}>โอนหลักทรัพย์</button>
+              <button className="btn btn-danger btn-sm ms-2" type="button" onClick={() => onRemove()}>ยกเลิกเตรียม</button>
             </div>
           </div>
         </div>

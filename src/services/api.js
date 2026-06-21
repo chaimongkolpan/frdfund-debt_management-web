@@ -2804,6 +2804,20 @@ export const searchGuaranteePrepare = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const searchSelectedGuaranteePrepare = async (filter) => {
+  const path = '/Guarantee/search-add-guarantee';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchGuaranteeCheck = async (filter) => {
   const path = '/Guarantee/search-check-guarantee';
   try {
@@ -2848,6 +2862,34 @@ export const getPostponeGuarantee = async (id_KFKPolicy) => {
 };
 export const savePostponeGuarantee = async (params) => {
   const path = '/Guarantee/postpone-assetpolicy';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const addSendGuarantee = async (params) => {
+  const path = '/Guarantee/add-sendassetpolicy';
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const removeSendGuarantee = async (params) => {
+  const path = '/Guarantee/remove-sendassetpolicy';
   try {
     const result = await axios.post(path, params);
     if (result.status == 200)
