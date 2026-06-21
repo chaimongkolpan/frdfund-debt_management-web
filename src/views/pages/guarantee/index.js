@@ -19,6 +19,9 @@ import DropZone from "@views/components/input/DropZone";
 import { 
   cleanData,
   searchGuaranteePrepare,
+  searchSelectedGuaranteePrepare,
+  addSendGuarantee,
+  removeSendGuarantee,
   sendGuarantee,
 } from "@services/api";
 import toast from "react-hot-toast";
@@ -32,6 +35,7 @@ const LegalContractPrepare = () => {
   const navigate = useNavigate();
   const [isLoadBigData, setLoadBigData] = useState(false);
   const [data, setData] = useState(null);
+  const [dataAdded, setDataAdded] = useState(null);
   const [policy, setPolicy] = useState(null);
   const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState(null);
@@ -83,6 +87,19 @@ const LegalContractPrepare = () => {
       console.error('no file upload');
     }
   }
+  const onSearchAdded = async () => {
+    setLoadBigData(true);
+    const result = await searchSelectedGuaranteePrepare({
+        currentPage: 1,
+        pageSize: 0,
+    });
+    if (result.isSuccess) {
+      setDataAdded(result)
+    } else {
+      setDataAdded(null)
+    }
+    setLoadBigData(false);
+  }
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter(filter)
@@ -122,6 +139,40 @@ const LegalContractPrepare = () => {
     await setPolicy(item);
     await setOpenSpouse(true);
   }
+  const handleAdd = async (item) => {
+    const ids =  item.map((it) => it.id_AssetPolicy);
+    await setLoadBigData(true);
+    const result = await addSendGuarantee({ids});
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await onSearch(filter);
+      await onSearchAdded();
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+    await setLoadBigData(false);
+  }
+  const handleRemove = async (item) => {
+    const ids =  item.map((it) => it.id_AssetPolicy);
+    await setLoadBigData(true);
+    const result = await removeSendGuarantee({ids});
+    if (result.isSuccess) {
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await onSearch(filter);
+      await onSearchAdded();
+    } else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
+    await setLoadBigData(false);
+  }
   const handleSubmit = async (item) => {
     await setTransferType('โอนตามมาตรา 37/9 วรรค 2');
     await setSelected(item);
@@ -129,6 +180,7 @@ const LegalContractPrepare = () => {
   }
   useEffect(() => {
     setLoadBigData(true);
+    onSearchAdded();
     return cleanData
   },[])
   return (
@@ -153,7 +205,22 @@ const LegalContractPrepare = () => {
                         handleGuarantor={handleGuarantor} 
                         handleReturnGuarantee={handleReturnGuarantee}
                         handleSpouse={handleSpouse} 
+                        handleSubmit={handleAdd} 
+                        can_action={can_action}
+                      />
+                    )}
+                  </>
+                )}
+              />
+              <According 
+                title={'ทะเบียนคุมหลักประกัน'}
+                className={"my-4"}
+                children={(
+                  <>
+                    {dataAdded && (
+                      <SelectTable result={dataAdded} 
                         handleSubmit={handleSubmit} 
+                        handleRemove={handleRemove}
                         can_action={can_action}
                       />
                     )}
