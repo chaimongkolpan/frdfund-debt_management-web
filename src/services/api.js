@@ -1388,6 +1388,34 @@ export const notConfirmCommittee = async (param) => {
 };
 // #endregion
 //#region Approval
+export const getBranchPolicyNo = async (status) => {
+  const path = '/common/branch-policy-no';
+  try {
+    const result = await axios.get(path, { params: {status} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getBranchPolicyDate = async (status, branch_policy_no) => {
+  const path = '/common/branch-policy-date';
+  try {
+    const result = await axios.get(path, { params: {status, branch_policy_no} });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getCommitteeNo = async (status) => {
   const path = '/common/proposal-committee-no';
   try {
@@ -2731,28 +2759,28 @@ export const searchLegalCheck = async (filter) => {
     return defaultErrorResponse;
   }
 };
-export const getBranchPolicyNo = async () => {
-  const path = "/common/branch-policy-no";
-  try {
-    const result = await axios.get(path);
-    if (result.status == 200) return result.data;
-    else return defaultErrorResponse;
-  } catch (e) {
-    console.error("error: " + path + " =>", e);
-    return defaultErrorResponse;
-  }
-};
-export const getBranchPolicyDate = async (no) => {
-  const path = "/common/branch-policy-date";
-  try {
-    const result = await axios.get(path, { param: { no }});
-    if (result.status == 200) return result.data;
-    else return defaultErrorResponse;
-  } catch (e) {
-    console.error("error: " + path + " =>", e);
-    return defaultErrorResponse;
-  }
-};
+// export const getBranchPolicyNo = async () => {
+//   const path = "/common/branch-policy-no";
+//   try {
+//     const result = await axios.get(path);
+//     if (result.status == 200) return result.data;
+//     else return defaultErrorResponse;
+//   } catch (e) {
+//     console.error("error: " + path + " =>", e);
+//     return defaultErrorResponse;
+//   }
+// };
+// export const getBranchPolicyDate = async (no) => {
+//   const path = "/common/branch-policy-date";
+//   try {
+//     const result = await axios.get(path, { param: { no }});
+//     if (result.status == 200) return result.data;
+//     else return defaultErrorResponse;
+//   } catch (e) {
+//     console.error("error: " + path + " =>", e);
+//     return defaultErrorResponse;
+//   }
+// };
 export const getDebtManagementPolicyNo = async () => {
   const path = "/common/debt-management-policy-no";
   try {
