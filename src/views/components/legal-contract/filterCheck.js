@@ -5,8 +5,8 @@ import {
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
-  getCommitteeNo,
-  getCommitteeDate,
+  getBranchPolicyNo,
+  getBranchPolicyDate,
 } from "@services/api";
 
 const Filter = (props) => {
@@ -81,13 +81,13 @@ const Filter = (props) => {
     if (key == 'branch_policy_no') {
       setLoading(true);
       await setDateOp(null);
-      const resultDate = await getCommitteeDate('', val);
+      const resultDate = await getBranchPolicyDate('', val);
       if (resultDate.isSuccess) {
         const temp = resultDate.data.map(item => item.name);
         await setDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({branch_policy_date: 'all'})
+          ...({branch_policy_date_th: 'all'})
         }))
       } else await setDateOp(null);
       setLoading(false);
@@ -99,7 +99,7 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultNo = await getCommitteeNo();
+    const resultNo = await getBranchPolicyNo();
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('loan_province', temp[0]);
@@ -137,13 +137,13 @@ const Filter = (props) => {
         ...prevState,
         ...({branch_policy_no: 'all'})
       }))
-      const resultDate = await getCommitteeDate('', temp[0]);
+      const resultDate = await getBranchPolicyDate('', temp[0]);
       if (resultDate.isSuccess) {
         const temp = resultDate.data.map(item => item.name);
         await setDateOp(temp);
         await setFilter((prevState) => ({
           ...prevState,
-          ...({branch_policy_date: 'all'})
+          ...({branch_policy_date_th: 'all'})
         }))
       } else await setDateOp(null);
     } else await setNoOp(null);
@@ -186,7 +186,7 @@ const Filter = (props) => {
               title={'วันที่หนังสือนำส่งสาขา'} 
               defaultValue={'all'} 
               options={dateOp} hasAll
-              handleChange={(val) => onChange('branch_policy_date', val)}
+              handleChange={(val) => onChange('branch_policy_date_th', val)}
             />
           )}
         </div>
