@@ -5,8 +5,8 @@ import {
   getBigDataProvinces,
   getBigDataCreditors,
   getBigDataCreditorTypes,
-  getDebtManagementPolicyNo,
-  getDebtManagementPolicyDate,
+  getBranchPolicyNo,
+  getBranchPolicyDate,
 } from "@services/api";
 
 const Filter = (props) => {
@@ -79,6 +79,20 @@ const Filter = (props) => {
       } else await setCreditorOp(null);
       setLoading(false);
     }
+    if (key == 'branch_policy_no') {
+      setLoading(true);
+      await setDateOp(null);
+      const resultDate = await getBranchPolicyDate("'ตรวจสอบนิติกรรมสัญญา','นิติกรรมสัญญาสมบูรณ์'", val);
+      if (resultDate.isSuccess) {
+        const temp = resultDate.data.map(item => item.name);
+        await setDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_policy_date_th: 'all'})
+        }))
+      } else await setDateOp(null);
+      setLoading(false);
+    }
     setFilter((prevState) => ({
       ...prevState,
       ...({[key]: val})
@@ -86,8 +100,7 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultNo = await getDebtManagementPolicyNo();
-    const resultDate = await getDebtManagementPolicyDate();
+    const resultNo = await getBranchPolicyNo("'ตรวจสอบนิติกรรมสัญญา','นิติกรรมสัญญาสมบูรณ์'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('loan_province', temp[0]);
@@ -123,17 +136,18 @@ const Filter = (props) => {
       await setNoOp(temp);
       await setFilter((prevState) => ({
         ...prevState,
-        ...({debt_management_policy_no: 'all'})
+        ...({branch_policy_no: 'all'})
       }))
+      const resultDate = await getBranchPolicyDate("'ตรวจสอบนิติกรรมสัญญา','นิติกรรมสัญญาสมบูรณ์'", temp[0]);
+      if (resultDate.isSuccess) {
+        const temp = resultDate.data.map(item => item.name);
+        await setDateOp(temp);
+        await setFilter((prevState) => ({
+          ...prevState,
+          ...({branch_policy_date_th: 'all'})
+        }))
+      } else await setDateOp(null);
     } else await setNoOp(null);
-    if (resultDate.isSuccess) {
-      const temp = resultDate.data.map(item => item.name);
-      await setDateOp(temp);
-      await setFilter((prevState) => ({
-        ...prevState,
-        ...({debt_management_policy_date: 'all'})
-      }))
-    } else await setDateOp(null);
     setIsMounted(true);
     setLoading(false);
   }
@@ -163,7 +177,7 @@ const Filter = (props) => {
               title={'เลขที่หนังสือนำส่งจัดการหนี้'} 
               defaultValue={'all'} 
               options={noOp} hasAll
-              handleChange={(val) => onChange('debt_management_policy_no', val)}
+              handleChange={(val) => onChange('branch_policy_no', val)}
             />
           )}
         </div>
@@ -173,7 +187,7 @@ const Filter = (props) => {
               title={'วันที่หนังสือนำส่งสาขาจัดการหนี้'} 
               defaultValue={'all'} 
               options={dateOp} hasAll
-              handleChange={(val) => onChange('debt_management_policy_date', val)}
+              handleChange={(val) => onChange('branch_policy_date_th', val)}
             />
           )}
         </div>
