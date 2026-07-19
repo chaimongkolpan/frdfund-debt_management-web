@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { stringToDateTh, toCurrency } from "@utils";
 const ConfirmTable = (props) => {
+  const debt_management_type = 'NPL';
   const { data, setAddPetition } = props;
   const [coop, setCoop] = useState(true);
   const [petition, setPetition] = useState(null);
