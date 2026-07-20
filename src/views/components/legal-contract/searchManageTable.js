@@ -46,7 +46,7 @@ const SearchTable = (props) => {
         <td className="fs-9 align-middle">
           {can_action ? (
             <div className="form-check ms-2 mb-0 fs-8">
-              <input className="form-check-input" disabled={!item.document_name} type="checkbox" checked={checked} onChange={() => onChange(index)} />
+              <input className="form-check-input" disabled={!item.document_name || item.policyStatus !== 'ตรวจสอบนิติกรรมสัญญา'} type="checkbox" checked={checked} onChange={() => onChange(index)} />
             </div>
           ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
