@@ -192,8 +192,8 @@ const LegalContractSend = () => {
       return {
         id_KFKPolicy: item.id_KFKPolicy,
         policyNO: item.policyNO,
-        policyStatus: "สาขาแก้ไขนิติกรรมสัญญา",
-        sendStatus: "สาขาแก้ไขนิติกรรมสัญญา",
+        policyStatus: "แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)",
+        sendStatus: "แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)",
         branch_policy_no: bookNo,
         branch_policy_date: ToDateDb(bookDate),
       }
@@ -419,7 +419,7 @@ const LegalContractSend = () => {
       )}
       {openEdit && (
         <Modal isOpen={openEdit} setModal={setOpenEdit} onClose={() => setOpenEdit(false)}  
-          title={'แก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable fullscreen okText={'แก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)'} onOk={onSubmit} okColor={"warning"}
+          title={'แก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable fullscreen okText={'แก้ไขนิติกรรมสัญญา (บริหารสินทรัพย์)'} onOk={onSubmitEdit} okColor={"warning"}
         >
           <form>
             <br />

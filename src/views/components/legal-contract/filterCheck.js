@@ -18,7 +18,7 @@ const Filter = (props) => {
   const [creditorOp, setCreditorOp] = useState(null);
   const [noOp, setNoOp] = useState(null);
   const [dateOp, setDateOp] = useState(null);
-  const statusOp = ["จัดส่งนิติกรรมสัญญา","สาขาแก้ไขนิติกรรมสัญญา","ส่งคืนนิติกรรมสัญญา"];
+  const statusOp = ["จัดส่งนิติกรรมสัญญา","สาขาแก้ไขนิติกรรมสัญญา","แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)","ส่งคืนนิติกรรมสัญญา"];
   const typeOp = ["NPA","NPL"];
   const onSubmit = () => {
     if (handleSubmit) {
