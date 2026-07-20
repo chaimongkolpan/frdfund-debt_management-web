@@ -28,6 +28,9 @@ import {
   submitSendLegal,
   downloadLegalDocument,
 } from "@services/api";
+import toast from "react-hot-toast";
+import ToastContent from "@views/components/toast/success";
+import ToastError from "@views/components/toast/error";
 
 const user = getUserData();
 const LegalContractSend = () => {
@@ -170,7 +173,16 @@ const LegalContractSend = () => {
     });
     const result = await submitSendLegal(param);
     if (result.isSuccess) {
-    } 
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await onSearch(filter);
+      await setOpenSubmit(false);
+    }  else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
   }
   const onSubmitReturn = async () => {
     const param = selectedData.map(item => {
@@ -185,7 +197,16 @@ const LegalContractSend = () => {
     });
     const result = await submitSendLegal(param);
     if (result.isSuccess) {
-    } 
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await onSearch(filter);
+      await setOpenSubmit(false);
+    }  else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
   }
   const onSubmitEdit = async () => {
     const param = selectedData.map(item => {
@@ -200,7 +221,16 @@ const LegalContractSend = () => {
     });
     const result = await submitSendLegal(param);
     if (result.isSuccess) {
-    } 
+      toast((t) => (
+        <ToastContent t={t} title={'บันทึกข้อมูล'} message={'บันทึกสำเร็จ'} />
+      ));
+      await onSearch(filter);
+      await setOpenSubmit(false);
+    }  else {
+      toast((t) => (
+        <ToastError t={t} title={'บันทึกข้อมูล'} message={'บันทึกไม่สำเร็จ'} />
+      ));
+    }
   }
   const handleSubmit = async (selected) => {
     await setBookNo(null);
