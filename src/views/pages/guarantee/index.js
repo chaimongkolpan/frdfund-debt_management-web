@@ -12,6 +12,7 @@ import SelectTable from "@views/components/guarantee/selectPrepareTable";
 import PostPone from "@views/components/guarantee/postpone";
 import Asset from "@views/components/guarantee/assetModal";
 import Guarantor from "@views/components/guarantee/editGuaranteeModal";
+import GuarantorManage from "@views/components/guarantee/editGuaranteeManageModal";
 import ReturnGuarantee from "@views/components/guarantee/returnGuaranteeModal";
 import Textbox from "@views/components/input/Textbox";
 import DatePicker from "@views/components/input/DatePicker";
@@ -248,17 +249,17 @@ const LegalContractPrepare = () => {
       )}
       {openGuarantor && (
         <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลแก้ไขโอนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-          <Guarantor policy={policy} /> 
+          <Guarantor policy={policy} isView /> 
         </Modal> 
       )}
       {openSpouse && (
         <Modal isOpen={openSpouse} setModal={setOpenSpouse} hideOk onClose={() => setOpenSpouse(false)}  title={'ข้อมูลแก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable fullscreen>
-           <Guarantor policy={policy} /> 
+           <GuarantorManage policy={policy} isView /> 
         </Modal> 
       )}
       {openReturnGuarantee && (
         <Modal isOpen={openReturnGuarantee} setModal={setOpenReturnGuarantee} hideOk onClose={() => setOpenReturnGuarantee(false)}  title={'ข้อมูลส่งคืนโอนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-          <ReturnGuarantee policy={policy} /> 
+          <ReturnGuarantee policy={policy} isView /> 
         </Modal> 
       )}
       {openSubmit && (
