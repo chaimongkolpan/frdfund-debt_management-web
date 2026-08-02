@@ -43,7 +43,7 @@ const editGuarantee = (props) => {
     }))
   }
   const fetchData = async () => {
-    const result = await getTransferGuarantee(policy.id_AssetPolicy, 'แก้ไขโอนหลักทรัพย์', '');
+    const result = await getTransferGuarantee(policy.id_AssetPolicy, 'แก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)', '');
     if (result.isSuccess) {
       await setGuarantors(result.data);
     } else {
@@ -136,7 +136,7 @@ const editGuarantee = (props) => {
       </div>
       <br />
       <div className="col-sm-12 col-md-12 col-lg-12">
-            <Textarea title={'หมายเหตุ'} disabled={isView} value={policy?.edit_asset_reason ?? ''}
+            <Textarea title={'หมายเหตุ'} disabled={isView} value={policy?.edit_asset_manage_reason ?? ''}
               containerClassname={'mb-3'} 
             />
         </div>

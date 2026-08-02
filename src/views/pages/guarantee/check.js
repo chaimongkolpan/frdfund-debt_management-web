@@ -12,6 +12,7 @@ import Detail from "@views/components/guarantee/detail";
 import PostPone from "@views/components/guarantee/postpone";
 import Asset from "@views/components/guarantee/assetModal";
 import Guarantor from "@views/components/guarantee/editGuaranteeModal";
+import GuarantorManage from "@views/components/guarantee/editGuaranteeManageModal";
 import ReturnGuarantee from "@views/components/guarantee/returnGuaranteeModal";
 import Spouse from "@views/components/legal-contract/spouseModal";
 import Textbox from "@views/components/input/Textbox";
@@ -302,12 +303,12 @@ const LegalContractSend = () => {
       )}
       {openGuarantor && (
         <Modal isOpen={openGuarantor} setModal={setOpenGuarantor} hideOk onClose={() => setOpenGuarantor(false)}  title={'ข้อมูลแก้ไขโอนหลักทรัพย์'} closeText={'ปิด'} scrollable fullscreen>
-          <Guarantor policy={policy} isView /> 
+          <Guarantor policy={policy} /> 
         </Modal> 
       )}
       {openSpouse && (
         <Modal isOpen={openSpouse} setModal={setOpenSpouse} hideOk onClose={() => setOpenSpouse(false)}  title={'ข้อมูลแก้ไขโอนหลักทรัพย์ (บริหารสินทรัพย์)'} closeText={'ปิด'} scrollable fullscreen>
-          <Guarantor policy={policy} isView /> 
+          <GuarantorManage policy={policy} isView /> 
         </Modal> 
       )}
       {openReturnGuarantee && (

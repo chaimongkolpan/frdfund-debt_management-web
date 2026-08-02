@@ -2832,6 +2832,20 @@ export const searchGuaranteePrepare = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const getTransferGuarantee = async (id, status) => {
+  const path = '/Guarantee/get-asset-transfer';
+  try {
+    const result = await axios.get(path, { params: { id, status } });
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const searchSelectedGuaranteePrepare = async (filter) => {
   const path = '/Guarantee/search-add-guarantee';
   try {
