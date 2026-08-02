@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import { ToDateDb } from "@utils";
+import { ToDateDb, stringToDateTh, toCurrency } from "@utils";
 import Textarea from "@views/components/input/Textarea";
 import { 
   getProvinces,
-  getLegalGuarantor,
+  getTransferGuarantee,
   updateLegalGuarantor,
 } from "@services/api";
 import Textbox from "@views/components/input/Textbox";
@@ -53,17 +53,9 @@ const returnGuarantee = (props) => {
     }))
   }
   const fetchData = async () => {
-    const result = await getLegalGuarantor(policy.id_KFKPolicy);
+    const result = await getTransferGuarantee(policy.id_AssetPolicy, 'ส่งคืนโอนหลักทรัพย์', 'หนังสือส่งคืนโอนหลักทรัพย์');
     if (result.isSuccess) {
-      const len = result.guarantors.length;
-      await setGuarantors([
-        ...result.guarantors,
-        ...((policy.loan_amount < 100000 && len < 1) ? [{ guarantor_type: 'ทายาทเกษตรกรสมาชิก' }] : []),
-        ...((policy.loan_amount < 100000 && len < 2) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
-        ...((policy.loan_amount >= 100000 && policy.loan_amount < 200000 && len < 3) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
-        ...((policy.loan_amount >= 200000 && policy.loan_amount < 500000 && len < 4) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
-        ...((policy.loan_amount >= 500000 && len < 5) ? [{ guarantor_type: 'สมาชิกองค์กรเกษตรกร' }] : []),
-      ])
+      await setGuarantors(result.data);
     } else {
       await setGuarantors(null)
     }
@@ -121,27 +113,30 @@ const returnGuarantee = (props) => {
             <tbody className="list text-center align-middle">
               {(guarantors && guarantors.length > 0) ? (guarantors.map((item,index) => (
                 <tr key={index}>
-                  <td>{item.guarantor_type}</td>
-                  <td>{item.guarantor_idcard}</td>
-                  <td>{item.guarantor_name_prefix}</td>
-                  <td>{item.fullname}</td>
-                  <td>{item.guarantor_type}</td>
-                  <td>{item.guarantor_idcard}</td>
-                  <td>{item.guarantor_name_prefix}</td>
-                  <td>{item.fullname}</td>
-                  <td>{item.guarantor_type}</td>
-                  <td>{item.guarantor_idcard}</td>
-                  <td>{item.guarantor_name_prefix}</td>
-                  <td>{item.fullname}</td>
-                  <td>{item.guarantor_type}</td>
-                  <td>{item.guarantor_idcard}</td>
-                  <td>{item.guarantor_name_prefix}</td>
-                  <td>{item.fullname}</td>
+                  <td>{policy.k_idcard}</td>
+                  <td>{policy.k_name_prefix}</td>
+                  <td>{(policy.k_firstname ?? '') + ' ' + (policy.k_lastname ?? '')}</td>
+                  <td>{policy.loan_province}</td>
+                  <td>{policy.policyNO}</td>
+                  <td>{policy.loan_debt_type}</td>
+                  <td>{policy.policyStartDate ? stringToDateTh(policy.policyStartDate, false) : '-'}</td>
+                  <td>{toCurrency(policy.loan_amount)}</td>
+                  <td>{toCurrency(policy.compensation_amount)}</td>
+                  <td>{item.transferStatus}</td>
+                  <td>{item.numberOfDay}</td>
+                  <td>{item.assetType}</td>
+                  <td>{item.collateral_no}</td>
+                  <td>{item.collateral_province}</td>
+                  <td>{item.collateral_district}</td>
+                  <td>{item.collateral_sub_district}</td>
+                  <td>{`${item.contract_area_rai ? item.contract_area_rai : 0}`}</td>
+                  <td>{`${item.contract_area_ngan ? item.contract_area_ngan : 0}`}</td>
+                  <td>{`${item.contract_area_sqaure_wa ? item.contract_area_sqaure_wa : 0}`}</td>
                   <td></td>
                 </tr>
               ))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={6}>
+                  <td className="fs-9 text-center align-middle" colSpan={19}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>
@@ -153,15 +148,15 @@ const returnGuarantee = (props) => {
       <br />
       <div class="row">
       <div class="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <Textbox title={'เลขที่หนังสือส่งคืน'} disabled containerClassname={'mb-3'} value={bookNo} />
+                <Textbox title={'เลขที่หนังสือส่งคืน'} disabled={isView} containerClassname={'mb-3'} value={bookNo} />
               </div>
               <div class="col-sm-12 col-md-6 col-lg-6 mt-3">
-                <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} disabled />
+                <DatePicker title={'วันที่หนังสือส่งคืน'} value={bookDate} disabled={isView} />
               </div>
               </div>
               <br />
       <div className="col-sm-12 col-md-12 col-lg-12">
-            <Textarea title={'หมายเหตุ'} 
+            <Textarea title={'หมายเหตุ'} disabled={isView} value={policy?.return_asset_reason ?? ''}
                     // handleChange={(val) => handleChangeDebt('debt_manage_remark', val)} 
                     containerClassname={'mb-3'} 
             />
