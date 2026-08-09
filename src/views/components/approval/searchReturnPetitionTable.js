@@ -44,6 +44,9 @@ const SearchTable = (props) => {
             </div>
           ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
+        <td>{item.approve_book_no}</td>
+        <td>{item.approve_book_date}</td>
+        <td>{item.remark}</td>
         <td>{item.book_no}</td>
         <td>{item.book_date}</td>
         <td>{item.proposal_committee_no}</td>
@@ -142,7 +145,7 @@ const SearchTable = (props) => {
                     </div>
                   ) : '#'}
                 </th>
-                          <th colSpan="2">รับคืนเงินชำระหนี้</th>
+                          <th colSpan="5">รับคืนเงินชำระหนี้</th>
                           <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                           <th colSpan="4">เกษตรกร</th>
                           <th colSpan="4">เจ้าหนี้</th>
@@ -153,6 +156,9 @@ const SearchTable = (props) => {
                           <th rowSpan="2">สถานะสัญญา</th>
               </tr>
               <tr>
+                <th>เลขที่หนังสือจัดการหนี้</th>
+                <th>วันที่หนังสือจัดการหนี้</th>
+                <th style={{ minWidth: 200 }}>หมายเหตุ</th>
                 <th>เลขที่หนังสือสาขา</th>
                 <th>วันที่หนังสือสาขา</th>
                 <th>ครั้งที่เสนอคณะกรรมการ</th>
@@ -210,7 +216,7 @@ const SearchTable = (props) => {
             <tbody className="list text-center align-middle" id="bulk-select-body">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
-                  <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
+                  <td className="fs-9 text-center align-middle" colSpan={coop ? 27 : 29}>
                     <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
                   </td>
                 </tr>

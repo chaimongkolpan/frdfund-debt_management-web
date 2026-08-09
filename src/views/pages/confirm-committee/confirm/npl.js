@@ -224,7 +224,7 @@ const NPL = () => {
               />
               {can_action && (
                 <According 
-                  title={'สาขายืนยันยอด'}
+                  title={'รวบรวมยืนยันยอด'}
                   className={"mb-3"}
                   children={(
                     <>
