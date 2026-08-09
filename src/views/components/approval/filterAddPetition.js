@@ -18,7 +18,7 @@ const Filter = (props) => {
   const [provOp, setProvOp] = useState(null);
   const [creditorTypeOp, setCreditorTypeOp] = useState(null);
   const [creditorOp, setCreditorOp] = useState(null);
-  const [statusDebtOp, setStatusDebtOp] = useState(["รอดำเนินการ","อนุมัติเพิ่มเงินแล้ว"]);
+  const [statusDebtOp, setStatusDebtOp] = useState(["รอเพิ่มเงิน","อนุมัติเพิ่มเงินแล้ว"]);
   const [committeeNoOp, setCommitteeNoOp] = useState(null);
   const [committeeDateOp, setCommitteeDateOp] = useState(null);
   const onSubmit = () => {
@@ -80,7 +80,7 @@ const Filter = (props) => {
     }
     if (key == 'book_no') {
       await setCommitteeDateOp(null);
-      const resultCommitteeDate = await getReturnPetitionDate("\'รอดำเนินการ\',\'อนุมัติเพิ่มเงินแล้ว\'", val);
+      const resultCommitteeDate = await getReturnPetitionDate("\'รอเพิ่มเงิน\',\'อนุมัติเพิ่มเงินแล้ว\'", val);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);
@@ -97,7 +97,7 @@ const Filter = (props) => {
   }
   async function fetchData() {
     const resultProv = await getBigDataProvinces();
-    const resultCommitteeNo = await getReturnPetitionNo("\'รอดำเนินการ\',\'อนุมัติเพิ่มเงินแล้ว\'");
+    const resultCommitteeNo = await getReturnPetitionNo("\'รอเพิ่มเงิน\',\'อนุมัติเพิ่มเงินแล้ว\'");
     if (resultProv.isSuccess) {
       const temp = resultProv.data.map(item => item.name);
       await setProvOp(temp);if (temp.length == 1) onChange('province', temp[0]);
@@ -136,7 +136,7 @@ const Filter = (props) => {
         ...({book_no: temp[0]})
       }))
       
-      const resultCommitteeDate = await getReturnPetitionDate("\'รอดำเนินการ\',\'อนุมัติเพิ่มเงินแล้ว\'", temp[0]);
+      const resultCommitteeDate = await getReturnPetitionDate("\'รอเพิ่มเงิน\',\'อนุมัติเพิ่มเงินแล้ว\'", temp[0]);
       if (resultCommitteeDate.isSuccess) {
         const temp = resultCommitteeDate.data.map(item => item.name);
         await setCommitteeDateOp(temp);

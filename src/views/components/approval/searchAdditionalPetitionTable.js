@@ -45,7 +45,7 @@ const SearchTable = (props) => {
           ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
         </td>
         <td>{item.approve_book_no}</td>
-        <td>{item.approve_book_date}</td>
+        <td>{stringToDateTh(item.approve_book_date, false)}</td>
         <td>{item.remark}</td>
         <td>{item.book_no}</td>
         <td>{item.book_date}</td>
