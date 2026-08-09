@@ -171,7 +171,7 @@ const PlanPay = (props) => {
               <div className="row g-3 justify-content-center">
                 <div className="col-auto">
                   <button className="btn btn-primary me-1 mb-1" type="button" onClick={() => print()}>ปริ้นแผนการชำระเงินคืน</button>
-                  {isView && (
+                  {!isView && (
                     <button className="btn btn-success me-1 mb-1" type="button" onClick={() => save()}>บันทึกแผนการชำระเงินคืน</button>
                   )}
                 </div>

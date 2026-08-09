@@ -29,7 +29,7 @@ const Filter = (props) => {
         province: "",
         creditorType: "",
         creditor: "",
-        addStatus: "",
+        returnStatus: "",
         ...filter,
         currentPage: 1,
         pageSize: process.env.VITE_PAGESIZE
@@ -227,7 +227,7 @@ const Filter = (props) => {
               title={'สถานะเพิ่มเงิน'} 
               defaultValue={'all'} 
               options={statusDebtOp}
-              handleChange={(val) => onChange('addStatus', val)}
+              handleChange={(val) => onChange('returnStatus', val)}
               hasAll />
           )}
         </div>
