@@ -20,7 +20,7 @@ const RefundTable = (props) => {
   const [coop, setCoop] = useState(true);
   const handleSubmit = async () => {
     if(onSave) {
-      await onSave(book_no, book_date, reason);
+      await onSave('กฟก '+ getBookNo() + book_no, book_date, reason);
     }
   }
   const RenderData = (item, index) => {
