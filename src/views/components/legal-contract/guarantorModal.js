@@ -184,6 +184,7 @@ const Guarantor = (props) => {
                       <select className="form-select" disabled={isView} value={guarantorDetail.guarantor_type ?? 'สมาชิกองค์กรเกษตรกร'} onChange={(e) => handleChangeGuarantor('guarantor_type', e.target?.value)}>
                         <option value="สมาชิกองค์กรเกษตรกร" selected>สมาชิกองค์กรเกษตรกร</option>
                         <option value="ทายาท">ทายาท</option>
+                        <option value="ผู้ค้ำประกันเดิม">ผู้ค้ำประกันเดิม</option>
                       </select>
                       <label htmlFor="floatingSelectTeam">ประเภทบุคคลค้ำประกัน</label>
                     </div>
