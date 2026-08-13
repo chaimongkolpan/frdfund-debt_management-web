@@ -1514,6 +1514,20 @@ export const searchMakePetition = async (filter) => {
     return defaultErrorResponse;
   }
 };
+export const searchMakePetitionBranch = async (filter) => {
+  const path = '/MakePetition/search-make-petition-branch';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
 export const getMakePetition = async (id) => {
   const path = '/MakePetition/get-make-petition';
   try {
@@ -1656,6 +1670,20 @@ export const updateAdditionalPetition = async (filter) => {
 };
 export const getMakePetitionAddedList = async (filter) => {
   const path = '/MakePetition/search-make-petition';
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const getMakePetitionAddedListBranch = async (filter) => {
+  const path = '/MakePetition/search-make-petition-branch';
   try {
     const result = await axios.post(path, filter);
     if (result.status == 200)

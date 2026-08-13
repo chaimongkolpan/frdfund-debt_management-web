@@ -11,15 +11,15 @@ import Loading from "@views/components/modal/loading";
 import logo from '@src/assets/images/icons/logo.png'
 import Filter from "@views/components/approval/filterMakePetitionBranch";
 import SearchTable from "@views/components/approval/searchMakePetitionTableBranch";
-import SelectedTable from "@views/components/approval/selectMakePetitionTable";
+import SelectedTable from "@views/components/approval/selectMakePetitionTableBranch";
 import ConfirmTable from "@views/components/approval/confirmMakePetitionBranchTable";
 import BookDateTable from "@views/components/approval/addBookDateTableBranch";
 import RefundTable from "@views/components/approval/refundTableBranch";
 import AdditionalTable from "@views/components/approval/addTableBranch";
 import { 
   cleanData,
-  searchMakePetition,
-  getMakePetitionAddedList,
+  searchMakePetitionBranch,
+  getMakePetitionAddedListBranch,
   addMakePetitionBranchList,
   removeMakePetitionBranchList,
   insertPetition,
@@ -139,7 +139,7 @@ const NPL = () => {
   const onSearch = async (filter) => {
     setLoadBigData(true);
     setFilter({ ...filter, DebtClassifyStatus: 'โอนเงินให้สาขาแล้ว' })
-    const result = await searchMakePetition(filter);
+    const result = await searchMakePetitionBranch(filter);
     if (result.isSuccess) {
       setData(result)
     } else {
@@ -149,7 +149,7 @@ const NPL = () => {
   }
   const fetchData = async (query) => {
     setFilterAdded(query);
-    const result = await getMakePetitionAddedList(query);
+    const result = await getMakePetitionAddedListBranch(query);
     if (result.isSuccess) {
       setAddedData(result)
     } else {

@@ -1,54 +1,65 @@
 import { useEffect, useState } from "react";
 import Paging from "@views/components/Paging";
 import { stringToDateTh, toCurrency } from "@utils";
-import EditDetail from "@views/components/approval/editDetailBranch";
-const SearchTable = (props) => {
-  const { result, handleSubmit, filter, getData, can_action } = props;
+const SelectedTable = (props) => {
+  const { result, handleSubmit, handleRemove, filter, getData } = props;
   const [data, setData] = useState([]);
   const [coop, setCoop] = useState(true);
   const [paging, setPaging] = useState(null);
   const [isSome, setIsSome] = useState(false);
+  const [count, setCount] = useState(0);
+  const [contracts, setContracts] = useState(0);
+  const [sumTotal, setSumTotal] = useState(0);
   const [isAll, setIsAll] = useState(false);
   const [selected, setSelected] = useState([]);
-  const [editData, setEditData] = useState(null);
-  const [isOpenDetail, setOpenDetail] = useState(false);
   const onSubmit = () => {
     if (handleSubmit) {
       const selectedData = data.filter((i, index) => selected[index]);
       handleSubmit(selectedData)
     }
   }
+  const onRemove = () => {
+    if (handleRemove) {
+      const selectedData = data.filter((i, index) => selected[index]);
+      handleRemove(selectedData)
+    }
+  }
   const onChange = async (id) => {
+    const newSelected = [
+      ...(selected.map((item, index) => (id == index ? !item : item))),
+    ]
     await setSelected((prev) => {
       prev[id] = !prev[id];
       return [...prev]
     })
+    const selectedData = data.filter((i, index) => newSelected[index]);
+    const custs = selectedData.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+    const sum = selectedData.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+    await setCount(custs.length.toLocaleString());
+    await setContracts(selectedData.length.toLocaleString());
+    await setSumTotal(toCurrency(sum,2));
   }
   const onHeaderChange = async (checked) => {
     await setSelected(result.data.map(() => checked));
     await setIsAll(checked)
-  }
-  const handleShowDetail = async(item) => {
-    await setEditData(item);
-    await setOpenDetail(true);
-  }
-  const handleCloseDetail = async() => {
-    await getData(filter);
-    await setOpenDetail(false);
+    if (checked) {
+      const custs = result.data.reduce((prev, item) => { return prev.includes(item.id_card) ? prev : [ ...prev, item.id_card ]; }, []);
+      const sum = result.data.reduce((prev, item) => { return prev + item.debt_manage_total; }, 0)
+      await setCount(custs.length.toLocaleString());
+      await setContracts(result.data.length.toLocaleString());
+      await setSumTotal(toCurrency(sum,2));
+    } else {
+      await setCount(0);
+      await setContracts(0);
+      await setSumTotal(0);
+    }
   }
   const RenderData = (item, index, checked) => {
     return (item && (
       <tr key={index} style={{ background: item.result_additional === 'เพิ่มเงิน' ? 'rgb(255, 242, 205)' : item.result_additional === 'ลดเงิน' ? '#fdeae7' : '#fff' }}>
         <td className="fs-9 align-middle">
-          {can_action ? (
-            <div className="form-check ms-2 mb-0 fs-8">
-              <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
-            </div>
-          ) : (((paging?.currentPage - 1) * process.env.VITE_PAGESIZE) + index + 1)}
-        </td>
-        <td>
-          <div className="d-flex justify-content-center"> 
-            <button className="btn btn-phoenix-secondary btn-icon fs-7 text-success-dark px-0" disabled={!can_action} onClick={() => handleShowDetail(item)}><i className="far fa-edit"></i></button>
+          <div className="form-check ms-2 mb-0 fs-8">
+            <input className="form-check-input" type="checkbox" checked={checked} onChange={() => onChange(index)} />
           </div>
         </td>
         <td>{item.proposal_committee_no}</td>
@@ -61,20 +72,20 @@ const SearchTable = (props) => {
         <td>{item.debt_manage_creditor_name}</td>
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
-        <td>{item.debt_manage_contract_no}</td>
-        <td>{toCurrency(item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0))}</td>
-        <td>{toCurrency(item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0))}</td>
-        <td>{toCurrency(item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0))}</td>
-        <td>{toCurrency(item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0))}</td>
-        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0))}</td>
+          <td>{item.debt_manage_contract_no}</td>
+          <td>{toCurrency(item.debt_manage_outstanding_principal-(item.debt_manage_outstanding_principal_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest-(item.debt_manage_accrued_interest_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_fine-(item.debt_manage_fine_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses-(item.debt_manage_litigation_expenses_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee-(item.debt_manage_forfeiture_withdrawal_fee_remain_remain ?? 0))}</td>
         {!coop && (
           <>
-            <td>{toCurrency(item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0))}</td>
-            <td>{toCurrency(item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0))}</td>
+            <td>{toCurrency(item.debt_manage_insurance_premium-(item.debt_manage_insurance_premium_remain ?? 0))}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses-(item.debt_manage_other_expenses_remain ?? 0))}</td>
           </>
         )}
-        <td>{toCurrency(item.debt_manage_total_expenses - (item.debt_manage_total_expenses_remain ?? 0))}</td>
-        <td>{toCurrency(item.debt_manage_total - (item.debt_manage_total_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses-(item.debt_manage_total_expenses_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_total-(item.debt_manage_total_remain ?? 0))}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
@@ -107,7 +118,6 @@ const SearchTable = (props) => {
     }
     return () => { setData([]) }
   },[result])
-
   return (
     <>
       <div className="d-flex">
@@ -118,19 +128,16 @@ const SearchTable = (props) => {
         <div className="ms-2 square border border-1"  style={{ background: "#fdeae7", height: 20, width: 30 }}></div>
         <div className="ms-1">ลดเงิน</div>
       </div>
-      <div data-list='{"valueNames":["name","email","age"]}'>
+      <div id="tableExample1" data-list='{"valueNames":["name","email","age"]'>
         <div className="table-responsive mx-n1 px-1">
           <table className="table table-sm table-striped table-bordered fs-9 mb-0">
             <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
               <tr>
-                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2" style={{ minWidth: 30 }}>
-                  {can_action ? (
-                    <div className="form-check ms-2 me-0 mb-0 fs-8">
-                      <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
-                    </div>
-                  ) : '#'}
+                <th className="white-space-nowrap fs-9 align-middle ps-0" rowSpan="2">
+                  <div className="form-check ms-2 mb-0 fs-8">
+                    <input className={`form-check-input ${(isSome && !isAll && data.length > 0) ? 'some' : ''}`} type="checkbox" checked={isAll} onChange={() => onHeaderChange(!isAll)} />
+                  </div>
                 </th>
-                <th rowSpan="2">ดำเนินการ</th>
                 <th colSpan="2">คณะกรรมการจัดการหนี้</th>
                 <th colSpan="4">เกษตรกร</th>
                 <th colSpan="4">เจ้าหนี้</th>
@@ -169,7 +176,7 @@ const SearchTable = (props) => {
                 <th>ประเภทและเลขที่หลักทรัพย์(เลขโฉนด)</th>
               </tr>
             </thead>
-            <tbody className="list text-center align-middle" id="bulk-select-body">
+            <tbody className="list text-center align-middle">
               {(data && data.length > 0) ? (data.map((item,index) => RenderData(item, index, selected[index]))) : (
                 <tr>
                   <td className="fs-9 text-center align-middle" colSpan={coop ? 24 : 26}>
@@ -183,22 +190,20 @@ const SearchTable = (props) => {
         {paging?.total > 0 && (
           <Paging currentPage={paging?.currentPage ?? 0} total={paging?.total ?? 1} totalPage={paging?.totalPage ?? 1} 
             setPage={(page) => getData({ ...filter, currentPage: page })} 
+            count={count} contracts={contracts} sumTotal={sumTotal}
           />
         )}
       </div>
-      {can_action && (
-        <div className="d-flex align-items-center justify-content-center my-3">
-          <div className={`${isSome ? '' : 'd-none'}`}>
-            <div className="d-flex">
-              <button className="btn btn-subtle-success btn-sm ms-2" type="button" onClick={() => onSubmit()}>เลือกสัญญาเสนอขออนุมัติรายชื่อ</button>
-            </div>
+      <div className="d-flex align-items-center justify-content-center my-3">
+        <div className={`${isSome ? '' : 'd-none'}`}>
+          <div className="d-flex">
+            <button type="button" className="btn btn-success btn-sm ms-2" onClick={() => onSubmit()}>จัดทำฎีกา</button>
+            {' '}
+            <button type="button" className="btn btn-danger btn-sm ms-2" onClick={() => onRemove()}>ลบออกจากรายการ</button>
           </div>
         </div>
-      )}
-      {isOpenDetail && (
-        <EditDetail isOpen={isOpenDetail} setModal={setOpenDetail} onClose={() => handleCloseDetail()} data={editData} />
-      )}
+      </div>
     </>
   );
 };
-export default SearchTable;
+export default SelectedTable;
