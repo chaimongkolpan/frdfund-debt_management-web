@@ -143,15 +143,78 @@ const FullModal = (props) => {
   },[debts?.debt_manage_outstanding_principal_add,debts?.debt_manage_accrued_interest_add,debts?.debt_manage_fine_add 
   ,debts?.debt_manage_litigation_expenses_add,debts?.debt_manage_forfeiture_withdrawal_fee_add,debts?.debt_manage_insurance_premium_add,debts?.debt_manage_other_expenses_add])
   useEffect(() => {
+    const principle = debts?.debt_manage_outstanding_principal_add;
+    const expense = debts?.debt_manage_litigation_expenses_add + debts?.debt_manage_forfeiture_withdrawal_fee_add + debts?.debt_manage_insurance_premium_add + debts?.debt_manage_other_expenses_add;
+    const total = debts?.debt_manage_outstanding_principal_add + debts?.debt_manage_accrued_interest_add + debts?.debt_manage_fine_add;
+    let frd = debts?.frD_paymen_amount_add;
+    let ex = 0;
+    if (debts?.debt_repayment_conditions != 'ต้นเงิน50%') {
+      if (debts?.debt_repayment_conditions == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = principle * 0.9;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = principle * 0.5;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = principle * 0.4;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = principle * 0.3;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน50%') { frd = principle * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({frD_paymen_amount_add: frd + ex})
+      }))
+    }
+    if (debts?.contract_conditions != 'ต้นเงิน50%') {
+      let pri = debts?.contract_amount_add;
+      let ex1 = 0;
+      if (debts?.contract_conditions == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน50%') { pri = frd * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({contract_amount_add: pri + ex1})
+      }))
+    }
     setDebts((prevState) => ({
       ...prevState,
       ...({debt_manage_total_expenses_add: parseFloat((debts?.debt_manage_litigation_expenses_add + debts?.debt_manage_forfeiture_withdrawal_fee_add + debts?.debt_manage_insurance_premium_add + debts?.debt_manage_other_expenses_add).toFixed(2)) })
     }))
   },[debts?.debt_manage_litigation_expenses_add,debts?.debt_manage_forfeiture_withdrawal_fee_add,debts?.debt_manage_insurance_premium_add,debts?.debt_manage_other_expenses_add])
   useEffect(() => {
+    const principle = debts?.debt_manage_outstanding_principal_add;
+    const expense = debts?.debt_manage_litigation_expenses_add + debts?.debt_manage_forfeiture_withdrawal_fee_add + debts?.debt_manage_insurance_premium_add + debts?.debt_manage_other_expenses_add;
+    const total = debts?.debt_manage_outstanding_principal_add + debts?.debt_manage_accrued_interest_add + debts?.debt_manage_fine_add;
+    let frd = debts?.frD_paymen_amount_add;
+    let ex = 0;
+    if (debts?.debt_repayment_conditions != 'ต้นเงิน50%') {
+      if (debts?.debt_repayment_conditions == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = principle * 0.9;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = principle * 0.5;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = principle * 0.4;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = principle * 0.3;ex = expense;}
+      else if (debts?.debt_repayment_conditions == 'ต้นเงิน50%') { frd = principle * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({frD_paymen_amount_add: frd + ex})
+      }))
+    }
+    if (debts?.contract_conditions != 'ต้นเงิน50%') {
+      let pri = debts?.contract_amount_add;
+      let ex1 = 0;
+      if (debts?.contract_conditions == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
+      else if (debts?.contract_conditions == 'ต้นเงิน50%') { pri = frd * 0.5}
+      setDebts((prevState) => ({
+        ...prevState,
+        ...({contract_amount_add: pri + ex1})
+      }))
+    }
     setDebts((prevState) => ({
       ...prevState,
-      ...({debt_manage_total_expenses_add: parseFloat((debts?.debt_manage_litigation_expenses_add + debts?.debt_manage_forfeiture_withdrawal_fee_add + debts?.debt_manage_insurance_premium_add + debts?.debt_manage_other_expenses_add).toFixed(2)) })
+      ...({debt_manage_total_add: parseFloat((debts?.debt_manage_outstanding_principal_add + debts?.debt_manage_accrued_interest_add + debts?.debt_manage_fine_add 
+        + debts?.debt_manage_litigation_expenses_add + debts?.debt_manage_forfeiture_withdrawal_fee_add + debts?.debt_manage_insurance_premium_add + debts?.debt_manage_other_expenses_add).toFixed(2)) })
     }))
   },[debts?.debt_manage_total_add,debts?.debt_manage_total_expenses_add])
   useEffect(() => {
@@ -182,7 +245,8 @@ const FullModal = (props) => {
       ...({contract_amount_add: pri + ex1})
     }))
   },[debts?.debt_repayment_conditions,debts?.contract_conditions])
-  
+    useEffect(() => {
+  },[debts?.contract_amount_add,debts?.frD_paymen_amount_add])
   const getProvince = async () => {
     const resultProv = await getProvinces();
     if (resultProv.isSuccess) {
@@ -345,7 +409,7 @@ const FullModal = (props) => {
 
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" disabled value={debts?.debt_repayment_conditions ?? ''} onChange={(e) => handleChangeDebt('debt_repayment_conditions', e.target?.value)}>
+                                <select className="form-select" disabled value={debts?.debt_repayment_conditions_add ?? ''} onChange={(e) => handleChangeDebt('debt_repayment_conditions', e.target?.value)}>
                                   <option value="ตามจำนวนเงินที่กองทุนชำระหนี้แทน">ตามจำนวนเงินที่กองทุนชำระหนี้แทน</option>
                                   <option value="ต้นเงิน90%+ค่าใช้จ่าย">ต้นเงิน90%+ค่าใช้จ่าย</option>
                                   <option value="ต้นเงิน50%+ค่าใช้จ่าย">ต้นเงิน50%+ค่าใช้จ่าย</option>
@@ -365,7 +429,7 @@ const FullModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <div className="form-floating">
-                                <select className="form-select" disabled value={debts?.contract_conditions ?? ''} onChange={(e) => handleChangeDebt('contract_conditions', e.target?.value)}>
+                                <select className="form-select" disabled value={debts?.contract_conditions_add ?? ''} onChange={(e) => handleChangeDebt('contract_conditions', e.target?.value)}>
                                   <option value="ตามจำนวนเงินที่กองทุนชำระหนี้แทน">ตามจำนวนเงินที่กองทุนชำระหนี้แทน</option>
                                   <option value="ต้นเงิน90%+ค่าใช้จ่าย">ต้นเงิน90%+ค่าใช้จ่าย</option>
                                   <option value="ต้นเงิน50%+ค่าใช้จ่าย">ต้นเงิน50%+ค่าใช้จ่าย</option>
@@ -501,7 +565,7 @@ const FullModal = (props) => {
                               <Textbox title={'กฟก. ชำระเงินจำนวน'} 
                                 handleChange={(val) => handleChangeDebt('frD_paymen_amount_add', val)} 
                                 containerClassname={'mb-3'} value={debts?.frD_paymen_amount_add}
-                                disabled={debts?.debt_agreement == 'ตามข้อตกลง'} isNumber
+                                disabled isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
@@ -521,7 +585,7 @@ const FullModal = (props) => {
                               <Textbox title={'ยอดเงินที่ทำสัญญา'} 
                                 handleChange={(val) => handleChangeDebt('contract_amount_add', val)} 
                                 containerClassname={'mb-3'} value={debts?.contract_amount_add}
-                                disabled={debts?.debt_agreement == 'ตามข้อตกลง'} isNumber
+                                disabled isNumber
                               />
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
