@@ -134,24 +134,22 @@ const ConfirmTable = (props) => {
     if(data) {
       setCoop(data[0]?.debt_manage_creditor_type == 'สหกรณ์');
       const sum = data.reduce((prev, item) => { 
-        var total = item.debt_manage_outstanding_principal_remain 
-        + item.debt_manage_accrued_interest_remain
-        + item.debt_manage_fine_remain
-        + item.debt_manage_litigation_expenses_remain
-        + item.debt_manage_forfeiture_withdrawal_fee_remain
-        + item.debt_manage_insurance_premium_remain
-        + item.debt_manage_other_expenses_remain
+        var total = item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0)
+        + item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0)
+        + item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0)
+        + item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0)
+        + item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0)
+        + item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0)
+        + item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0)
         return prev + total; 
       }, 0)
       setSumTotal(sum);
       const total = data.reduce((prev, item) => { 
-        prev[0] += item.debt_manage_outstanding_principal_remain;
-        prev[1] += item.debt_manage_accrued_interest_remain;
-        prev[2] += item.debt_manage_fine_remain;
-        prev[3] += item.debt_manage_litigation_expenses_remain;
-        prev[4] += item.debt_manage_forfeiture_withdrawal_fee_remain;
-        prev[5] += item.debt_manage_insurance_premium_remain;
-        prev[6] += item.debt_manage_other_expenses_remain;
+        prev[0] += item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0);
+        prev[1] += item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0);
+        prev[2] += item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0);
+        prev[3] += item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0);
+        prev[6] += item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0);
         return prev; 
       }, [0, 0, 0, 0, 0, 0, 0]);
       setAmountCheck(total);
