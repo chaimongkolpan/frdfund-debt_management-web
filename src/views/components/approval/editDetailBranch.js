@@ -422,8 +422,8 @@ const FullModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <Textbox title={'กฟก. ชำระเงินจำนวน'} 
-                                handleChange={(val) => handleChangeDebt('frD_paymen_amount_add', val)} 
-                                containerClassname={'mb-3'} value={debts?.frD_paymen_amount_add}
+                                handleChange={(val) => handleChangeDebt('frD_paymen_amount', val)} 
+                                containerClassname={'mb-3'} value={debts?.frD_paymen_amount}
                                 disabled isNumber
                               />
                             </div>
@@ -442,8 +442,8 @@ const FullModal = (props) => {
                             </div>
                             <div className="col-sm-12 col-md-6 col-lg-6">
                               <Textbox title={'ยอดเงินที่ทำสัญญา'} 
-                                handleChange={(val) => handleChangeDebt('contract_amount_add', val)} 
-                                containerClassname={'mb-3'} value={debts?.contract_amount_add}
+                                handleChange={(val) => handleChangeDebt('contract_amount', val)} 
+                                containerClassname={'mb-3'} value={debts?.contract_amount}
                                 disabled isNumber
                               />
                             </div>
