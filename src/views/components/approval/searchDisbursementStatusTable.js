@@ -32,7 +32,7 @@ const SearchTable = (props) => {
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch : 1}>{item.office[0].petition_no_office}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].petition_date_office ?? '-'}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].disbursement}</td>
-                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].debt_manage_total)}</td>
+                <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].cheque_amount)}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].cashier_check_amount)}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{toCurrency(item.office[0].petition_amount)}</td>
                 <td rowSpan={(item.office[0].disbursement == 'สาขา' && maxbranch > 1) ? maxbranch: 1}>{item.office[0].no ?? 1}</td>
@@ -117,7 +117,7 @@ const SearchTable = (props) => {
               <td>{subitem.petition_no_office}</td> 
               <td>{subitem.petition_date_office ?? '-'}</td>
               <td>{subitem.disbursement}</td>
-              <td>{toCurrency(subitem.debt_manage_total)}</td>
+              <td>{toCurrency(subitem.cheque_amount)}</td>
               <td>{toCurrency(subitem.cashier_check_amount)}</td>
               <td>{toCurrency(subitem.petition_amount)}</td>
               <td>{subitem.no ?? 1}</td>
