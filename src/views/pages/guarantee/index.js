@@ -348,6 +348,7 @@ const LegalContractPrepare = () => {
                   <select className="form-select" value={transferType} onChange={(e) => setTransferType(e.target?.value)}>
                     <option value="โอนตามมาตรา 37/9 วรรค 2">โอนตามมาตรา 37/9 วรรค 2</option>
                     <option value="ขาย">ขาย</option>
+                    <option value="นำมาใช้เป็นหลักประกันในการกู้ยืมเงินให้ กฟก. ยึดถือไว้เป็นหลักประกัน">นำมาใช้เป็นหลักประกันในการกู้ยืมเงินให้ กฟก. ยึดถือไว้เป็นหลักประกัน</option>
                   </select>
                   <label htmlFor="floatingSelectTeam">ประเภทการโอน</label>
                 </div>
