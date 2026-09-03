@@ -149,6 +149,8 @@ const ConfirmTable = (props) => {
         prev[1] += item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0);
         prev[2] += item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0);
         prev[3] += item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0);
+        prev[4] += item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0);
+        prev[5] += item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0);
         prev[6] += item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0);
         return prev; 
       }, [0, 0, 0, 0, 0, 0, 0]);
