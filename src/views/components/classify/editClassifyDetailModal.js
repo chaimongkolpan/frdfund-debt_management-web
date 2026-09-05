@@ -52,14 +52,33 @@ const FullModal = (props) => {
     ,'เจ้าหนี้ปิดกิจการ/ล้มละลาย','ไม่ใช่เกษตรสมาชิกที่ขึ้นทะเบียนในจังหวัด','เจ้าหนี้ไม่เป็นไปตามที่กำหนด-ไม่ต้องตรวจสอบ','เจ้าหนี้ไม่ยินยอมให้ตรวจสอบข้อมูลเกษตรกร','ติดต่อเกษตรกรไม่ได้'];
   const objective = ['เพื่อการเกษตร','ไม่ใช่เพื่อการเกษตร','เพื่อการเกษตรและไม่ใช่เพื่อการเกษตร'];
   const submitDebt = async () => {
+    const total = principle + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine;
+    let frd = debts?.frD_paymen_amount;
+    let ex = 0;
+    if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { frd = total;ex = expense;}
+    else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { frd = principle * 0.9;ex = expense;}
+    else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { frd = principle * 0.5;ex = expense;}
+    else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { frd = principle * 0.4;ex = expense;}
+    else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { frd = principle * 0.3;ex = expense;}
+    else if (repayment == 'ต้นเงิน50%') { frd = principle * 0.5}
+
+    let pri = debts?.contract_amount;
+    let ex1 = 0;
+    if (contract == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') { pri = frd;ex1 = expense;}
+    else if (contract == 'ต้นเงิน90%+ค่าใช้จ่าย') { pri = frd * 0.9;ex1 = expense;}
+    else if (contract == 'ต้นเงิน50%+ค่าใช้จ่าย') { pri = frd * 0.5;ex1 = expense;}
+    else if (contract == 'ต้นเงิน40%+ค่าใช้จ่าย') { pri = frd * 0.4;ex1 = expense;}
+    else if (contract == 'ต้นเงิน30%+ค่าใช้จ่าย') { pri = frd * 0.3;ex1 = expense;}
+    else if (contract == 'ต้นเงิน50%') { pri = frd * 0.5}
+
     let rate = 1;
-    let expense = 0;
-    if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') {  rate = 1; expense = debts?.debt_manage_total_expenses; }
-    else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { rate = 0.9; expense = debts?.debt_manage_total_expenses;}
-    else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { rate = 0.5; expense = debts?.debt_manage_total_expenses;}
-    else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { rate = 0.4; expense = debts?.debt_manage_total_expenses;}
-    else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { rate = 0.3; expense = debts?.debt_manage_total_expenses;}
-    else if (repayment == 'ต้นเงิน50%') { rate = 0.5; expense = 0;}
+    let exp2 = 0;
+    if (repayment == 'ตามจำนวนเงินที่กองทุนชำระหนี้แทน') {  rate = 1; exp2 = debts?.debt_manage_total_expenses; }
+    else if (repayment == 'ต้นเงิน90%+ค่าใช้จ่าย') { rate = 0.9; exp2 = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน50%+ค่าใช้จ่าย') { rate = 0.5; exp2 = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน40%+ค่าใช้จ่าย') { rate = 0.4; exp2 = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน30%+ค่าใช้จ่าย') { rate = 0.3; exp2 = debts?.debt_manage_total_expenses;}
+    else if (repayment == 'ต้นเงิน50%') { rate = 0.5; exp2 = 0;}
     const param = {
       ...debts,
       debt_manage_total_expenses: (debts?.debt_manage_litigation_expenses + debts?.debt_manage_forfeiture_withdrawal_fee + debts?.debt_manage_insurance_premium + debts?.debt_manage_other_expenses),
@@ -74,8 +93,10 @@ const FullModal = (props) => {
       contract_debt_manage_insurance_premium: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_insurance_premium,
       contract_debt_manage_other_expenses: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_other_expenses,
       contract_debt_manage_total_expenses: repayment == 'ต้นเงิน50%' ? 0 : debts?.debt_manage_total_expenses,
-      contract_debt_manage_total: ((debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine) * rate) + expense,
-      not_correct_list: '0,0,0,0,0,0,0,0,0,0'
+      contract_debt_manage_total: ((debts?.debt_manage_outstanding_principal + debts?.debt_manage_accrued_interest + debts?.debt_manage_fine) * rate) + exp2,
+      not_correct_list: '0,0,0,0,0,0,0,0,0,0',
+      frD_paymen_amount: frd + ex,
+      contract_amount: pri + ex1,
     }
     const result = await updateDebtManagementDetailClassify(param);
     if (result.isSuccess) {
