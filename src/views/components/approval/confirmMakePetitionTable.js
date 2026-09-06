@@ -62,14 +62,21 @@ const ConfirmTable = (props) => {
         id_debt_management: item.id_debt_management.toString(),
         province: item.province,
         amount: cheques?.length > 0 ? 
-          (findCheque(0) ? item.debt_manage_outstanding_principal_remain : 0)
-          + (findCheque(1) ? item.debt_manage_accrued_interest_remain : 0)
-          + (findCheque(2) ? item.debt_manage_fine_remain : 0)
-          + (findCheque(3) ? item.debt_manage_litigation_expenses_remain : 0)
-          + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee_remain : 0)
-          + (findCheque(5) ? item.debt_manage_insurance_premium_remain : 0)
-          + (findCheque(6) ? item.debt_manage_other_expenses_remain : 0)
+          (findCheque(0) ? item.debt_manage_outstanding_principal_remain ?? item.debt_manage_outstanding_principal : 0)
+          + (findCheque(1) ? item.debt_manage_accrued_interest_remain ?? item.debt_manage_accrued_interest : 0)
+          + (findCheque(2) ? item.debt_manage_fine_remain ?? item.debt_manage_fine : 0)
+          + (findCheque(3) ? item.debt_manage_litigation_expenses_remain ?? item.debt_manage_litigation_expenses : 0)
+          + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee_remain ?? item.debt_manage_forfeiture_withdrawal_fee : 0)
+          + (findCheque(5) ? item.debt_manage_insurance_premium_remain ?? item.debt_manage_insurance_premium : 0)
+          + (findCheque(6) ? item.debt_manage_other_expenses_remain ?? item.debt_manage_other_expenses : 0)
         : item.debt_manage_total_remain ?? item.debt_manage_total,
+        pay_debt_manage_outstanding_principal: (findCheque(0) ? item.debt_manage_outstanding_principal_remain ?? item.debt_manage_outstanding_principal : 0),
+        pay_debt_manage_accrued_interest: (findCheque(1) ? item.debt_manage_accrued_interest_remain ?? item.debt_manage_accrued_interest : 0),
+        pay_debt_manage_fine: (findCheque(2) ? item.debt_manage_fine_remain ?? item.debt_manage_fine : 0),
+        pay_debt_manage_litigation_expenses: (findCheque(3) ? item.debt_manage_litigation_expenses_remain ?? item.debt_manage_litigation_expenses : 0),
+        pay_debt_manage_forfeiture_withdrawal_fee: (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee_remain ?? item.debt_manage_forfeiture_withdrawal_fee : 0),
+        pay_debt_manage_insurance_premium: (findCheque(5) ? item.debt_manage_insurance_premium_remain ?? item.debt_manage_insurance_premium : 0),
+        pay_debt_manage_other_expenses: (findCheque(6) ? item.debt_manage_other_expenses_remain ?? item.debt_manage_other_expenses : 0),
       }
     })
     
@@ -131,14 +138,21 @@ const ConfirmTable = (props) => {
         id_debt_management: item.id_debt_management.toString(),
         province: item.province,
         amount: branchCheck?.length > 0 ? 
-          (branchCheck[0] ? item.debt_manage_outstanding_principal_remain : 0)
-          + (branchCheck[1] ? item.debt_manage_accrued_interest_remain : 0)
-          + (branchCheck[2] ? item.debt_manage_fine_remain : 0)
-          + (branchCheck[3] ? item.debt_manage_litigation_expenses_remain : 0)
-          + (branchCheck[4] ? item.debt_manage_forfeiture_withdrawal_fee_remain : 0)
-          + (branchCheck[5] ? item.debt_manage_insurance_premium_remain : 0)
-          + (branchCheck[6] ? item.debt_manage_other_expenses_remain : 0)
+          (branchCheck[0] ? item.debt_manage_outstanding_principal_remain ?? item.debt_manage_outstanding_principal : 0)
+          + (branchCheck[1] ? item.debt_manage_accrued_interest_remain ?? item.debt_manage_accrued_interest : 0)
+          + (branchCheck[2] ? item.debt_manage_fine_remain ?? item.debt_manage_fine : 0)
+          + (branchCheck[3] ? item.debt_manage_litigation_expenses_remain ?? item.debt_manage_litigation_expenses : 0)
+          + (branchCheck[4] ? item.debt_manage_forfeiture_withdrawal_fee_remain ?? item.debt_manage_forfeiture_withdrawal_fee : 0)
+          + (branchCheck[5] ? item.debt_manage_insurance_premium_remain ?? item.debt_manage_insurance_premium : 0)
+          + (branchCheck[6] ? item.debt_manage_other_expenses_remain ?? item.debt_manage_other_expenses : 0)
         : item.debt_manage_total_remain ?? item.debt_manage_total,
+        pay_debt_manage_outstanding_principal: (findCheque(0) ? item.debt_manage_outstanding_principal_remain ?? item.debt_manage_outstanding_principal : 0),
+        pay_debt_manage_accrued_interest: (findCheque(1) ? item.debt_manage_accrued_interest_remain ?? item.debt_manage_accrued_interest : 0),
+        pay_debt_manage_fine: (findCheque(2) ? item.debt_manage_fine_remain ?? item.debt_manage_fine : 0),
+        pay_debt_manage_litigation_expenses: (findCheque(3) ? item.debt_manage_litigation_expenses_remain ?? item.debt_manage_litigation_expenses : 0),
+        pay_debt_manage_forfeiture_withdrawal_fee: (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee_remain ?? item.debt_manage_forfeiture_withdrawal_fee : 0),
+        pay_debt_manage_insurance_premium: (findCheque(5) ? item.debt_manage_insurance_premium_remain ?? item.debt_manage_insurance_premium : 0),
+        pay_debt_manage_other_expenses: (findCheque(6) ? item.debt_manage_other_expenses_remain ?? item.debt_manage_other_expenses : 0),
       }
     })
     const t_cheque = [{
