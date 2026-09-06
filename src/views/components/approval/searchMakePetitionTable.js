@@ -62,19 +62,19 @@ const SearchTable = (props) => {
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
-        <td>{toCurrency(item.debt_manage_accrued_interest)}</td>
-        <td>{toCurrency(item.debt_manage_fine)}</td>
-        <td>{toCurrency(item.debt_manage_litigation_expenses)}</td>
-        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal_remain)}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest_remain)}</td>
+        <td>{toCurrency(item.debt_manage_fine_remain)}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses_remain)}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee_remain)}</td>
         {!coop && (
           <>
-            <td>{toCurrency(item.debt_manage_insurance_premium)}</td>
-            <td>{toCurrency(item.debt_manage_other_expenses)}</td>
+            <td>{toCurrency(item.debt_manage_insurance_premium_remain)}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses_remain)}</td>
           </>
         )}
-        <td>{toCurrency(item.debt_manage_total_expenses)}</td>
-        <td>{toCurrency(item.debt_manage_total)}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses_remain)}</td>
+        <td>{toCurrency(item.debt_manage_total_remain)}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
