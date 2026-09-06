@@ -44,13 +44,13 @@ const ConfirmTable = (props) => {
       disbursement: receiverType,
       petition_amount: cheques?.length > 0 ? 
           data.reduce((prev, item) => { 
-            var total = (findCheque(0) ? item.debt_manage_outstanding_principal : 0)
-              + (findCheque(1) ? item.debt_manage_accrued_interest : 0)
-              + (findCheque(2) ? item.debt_manage_fine : 0)
-              + (findCheque(3) ? item.debt_manage_litigation_expenses : 0)
-              + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee : 0)
-              + (findCheque(5) ? item.debt_manage_insurance_premium : 0)
-              + (findCheque(6) ? item.debt_manage_other_expenses : 0)
+            var total = (findCheque(0) ? item.debt_manage_outstanding_principal_remain : 0)
+              + (findCheque(1) ? item.debt_manage_accrued_interest_remain : 0)
+              + (findCheque(2) ? item.debt_manage_fine_remain : 0)
+              + (findCheque(3) ? item.debt_manage_litigation_expenses_remain : 0)
+              + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee_remain : 0)
+              + (findCheque(5) ? item.debt_manage_insurance_premium_remain : 0)
+              + (findCheque(6) ? item.debt_manage_other_expenses_remain : 0)
             return prev + total; 
           }, 0)
         : sumTotal,
@@ -62,16 +62,17 @@ const ConfirmTable = (props) => {
         id_debt_management: item.id_debt_management.toString(),
         province: item.province,
         amount: cheques?.length > 0 ? 
-          (findCheque(0) ? item.debt_manage_outstanding_principal : 0)
-          + (findCheque(1) ? item.debt_manage_accrued_interest : 0)
-          + (findCheque(2) ? item.debt_manage_fine : 0)
-          + (findCheque(3) ? item.debt_manage_litigation_expenses : 0)
-          + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee : 0)
-          + (findCheque(5) ? item.debt_manage_insurance_premium : 0)
-          + (findCheque(6) ? item.debt_manage_other_expenses : 0)
+          (findCheque(0) ? item.debt_manage_outstanding_principal_remain : 0)
+          + (findCheque(1) ? item.debt_manage_accrued_interest_remain : 0)
+          + (findCheque(2) ? item.debt_manage_fine_remain : 0)
+          + (findCheque(3) ? item.debt_manage_litigation_expenses_remain : 0)
+          + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee_remain : 0)
+          + (findCheque(5) ? item.debt_manage_insurance_premium_remain : 0)
+          + (findCheque(6) ? item.debt_manage_other_expenses_remain : 0)
         : item.debt_manage_total_remain ?? item.debt_manage_total,
       }
     })
+    
     const t_cheque = cheques.map(item => {
       return {
         debt_management_type,
@@ -106,14 +107,64 @@ const ConfirmTable = (props) => {
     onSave()
   }
   const SaveBranch = async () => {
-    await setCheques([
-      {
-        total: branchTotal,
-        checked: branchCheck,
-        amount: branchAmountCheck,
+    const ids = data.map(item => item.id_debt_management.toString());
+    const pet = {
+      id: petition ? petition.id_petition : 0,
+      disbursement: receiverType,
+      petition_amount: branchCheck?.length > 0 ? 
+          data.reduce((prev, item) => { 
+            var total = (branchCheck[0] ? item.debt_manage_outstanding_principal_remain : 0)
+              + (branchCheck[1] ? item.debt_manage_accrued_interest_remain : 0)
+              + (branchCheck[2] ? item.debt_manage_fine_remain : 0)
+              + (branchCheck[3] ? item.debt_manage_litigation_expenses_remain : 0)
+              + (branchCheck[4] ? item.debt_manage_forfeiture_withdrawal_fee_remain : 0)
+              + (branchCheck[5] ? item.debt_manage_insurance_premium_remain : 0)
+              + (branchCheck[6] ? item.debt_manage_other_expenses_remain : 0)
+            return prev + total; 
+          }, 0)
+        : sumTotal,
+      debt_payment_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'รอชำระหนี้แทน' : 'รอชำระหนี้แทน'),
+      contract_status: 'ปกติ',
+    };
+    const map_petitions = data.map(item => {
+      return {
+        id_debt_management: item.id_debt_management.toString(),
+        province: item.province,
+        amount: branchCheck?.length > 0 ? 
+          (branchCheck[0] ? item.debt_manage_outstanding_principal_remain : 0)
+          + (branchCheck[1] ? item.debt_manage_accrued_interest_remain : 0)
+          + (branchCheck[2] ? item.debt_manage_fine_remain : 0)
+          + (branchCheck[3] ? item.debt_manage_litigation_expenses_remain : 0)
+          + (branchCheck[4] ? item.debt_manage_forfeiture_withdrawal_fee_remain : 0)
+          + (branchCheck[5] ? item.debt_manage_insurance_premium_remain : 0)
+          + (branchCheck[6] ? item.debt_manage_other_expenses_remain : 0)
+        : item.debt_manage_total_remain ?? item.debt_manage_total,
       }
-    ])
-    onSave()
+    })
+    const t_cheque = [{
+        debt_management_type,
+        cheques_no: '1',
+        cashier_check_amount: branchTotal,
+        principle_flag: branchCheck[0] ? '1' : '0',
+        interest_flag: branchCheck[1] ? '1' : '0',
+        fine_flag: branchCheck[2] ? '1' : '0',
+        litigation_expenses_flag: branchCheck[3] ? '1' : '0',
+        forfeiture_withdrawal_fee_flag: branchCheck[4] ? '1' : '0',
+        insurance_premium_flag: branchCheck[5] ? '1' : '0',
+        other_expenses_flag: branchCheck[6] ? '1' : '0',
+        NPA_property_sales_price_flag: '0',
+        NPA_NPL_creditors_receive_flag: '0',
+        NPA_litigation_expenses_flag: '0',
+        NPA_insurance_premium_flag: '0',
+    }];
+    const param = {
+      ids,
+      debt_management_audit_status: receiverType == 'สาขา' ? 'อยู่ระหว่างการโอนเงินให้สาขา' : (paymentType == 'เบิกจ่ายเต็มจำนวน' ? 'อยู่ระหว่างการชำระหนี้แทน' : 'อยู่ระหว่างการชำระหนี้แทน'),
+      petition: pet,
+      cheques: t_cheque,
+      map_petitions,
+    }
+    setAddPetition(param)
   }
   const ChequeChange = (index, key) => {
     const newSelected = [
