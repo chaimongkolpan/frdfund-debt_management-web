@@ -67,7 +67,7 @@ const ConfirmTable = (props) => {
           + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0) : 0)
           + (findCheque(5) ? item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0) : 0)
           + (findCheque(6) ? item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0) : 0)
-        : item.debt_manage_total,
+        : item.debt_manage_total - (item.debt_manage_total_remain ?? 0),
         pay_debt_manage_outstanding_principal: (findCheque(0) || cheques?.length == 0 ? item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0) : 0),
         pay_debt_manage_accrued_interest: (findCheque(1) || cheques?.length == 0 ? item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0) : 0),
         pay_debt_manage_fine: (findCheque(2) || cheques?.length == 0 ? item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0) : 0),
@@ -146,19 +146,19 @@ const ConfirmTable = (props) => {
         <td>{item.debt_manage_creditor_province}</td>
         <td>{item.debt_manage_creditor_branch}</td>
         <td>{item.debt_manage_contract_no}</td>
-        <td>{toCurrency(item.debt_manage_outstanding_principal)}</td>
-        <td>{toCurrency(item.debt_manage_accrued_interest)}</td>
-        <td>{toCurrency(item.debt_manage_fine)}</td>
-        <td>{toCurrency(item.debt_manage_litigation_expenses)}</td>
-        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee)}</td>
+        <td>{toCurrency(item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0))}</td>
         {!coop && (
           <>
-            <td>{toCurrency(item.debt_manage_insurance_premium)}</td>
-            <td>{toCurrency(item.debt_manage_other_expenses)}</td>
+            <td>{toCurrency(item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0))}</td>
+            <td>{toCurrency(item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0))}</td>
           </>
         )}
-        <td>{toCurrency(item.debt_manage_total_expenses)}</td>
-        <td>{toCurrency(item.debt_manage_total)}</td>
+        <td>{toCurrency(item.debt_manage_total_expenses - (item.debt_manage_total_expenses_remain ?? 0))}</td>
+        <td>{toCurrency(item.debt_manage_total - (item.debt_manage_total_remain ?? 0))}</td>
         <td>{item.debt_manage_objective_details}</td>
         <td>{item.debt_manage_status}</td>
         <td>{item.collateral_type}</td>
