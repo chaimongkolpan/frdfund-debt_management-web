@@ -40,7 +40,18 @@ const ConfirmTable = (props) => {
     const pet = {
       id: petition ? petition.id_petition : 0,
       disbursement: 'เจ้าหนี้',
-      petition_amount: sumTotal,
+      petition_amount: cheques?.length > 0 ? 
+          data.reduce((prev, item) => { 
+            var total = (findCheque(0) ? item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0) : 0)
+              + (findCheque(1) ? item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0) : 0)
+              + (findCheque(2) ? item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0) : 0)
+              + (findCheque(3) ? item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0) : 0)
+              + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0) : 0)
+              + (findCheque(5) ? item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0) : 0)
+              + (findCheque(6) ? item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0) : 0)
+            return prev + total; 
+          }, 0)
+        : sumTotal,
       debt_payment_status: 'รอชำระหนี้แทน',
       contract_status: 'ปกติ',
     };
@@ -49,21 +60,21 @@ const ConfirmTable = (props) => {
         id_debt_management: item.id_debt_management.toString(),
         province: item.province,
         amount: cheques?.length > 0 ? 
-          (findCheque(0) ? item.debt_manage_outstanding_principal : 0)
-          + (findCheque(1) ? item.debt_manage_accrued_interest : 0)
-          + (findCheque(2) ? item.debt_manage_fine : 0)
-          + (findCheque(3) ? item.debt_manage_litigation_expenses : 0)
-          + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee : 0)
-          + (findCheque(5) ? item.debt_manage_insurance_premium : 0)
-          + (findCheque(6) ? item.debt_manage_other_expenses : 0)
+          (findCheque(0) ? item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0) : 0)
+          + (findCheque(1) ? item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0) : 0)
+          + (findCheque(2) ? item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0) : 0)
+          + (findCheque(3) ? item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0) : 0)
+          + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0) : 0)
+          + (findCheque(5) ? item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0) : 0)
+          + (findCheque(6) ? item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0) : 0)
         : item.debt_manage_total,
-        pay_debt_manage_outstanding_principal: (findCheque(0) || cheques?.length == 0 ? item.debt_manage_outstanding_principal : 0),
-        pay_debt_manage_accrued_interest: (findCheque(1) || cheques?.length == 0 ? item.debt_manage_accrued_interest : 0),
-        pay_debt_manage_fine: (findCheque(2) || cheques?.length == 0 ? item.debt_manage_fine : 0),
-        pay_debt_manage_litigation_expenses: (findCheque(3) || cheques?.length == 0 ? item.debt_manage_litigation_expenses : 0),
-        pay_debt_manage_forfeiture_withdrawal_fee: (findCheque(4) || cheques?.length == 0 ? item.debt_manage_forfeiture_withdrawal_fee : 0),
-        pay_debt_manage_insurance_premium: (findCheque(5) || cheques?.length == 0 ? item.debt_manage_insurance_premium : 0),
-        pay_debt_manage_other_expenses: (findCheque(6) || cheques?.length == 0 ? item.debt_manage_other_expenses : 0),
+        pay_debt_manage_outstanding_principal: (findCheque(0) || cheques?.length == 0 ? item.debt_manage_outstanding_principal - (item.debt_manage_outstanding_principal_remain ?? 0) : 0),
+        pay_debt_manage_accrued_interest: (findCheque(1) || cheques?.length == 0 ? item.debt_manage_accrued_interest - (item.debt_manage_accrued_interest_remain ?? 0) : 0),
+        pay_debt_manage_fine: (findCheque(2) || cheques?.length == 0 ? item.debt_manage_fine - (item.debt_manage_fine_remain ?? 0) : 0),
+        pay_debt_manage_litigation_expenses: (findCheque(3) || cheques?.length == 0 ? item.debt_manage_litigation_expenses - (item.debt_manage_litigation_expenses_remain ?? 0) : 0),
+        pay_debt_manage_forfeiture_withdrawal_fee: (findCheque(4) || cheques?.length == 0 ? item.debt_manage_forfeiture_withdrawal_fee - (item.debt_manage_forfeiture_withdrawal_fee_remain ?? 0) : 0),
+        pay_debt_manage_insurance_premium: (findCheque(5) || cheques?.length == 0 ? item.debt_manage_insurance_premium - (item.debt_manage_insurance_premium_remain ?? 0) : 0),
+        pay_debt_manage_other_expenses: (findCheque(6) || cheques?.length == 0 ? item.debt_manage_other_expenses - (item.debt_manage_other_expenses_remain ?? 0) : 0),
       }
     })
     const t_cheque = cheques.map(item => {
