@@ -40,7 +40,18 @@ const ConfirmTable = (props) => {
     const pet = {
       id: petition ? petition.id_petition : 0,
       disbursement: 'เจ้าหนี้',
-      petition_amount: sumTotal,
+      petition_amount: cheques?.length > 0 ? 
+          data.reduce((prev, item) => { 
+            var total = (findCheque(0) ? item.debt_manage_outstanding_principal : 0)
+              + (findCheque(1) ? item.debt_manage_accrued_interest : 0)
+              + (findCheque(2) ? item.debt_manage_fine : 0)
+              + (findCheque(3) ? item.debt_manage_litigation_expenses : 0)
+              + (findCheque(4) ? item.debt_manage_forfeiture_withdrawal_fee : 0)
+              + (findCheque(5) ? item.debt_manage_insurance_premium : 0)
+              + (findCheque(6) ? item.debt_manage_other_expenses : 0)
+            return prev + total; 
+          }, 0)
+        : sumTotal,
       debt_payment_status: 'รอชำระหนี้แทน',
       contract_status: 'ปกติ',
     };
