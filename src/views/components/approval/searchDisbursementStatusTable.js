@@ -168,7 +168,7 @@ const SearchTable = (props) => {
             )}
           </>
         </tr>
-        {RenderRow(item, index)}
+        {maxrow > 1 && (RenderRow(item, index))}
       </>
     ))
   }
