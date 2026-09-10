@@ -5,6 +5,92 @@ const SearchTable = (props) => {
   const { result, filter, getData } = props;
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState(null);
+  const RenderAll = (subitem, subitem1, subindex, index) => {
+    return (
+      <tr key={index + '-2-' + (subindex + 1)}>
+        <td>{subitem.petition_no_office}</td> 
+        <td>{subitem.petition_date_office ?? '-'}</td>
+        <td>{subitem.disbursement}</td>
+        <td>{toCurrency(subitem.cheque_amount)}</td>
+        <td>{toCurrency(subitem.cashier_check_amount)}</td>
+        <td>{toCurrency(subitem.petition_amount)}</td>
+        <td>{subitem.no ?? 1}</td>
+        <td>{subitem.wp_transfer_date ? stringToDateTh(subitem.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem.cashier_check_no}</td>
+        <td>{subitem.cashier_check_date ? stringToDateTh(subitem.cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{toCurrency(subitem.cashier_check_amount)}</td>
+        <td>{subitem.wp_pay_docuno}</td>
+        <td>{subitem.wp_pay_docudate ? stringToDateTh(subitem.wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem.wp_transfer_docuno}</td>
+        <td>{subitem.wp_transfer_docudate ? stringToDateTh(subitem.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem.debt_payment_status}</td>
+        <td>{subitem1.petition_no_office}</td>
+        <td>{subitem1.petition_date_office ?? '-'}</td>
+        <td>{subitem1.disbursement}</td>
+        <td>{toCurrency(subitem1.debt_manage_outstanding_principal)}</td>
+        <td>{toCurrency(subitem1.debt_manage_accrued_interest)}</td>
+        <td>{toCurrency(subitem1.debt_manage_fine)}</td> 
+        <td>{toCurrency(subitem1.debt_manage_litigation_expenses)}</td>
+        <td>{toCurrency(subitem1.debt_manage_forfeiture_withdrawal_fee)}</td>
+        <td>{toCurrency(subitem1.debt_manage_insurance_premium)}</td>
+        <td>{toCurrency(subitem1.debt_manage_other_expenses)}</td>
+        <td>{toCurrency(subitem1.debt_manage_total_expenses)}</td>
+        <td>{toCurrency(subitem1.debt_manage_total)}</td>
+        <td>{toCurrency(subitem1.petition_amount)}</td>
+        <td>{subitem1.no ?? 1}</td>
+        <td>{subitem1.wp_transfer_date ? stringToDateTh(subitem1.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem1.cashier_check_no}</td>
+        <td>{subitem1.cashier_check_date ? stringToDateTh(subitem1.cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{toCurrency(subitem1.cashier_check_amount)}</td>
+        <td>{subitem1.wp_pay_docuno}</td>
+        <td>{subitem1.wp_pay_docudate ? stringToDateTh(subitem1.wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem1.wp_transfer_docuno}</td>
+        <td>{subitem1.wp_transfer_docudate ? stringToDateTh(subitem1.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem1.debt_payment_status}</td>
+      </tr>
+    )
+  }
+  const RenderOffice = (subitem, subindex, index) => {
+    return (
+      <tr key={index + '-3-' + (subindex + 1)}>
+        <td>{subitem.petition_no_office}</td> 
+        <td>{subitem.petition_date_office ?? '-'}</td>
+        <td>{subitem.disbursement}</td>
+        <td>{toCurrency(subitem.cheque_amount)}</td>
+        <td>{toCurrency(subitem.cashier_check_amount)}</td>
+        <td>{toCurrency(subitem.petition_amount)}</td>
+        <td>{subitem.no ?? 1}</td>
+        <td>{subitem.wp_transfer_date ? stringToDateTh(subitem.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem.cashier_check_no}</td>
+        <td>{subitem.cashier_check_date ? stringToDateTh(subitem.cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{toCurrency(subitem.cashier_check_amount)}</td>
+        <td>{subitem.wp_pay_docuno}</td>
+        <td>{subitem.wp_pay_docudate ? stringToDateTh(subitem.wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem.wp_transfer_docuno}</td>
+        <td>{subitem.wp_transfer_docudate ? stringToDateTh(subitem.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
+        <td>{subitem.debt_payment_status}</td>
+        <td colSpan={23}>-</td>
+      </tr>
+    )
+  }
+  const RenderRow = (item, index) => {
+    let iOffice = 1, iBranch = item.branch?.length > 1 && item.office[0].disbursement == 'สาขา' ? 1 : 0;
+    const maxbranch = item.branch?.length > 0 ? item.branch?.length : 1;
+    const maxoffice = item.office?.length > 0 ? item.office?.length : 0;
+    let result = [];
+    while (true) {
+      if (iOffice >= maxoffice && iBranch >= maxbranch) break;
+      if (item.office[iOffice].disbursement == 'สาขา' && iBranch < maxbranch) {
+        result.push(RenderAll(item.office[iOffice], item.branch[iBranch], iOffice, index));
+        iOffice++;
+        iBranch++;
+      } else {
+        result.push(RenderOffice(item.office[iOffice], iOffice, index));
+        iOffice++;
+      }
+    }
+    return result;
+  }
   const RenderData = (item, index) => {
     const maxbranch = item.branch?.length > 0 ? item.branch?.length : 1;
     const maxoffice = item.office?.length > 0 ? item.office?.length : 0;
@@ -82,60 +168,7 @@ const SearchTable = (props) => {
             )}
           </>
         </tr>
-        {(item.branch?.length > 1 && item.office[0].disbursement == 'สาขา') && (
-          item.branch.slice(1).map((subitem, subindex) => (
-            <tr key={index + '-2-' + (subindex + 1)}>
-              <td>{subitem.petition_no_office}</td>
-              <td>{subitem.petition_date_office ?? '-'}</td>
-              <td>{subitem.disbursement}</td>
-              <td>{toCurrency(subitem.debt_manage_outstanding_principal)}</td>
-              <td>{toCurrency(subitem.debt_manage_accrued_interest)}</td>
-              <td>{toCurrency(subitem.debt_manage_fine)}</td> 
-              <td>{toCurrency(subitem.debt_manage_litigation_expenses)}</td>
-              <td>{toCurrency(subitem.debt_manage_forfeiture_withdrawal_fee)}</td>
-              <td>{toCurrency(subitem.debt_manage_insurance_premium)}</td>
-              <td>{toCurrency(subitem.debt_manage_other_expenses)}</td>
-              <td>{toCurrency(subitem.debt_manage_total_expenses)}</td>
-              <td>{toCurrency(subitem.debt_manage_total)}</td>
-              <td>{toCurrency(subitem.petition_amount)}</td>
-              <td>{subitem.no ?? 1}</td>
-              <td>{subitem.wp_transfer_date ? stringToDateTh(subitem.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.cashier_check_no}</td>
-              <td>{subitem.cashier_check_date ? stringToDateTh(subitem.cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{toCurrency(subitem.cashier_check_amount)}</td>
-              <td>{subitem.wp_pay_docuno}</td>
-              <td>{subitem.wp_pay_docudate ? stringToDateTh(subitem.wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.wp_transfer_docuno}</td>
-              <td>{subitem.wp_transfer_docudate ? stringToDateTh(subitem.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.debt_payment_status}</td>
-            </tr>
-          ))
-        )}
-        {(item.office?.length > 1) ? (
-          item.office.slice(1).map((subitem, subindex) => (
-            <tr key={index + '-3-' + (subindex + 1)}>
-              <td>{subitem.petition_no_office}</td> 
-              <td>{subitem.petition_date_office ?? '-'}</td>
-              <td>{subitem.disbursement}</td>
-              <td>{toCurrency(subitem.cheque_amount)}</td>
-              <td>{toCurrency(subitem.cashier_check_amount)}</td>
-              <td>{toCurrency(subitem.petition_amount)}</td>
-              <td>{subitem.no ?? 1}</td>
-              <td>{subitem.wp_transfer_date ? stringToDateTh(subitem.wp_transfer_date, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.cashier_check_no}</td>
-              <td>{subitem.cashier_check_date ? stringToDateTh(subitem.cashier_check_date, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{toCurrency(subitem.cashier_check_amount)}</td>
-              <td>{subitem.wp_pay_docuno}</td>
-              <td>{subitem.wp_pay_docudate ? stringToDateTh(subitem.wp_pay_docudate, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.wp_transfer_docuno}</td>
-              <td>{subitem.wp_transfer_docudate ? stringToDateTh(subitem.wp_transfer_docudate, false, 'DD/MM/YYYY') : '-'}</td>
-              <td>{subitem.debt_payment_status}</td>
-              <td colSpan={23}>-</td>
-            </tr>
-          ))
-        ) : (
-          <></>
-        )}
+        {RenderRow(item, index)}
       </>
     ))
   }
