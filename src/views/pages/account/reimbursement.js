@@ -111,7 +111,7 @@ const PageContent = () => {
   }
   const printCardGov = async () => {
     await setLoadBigData(true);
-    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', id: policy.id_KFKPolicy };
+    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้รัฐบาล_' + (new Date().getTime()) + '.xlsx', id: policy.id_KFKPolicy };
     const result = await printCardGovernment(param);
     await setLoadBigData(false);
     if (result.isSuccess) {
