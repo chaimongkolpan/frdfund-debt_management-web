@@ -3253,6 +3253,33 @@ export const printCardRe = async (params) => {
   }
   return;
 };
+export const getReimbursementCardGovernment = async (filter) => {
+  const path = '/Account/get-card-government';
+  try {
+    const result = await axios.get(path, filter);
+    if (result.status == 200)
+      return result.data;
+    else
+      return defaultErrorResponse;
+
+  } catch (e) {
+    console.error('error: ' + path + ' =>', e);
+    return defaultErrorResponse;
+  }
+};
+export const printCardGovernment = async (params) => {
+  const path = '/report/Print-Card-Government';
+  try {
+    const result = await axios.post(path, { id: params.id, filename: params.filename }, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: params.type });
+      SaveAs(blob, params.filename);
+    }
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+  }
+  return;
+};
 //#endregion
 //#region Adjust
 export const searchAdjust = async (filter) => {
