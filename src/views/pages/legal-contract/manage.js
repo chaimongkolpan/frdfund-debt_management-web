@@ -25,6 +25,8 @@ import {
   getReimbursementCard,
   printPlanRe,
   printCardRe,
+  getReimbursementCardGovernment,
+  printCardGovernment,
   submitSendLegal,
   downloadLegalDocument,
 } from "@services/api";
@@ -44,6 +46,7 @@ const LegalContractSend = () => {
   const [policy, setPolicy] = useState(null);
   const [filter, setFilter] = useState(null);
   const [card, setCard] = useState(null);
+  const [cardGov, setCardGov] = useState(null);
   const [cardPrint, setCardPrint] = useState(null);
   const [openCard, setOpenCard] = useState(false);
   const [tab, setTab] = useState(null);
@@ -74,6 +77,12 @@ const LegalContractSend = () => {
         params: { id: item.id_KFKPolicy }
       };
       const result = await getReimbursementCard(param);
+    const resultGov = await getReimbursementCardGovernment(param);
+    if (resultGov.isSuccess) {
+      await setCardGov(resultGov?.transactions)
+    } else {
+      await setCardGov(null)
+    }
       if (result.isSuccess) {
         const kfkcard = result?.data?.kfkCards[0];
         await setCard(kfkcard?.transactions)
@@ -99,6 +108,15 @@ const LegalContractSend = () => {
         await onSearch(filter)
       }
     }
+  const printCardGov = async () => {
+    await setLoadBigData(true);
+    const param = { type: 'application/octet-stream', filename: 'การ์ดลูกหนี้_' + (new Date().getTime()) + '.xlsx', id: policy.id_KFKPolicy };
+    const result = await printCardGovernment(param);
+    await setLoadBigData(false);
+    if (result.isSuccess) {
+      await onSearch(filter)
+    }
+  }
     const convertTrc = (trc) => {
       if (trc == 'PAYOUT') return 'จ่าย';
       else if (trc == 'PAYIN') return 'รับ';
@@ -688,28 +706,58 @@ const LegalContractSend = () => {
                     <table className="table table-sm table-striped table-bordered fs-9 mb-0">
                       <thead className="align-middle text-center text-nowrap" style={{ backgroundColor: '#d9fbd0',border: '#cdd0c7' }}>
                         <tr>
-                          <th>แผนงวดที่</th>
-                          <th>ชำระงวดที่</th>
-                          <th>รายการ</th>
-                          <th>วันที่ทำรายการ</th>
-                          <th>จำนวนวัน</th>
-                          <th>ต้นเงินตามแผน</th>
-                          <th>แผนเงินต้นค้างชำระ(+)</th>
-                          <th>เงินต้นยกมา</th>
-                          <th>ยอดชำระทั้งสิ้น</th>
-                          <th>ลดต้น</th>
-                          <th>คงเหลือ</th>
-                          <th>อัตราดอกเบี้ย</th>
+                          <th rowSpan="2">ชำระงวดที่</th>
+                          <th rowSpan="2">รายการ</th>
+                          <th rowSpan="2">วันที่ทำรายการ</th>
+                          <th rowSpan="2">เลขที่เอกสารบัญชี</th>
+                          <th rowSpan="2">จำนวนวัน</th>
+                          <th rowSpan="2">เลขที่เช็คจ่าย</th>
+                          <th rowSpan="2">เลขที่แคชเชียร์เช็ค</th>
+                          <th colSpan="2">ใบเสร็จ</th>
+                          <th rowSpan="2">เดบิตเพิ่มยอดหนี้</th>
+                          <th colSpan="3">เครดิต / ลดยอดหนี้</th>
+                          <th rowSpan="2">ลูกหนี้คงเหลือ</th>
+                        </tr>
+                        <tr>
+                          <th>วันที่</th>
+                          <th>เลขที่</th>
+                          <th>เงินต้น</th>
+                          <th>ดอกเบี้ย</th>
+                          <th>รวม</th>
                         </tr>
                       </thead>
-                      <tbody className="list text-center align-middle">
-                        <tr>
-                          <td className="fs-9 text-center align-middle" colSpan={12}>
-                            <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
-                          </td>
-                        </tr>
+                      <tbody className="list text-center align-middle" id="bulk-select-body">
+                        {(cardGov && cardGov.length > 0) ? (cardGov.map((item,index) => (
+                          <tr key={index}>
+                            <td>{item.no == 0 ? '' : item.no}</td>
+                            <td>{item.type}</td>
+                            <td>{item.transactionDate}</td>
+                            <td>{item.docAccNo}</td>
+                            <td>{item.duration}</td>
+                            <td>{item.chequeNo}</td>
+                            <td>{item.cashierChequeNo}</td>
+                            <td>{item.receiptDate}</td>
+                            <td>{item.receiptNo}</td>
+                            <td>{item.type == 'จ่าย' ? toCurrency(item.debit, 2) : '-'}</td>
+                            <td>{item.type == 'จ่าย' ? '-' : toCurrency(item.principle, 2)}</td>
+                            <td>{item.type == 'จ่าย' ? '-' : toCurrency(item.interest, 2)}</td>
+                            <td>{item.type == 'จ่าย' ? '-' : toCurrency(item.principle + item.interest, 2)}</td>
+                            <td>{toCurrency(item.balance, 2)}</td>
+                          </tr>
+                        ))) : (
+                          <tr>
+                            <td className="fs-9 text-center align-middle" colSpan={16}>
+                              <div className="mt-5 mb-5 fs-8"><h5>ไม่มีข้อมูล</h5></div>
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center my-3">
+                    <div className="d-flex">
+                      <button className="btn btn-primary btn-sm ms-2" type="button" onClick={() => printCardGov()}><i className="fa fa-print"></i> ปริ้นการ์ดลูกหนี้รัฐบาล</button>
+                    </div>
                   </div>
                 </TabPane>
               </TabContent>
