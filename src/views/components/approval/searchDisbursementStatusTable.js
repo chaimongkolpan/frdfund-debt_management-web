@@ -103,7 +103,7 @@ const SearchTable = (props) => {
     )
   }
   const RenderRow = (item, index) => {
-    let iOffice = 1, iBranch = item.branch?.length > 1 && item.office[0].disbursement == 'สาขา' ? 1 : 0;
+    let iOffice = 1, iBranch = item.office[0].disbursement == 'สาขา' ? 1 : 0;
     const maxbranch = item.branch?.length > 0 ? item.branch?.length : 0;
     const maxoffice = item.office?.length > 0 ? item.office?.length : 0;
     let result = [];
