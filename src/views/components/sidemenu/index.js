@@ -831,6 +831,12 @@ const Sidebar = props => {
                           <div className="d-flex align-items-center"><span className="nav-link-text">เงินไม่เข้าบัญชีกองทุน</span></div>
                         </Link>
                       </li>
+                      <li className="nav-item">
+                        <Link className={`nav-link ${path.includes('/account/adjust/pending-settlement') ? 'active' : ''}`}
+                          to={`${prefix_url + "/account/adjust/pending-settlement"}`}>
+                          <div className="d-flex align-items-center"><span className="nav-link-text">ปรับปรุงหนี้รอสะสาง</span></div>
+                        </Link>
+                      </li>
                     </ul>
                   </div>
                 </div>
