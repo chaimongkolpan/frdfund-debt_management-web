@@ -3855,4 +3855,121 @@ export const downloadOldReport = async (params) => {
   }
   return true;
 };
+//#endregion
+//#region PendingDebtAdjustment
+export const downloadPendingDebtAdjustmentTemplate = async () => {
+  const path = "/PendingDebtAdjustment/download-template";
+  try {
+    const result = await axios.get(path, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: result.data.type });
+      SaveAs(blob, "แบบฟอร์มนำเข้าเงินรับฝากรอสะสาง.xlsx");
+      return true;
+    } else return false;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return false;
+  }
+};
+export const validateImportPendingDebtAdjustment = async (formData) => {
+  const path = "/PendingDebtAdjustment/validate-import";
+  try {
+    const result = await axios.post(path, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const downloadPendingDebtAdjustmentValidationResult = async (params) => {
+  const path = "/PendingDebtAdjustment/download-validation-result";
+  try {
+    const result = await axios.post(
+      path,
+      { import_filename: params.import_filename, rows: params.rows },
+      { responseType: "blob" }
+    );
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: result.data.type });
+      SaveAs(blob, "ผลการตรวจสอบปรับปรุงหนี้รอสะสาง.xlsx");
+      return true;
+    } else return false;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return false;
+  }
+};
+export const searchPendingDebtAdjustment = async (filter) => {
+  const path = "/PendingDebtAdjustment/search-pending";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const getPendingDebtAdjustmentDetail = async (id) => {
+  const path = "/PendingDebtAdjustment/batch-detail/" + id;
+  try {
+    const result = await axios.get(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const downloadPendingDebtAdjustmentDocuments = async (id, filename) => {
+  const path = "/PendingDebtAdjustment/download-documents/" + id;
+  try {
+    const result = await axios.post(path, {}, { responseType: "blob" });
+    if (result.status == 200) {
+      const blob = new Blob([result.data], { type: result.data.type });
+      SaveAs(blob, filename ?? ("เอกสารปรับปรุงหนี้รอสะสาง_" + id + ".zip"));
+      return true;
+    } else return false;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return false;
+  }
+};
+export const confirmPendingDebtAdjustment = async (id) => {
+  const path = "/PendingDebtAdjustment/confirm/" + id;
+  try {
+    const result = await axios.post(path);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const cancelPendingDebtAdjustment = async (params) => {
+  const path = "/PendingDebtAdjustment/cancel";
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const searchHistoryPendingDebtAdjustment = async (filter) => {
+  const path = "/PendingDebtAdjustment/search-history";
+  try {
+    const result = await axios.post(path, filter);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+//#endregion
 // #endregion

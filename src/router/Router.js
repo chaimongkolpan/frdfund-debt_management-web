@@ -63,6 +63,7 @@ const GuaranteeBorrow = lazy(() => import('../views/pages/account/borrow'))
 const AccountReimbursement = lazy(() => import('../views/pages/account/reimbursement'))
 const AccountAdjustReceivable = lazy(() => import('../views/pages/account/adjust-receivable-debt'))
 const AccountAdjustNotValid = lazy(() => import('../views/pages/account/adjust-not-valid'))
+const AccountPendingDebtAdjustment = lazy(() => import('../views/pages/account/pending-debt-adjustment'))
 const AccountFollowing = lazy(() => import('../views/pages/account/following'))
 const AccountInvoice = lazy(() => import('../views/pages/account/invoice'))
 const AccountDebtAcknowledgment = lazy(() => import('../views/pages/account/debt-acknowledgment'))
@@ -345,6 +346,11 @@ const Router = () => {
             path: prefix_url + '/account/adjust/not-valid',
             element: <VerticalLayout />,
             children: [{ path: prefix_url + '/account/adjust/not-valid', element: <AccountAdjustNotValid /> }]
+        },
+        {
+            path: prefix_url + '/account/adjust/pending-settlement',
+            element: <VerticalLayout />,
+            children: [{ path: prefix_url + '/account/adjust/pending-settlement', element: <AccountPendingDebtAdjustment /> }]
         },
         {
             path: prefix_url + '/account/following',
