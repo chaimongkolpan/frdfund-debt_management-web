@@ -63,6 +63,39 @@ export const getUsers = async (params) => {
     return defaultErrorResponse;
   }
 };
+export const addUsers = async (params) => {
+  const path = "/AddUsers";
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const updateUsers = async (params) => {
+  const path = "/UpdateUsers";
+  try {
+    const result = await axios.post(path, params);
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
+export const deleteUsers = async (params) => {
+  const path = "/DeteleUsers";
+  try {
+    const result = await axios.get(path, { params: { ...params }});
+    if (result.status == 200) return result.data;
+    else return defaultErrorResponse;
+  } catch (e) {
+    console.error("error: " + path + " =>", e);
+    return defaultErrorResponse;
+  }
+};
 export const getNplCondition = async () => {
   const path = "/npl-condition";
   try {
