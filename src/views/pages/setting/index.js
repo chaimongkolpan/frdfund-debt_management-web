@@ -67,7 +67,8 @@ const Setting = () => {
     const newuser = {
       ...user,
       password: '',
-      province_id: provincesMaster.find(item => item.name === user?.province)?.id
+      role: user?.role ?? '4',
+      province_id: provincesMaster.find(item => item.name === user?.province)?.id || 81
     }
     const result = await addUsers(newuser);
     if (result.isSuccess) {
